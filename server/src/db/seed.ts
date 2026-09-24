@@ -115,7 +115,36 @@ async function main() {
     }
   });
 
-  console.log(`👤 Created Demo User (${demoUser.email}) and Admin (${adminUser.email})`);
+  const genericDemoUser = await prisma.user.create({
+    data: {
+      id: 'usr-demo-002',
+      email: 'demo@romefind.com',
+      passwordHash,
+      firstName: 'Demo',
+      lastName: 'User',
+      location: 'San Francisco, CA',
+      country: 'United States',
+      role: 'USER',
+      onboardingCompleted: true,
+      profile: {
+        create: {
+          bio: 'Exploring opportunities in Tech, Design, and Public Health.',
+          currentStatus: 'University Student',
+          skills: JSON.stringify(['JavaScript', 'Python', 'Product Management', 'Public Health']),
+          interests: JSON.stringify(['Technology', 'Public Health', 'Design', 'Artificial Intelligence']),
+          goals: JSON.stringify(['Find remote internships and funded fellowships']),
+          opportunityPreferences: JSON.stringify(['Internship', 'Fellowship', 'Job']),
+          locationPreferences: JSON.stringify(['Remote', 'United States']),
+          fundingPreferences: true,
+          remotePreferences: JSON.stringify(['Remote']),
+          experienceLevel: 'Beginner',
+          completeness: 85
+        }
+      }
+    }
+  });
+
+  console.log(`👤 Created Demo Users (${demoUser.email}, ${genericDemoUser.email}) and Admin (${adminUser.email})`);
 
   // 3. Seed Organizations
   for (const org of organizationsData) {
