@@ -19,8 +19,9 @@ if (process.env.NODE_ENV !== 'test' && !process.env.TESTING) {
   app.use(morgan('dev'));
 }
 
-// Mount API routes
+// Mount API routes (supports both standalone Express /api and Vercel serverless functions)
 app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 // Error Handling Middleware
 app.use(errorHandler);

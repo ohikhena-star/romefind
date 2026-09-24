@@ -59,7 +59,12 @@ class ApiClient {
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      const errorMsg = data.message || data.error?.message || `Request failed with status ${response.status}`;
+      const errorMsg =
+        data.message ||
+        data.error?.message ||
+        (response.status === 500
+          ? 'Backend server connection error. Please ensure the backend server is running.'
+          : `Request failed with status ${response.status}`);
       throw new Error(errorMsg);
     }
 
