@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Modal, Button, Input } from '@/components/ui';
 import { Trophy, Sparkles, Heart, CheckCircle2 } from 'lucide-react';
 import { ApplicationStatus } from '@/types/models';
+import { api } from '@/api/client';
 
 export interface OutcomeReportingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  opportunityId?: string;
   opportunityTitle: string;
   organizationName: string;
   onSubmitOutcome: (details: {
@@ -21,6 +23,7 @@ export interface OutcomeReportingModalProps {
 export const OutcomeReportingModal: React.FC<OutcomeReportingModalProps> = ({
   isOpen,
   onClose,
+  opportunityId,
   opportunityTitle,
   organizationName,
   onSubmitOutcome
@@ -45,6 +48,16 @@ export const OutcomeReportingModal: React.FC<OutcomeReportingModalProps> = ({
         reflectionTip,
         shareWithCommunity
       });
+
+      if (shareWithCommunity && reflectionTip.trim() && opportunityId) {
+        await api.addOpportunityAdvice(opportunityId, {
+          title: `Key success tip for ${opportunityTitle}`,
+          content: reflectionTip.trim(),
+          outcomeStatus: outcomeType.includes('Accepted') ? 'Accepted' : 'Applied',
+          adviceType: 'What I Wish I Knew'
+        }).catch(() => {});
+      }
+
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);

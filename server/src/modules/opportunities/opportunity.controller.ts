@@ -333,3 +333,98 @@ export const rejectOpportunity = async (req: Request, res: Response, next: NextF
     next(error);
   }
 };
+
+// POST /api/opportunities/:id/report
+export const reportOpportunity = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user?.id || null;
+    const { id } = req.params;
+    const { reason, details } = req.body;
+
+    if (!reason) {
+      return res.status(400).json({ success: false, message: 'Report reason is required' });
+    }
+
+    const opp = await prisma.opportunity.findUnique({ where: { id } });
+    if (!opp) {
+      return res.status(404).json({ success: false, message: 'Opportunity not found' });
+    }
+
+    const report = await prisma.opportunityReport.create({
+      data: {
+        opportunityId: id,
+        userId,
+        reason,
+        details: details || null
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Thank you for reporting. Our verification team has been notified.',
+      data: report
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/opportunities/:id/advice
+export const getOpportunityAdvice = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+
+    const adviceList = await prisma.communityAdvice.findMany({
+      where: { opportunityId: id },
+      orderBy: [{ upvotes: 'desc' }, { createdAt: 'desc' }]
+    });
+
+    res.json({
+      success: true,
+      data: adviceList
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /api/opportunities/:id/advice
+export const addOpportunityAdvice = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user.id;
+    const { id } = req.params;
+    const { authorName, authorRole, outcomeStatus, adviceType, title, content } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({ success: false, message: 'Title and content are required' });
+    }
+
+    const opp = await prisma.opportunity.findUnique({ where: { id } });
+    if (!opp) {
+      return res.status(404).json({ success: false, message: 'Opportunity not found' });
+    }
+
+    const advice = await prisma.communityAdvice.create({
+      data: {
+        opportunityId: id,
+        userId,
+        authorName: authorName || 'Anonymous Applicant',
+        authorRole: authorRole || 'Past Applicant',
+        outcomeStatus: outcomeStatus || 'Applied',
+        adviceType: adviceType || 'General',
+        title: String(title).trim(),
+        content: String(content).trim(),
+        isVerified: true
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Advice shared with the community successfully!',
+      data: advice
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

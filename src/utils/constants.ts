@@ -15,23 +15,29 @@ export const OPPORTUNITY_TYPE_COLORS: Record<OpportunityType, string> = {
 };
 
 export const FIELDS = [
-  'Technology', 'Business', 'Finance', 'Design', 'Engineering',
-  'Science', 'Health', 'Education', 'Policy', 'Climate',
-  'Creative', 'Research', 'Social Impact', 'Arts', 'Law',
-  'Media', 'Data Science', 'AI/ML', 'Sustainability', 'Other',
+  'Public Health', 'Global Health', 'Health & Medicine', 'Biotechnology', 'Life Sciences',
+  'Technology', 'AI & Machine Learning', 'Data Science', 'Engineering', 'Design & UX',
+  'Climate & Sustainability', 'Clean Energy', 'Science', 'Research',
+  'Business & Startups', 'Finance & VC', 'Policy & Governance', 'International Relations',
+  'Social Impact', 'Education & Teaching', 'Creative & Media', 'Journalism', 'Law & Human Rights',
+  'Other',
 ] as const;
 
 export const GOALS = [
-  'Get experience', 'Find funding', 'Study', 'Find a job',
-  'Build my portfolio', 'Meet people', 'Start research',
-  'Grow a skill', 'Travel', 'Build something', 'Explore opportunities',
+  'Build practical experience', 'Find funding & grants', 'Study abroad / Scholarships',
+  'Transition into a new field', 'Find a remote job', 'Publish research',
+  'Build my portfolio', 'Expand global network', 'Launch a startup / venture',
+  'Grow specialized skills', 'Explore opportunities',
+] as const;
+
+export const WORK_MODALITIES = [
+  'Remote (Worldwide)', 'Remote (Country-specific)', 'Hybrid', 'In-Person', 'Flexible',
 ] as const;
 
 export const LOCATIONS = [
-  'United States', 'United Kingdom', 'Germany', 'Canada', 'Australia',
-  'Netherlands', 'Switzerland', 'Singapore', 'Japan', 'France',
-  'Kenya', 'Nigeria', 'South Africa', 'India', 'Brazil',
-  'Global', 'Remote',
+  'Remote (Worldwide)', 'United States', 'United Kingdom', 'Nigeria', 'Kenya', 'South Africa', 'Ghana', 'Rwanda',
+  'Germany', 'Canada', 'France', 'Netherlands', 'Switzerland', 'Sweden', 'Australia',
+  'Singapore', 'Japan', 'India', 'Brazil', 'Global / Anywhere',
 ] as const;
 
 export const DURATIONS = [

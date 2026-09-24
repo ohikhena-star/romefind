@@ -98,7 +98,7 @@ export default function DiscoverPage() {
               Personalized opportunities matched to your identity and goals.
             </p>
           </div>
-          <Link to="/explore" className="hidden sm:flex text-rome-600 dark:text-rome-400 hover:text-rome-700 font-medium items-center gap-1 transition-colors text-sm">
+          <Link to="/recommendations" className="text-rome-600 dark:text-rome-400 hover:text-rome-700 font-medium flex items-center gap-1 transition-colors text-sm">
             See all recommendations <ChevronRight className="w-4 h-4" />
           </Link>
         </div>

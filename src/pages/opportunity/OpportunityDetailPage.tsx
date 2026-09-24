@@ -1,13 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { calculateRelevanceScore } from '@/services/personalization.service';
+import { api } from '@/api/client';
 import { Button, Tag, DeadlineIndicator, MatchIndicator, Badge, EmptyState } from '@/components/ui';
 import { OpportunityCard } from '@/components/opportunity';
 import { OPPORTUNITY_TYPE_COLORS } from '@/utils/constants';
-import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck, Share2 } from 'lucide-react';
 import { Opportunity } from '@/types/models';
 
 export default function OpportunityDetailPage() {
@@ -16,6 +17,79 @@ export default function OpportunityDetailPage() {
   const { getOpportunityById, opportunities } = useOpportunityStore();
   const { user, isAuthenticated } = useAuthStore();
   const { isSaved, saveOpportunity, unsaveOpportunity, addToCompare, removeFromCompare, comparisons, createApplication } = useApplicationStore();
+
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copyToast, setCopyToast] = useState(false);
+
+  // Report modal state
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState('link_broken');
+  const [reportDetails, setReportDetails] = useState('');
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportSuccess, setReportSuccess] = useState(false);
+
+  // Community advice state
+  const [showAdviceModal, setShowAdviceModal] = useState(false);
+  const [adviceList, setAdviceList] = useState<any[]>([]);
+  const [adviceAuthorName, setAdviceAuthorName] = useState('');
+  const [adviceAuthorRole, setAdviceAuthorRole] = useState('');
+  const [adviceType, setAdviceType] = useState('General');
+  const [adviceOutcome, setAdviceOutcome] = useState('Accepted');
+  const [adviceTitle, setAdviceTitle] = useState('');
+  const [adviceContent, setAdviceContent] = useState('');
+  const [adviceLoading, setAdviceLoading] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      api.getOpportunityAdvice(id)
+        .then(data => {
+          if (Array.isArray(data)) setAdviceList(data);
+        })
+        .catch(() => {});
+    }
+  }, [id]);
+
+  const handleReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!id) return;
+    setReportLoading(true);
+    try {
+      await api.reportOpportunity(id, reportReason, reportDetails);
+      setReportSuccess(true);
+      setReportDetails('');
+    } catch {
+      // fallback
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  const handleAdviceSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!id || !adviceTitle || !adviceContent) return;
+    setAdviceLoading(true);
+    try {
+      const res = await api.addOpportunityAdvice(id, {
+        authorName: adviceAuthorName || user?.profile?.name || 'Anonymous Applicant',
+        authorRole: adviceAuthorRole || user?.profile?.currentStatus || 'Applicant',
+        adviceType,
+        outcomeStatus: adviceOutcome,
+        title: adviceTitle,
+        content: adviceContent
+      });
+      if (res?.data) {
+        setAdviceList(prev => [res.data, ...prev]);
+      }
+      setShowAdviceModal(false);
+      setAdviceTitle('');
+      setAdviceContent('');
+    } catch {
+      // fallback
+    } finally {
+      setAdviceLoading(false);
+    }
+  };
+
 
   const opportunity = useMemo(() => getOpportunityById(id || ''), [id, getOpportunityById]);
   
@@ -175,21 +249,29 @@ export default function OpportunityDetailPage() {
                     Track in Workspace
                   </Button>
 
-                  <div className="flex gap-3">
+                  <div className="flex gap-2">
                     <Button 
                       variant="outline" 
-                      className="flex-1 justify-center gap-1.5 text-xs"
+                      className="flex-1 justify-center gap-1.5 text-xs px-2"
                       onClick={() => saved ? unsaveOpportunity(opportunity.id) : saveOpportunity(opportunity.id)}
                     >
-                      {saved ? <BookmarkCheck className="w-4 h-4 text-rome-500" /> : <Bookmark className="w-4 h-4" />}
+                      {saved ? <BookmarkCheck className="w-3.5 h-3.5 text-rome-500" /> : <Bookmark className="w-3.5 h-3.5" />}
                       {saved ? 'Saved' : 'Save'}
                     </Button>
                     <Button 
                       variant={isComparing ? 'secondary' : 'outline'}
-                      className="flex-1 justify-center text-xs"
+                      className="flex-1 justify-center text-xs px-2"
                       onClick={() => isComparing ? removeFromCompare(opportunity.id) : addToCompare(opportunity.id)}
                     >
                       {isComparing ? 'Comparing ✓' : '+ Compare'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="justify-center text-xs px-2.5"
+                      onClick={() => setShowShareModal(true)}
+                      title="Share Opportunity"
+                    >
+                      <Share2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </div>
@@ -285,7 +367,15 @@ export default function OpportunityDetailPage() {
 
           {/* Source & Verification */}
           <section className="pt-8 border-t border-surface-200 dark:border-surface-800">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-3">Official Verification</h2>
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-surface-500">Official Verification & Transparency</h2>
+              <button 
+                onClick={() => setShowReportModal(true)}
+                className="text-xs text-surface-500 hover:text-red-500 transition-colors inline-flex items-center gap-1"
+              >
+                <AlertCircle className="w-3.5 h-3.5" /> Report Issue
+              </button>
+            </div>
             <div className="flex flex-wrap items-center gap-4 bg-surface-50 dark:bg-surface-900 p-4 rounded-xl border border-surface-200 dark:border-surface-800">
               <Badge variant="verified">
                 {opportunity.verificationStatus || 'Verified'}
@@ -303,8 +393,227 @@ export default function OpportunityDetailPage() {
               </a>
             </div>
           </section>
+
+          {/* Community Advice & Insights */}
+          <section className="pt-6 border-t border-surface-200 dark:border-surface-800">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                  <span>Community Advice & Insights</span>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-rome-100 dark:bg-rome-900/50 text-rome-700 dark:text-rome-300">
+                    {adviceList.length} Tips
+                  </span>
+                </h2>
+                <p className="text-xs text-surface-500 dark:text-surface-400">
+                  Insights from past applicants and fellows.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAdviceModal(true)}
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-rome-50 dark:bg-rome-950 text-rome-600 dark:text-rome-400 border border-rome-200 dark:border-rome-800 hover:bg-rome-100 transition-colors"
+              >
+                + Share Advice
+              </button>
+            </div>
+
+            {adviceList.length === 0 ? (
+              <div className="p-5 rounded-xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-center">
+                <p className="text-sm text-surface-600 dark:text-surface-400 mb-2">
+                  No community advice has been submitted for this opportunity yet.
+                </p>
+                <button
+                  onClick={() => setShowAdviceModal(true)}
+                  className="text-xs font-bold text-rome-600 hover:underline"
+                >
+                  Be the first to share application tips →
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {adviceList.map((adv) => (
+                  <div key={adv.id} className="p-4 rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm space-y-2">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 mr-2">
+                          {adv.adviceType}
+                        </span>
+                        <span className="text-xs text-surface-400">
+                          by {adv.authorName} ({adv.authorRole || 'Applicant'})
+                        </span>
+                      </div>
+                      <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                        Outcome: {adv.outcomeStatus || 'Applied'}
+                      </span>
+                    </div>
+                    <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100">{adv.title}</h4>
+                    <p className="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">{adv.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-5">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Share Opportunity</h3>
+              <button onClick={() => setShowShareModal(false)} className="text-surface-400 hover:text-surface-700">✕</button>
+            </div>
+            <p className="text-xs text-surface-500">
+              Share "{opportunity.title}" with fellow researchers, students, and peers.
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  setCopyToast(true);
+                  setTimeout(() => setCopyToast(false), 2500);
+                }}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+              >
+                <span className="text-base font-bold">🔗</span>
+                <span className="text-xs font-semibold">Copy Link</span>
+              </button>
+              <button
+                onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out this opportunity: ${opportunity.title} on ROMEfind - ${window.location.href}`)}`, '_blank')}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+              >
+                <span className="text-base">💬</span>
+                <span className="text-xs font-semibold">WhatsApp</span>
+              </button>
+              <button
+                onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Found this great opportunity: ${opportunity.title}`)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+              >
+                <span className="text-base">𝕏</span>
+                <span className="text-xs font-semibold">Twitter/X</span>
+              </button>
+            </div>
+            {copyToast && (
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold text-center">
+                ✓ Link copied to clipboard!
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Report Issue Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Report an Issue</h3>
+              <button onClick={() => setShowReportModal(false)} className="text-surface-400 hover:text-surface-700">✕</button>
+            </div>
+            {reportSuccess ? (
+              <div className="text-center py-6 space-y-2">
+                <p className="text-emerald-600 font-bold">✓ Thank you for reporting.</p>
+                <p className="text-xs text-surface-500">Our verification editors have queued this opportunity for re-checking.</p>
+                <Button variant="outline" size="sm" onClick={() => { setShowReportModal(false); setReportSuccess(false); }}>Close</Button>
+              </div>
+            ) : (
+              <form onSubmit={handleReportSubmit} className="space-y-3">
+                <label className="block text-xs font-bold text-surface-700 dark:text-surface-300">Reason</label>
+                <select
+                  value={reportReason}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                >
+                  <option value="link_broken">Broken / inaccessible application link</option>
+                  <option value="closed">Deadline passed / programme closed</option>
+                  <option value="inaccurate_info">Inaccurate funding / eligibility info</option>
+                  <option value="other">Other issue</option>
+                </select>
+                <textarea
+                  value={reportDetails}
+                  onChange={(e) => setReportDetails(e.target.value)}
+                  placeholder="Additional context (optional)..."
+                  rows={3}
+                  className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                />
+                <Button type="submit" variant="primary" fullWidth size="sm" isLoading={reportLoading}>
+                  Submit Report
+                </Button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Share Advice Modal */}
+      {showAdviceModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Contribute Application Advice</h3>
+              <button onClick={() => setShowAdviceModal(false)} className="text-surface-400 hover:text-surface-700">✕</button>
+            </div>
+            <form onSubmit={handleAdviceSubmit} className="space-y-3">
+              <input
+                type="text"
+                placeholder="Your Name (or Anonymous)"
+                value={adviceAuthorName}
+                onChange={(e) => setAdviceAuthorName(e.target.value)}
+                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+              />
+              <input
+                type="text"
+                placeholder="Your Role / Background (e.g. 2025 Fellow, MSc Applicant)"
+                value={adviceAuthorRole}
+                onChange={(e) => setAdviceAuthorRole(e.target.value)}
+                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <select
+                  value={adviceType}
+                  onChange={(e) => setAdviceType(e.target.value)}
+                  className="w-full text-xs p-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                >
+                  <option value="General">General Advice</option>
+                  <option value="Interview">Interview Tips</option>
+                  <option value="CV/Portfolio">CV / Portfolio</option>
+                  <option value="Preparation">Preparation</option>
+                  <option value="What I Wish I Knew">What I Wish I Knew</option>
+                </select>
+                <select
+                  value={adviceOutcome}
+                  onChange={(e) => setAdviceOutcome(e.target.value)}
+                  className="w-full text-xs p-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                >
+                  <option value="Accepted">Accepted</option>
+                  <option value="Applied">Applied</option>
+                  <option value="Interviewed">Interviewed</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+              <input
+                type="text"
+                placeholder="Key Takeaway Title (e.g. Focus on returning impact)"
+                value={adviceTitle}
+                onChange={(e) => setAdviceTitle(e.target.value)}
+                required
+                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 font-semibold"
+              />
+              <textarea
+                placeholder="Detailed tips for prospective applicants..."
+                value={adviceContent}
+                onChange={(e) => setAdviceContent(e.target.value)}
+                required
+                rows={4}
+                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+              />
+              <Button type="submit" variant="primary" fullWidth size="sm" isLoading={adviceLoading}>
+                Publish Community Advice
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Related Opportunities */}
       {relatedOpportunities.length > 0 && (
@@ -340,6 +649,14 @@ export default function OpportunityDetailPage() {
           >
             {saved ? <BookmarkCheck className="w-5 h-5 text-rome-500" /> : <Bookmark className="w-5 h-5" />}
           </Button>
+          <Button
+            variant="outline"
+            className="flex-1 justify-center"
+            size="md"
+            onClick={() => setShowShareModal(true)}
+          >
+            Share
+          </Button>
           <Button 
             variant="primary" 
             className="flex-[3] justify-center text-sm font-semibold"
@@ -354,3 +671,4 @@ export default function OpportunityDetailPage() {
     </div>
   );
 }
+

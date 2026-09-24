@@ -271,3 +271,107 @@ export async function getMe(req: AuthRequest, res: Response): Promise<void> {
 export function logout(_req: Request, res: Response): void {
   res.json({ success: true, message: 'Logged out successfully' });
 }
+
+export async function forgotPassword(req: Request, res: Response): Promise<void> {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      res.status(400).json({ success: false, message: 'Email is required' });
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase().trim() }
+    });
+
+    if (!user) {
+      // Don't reveal if user exists, return generic success
+      res.json({
+        success: true,
+        message: 'If an account exists with this email, password reset instructions have been generated.'
+      });
+      return;
+    }
+
+    // Generate a secure reset code / token (6-digit or hex)
+    const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+
+    await prisma.passwordResetToken.deleteMany({
+      where: { email: user.email }
+    });
+
+    await prisma.passwordResetToken.create({
+      data: {
+        email: user.email,
+        token: resetToken,
+        expiresAt
+      }
+    });
+
+    // In a production app with SMTP, email the token here.
+    // For local/testing convenience, we log and return the message:
+    console.log(`🔑 Password reset code for ${user.email}: [${resetToken}]`);
+
+    res.json({
+      success: true,
+      message: `Password reset instructions sent. (Demo reset code: ${resetToken})`,
+      data: {
+        demoResetCode: resetToken
+      }
+    });
+  } catch (error) {
+    console.error('forgotPassword error:', error);
+    res.status(500).json({ success: false, message: 'Failed to process password reset request' });
+  }
+}
+
+export async function resetPassword(req: Request, res: Response): Promise<void> {
+  try {
+    const { email, token, newPassword } = req.body;
+
+    if (!email || !token || !newPassword) {
+      res.status(400).json({ success: false, message: 'Email, reset code, and new password are required' });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+      return;
+    }
+
+    const record = await prisma.passwordResetToken.findFirst({
+      where: {
+        email: email.toLowerCase().trim(),
+        token: String(token).trim(),
+        expiresAt: { gt: new Date() }
+      }
+    });
+
+    if (!record) {
+      res.status(400).json({ success: false, message: 'Invalid or expired password reset code' });
+      return;
+    }
+
+    const passwordHash = await hashPassword(newPassword);
+
+    await prisma.user.update({
+      where: { email: record.email },
+      data: { passwordHash }
+    });
+
+    // Invalidate used reset tokens
+    await prisma.passwordResetToken.deleteMany({
+      where: { email: record.email }
+    });
+
+    res.json({
+      success: true,
+      message: 'Your password has been successfully reset. You can now log in with your new password.'
+    });
+  } catch (error) {
+    console.error('resetPassword error:', error);
+    res.status(500).json({ success: false, message: 'Failed to reset password' });
+  }
+}
+

@@ -111,3 +111,78 @@ export const getLearningRecommendations = async (req: Request, res: Response, ne
     next(error);
   }
 };
+
+// GET /api/learning/progress
+export const getUserLearningProgress = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user.id;
+
+    const progress = await prisma.userLearningProgress.findMany({
+      where: { userId },
+      include: { resource: true },
+      orderBy: { updatedAt: 'desc' }
+    });
+
+    res.json({
+      success: true,
+      data: progress
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /api/learning/progress
+export const updateUserLearningProgress = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user.id;
+    const { resourceId, status, notes } = req.body;
+
+    if (!resourceId) {
+      return res.status(400).json({ success: false, message: 'resourceId is required' });
+    }
+
+    const validStatuses = ['WANT_TO_LEARN', 'LEARNING', 'COMPLETED'];
+    const normalizedStatus = String(status || 'WANT_TO_LEARN').toUpperCase();
+
+    if (!validStatuses.includes(normalizedStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Must be one of: ${validStatuses.join(', ')}`
+      });
+    }
+
+    const record = await prisma.userLearningProgress.upsert({
+      where: { userId_resourceId: { userId, resourceId } },
+      create: {
+        userId,
+        resourceId,
+        status: normalizedStatus,
+        notes: notes || null
+      },
+      update: {
+        status: normalizedStatus,
+        notes: notes !== undefined ? notes : undefined
+      },
+      include: { resource: true }
+    });
+
+    // Record behavioral signal
+    await prisma.behaviourSignal.create({
+      data: {
+        userId,
+        eventType: normalizedStatus === 'COMPLETED' ? 'learning_completed' : 'learning_started',
+        metadata: JSON.stringify({ resourceId, status: normalizedStatus })
+      }
+    }).catch(() => {});
+
+    res.json({
+      success: true,
+      message: 'Learning progress updated',
+      data: record
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

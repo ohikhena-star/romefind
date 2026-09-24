@@ -33,47 +33,11 @@ export const useAuthStore = create<AuthState>()(
             });
             return;
           }
-        } catch (error) {
-          console.warn('Backend login failed, falling back to local session', error);
+          throw new Error('Invalid response from server');
+        } catch (error: any) {
+          set({ isLoading: false });
+          throw error;
         }
-
-        // Graceful fallback for local offline testing
-        const fallbackUser: User = {
-          id: 'usr-demo-001',
-          profile: {
-            name: email.split('@')[0],
-            email,
-            location: 'London, UK',
-            country: 'United Kingdom',
-            bio: 'Passionate about AI, HCI, and high-impact fellowships.',
-            education: [],
-            experience: [],
-            skills: ['TypeScript', 'Python', 'UX Research'],
-            projects: [],
-            certifications: [],
-            portfolioLinks: [],
-            interests: ['Artificial Intelligence', 'Open Source'],
-            goals: ['Secure a research fellowship'],
-            currentStatus: 'Exploring opportunities',
-            completeness: 80
-          },
-          preferences: {
-            opportunityTypes: [],
-            fields: [],
-            goals: [],
-            remotePreference: [RemoteStatus.Hybrid],
-            fundingPreference: true,
-            locationPreference: ['Global']
-          },
-          onboardingCompleted: true,
-          createdAt: new Date().toISOString()
-        };
-
-        set({
-          user: fallbackUser,
-          isAuthenticated: true,
-          isLoading: false
-        });
       },
 
       signup: async (email: string, password: string, name: string) => {
@@ -88,46 +52,11 @@ export const useAuthStore = create<AuthState>()(
             });
             return;
           }
-        } catch (error) {
-          console.warn('Backend signup error, using local state', error);
+          throw new Error('Invalid response from server');
+        } catch (error: any) {
+          set({ isLoading: false });
+          throw error;
         }
-
-        const newUser: User = {
-          id: 'usr-' + Date.now(),
-          profile: {
-            name,
-            email,
-            location: '',
-            country: '',
-            bio: '',
-            education: [],
-            experience: [],
-            skills: [],
-            projects: [],
-            certifications: [],
-            portfolioLinks: [],
-            interests: [],
-            goals: [],
-            currentStatus: '',
-            completeness: 20
-          },
-          preferences: {
-            opportunityTypes: [],
-            fields: [],
-            goals: [],
-            remotePreference: [],
-            fundingPreference: false,
-            locationPreference: []
-          },
-          onboardingCompleted: false,
-          createdAt: new Date().toISOString()
-        };
-
-        set({
-          user: newUser,
-          isAuthenticated: true,
-          isLoading: false
-        });
       },
 
       logout: () => {

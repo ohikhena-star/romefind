@@ -1,4 +1,4 @@
-// Prisma schema for PostgreSQL (Production on Vercel + Supabase / Neon / RDS)
+// Prisma schema for PostgreSQL (Production on Vercel + Neon / Supabase / RDS)
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -37,7 +37,15 @@ enum ApplicationStatus {
   SUBMITTED
   ACCEPTED
   REJECTED
+  WAITLISTED
   WITHDRAWN
+  NO_RESPONSE
+}
+
+enum LearningStatus {
+  WANT_TO_LEARN
+  LEARNING
+  COMPLETED
 }
 
 model User {
@@ -61,6 +69,9 @@ model User {
   behaviourSignals    BehaviourSignal[]
   notifications       Notification[]
   providerSubmissions ProviderSubmission[]
+  communityAdvices    CommunityAdvice[]
+  opportunityReports  OpportunityReport[]
+  learningProgress    UserLearningProgress[]
 }
 
 model Profile {
@@ -69,20 +80,20 @@ model Profile {
   user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   bio                   String?
-  currentStatus         String?
+  currentStatus         String?  // High School Student, University Student, Working Professional, Freelancer, Founder, Looking for opportunities
   education             String   @default("[]") // JSON string of Education array
   experience            String   @default("[]") // JSON string of WorkExperience array
   skills                String   @default("[]") // JSON string of string array
-  interests             String   @default("[]") // JSON string of string array
+  interests             String   @default("[]") // JSON string of string array (Fields)
   goals                 String   @default("[]") // JSON string of string array
   portfolioLinks        String   @default("[]") // JSON string of string array
   certifications        String   @default("[]") // JSON string of string array
   
   opportunityPreferences String  @default("[]") // JSON string of string array (OpportunityType)
-  locationPreferences    String  @default("[]") // JSON string of string array
+  locationPreferences    String  @default("[]") // JSON string of string array (Target locations/countries)
   fundingPreferences     Boolean @default(false)
-  remotePreferences      String  @default("[]") // JSON string of string array (RemoteStatus)
-  experienceLevel        String?
+  remotePreferences      String  @default("[]") // JSON string of string array (Remote, Hybrid, In-Person, Flexible)
+  experienceLevel        String?  // Beginner, Intermediate, Advanced, Expert
   completeness           Int     @default(0)
   
   createdAt             DateTime @default(now())
@@ -112,15 +123,15 @@ model Opportunity {
   opportunityType        String                    // Scholarship, Fellowship, Internship, Job, Grant, Programme, Competition, Conference/Event, Research, Volunteering
   description            String
   shortDescription       String?
-  field                  String                    @default("[]") // JSON string of string array
+  field                  String                    @default("[]") // JSON string of string array (e.g. Public Health, AI, Climate, Design)
   subfields              String                    @default("[]") // JSON string of string array
   location               String
   country                String?
   remoteStatus           String                    @default("In-Person") // In-Person, Remote, Hybrid, Flexible
   
-  fundingType            String?                   // Fully-Funded, Partially-Funded, Stipend, Unfunded, Prize
+  fundingType            String?                   // Fully-Funded, Partially-Funded, Stipend, Unfunded, Prize, Salary
   fundingAmount          String?
-  funding                String?
+  funding                String?                   // Human readable summary (e.g., "$100,000 stipend", "Fully Funded + Travel")
   
   benefits               String                    @default("[]") // JSON string of string array
   eligibility            String                    @default("[]") // JSON string of string array
@@ -157,6 +168,8 @@ model Opportunity {
   trackedApplications    TrackedApplication[]
   changeHistory          OpportunityChangeHistory[]
   behaviourSignals       BehaviourSignal[]
+  communityAdvices       CommunityAdvice[]
+  reports                OpportunityReport[]
 }
 
 model SavedOpportunity {
@@ -190,10 +203,10 @@ model TrackedApplication {
   opportunityId String
   opportunity   Opportunity       @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
   
-  status        String            @default("SAVED") // SAVED, CONSIDERING, PREPARING, APPLYING, SUBMITTED, ACCEPTED, REJECTED, WITHDRAWN
+  status        String            @default("SAVED") // SAVED, CONSIDERING, PREPARING, APPLYING, SUBMITTED, ACCEPTED, REJECTED, WAITLISTED, WITHDRAWN, NO_RESPONSE
   startedAt     DateTime          @default(now())
   submittedAt   DateTime?
-  result        String?           // accepted, rejected, waitlisted, withdrawn
+  result        String?           // accepted, rejected, waitlisted, withdrawn, no_response
   notesHistory  String?           // Summary text
   
   createdAt     DateTime          @default(now())
@@ -227,22 +240,75 @@ model ApplicationNote {
   updatedAt     DateTime           @updatedAt
 }
 
+model CommunityAdvice {
+  id              String      @id @default(cuid())
+  opportunityId   String
+  opportunity     Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  authorName      String?
+  authorRole      String?
+  outcomeStatus   String?     // Accepted, Interviewed, Applied, Completed
+  adviceType      String      @default("General") // General, Interview, CV/Portfolio, Preparation, Timeline, What I Wish I Knew
+  title           String
+  content         String
+  upvotes         Int         @default(0)
+  isVerified      Boolean     @default(true)
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model OpportunityReport {
+  id              String       @id @default(cuid())
+  opportunityId   String
+  opportunity     Opportunity  @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  userId          String?
+  user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  reason          String       // too_old, closed, link_broken, inaccurate_info, eligibility_unclear, other
+  details         String?
+  status          String       @default("PENDING") // PENDING, REVIEWED, RESOLVED, DISMISSED
+  
+  createdAt       DateTime     @default(now())
+}
+
 model LearningResource {
-  id                     String   @id @default(cuid())
+  id                     String                 @id @default(cuid())
   title                  String
   description            String
   provider               String
   url                    String
   topic                  String?
-  skills                 String   @default("[]") // JSON string of string array
-  difficulty             String?  // Beginner, Intermediate, Advanced
+  skills                 String                 @default("[]") // JSON string of string array
+  difficulty             String?                // Beginner, Intermediate, Advanced
   duration               String
-  free                   Boolean  @default(true)
-  relatedOpportunityTypes String   @default("[]") // JSON string of OpportunityType array
+  free                   Boolean                @default(true)
+  relatedOpportunityTypes String                 @default("[]") // JSON string of OpportunityType array
+  relatedFields          String                 @default("[]") // JSON string of string array
   source                 String?
   
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+
+  userProgress           UserLearningProgress[]
+}
+
+model UserLearningProgress {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resourceId      String
+  resource        LearningResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  status          String           @default("WANT_TO_LEARN") // WANT_TO_LEARN, LEARNING, COMPLETED
+  notes           String?
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([userId, resourceId])
 }
 
 model BehaviourSignal {
@@ -273,7 +339,7 @@ model Notification {
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  type          String   // deadline_reminder, new_match, application_update, learning_recommendation, system
+  type          String   // deadline_reminder, new_match, application_update, learning_recommendation, system, community_advice
   title         String
   message       String
   opportunityId String?
@@ -287,9 +353,17 @@ model ProviderSubmission {
   user            User     @relation(fields: [providerUserId], references: [id], onDelete: Cascade)
   
   opportunityData String   // JSON string of submitted opportunity fields
-  status          String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  status          String   @default("PENDING") // PENDING, REVIEWING, APPROVED, REJECTED
   reviewNotes     String?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }

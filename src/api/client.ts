@@ -243,6 +243,38 @@ class ApiClient {
     });
   }
 
+  async forgotPassword(email: string) {
+    return this.request<{ success: boolean; message: string; data?: { demoResetCode?: string } }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
+  }
+
+  async resetPassword(payload: { email: string; token: string; newPassword: string }) {
+    return this.request<{ success: boolean; message: string }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
+  async reportOpportunity(id: string, reason: string, details?: string) {
+    return this.request<any>(`/opportunities/${id}/report`, {
+      method: 'POST',
+      body: JSON.stringify({ reason, details })
+    });
+  }
+
+  async getOpportunityAdvice(id: string) {
+    return this.request<any[]>(`/opportunities/${id}/advice`);
+  }
+
+  async addOpportunityAdvice(id: string, payload: { authorName?: string; authorRole?: string; outcomeStatus?: string; adviceType?: string; title: string; content: string }) {
+    return this.request<any>(`/opportunities/${id}/advice`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
   // ── Learning Resources ────────────────────────────
   async getLearningResources(params: Record<string, any> = {}) {
     const query = new URLSearchParams();
@@ -255,6 +287,17 @@ class ApiClient {
 
   async getLearningRecommendations() {
     return this.request<any[]>('/learning/recommendations');
+  }
+
+  async getUserLearningProgress() {
+    return this.request<any[]>('/learning/progress');
+  }
+
+  async updateUserLearningProgress(resourceId: string, status: 'WANT_TO_LEARN' | 'LEARNING' | 'COMPLETED', notes?: string) {
+    return this.request<any>('/learning/progress', {
+      method: 'POST',
+      body: JSON.stringify({ resourceId, status, notes })
+    });
   }
 
   // ── Notifications ─────────────────────────────────
@@ -281,3 +324,4 @@ class ApiClient {
 
 export const api = new ApiClient();
 export default api;
+

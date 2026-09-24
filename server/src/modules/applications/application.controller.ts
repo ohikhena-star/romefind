@@ -176,7 +176,7 @@ export const updateApplicationStatus = async (req: Request, res: Response, next:
       return res.status(400).json({ success: false, message: 'Status is required' });
     }
 
-    const validStatuses = ['SAVED', 'CONSIDERING', 'PREPARING', 'APPLYING', 'SUBMITTED', 'ACCEPTED', 'REJECTED', 'WITHDRAWN'];
+    const validStatuses = ['SAVED', 'CONSIDERING', 'PREPARING', 'APPLYING', 'SUBMITTED', 'ACCEPTED', 'REJECTED', 'WAITLISTED', 'WITHDRAWN', 'NO_RESPONSE'];
     const normalizedStatus = String(status).toUpperCase();
 
     if (!validStatuses.includes(normalizedStatus)) {

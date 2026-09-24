@@ -17,8 +17,10 @@ import LandingPage from '@/pages/landing/LandingPage';
 import AboutPage from '@/pages/about/AboutPage';
 import LoginPage from '@/pages/auth/LoginPage';
 import SignupPage from '@/pages/auth/SignupPage';
+import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
 import OnboardingFlow from '@/pages/onboarding/OnboardingFlow';
 import DiscoverPage from '@/pages/discover/DiscoverPage';
+import RecommendationsPage from '@/pages/recommendations/RecommendationsPage';
 import ExplorePage from '@/pages/explore/ExplorePage';
 import OpportunityDetailPage from '@/pages/opportunity/OpportunityDetailPage';
 import ComparePage from '@/pages/compare/ComparePage';
@@ -79,6 +81,7 @@ export default function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Route>
 
       {/* Onboarding */}
@@ -89,6 +92,7 @@ export default function App() {
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/discover" element={<DiscoverPage />} />
+        <Route path="/recommendations" element={<RecommendationsPage />} />
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/opportunity/:id" element={<OpportunityDetailPage />} />
         <Route path="/compare" element={<ComparePage />} />

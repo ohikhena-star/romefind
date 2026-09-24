@@ -329,6 +329,7 @@ export default function ApplicationWorkspacePage() {
       <OutcomeReportingModal
         isOpen={showOutcomeModal}
         onClose={() => setShowOutcomeModal(false)}
+        opportunityId={opp.id}
         opportunityTitle={opp.title}
         organizationName={typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
         onSubmitOutcome={handleOutcomeSubmit}

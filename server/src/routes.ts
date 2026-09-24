@@ -31,6 +31,8 @@ apiRouter.post('/auth/register', authController.register);
 apiRouter.post('/auth/login', authController.login);
 apiRouter.get('/auth/me', authenticateToken, authController.getMe);
 apiRouter.post('/auth/logout', authenticateToken, authController.logout);
+apiRouter.post('/auth/forgot-password', authController.forgotPassword);
+apiRouter.post('/auth/reset-password', authController.resetPassword);
 
 // ── Profile Endpoints ───────────────────────────────────────────────────
 apiRouter.get('/profiles/me', authenticateToken, profileController.getMyProfile);
@@ -48,6 +50,9 @@ apiRouter.get('/opportunities/:id/related', opportunityController.getRelatedOppo
 apiRouter.post('/opportunities/:id/save', authenticateToken, opportunityController.saveOpportunity);
 apiRouter.delete('/opportunities/:id/save', authenticateToken, opportunityController.unsaveOpportunity);
 apiRouter.post('/opportunities/:id/reject', authenticateToken, opportunityController.rejectOpportunity);
+apiRouter.post('/opportunities/:id/report', optionalAuth, opportunityController.reportOpportunity);
+apiRouter.get('/opportunities/:id/advice', opportunityController.getOpportunityAdvice);
+apiRouter.post('/opportunities/:id/advice', authenticateToken, opportunityController.addOpportunityAdvice);
 
 // ── Search & Discovery Endpoints ────────────────────────────────────────
 apiRouter.get('/search', optionalAuth, searchController.searchOpportunities);
@@ -74,6 +79,9 @@ apiRouter.delete('/applications/:id/notes/:noteId', authenticateToken, applicati
 // ── Learning Resources Endpoints ────────────────────────────────────────
 apiRouter.get('/learning', learningController.getLearningResources);
 apiRouter.get('/learning/recommendations', optionalAuth, learningController.getLearningRecommendations);
+apiRouter.get('/learning/progress', authenticateToken, learningController.getUserLearningProgress);
+apiRouter.post('/learning/progress', authenticateToken, learningController.updateUserLearningProgress);
+
 
 // ── Notifications Endpoints ─────────────────────────────────────────────
 apiRouter.get('/notifications', authenticateToken, notificationController.getUserNotifications);

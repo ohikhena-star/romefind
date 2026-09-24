@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { useAuthStore } from '@/store/authStore';
 import { getRecommendationsForOpportunity, getRecommendationsForProfile } from '@/services/learning.service';
 import { learningResources } from '@/data/learning-resources';
+import { api } from '@/api/client';
 import { Badge, Button, EmptyState } from '@/components/ui';
-import { BookOpen, ExternalLink, Sparkles } from 'lucide-react';
+import { BookOpen, ExternalLink, Sparkles, CheckCircle2, Clock } from 'lucide-react';
 import { Opportunity, LearningResource } from '@/types/models';
 
 export default function LearnPage() {
   const navigate = useNavigate();
   const { opportunities } = useOpportunityStore();
-  const { savedOpportunities } = useApplicationStore();
+  const { savedOpportunities, trackedApplications } = useApplicationStore();
   const { user } = useAuthStore();
+  
   const [learningStatus, setLearningStatus] = useState<Record<string, string>>(() => {
     try {
       return JSON.parse(localStorage.getItem('learningStatus') || '{}');
@@ -22,14 +24,42 @@ export default function LearnPage() {
     }
   });
 
-  const updateStatus = (id: string, status: string) => {
+  // Fetch learning progress from backend
+  useEffect(() => {
+    api.getUserLearningProgress()
+      .then(progressList => {
+        if (Array.isArray(progressList)) {
+          const map: Record<string, string> = {};
+          progressList.forEach(p => {
+            const st = p.status === 'COMPLETED' ? 'completed' : p.status === 'LEARNING' ? 'learning' : 'want';
+            map[p.resourceId] = st;
+          });
+          setLearningStatus(prev => ({ ...prev, ...map }));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const updateStatus = async (id: string, status: string) => {
     const newStatus = { ...learningStatus, [id]: status };
     setLearningStatus(newStatus);
     localStorage.setItem('learningStatus', JSON.stringify(newStatus));
+
+    const serverStatus = status === 'completed' ? 'COMPLETED' : status === 'learning' ? 'LEARNING' : 'WANT_TO_LEARN';
+    try {
+      await api.updateUserLearningProgress(id, serverStatus as any);
+    } catch {
+      // local state persists
+    }
   };
 
+  const relevantOpportunityIds = Array.from(new Set([
+    ...savedOpportunities,
+    ...trackedApplications.map(a => a.opportunityId)
+  ]));
+
   const savedOpps: Opportunity[] = opportunities.filter((opp: Opportunity) =>
-    savedOpportunities.includes(opp.id)
+    relevantOpportunityIds.includes(opp.id)
   );
 
   const profileRecommendations: LearningResource[] = user
