@@ -167,6 +167,7 @@ export interface UserProfile {
   goals: string[];
   currentStatus: string;
   completeness: number;
+  onboardingStep?: number;
 }
 
 export interface UserPreferences {
@@ -184,6 +185,7 @@ export interface User {
   profile: UserProfile;
   preferences: UserPreferences;
   onboardingCompleted: boolean;
+  onboardingStep?: number;
   createdAt: string;
 }
 

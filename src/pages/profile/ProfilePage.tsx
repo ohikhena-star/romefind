@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
-import { Avatar, ProgressBar, Chip, Button, Input } from '@/components/ui';
+import { Avatar, ProgressBar, Chip, Button, Input, ProfileSkeleton } from '@/components/ui';
 import { calculateProfileCompleteness } from '@/utils/format';
 import { FIELDS, GOALS, LOCATIONS } from '@/utils/constants';
 import { Moon, Sun, Plus, X, Briefcase, GraduationCap, Award, Compass } from 'lucide-react';
@@ -11,6 +11,7 @@ export default function ProfilePage() {
   const { user, updateUser } = useAuthStore();
   const { theme, toggleTheme } = useUIStore();
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [newSkill, setNewSkill] = useState<string>('');
 
   const [profile, setProfile] = useState<UserProfile>(() => user?.profile || {
@@ -37,17 +38,22 @@ export default function ProfilePage() {
     }
   }, [user?.profile]);
 
-  if (!user) return null;
+  if (!user) return <ProfileSkeleton />;
 
   const completeness = calculateProfileCompleteness(profile);
 
-  const handleSave = () => {
-    const updated = {
-      ...profile,
-      completeness
-    };
-    updateUser({ profile: updated });
-    setIsEditing(false);
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const updated = {
+        ...profile,
+        completeness
+      };
+      await updateUser({ profile: updated });
+      setIsEditing(false);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleAddSkill = () => {
@@ -104,11 +110,11 @@ export default function ProfilePage() {
             <div>
               {isEditing ? (
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
+                  <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} disabled={isSaving}>
                     Cancel
                   </Button>
-                  <Button variant="primary" size="sm" onClick={handleSave}>
-                    Save Changes
+                  <Button variant="primary" size="sm" onClick={handleSave} isLoading={isSaving} disabled={isSaving}>
+                    {isSaving ? 'Saving…' : 'Save Changes'}
                   </Button>
                 </div>
               ) : (

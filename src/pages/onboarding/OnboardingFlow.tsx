@@ -29,38 +29,56 @@ const OnboardingFlow: React.FC = () => {
   const { user, updateUser } = useAuthStore();
   const { updateProfile } = useProfileStore();
   
-  // Guarantee starting at step 1
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  // Initialize step from backend user state if available
+  const initialStep = user?.profile?.onboardingStep || user?.onboardingStep || 1;
+  const [currentStep, setCurrentStep] = useState<number>(initialStep);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const totalSteps = 5;
 
+  // Sync step if user loaded later
+  React.useEffect(() => {
+    if (user?.profile?.onboardingStep && user.profile.onboardingStep !== currentStep) {
+      setCurrentStep(user.profile.onboardingStep);
+    }
+  }, [user?.profile?.onboardingStep]);
+
   // Selected State
-  const [selectedTypes, setSelectedTypes] = useState<OpportunityType[]>([
-    OpportunityType.Fellowship,
-    OpportunityType.Internship,
-    OpportunityType.Grant
-  ]);
+  const [selectedTypes, setSelectedTypes] = useState<OpportunityType[]>(
+    user?.preferences?.opportunityTypes?.length 
+      ? user.preferences.opportunityTypes 
+      : [OpportunityType.Fellowship, OpportunityType.Internship, OpportunityType.Grant]
+  );
   
-  const [selectedFields, setSelectedFields] = useState<string[]>([
-    'Public Health',
-    'Technology',
-    'Social Impact'
-  ]);
+  const [selectedFields, setSelectedFields] = useState<string[]>(
+    user?.preferences?.fields?.length || user?.profile?.interests?.length
+      ? (user.preferences?.fields || user.profile?.interests || [])
+      : ['Public Health', 'Technology', 'Social Impact']
+  );
   
-  const [selectedGoals, setSelectedGoals] = useState<string[]>([
-    'Build practical experience',
-    'Find funding & grants'
-  ]);
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(
+    user?.preferences?.goals?.length || user?.profile?.goals?.length
+      ? (user.preferences?.goals || user.profile?.goals || [])
+      : ['Build practical experience', 'Find funding & grants']
+  );
 
-  const [remotePreferences, setRemotePreferences] = useState<string[]>([
-    'Remote', 'Hybrid'
-  ]);
+  const [remotePreferences, setRemotePreferences] = useState<string[]>(
+    user?.preferences?.remotePreference?.length
+      ? user.preferences.remotePreference.map(r => r.toString())
+      : ['Remote', 'Hybrid']
+  );
 
-  const [targetLocations, setTargetLocations] = useState<string[]>([
-    'Remote (Worldwide)', 'United States', 'United Kingdom', 'Nigeria'
-  ]);
+  const [targetLocations, setTargetLocations] = useState<string[]>(
+    user?.preferences?.locationPreference?.length
+      ? user.preferences.locationPreference
+      : ['Remote (Worldwide)', 'United States', 'United Kingdom', 'Nigeria']
+  );
 
-  const [requireFunding, setRequireFunding] = useState<boolean>(true);
-  const [experienceLevel, setExperienceLevel] = useState<string>('Intermediate');
+  const [requireFunding, setRequireFunding] = useState<boolean>(
+    user?.preferences?.fundingPreference !== undefined ? user.preferences.fundingPreference : true
+  );
+  const [experienceLevel, setExperienceLevel] = useState<string>(
+    (user?.profile as any)?.experienceLevel || 'Intermediate'
+  );
 
   const [profileData, setProfileData] = useState({
     name: user?.profile?.name || '',
@@ -70,21 +88,7 @@ const OnboardingFlow: React.FC = () => {
     bio: user?.profile?.bio || ''
   });
 
-  const handleNext = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep(prev => prev + 1);
-    } else {
-      completeOnboarding();
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
-    }
-  };
-
-  const completeOnboarding = async () => {
+  const persistCurrentProgress = async (nextStep: number) => {
     const updatedProfile = {
       ...(user?.profile || {}),
       name: profileData.name.trim() || user?.profile?.name || 'Explorer',
@@ -95,7 +99,8 @@ const OnboardingFlow: React.FC = () => {
       interests: selectedFields,
       goals: selectedGoals,
       experienceLevel,
-      completeness: 90
+      completeness: Math.min(100, nextStep * 20),
+      onboardingStep: nextStep
     };
 
     const updatedPreferences = {
@@ -111,11 +116,81 @@ const OnboardingFlow: React.FC = () => {
     await updateUser({
       profile: updatedProfile as any,
       preferences: updatedPreferences as any,
-      onboardingCompleted: true
+      onboardingStep: nextStep
     });
 
     updateProfile(updatedProfile as any);
-    navigate('/discover');
+  };
+
+  const handleNext = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    try {
+      if (currentStep < totalSteps) {
+        const nextStep = currentStep + 1;
+        await persistCurrentProgress(nextStep);
+        setCurrentStep(nextStep);
+      } else {
+        await completeOnboarding();
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleBack = async () => {
+    if (isSaving) return;
+    if (currentStep > 1) {
+      const prevStep = currentStep - 1;
+      setIsSaving(true);
+      try {
+        await persistCurrentProgress(prevStep);
+        setCurrentStep(prevStep);
+      } finally {
+        setIsSaving(false);
+      }
+    }
+  };
+
+  const completeOnboarding = async () => {
+    setIsSaving(true);
+    try {
+      const updatedProfile = {
+        ...(user?.profile || {}),
+        name: profileData.name.trim() || user?.profile?.name || 'Explorer',
+        location: profileData.residence,
+        country: profileData.country,
+        currentStatus: profileData.status,
+        bio: profileData.bio || 'Exploring transformative opportunities across fields.',
+        interests: selectedFields,
+        goals: selectedGoals,
+        experienceLevel,
+        completeness: 100,
+        onboardingStep: 5
+      };
+
+      const updatedPreferences = {
+        ...(user?.preferences || {}),
+        opportunityTypes: selectedTypes,
+        fields: selectedFields,
+        goals: selectedGoals,
+        remotePreference: remotePreferences.map(r => r === 'Remote' ? RemoteStatus.Remote : r === 'Hybrid' ? RemoteStatus.Hybrid : RemoteStatus.InPerson),
+        locationPreference: targetLocations,
+        fundingPreference: requireFunding
+      };
+
+      await updateUser({
+        profile: updatedProfile as any,
+        preferences: updatedPreferences as any,
+        onboardingCompleted: true,
+        onboardingStep: 5
+      });
+
+      updateProfile(updatedProfile as any);
+      navigate('/discover');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const toggleType = (type: OpportunityType) => {
@@ -476,6 +551,7 @@ const OnboardingFlow: React.FC = () => {
             variant="outline" 
             size="sm" 
             onClick={handleBack}
+            disabled={isSaving}
             leftIcon={<ArrowLeft size={16} />}
           >
             Back
@@ -485,6 +561,7 @@ const OnboardingFlow: React.FC = () => {
             variant="ghost" 
             size="sm" 
             onClick={completeOnboarding} 
+            disabled={isSaving}
             className="text-surface-400 hover:text-surface-700 dark:hover:text-surface-200"
           >
             Skip for now
@@ -495,11 +572,15 @@ const OnboardingFlow: React.FC = () => {
           variant="primary" 
           size="sm"
           onClick={handleNext} 
-          disabled={isNextDisabled()}
-          rightIcon={<ArrowRight size={16} />}
+          disabled={isNextDisabled() || isSaving}
+          isLoading={isSaving}
+          rightIcon={!isSaving ? <ArrowRight size={16} /> : undefined}
           className="ml-auto"
         >
-          {currentStep === totalSteps ? "Launch Opportunity Map 🚀" : "Continue"}
+          {isSaving 
+            ? (currentStep === totalSteps ? "Launching Opportunity Map…" : "Saving…")
+            : (currentStep === totalSteps ? "Launch Opportunity Map 🚀" : "Continue")
+          }
         </Button>
       </div>
     </div>

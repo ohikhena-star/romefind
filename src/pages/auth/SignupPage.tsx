@@ -3,12 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { Eye, EyeOff } from 'lucide-react';
 
 const SignupPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -19,13 +22,8 @@ const SignupPage = () => {
     e.preventDefault();
     setError('');
     
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
       setError('Please fill in all fields');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
       return;
     }
 
@@ -34,16 +32,18 @@ const SignupPage = () => {
       return;
     }
 
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      await signup(email, password, name);
-      
+      await signup(email.trim(), password, name.trim());
       navigate('/onboarding');
-    } catch (err) {
-      setError('Something went wrong. Please try again.');
+    } catch (err: any) {
+      setError(err?.message || 'Failed to create account. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -72,6 +72,7 @@ const SignupPage = () => {
           placeholder="Jane Doe"
           required
           fullWidth
+          disabled={isLoading}
         />
 
         <Input
@@ -83,38 +84,62 @@ const SignupPage = () => {
           placeholder="you@example.com"
           required
           fullWidth
+          disabled={isLoading}
         />
         
-        <Input
-          id="password"
-          type="password"
-          label="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
-          required
-          fullWidth
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            label="Password (min. 8 characters)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            fullWidth
+            disabled={isLoading}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-9 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
-        <Input
-          id="confirmPassword"
-          type="password"
-          label="Confirm password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="••••••••"
-          required
-          fullWidth
-        />
+        <div className="relative">
+          <Input
+            id="confirmPassword"
+            type={showConfirmPassword ? 'text' : 'password'}
+            label="Confirm password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            fullWidth
+            disabled={isLoading}
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-9 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors"
+            aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+          >
+            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
         <Button
           type="submit"
           variant="primary"
           fullWidth
           isLoading={isLoading}
+          disabled={isLoading}
           className="mt-6"
         >
-          Create account
+          {isLoading ? 'Creating account…' : 'Create account'}
         </Button>
       </form>
 

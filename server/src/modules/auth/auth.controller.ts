@@ -15,10 +15,10 @@ export async function register(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       res.status(400).json({
         success: false,
-        message: 'Password must be at least 6 characters'
+        message: 'Password must be at least 8 characters'
       });
       return;
     }
@@ -30,7 +30,7 @@ export async function register(req: Request, res: Response): Promise<void> {
     if (existingUser) {
       res.status(409).json({
         success: false,
-        message: 'An account with this email already exists'
+        message: 'An account with this email already exists.'
       });
       return;
     }
@@ -44,6 +44,8 @@ export async function register(req: Request, res: Response): Promise<void> {
         passwordHash,
         firstName: firstName || displayName.split(' ')[0] || displayName,
         lastName: lastName || displayName.split(' ').slice(1).join(' ') || '',
+        onboardingCompleted: false,
+        onboardingStep: 1,
         profile: {
           create: {
             bio: '',
@@ -56,7 +58,8 @@ export async function register(req: Request, res: Response): Promise<void> {
             opportunityPreferences: JSON.stringify([]),
             locationPreferences: JSON.stringify([]),
             remotePreferences: JSON.stringify([]),
-            completeness: 20
+            completeness: 20,
+            onboardingStep: 1
           }
         }
       },
@@ -99,7 +102,8 @@ export async function register(req: Request, res: Response): Promise<void> {
         goals: parseJsonField(user.profile?.goals, []),
         education: parseJsonField(user.profile?.education, []),
         experience: parseJsonField(user.profile?.experience, []),
-        completeness: user.profile?.completeness || 20
+        completeness: user.profile?.completeness || 20,
+        onboardingStep: user.profile?.onboardingStep || user.onboardingStep || 1
       },
       preferences: {
         opportunityTypes: parseJsonField(user.profile?.opportunityPreferences, []),
@@ -144,7 +148,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     if (!user) {
       res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Incorrect email or password.'
       });
       return;
     }
@@ -153,7 +157,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     if (!isMatch) {
       res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Incorrect email or password.'
       });
       return;
     }
@@ -184,7 +188,8 @@ export async function login(req: Request, res: Response): Promise<void> {
         goals: parseJsonField(user.profile?.goals, []),
         education: parseJsonField(user.profile?.education, []),
         experience: parseJsonField(user.profile?.experience, []),
-        completeness: user.profile?.completeness || 0
+        completeness: user.profile?.completeness || 0,
+        onboardingStep: user.profile?.onboardingStep || user.onboardingStep || 1
       },
       preferences: {
         opportunityTypes: parseJsonField(user.profile?.opportunityPreferences, []),
@@ -246,7 +251,8 @@ export async function getMe(req: AuthRequest, res: Response): Promise<void> {
         goals: parseJsonField(user.profile?.goals, []),
         education: parseJsonField(user.profile?.education, []),
         experience: parseJsonField(user.profile?.experience, []),
-        completeness: user.profile?.completeness || 0
+        completeness: user.profile?.completeness || 0,
+        onboardingStep: user.profile?.onboardingStep || user.onboardingStep || 1
       },
       preferences: {
         opportunityTypes: parseJsonField(user.profile?.opportunityPreferences, []),
@@ -335,8 +341,8 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
       return;
     }
 
-    if (newPassword.length < 6) {
-      res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    if (newPassword.length < 8) {
+      res.status(400).json({ success: false, message: 'Password must be at least 8 characters' });
       return;
     }
 

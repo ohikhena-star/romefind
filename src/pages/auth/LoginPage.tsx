@@ -3,10 +3,12 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -28,7 +30,7 @@ const LoginPage = () => {
     setIsLoading(true);
     
     try {
-      await login(email, password);
+      await login(email.trim(), password);
       
       // Check if user has already completed onboarding
       const currentUser = useAuthStore.getState().user;
@@ -38,7 +40,7 @@ const LoginPage = () => {
         navigate('/onboarding');
       }
     } catch (err: any) {
-      setError(err?.message || 'Invalid email or password');
+      setError(err?.message || 'Incorrect email or password.');
     } finally {
       setIsLoading(false);
     }
@@ -67,19 +69,31 @@ const LoginPage = () => {
           placeholder="you@example.com"
           required
           fullWidth
+          disabled={isLoading}
         />
         
         <div>
-          <Input
-            id="password"
-            type="password"
-            label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            required
-            fullWidth
-          />
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              fullWidth
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
           <div className="flex justify-end mt-1">
             <Link to="/forgot-password" className="text-xs font-medium text-rome-500 hover:text-rome-600">
               Forgot your password?
@@ -92,9 +106,10 @@ const LoginPage = () => {
           variant="primary"
           fullWidth
           isLoading={isLoading}
+          disabled={isLoading}
           className="mt-6"
         >
-          Log in
+          {isLoading ? 'Signing in…' : 'Log in'}
         </Button>
       </form>
 

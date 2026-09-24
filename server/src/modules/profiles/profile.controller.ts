@@ -38,7 +38,8 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
           experience: parseJsonField(user.profile.experience, []),
           portfolioLinks: parseJsonField(user.profile.portfolioLinks, []),
           certifications: parseJsonField(user.profile.certifications, []),
-          completeness: user.profile.completeness
+          completeness: user.profile.completeness,
+          onboardingStep: user.profile.onboardingStep || 1
         },
         preferences: {
           opportunityTypes: parseJsonField(user.profile.opportunityPreferences, []),
@@ -59,7 +60,7 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
 export async function updateProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
     const userId = req.user!.id;
-    const { profile, preferences, onboardingCompleted, bio, skills, interests, goals, education, experience, currentStatus, location, country } = req.body;
+    const { profile, preferences, onboardingCompleted, onboardingStep, bio, skills, interests, goals, education, experience, currentStatus, location, country } = req.body;
 
     const currentUser = await prisma.user.findUnique({
       where: { id: userId },
@@ -93,6 +94,8 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
     const updatedEducation = education !== undefined ? stringifyJsonField(education) : (profile?.education !== undefined ? stringifyJsonField(profile.education) : currentUser.profile?.education || '[]');
     const updatedExperience = experience !== undefined ? stringifyJsonField(experience) : (profile?.experience !== undefined ? stringifyJsonField(profile.experience) : currentUser.profile?.experience || '[]');
 
+    const updatedStep = onboardingStep !== undefined ? Number(onboardingStep) : (profile?.onboardingStep !== undefined ? Number(profile.onboardingStep) : (currentUser.profile?.onboardingStep || currentUser.onboardingStep || 1));
+
     const updatedOppPrefs = preferences?.opportunityTypes !== undefined 
       ? stringifyJsonField(preferences.opportunityTypes) 
       : currentUser.profile?.opportunityPreferences || '[]';
@@ -125,6 +128,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
         location: updatedLocation,
         country: updatedCountry,
         onboardingCompleted: onboardingCompleted !== undefined ? Boolean(onboardingCompleted) : currentUser.onboardingCompleted,
+        onboardingStep: updatedStep,
         profile: {
           upsert: {
             create: {
@@ -139,7 +143,8 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
               locationPreferences: updatedLocPrefs,
               remotePreferences: updatedRemotePrefs,
               fundingPreferences: updatedFundingPref,
-              completeness
+              completeness,
+              onboardingStep: updatedStep
             },
             update: {
               bio: updatedBio,
@@ -153,7 +158,8 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
               locationPreferences: updatedLocPrefs,
               remotePreferences: updatedRemotePrefs,
               fundingPreferences: updatedFundingPref,
-              completeness
+              completeness,
+              onboardingStep: updatedStep
             }
           }
         }
@@ -170,6 +176,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
         id: updated.id,
         email: updated.email,
         name: displayName,
+        onboardingCompleted: updated.onboardingCompleted,
         profile: {
           name: displayName,
           email: updated.email,
@@ -182,7 +189,8 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
           goals: parseJsonField(updated.profile?.goals, []),
           education: parseJsonField(updated.profile?.education, []),
           experience: parseJsonField(updated.profile?.experience, []),
-          completeness: updated.profile?.completeness || 0
+          completeness: updated.profile?.completeness || 0,
+          onboardingStep: updated.profile?.onboardingStep || updated.onboardingStep || 1
         },
         preferences: {
           opportunityTypes: parseJsonField(updated.profile?.opportunityPreferences, []),

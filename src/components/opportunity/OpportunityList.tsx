@@ -1,7 +1,7 @@
 import React from 'react';
 import { Opportunity } from '@/types/models';
 import { OpportunityCard } from './OpportunityCard';
-import { LoadingSkeleton, EmptyState } from '@/components/ui';
+import { LoadingSkeleton, EmptyState, OpportunityCardSkeleton } from '@/components/ui';
 import { cn } from '@/utils/cn';
 import { Search } from 'lucide-react';
 
@@ -56,7 +56,7 @@ export const OpportunityList: React.FC<OpportunityListProps> = ({
         className
       )}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <LoadingSkeleton key={i} variant="card" className="h-[280px]" />
+          <OpportunityCardSkeleton key={i} />
         ))}
       </div>
     );

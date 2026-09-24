@@ -30,9 +30,19 @@ import LearnPage from '@/pages/learn/LearnPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import NotificationsPage from '@/pages/notifications/NotificationsPage';
 
+import { DashboardSkeleton } from '@/components/ui/Skeleton';
+
 const ProtectedRoute = () => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isInitializing } = useAuthStore();
   
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen bg-surface-50 dark:bg-surface-950 p-6">
+        <DashboardSkeleton />
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }

@@ -59,6 +59,7 @@ model User {
   country             String?
   role                String               @default("USER") // USER, PROVIDER, ADMIN
   onboardingCompleted Boolean              @default(false)
+  onboardingStep      Int                  @default(1)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
 
@@ -95,6 +96,7 @@ model Profile {
   remotePreferences      String  @default("[]") // JSON string of string array (Remote, Hybrid, In-Person, Flexible)
   experienceLevel        String?  // Beginner, Intermediate, Advanced, Expert
   completeness           Int     @default(0)
+  onboardingStep         Int     @default(1)
   
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApplicationStore } from '@/store/applicationStore';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { ArrowLeft, ExternalLink, Plus, Trash2, CheckCircle2, FileText, Trophy, Sparkles, PartyPopper } from 'lucide-react';
-import { Badge, DeadlineIndicator, ProgressBar, Checkbox, Button } from '@/components/ui';
+import { Badge, DeadlineIndicator, ProgressBar, Checkbox, Button, WorkspaceSkeleton } from '@/components/ui';
 import { OutcomeReportingModal } from '@/components/opportunity/OutcomeReportingModal';
 import { ApplicationStatus, ApplicationTask, ApplicationNote } from '@/types/models';
 import { formatRelative } from '@/utils/format';
@@ -12,7 +12,7 @@ export default function ApplicationWorkspacePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { trackedApplications, updateApplicationStatus, toggleTask, addNote, removeNote, createApplication } = useApplicationStore();
-  const { opportunities } = useOpportunityStore();
+  const { opportunities, isLoading } = useOpportunityStore();
 
   const opp = opportunities.find(o => o.id === id || trackedApplications.some(a => a.id === id && a.opportunityId === o.id));
   let app = trackedApplications.find(a => a.id === id || a.opportunityId === id);
@@ -26,6 +26,10 @@ export default function ApplicationWorkspacePage() {
 
   const [newNote, setNewNote] = useState('');
   const [showOutcomeModal, setShowOutcomeModal] = useState(false);
+
+  if (isLoading && !opp) {
+    return <WorkspaceSkeleton />;
+  }
 
   if (!opp) {
     return (

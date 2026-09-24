@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { calculateRelevanceScore } from '@/services/personalization.service';
 import { api } from '@/api/client';
-import { Button, Tag, DeadlineIndicator, MatchIndicator, Badge, EmptyState } from '@/components/ui';
+import { Button, Tag, DeadlineIndicator, MatchIndicator, Badge, EmptyState, OpportunityDetailSkeleton } from '@/components/ui';
 import { OpportunityCard } from '@/components/opportunity';
 import { OPPORTUNITY_TYPE_COLORS } from '@/utils/constants';
 import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck, Share2 } from 'lucide-react';
@@ -14,7 +14,7 @@ import { Opportunity } from '@/types/models';
 export default function OpportunityDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getOpportunityById, opportunities } = useOpportunityStore();
+  const { getOpportunityById, opportunities, isLoading } = useOpportunityStore();
   const { user, isAuthenticated } = useAuthStore();
   const { isSaved, saveOpportunity, unsaveOpportunity, addToCompare, removeFromCompare, comparisons, createApplication } = useApplicationStore();
 
@@ -90,7 +90,6 @@ export default function OpportunityDetailPage() {
     }
   };
 
-
   const opportunity = useMemo(() => getOpportunityById(id || ''), [id, getOpportunityById]);
   
   const relevance = useMemo(() => {
@@ -104,6 +103,10 @@ export default function OpportunityDetailPage() {
       .filter((opp: Opportunity) => opp.id !== opportunity.id && (opp.type === opportunity.type || opp.field.some((f: string) => opportunity.field.includes(f))))
       .slice(0, 3);
   }, [opportunity, opportunities]);
+
+  if (isLoading && !opportunity) {
+    return <OpportunityDetailSkeleton />;
+  }
 
   if (!opportunity) {
     return (

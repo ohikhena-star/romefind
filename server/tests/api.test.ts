@@ -256,4 +256,37 @@ describe('ROMEfind API Integration Test Suite', () => {
     assert.ok(metricsRes.data.data.totalOpportunities > 0);
     assert.ok(metricsRes.data.data.totalUsers >= 2);
   });
+
+  it('15. Duplicate email signup rejection with exact message', async () => {
+    const duplicateRes = await jsonFetch(`${baseUrl}/auth/register`, {
+      method: 'POST',
+      body: {
+        email: 'alex.chen@example.com',
+        password: 'password12345',
+        name: 'Alex Chen Duplicate'
+      },
+      noAuth: true
+    });
+
+    assert.strictEqual(duplicateRes.status, 409);
+    assert.strictEqual(duplicateRes.data.success, false);
+    assert.strictEqual(duplicateRes.data.message, 'An account with this email already exists.');
+  });
+
+  it('16. Onboarding step persistence across profile updates', async () => {
+    const updateStepRes = await jsonFetch(`${baseUrl}/profiles/me`, {
+      method: 'PUT',
+      body: {
+        onboardingStep: 3
+      }
+    });
+
+    assert.strictEqual(updateStepRes.status, 200);
+    assert.strictEqual(updateStepRes.data.data.profile.onboardingStep, 3);
+
+    // Retrieve again to confirm persistence
+    const getRes = await jsonFetch(`${baseUrl}/profiles/me`);
+    assert.strictEqual(getRes.status, 200);
+    assert.strictEqual(getRes.data.data.profile.onboardingStep, 3);
+  });
 });

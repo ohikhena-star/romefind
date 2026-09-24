@@ -5,7 +5,7 @@ import { useOpportunityStore } from '@/store/opportunityStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { getPersonalizedRecommendations, getOverlookingOpportunities } from '@/services/personalization.service';
 import { OpportunityCard } from '@/components/opportunity';
-import { EmptyState } from '@/components/ui';
+import { EmptyState, DashboardSkeleton } from '@/components/ui';
 import { getGreeting, daysUntil } from '@/utils/format';
 import { OPPORTUNITY_TYPE_COLORS } from '@/utils/constants';
 import { cn } from '@/utils/cn';
@@ -15,7 +15,7 @@ import { Opportunity, AlternativeDiscovery, SearchResult } from '@/types/models'
 export default function DiscoverPage() {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
-  const { opportunities } = useOpportunityStore();
+  const { opportunities, isLoading } = useOpportunityStore();
   const { savedOpportunities, trackedApplications, saveOpportunity, unsaveOpportunity, isSaved } = useApplicationStore();
 
   const recommendations: SearchResult[] = useMemo(() => {
@@ -59,6 +59,10 @@ export default function DiscoverPage() {
       trackedApplications.some(app => app.opportunityId === opp.id)
     ).slice(0, 4);
   }, [opportunities, savedOpportunities, trackedApplications]);
+
+  if (isLoading && opportunities.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   if (!isAuthenticated || !user) {
     return (

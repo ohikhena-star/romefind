@@ -7,6 +7,8 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitializing: boolean;
+  initAuth: () => Promise<void>;
   login: (email: string, password?: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
@@ -20,6 +22,34 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      isInitializing: true,
+
+      initAuth: async () => {
+        const token = api.getToken();
+        if (!token) {
+          set({ isInitializing: false });
+          return;
+        }
+
+        try {
+          const res = await api.getMe();
+          if (res) {
+            set({
+              user: res,
+              isAuthenticated: true,
+              isInitializing: false
+            });
+            return;
+          }
+        } catch (e) {
+          // Token expired or invalid
+          api.setToken(null);
+          set({ user: null, isAuthenticated: false, isInitializing: false });
+          return;
+        }
+
+        set({ isInitializing: false });
+      },
 
       login: async (email: string, password?: string) => {
         set({ isLoading: true });
@@ -90,7 +120,8 @@ export const useAuthStore = create<AuthState>()(
           await api.updateProfile({
             profile: updatedUser.profile,
             preferences: updatedUser.preferences,
-            onboardingCompleted: updatedUser.onboardingCompleted
+            onboardingCompleted: updatedUser.onboardingCompleted,
+            onboardingStep: updatedUser.profile?.onboardingStep || updatedUser.onboardingStep
           });
         } catch (error) {
           console.warn('Failed to persist profile update to backend', error);
@@ -106,6 +137,8 @@ export const useAuthStore = create<AuthState>()(
               set({
                 user: {
                   ...user,
+                  onboardingCompleted: res.onboardingCompleted !== undefined ? res.onboardingCompleted : user.onboardingCompleted,
+                  onboardingStep: res.profile?.onboardingStep || user.onboardingStep,
                   profile: res.profile,
                   preferences: res.preferences || user.preferences
                 }
@@ -118,7 +151,12 @@ export const useAuthStore = create<AuthState>()(
       }
     }),
     {
-      name: 'romefind-auth-storage'
+      name: 'romefind-auth-storage',
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.initAuth();
+        }
+      }
     }
   )
 );

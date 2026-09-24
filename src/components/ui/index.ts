@@ -14,6 +14,7 @@ export * from './Modal';
 export * from './EmptyState';
 export * from './LoadingState';
 export * from './ErrorState';
+export * from './Skeleton';
 export * from './DeadlineIndicator';
 export * from './MatchIndicator';
 export * from './Toggle';
