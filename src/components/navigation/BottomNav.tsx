@@ -1,6 +1,5 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Compass, Search, Bookmark, BookOpen, User } from 'lucide-react';
+import { Compass, Search, Bookmark, BookOpen, User, Sparkles } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/utils/cn';
 
@@ -11,6 +10,7 @@ const BottomNav = () => {
 
   const navItems = [
     { to: '/discover', label: 'Discover', icon: Compass },
+    { to: '/recommendations', label: 'For You', icon: Sparkles },
     { to: '/explore', label: 'Explore', icon: Search },
     { to: '/my-opportunities', label: 'Saved', icon: Bookmark },
     { to: '/learn', label: 'Learn', icon: BookOpen },

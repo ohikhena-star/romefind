@@ -24,6 +24,7 @@ const TopNav = () => {
 
   const navLinks = [
     { to: '/discover', label: 'Discover' },
+    { to: '/recommendations', label: 'For You' },
     { to: '/explore', label: 'Explore' },
     { to: '/compare', label: 'Compare' },
     { to: '/my-opportunities', label: 'My Opportunities' },
