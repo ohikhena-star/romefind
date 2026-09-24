@@ -428,123 +428,56 @@ export default function OpportunityDetailPage() {
               </button>
             </div>
 
-            {/* Candidate Experience Cards */}
-            <div className="space-y-4">
-              {/* Review 1: Accepted Outcome */}
-              <div className="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                      🟢 ACCEPTED — 2025 Cohort
-                    </span>
-                    <span className="text-xs font-medium text-surface-400">
-                      Review by Marcus T. (Research Specialist)
-                    </span>
-                  </div>
-                  <span className="text-xs text-surface-400">Final Round Selection</span>
-                </div>
-
-                <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100">
-                  "What Made the Difference: Explicit Metrics & Clear Execution Narrative"
-                </h4>
-
-                <p className="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">
-                  In my personal statement, I didn’t just list course titles—I walked through a tangible project where I tracked outcomes for 400+ participants. The selection committee explicitly mentioned they valued applicants who demonstrated immediate readiness to execute without heavy supervision.
+            {/* Candidate Experience Cards - Only rendered when actual reviews exist */}
+            {adviceList.length === 0 ? (
+              <div className="p-8 rounded-2xl bg-surface-50 dark:bg-surface-900/50 border border-surface-200 dark:border-surface-800 text-center space-y-3">
+                <p className="text-sm font-semibold text-surface-700 dark:text-surface-300">
+                  No applicant reviews or outcome notes posted for this opportunity yet.
                 </p>
-
-                <div className="p-3 rounded-xl bg-surface-50 dark:bg-surface-800/60 border border-surface-100 dark:border-surface-700/50 space-y-1">
-                  <p className="text-[11px] font-bold text-surface-700 dark:text-surface-300 uppercase tracking-wider">
-                    💡 Interview Tip & Question Asked:
-                  </p>
-                  <p className="text-xs text-surface-600 dark:text-surface-400 italic">
-                    "How do you resolve conflicting priorities when field deliverables are delayed by external partners?"
-                  </p>
-                </div>
-              </div>
-
-              {/* Review 2: Rejection & Lessons Learned */}
-              <div className="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
-                      🔴 REJECTED IN FINAL ROUND — Lessons Learned
-                    </span>
-                    <span className="text-xs font-medium text-surface-400">
-                      Review by Chioma E. (Global Analyst)
-                    </span>
-                  </div>
-                  <span className="text-xs text-surface-400">Feedback Received</span>
-                </div>
-
-                <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100">
-                  "Why I Got Rejected: Proposal was Too Broad, Needed Host Lab Alignment"
-                </h4>
-
-                <p className="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">
-                  I made it to the final interview but was turned down because my proposed 1-year milestones didn't align closely enough with the current funding cycle of the host division. Next time, I would reach out to current fellows 3 weeks before the deadline to calibrate my focus area.
+                <p className="text-xs text-surface-500 dark:text-surface-400 max-w-md mx-auto">
+                  Have you applied, interviewed, or received an offer for this program? Share your insights to help the community prepare.
                 </p>
-
-                <div className="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 space-y-1">
-                  <p className="text-[11px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
-                    ⚠️ Recommendation for Prospective Applicants:
-                  </p>
-                  <p className="text-xs text-amber-900 dark:text-amber-200">
-                    Identify 2 specific advisors or mentors at the organization beforehand and reference their recent published work in your statement of purpose.
-                  </p>
-                </div>
+                <button
+                  onClick={() => setShowAdviceModal(true)}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl bg-rome-500 hover:bg-rome-600 text-white shadow-xs transition-colors cursor-pointer"
+                >
+                  + Be the first to share your experience
+                </button>
               </div>
-
-              {/* Review 3: Interview Experience */}
-              <div className="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
-                      🟡 INTERVIEWED — Technical & Panel Stage
-                    </span>
-                    <span className="text-xs font-medium text-surface-400">
-                      Review by David K. (Software Fellow)
-                    </span>
-                  </div>
-                  <span className="text-xs text-surface-400">Remote Panel</span>
-                </div>
-
-                <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100">
-                  "Format: 30-min Technical Walkthrough + 20-min Values Alignment"
-                </h4>
-
-                <p className="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">
-                  The panel asked me to share my screen and explain architectural trade-offs in my submitted portfolio code. Be ready to explain your error handling, data pipeline assumptions, and why you chose your specific stack over alternatives.
-                </p>
-              </div>
-
-              {/* Dynamic User-Submitted Advice */}
-              {adviceList.map((adv) => (
-                <div key={adv.id} className="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className={cn(
-                        "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border",
-                        adv.outcomeStatus === 'Accepted'
-                          ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300"
-                          : adv.outcomeStatus === 'Rejected'
-                          ? "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300"
-                          : "bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-300"
-                      )}>
-                        {adv.outcomeStatus?.toUpperCase() || 'COMMUNITY REVIEW'}
-                      </span>
-                      <span className="text-xs text-surface-400">
-                        by {adv.authorName} ({adv.authorRole || 'Applicant'})
+            ) : (
+              <div className="space-y-4">
+                {adviceList.map((adv) => (
+                  <div key={adv.id} className="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className={cn(
+                          "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border",
+                          adv.outcomeStatus === 'Accepted'
+                            ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
+                            : adv.outcomeStatus === 'Rejected'
+                            ? "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800"
+                            : "bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-800"
+                        )}>
+                          {adv.outcomeStatus === 'Accepted' ? '🟢 ACCEPTED' : adv.outcomeStatus === 'Rejected' ? '🔴 REJECTED' : '🟡 INTERVIEWED'}
+                        </span>
+                        <span className="text-xs font-medium text-surface-500 dark:text-surface-400">
+                          by {adv.authorName} {adv.authorRole ? `(${adv.authorRole})` : ''}
+                        </span>
+                      </div>
+                      <span className="text-xs font-semibold text-rome-600 dark:text-rome-400">
+                        {adv.adviceType || 'Applicant Insight'}
                       </span>
                     </div>
-                    <span className="text-xs font-semibold text-rome-600 dark:text-rome-400">
-                      {adv.adviceType}
-                    </span>
+
+                    {adv.title && (
+                      <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100">{adv.title}</h4>
+                    )}
+
+                    <p className="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">{adv.content}</p>
                   </div>
-                  <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100">{adv.title}</h4>
-                  <p className="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">{adv.content}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         </div>
       </div>

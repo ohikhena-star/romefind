@@ -20,10 +20,10 @@ export default function DiscoverPage() {
 
   const recommendations: SearchResult[] = useMemo(() => {
     if (!user?.profile || !user?.preferences) {
-      return opportunities.slice(0, 6).map((opp: Opportunity) => ({
+      return opportunities.slice(0, 6).map((opp: Opportunity, idx: number) => ({
         opportunity: opp,
-        relevanceScore: 85,
-        relevanceReasons: ['Popular opportunity matching general interests']
+        relevanceScore: Math.max(52, 82 - idx * 4),
+        relevanceReasons: ['Curated opportunity in active open cycle']
       }));
     }
     return getPersonalizedRecommendations(opportunities, user.profile, user.preferences, 6);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { Heart, MapPin, DollarSign, Scale, Check } from 'lucide-react';
 import { Opportunity } from '@/types/models';
@@ -36,6 +37,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
   onClick,
   className
 }) => {
+  const navigate = useNavigate();
   const { 
     isSaved: storeIsSaved, 
     saveOpportunity, 
@@ -73,12 +75,16 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
   };
 
   const handleCardClick = () => {
-    if (onClick) onClick(opportunity.id);
+    if (onClick) {
+      onClick(opportunity.id);
+    } else {
+      navigate(`/opportunity/${opportunity.id}`);
+    }
   };
 
   return (
     <Card 
-      hoverable={!!onClick}
+      hoverable
       onClick={handleCardClick}
       padding={compact ? 'sm' : 'md'}
       className={cn(
