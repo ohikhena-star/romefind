@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
-import { Heart, MapPin, DollarSign, Scale, Check } from 'lucide-react';
+import { Heart, MapPin, DollarSign, Scale, Check, Share2 } from 'lucide-react';
 import { Opportunity } from '@/types/models';
 import { Card, Tag, DeadlineIndicator, MatchIndicator } from '@/components/ui';
 import { useApplicationStore } from '@/store/applicationStore';
@@ -49,6 +49,38 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
   const isSaved = propIsSaved !== undefined ? propIsSaved : storeIsSaved(opportunity.id);
   const isComparing = propIsComparing !== undefined ? propIsComparing : comparisons.includes(opportunity.id);
+
+  const [copied, setCopied] = React.useState(false);
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const url = typeof window !== 'undefined' 
+      ? `${window.location.origin}/opportunity/${opportunity.id}` 
+      : `https://romefind.com/opportunity/${opportunity.id}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: opportunity.title,
+          text: `Check out ${opportunity.title} on ROMEfind`,
+          url
+        });
+        return;
+      } catch {
+        // Fallback to clipboard copy
+      }
+    }
+
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        // Fallback
+      }
+    }
+  };
 
   const handleSaveToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -102,13 +134,27 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
           </span>
         </div>
         
-        {/* Top Actions: Compare & Save */}
+        {/* Top Actions: Share, Compare & Save */}
         <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={handleShare}
+            className={cn(
+              "p-1.5 rounded-lg transition-colors z-10 cursor-pointer border shadow-2xs",
+              copied
+                ? "text-emerald-600 bg-emerald-50 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800"
+                : "text-surface-400 bg-surface-50 dark:bg-surface-800/90 hover:text-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
+            )}
+            title={copied ? "Link Copied to Clipboard!" : "Share Opportunity Link"}
+            aria-label="Share opportunity"
+          >
+            {copied ? <Check className="h-3.5 w-3.5 text-emerald-500 stroke-[3]" /> : <Share2 className="h-3.5 w-3.5" />}
+          </button>
+
           {showCompareButton && (
             <button
               onClick={handleCompareToggle}
               className={cn(
-                "px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all z-10 cursor-pointer border shadow-2xs",
+                "px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all z-10 cursor-pointer border shadow-2xs",
                 isComparing
                   ? "bg-rome-500 text-white border-rome-600 dark:bg-rome-600 dark:border-rome-500 shadow-sm"
                   : "bg-surface-100 dark:bg-surface-800/90 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-rome-50 hover:text-rome-600 hover:border-rome-300 dark:hover:bg-surface-700"
@@ -134,15 +180,15 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
             <button
               onClick={handleSaveToggle}
               className={cn(
-                "p-1.5 rounded-lg transition-colors z-10 cursor-pointer",
+                "p-1.5 rounded-lg transition-colors z-10 cursor-pointer border shadow-2xs",
                 isSaved 
-                  ? "text-rome-500 bg-rome-50 dark:bg-rome-900/30" 
-                  : "text-surface-400 hover:text-surface-600 hover:bg-surface-100 dark:hover:bg-surface-800 dark:hover:text-surface-300"
+                  ? "text-rome-500 bg-rome-50 border-rome-200 dark:bg-rome-900/30 dark:border-rome-800" 
+                  : "text-surface-400 bg-surface-50 dark:bg-surface-800/90 hover:text-surface-600 hover:bg-surface-100 dark:hover:bg-surface-800 dark:hover:text-surface-300 border-surface-200 dark:border-surface-700"
               )}
               aria-label={isSaved ? "Unsave opportunity" : "Save opportunity"}
               title={isSaved ? "Saved" : "Save opportunity"}
             >
-              <Heart className={cn("h-4 w-4", isSaved && "fill-current text-rome-500")} />
+              <Heart className={cn("h-3.5 w-3.5", isSaved && "fill-current text-rome-500")} />
             </button>
           )}
         </div>
