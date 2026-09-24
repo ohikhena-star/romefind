@@ -18,6 +18,9 @@ import AboutPage from '@/pages/about/AboutPage';
 import LoginPage from '@/pages/auth/LoginPage';
 import SignupPage from '@/pages/auth/SignupPage';
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
+import PrivacyPage from '@/pages/legal/PrivacyPage';
+import TermsPage from '@/pages/legal/TermsPage';
+import CommunityGuidelinesPage from '@/pages/legal/CommunityGuidelinesPage';
 import OnboardingFlow from '@/pages/onboarding/OnboardingFlow';
 import DiscoverPage from '@/pages/discover/DiscoverPage';
 import RecommendationsPage from '@/pages/recommendations/RecommendationsPage';
@@ -85,6 +88,9 @@ export default function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/community-guidelines" element={<CommunityGuidelinesPage />} />
       </Route>
 
       {/* Auth Routes */}

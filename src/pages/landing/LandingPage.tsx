@@ -896,9 +896,9 @@ export default function LandingPage() {
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-surface-600 mb-4">Legal</p>
               <ul className="space-y-2.5">
-                {['Privacy Policy', 'Terms & Conditions', 'Community Guidelines'].map(l => (
-                  <li key={l}><a href="#" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">{l}</a></li>
-                ))}
+                <li><Link to="/privacy" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">Terms & Conditions</Link></li>
+                <li><Link to="/community-guidelines" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">Community Guidelines</Link></li>
               </ul>
             </div>
           </div>
