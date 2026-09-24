@@ -8,7 +8,7 @@ import { api } from '@/api/client';
 import { Button, Tag, DeadlineIndicator, MatchIndicator, Badge, EmptyState, OpportunityDetailSkeleton } from '@/components/ui';
 import { OpportunityCard } from '@/components/opportunity';
 import { OPPORTUNITY_TYPE_COLORS } from '@/utils/constants';
-import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck, Share2 } from 'lucide-react';
+import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck, Share2, Trash2 } from 'lucide-react';
 import { Opportunity } from '@/types/models';
 import { cn } from '@/utils/cn';
 
@@ -39,6 +39,20 @@ export default function OpportunityDetailPage() {
   const [adviceTitle, setAdviceTitle] = useState('');
   const [adviceContent, setAdviceContent] = useState('');
   const [adviceLoading, setAdviceLoading] = useState(false);
+
+  // Delete advice state
+  const [deleteTarget, setDeleteTarget] = useState<any>(null); // the advice object being deleted
+  const [deleteReason, setDeleteReason] = useState('');
+  const [deleteOtherText, setDeleteOtherText] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const DELETE_REASONS = [
+    'I posted this by mistake',
+    'The information I shared is no longer accurate',
+    'I want to update it and will repost',
+    'Privacy concerns',
+    'Other',
+  ];
 
   useEffect(() => {
     if (!id) return;
@@ -100,6 +114,22 @@ export default function OpportunityDetailPage() {
       alert(err?.message || 'Failed to post review. Please make sure you are logged in.');
     } finally {
       setAdviceLoading(false);
+    }
+  };
+
+  const handleDeleteAdvice = async () => {
+    if (!id || !deleteTarget || !deleteReason) return;
+    setDeleteLoading(true);
+    try {
+      await api.deleteOpportunityAdvice(id, deleteTarget.id);
+      setAdviceList(prev => prev.filter(a => a.id !== deleteTarget.id));
+      setDeleteTarget(null);
+      setDeleteReason('');
+      setDeleteOtherText('');
+    } catch (err: any) {
+      alert(err?.message || 'Failed to remove. Please try again.');
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -479,6 +509,16 @@ export default function OpportunityDetailPage() {
                       <span className="text-xs font-semibold text-rome-600 dark:text-rome-400">
                         {adv.adviceType || 'Applicant Insight'}
                       </span>
+                      {/* Delete button — only visible to the author */}
+                      {user && adv.userId === user.id && (
+                        <button
+                          onClick={() => { setDeleteTarget(adv); setDeleteReason(''); setDeleteOtherText(''); }}
+                          className="ml-auto p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                          title="Remove my review"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      )}
                     </div>
 
                     {adv.title && (
@@ -655,6 +695,70 @@ export default function OpportunityDetailPage() {
       )}
 
       {/* Related Opportunities */}
+      {/* Delete Advice Modal — "Why are you removing this?" */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-5">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Remove your review?</h3>
+                <p className="text-xs text-surface-500 mt-1">Please let us know why you're removing this — your feedback helps us improve the community.</p>
+              </div>
+              <button onClick={() => setDeleteTarget(null)} className="text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 ml-4 flex-shrink-0">✕</button>
+            </div>
+
+            {/* Reason options */}
+            <div className="space-y-2">
+              {DELETE_REASONS.map(reason => (
+                <button
+                  key={reason}
+                  onClick={() => { setDeleteReason(reason); setDeleteOtherText(''); }}
+                  className={cn(
+                    'w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all',
+                    deleteReason === reason
+                      ? 'border-red-400 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300'
+                      : 'border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:border-surface-300 dark:hover:border-surface-600'
+                  )}
+                >
+                  {deleteReason === reason ? '● ' : '○ '}{reason}
+                </button>
+              ))}
+            </div>
+
+            {/* "Other" text field — slides in when Other is selected */}
+            {deleteReason === 'Other' && (
+              <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                <label className="block text-xs font-medium text-surface-600 dark:text-surface-400 mb-1.5">Tell us why</label>
+                <textarea
+                  className="w-full px-3 py-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-transparent text-sm text-surface-900 dark:text-surface-100 focus:ring-2 focus:ring-red-400 outline-none resize-none"
+                  rows={2}
+                  value={deleteOtherText}
+                  onChange={e => setDeleteOtherText(e.target.value)}
+                  placeholder="Briefly describe your reason…"
+                  autoFocus
+                />
+              </div>
+            )}
+
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="flex-1 px-4 py-2 rounded-xl border border-surface-200 dark:border-surface-700 text-sm font-medium text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAdvice}
+                disabled={!deleteReason || (deleteReason === 'Other' && !deleteOtherText.trim()) || deleteLoading}
+                className="flex-1 px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold transition-colors"
+              >
+                {deleteLoading ? 'Removing…' : 'Remove Review'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {relatedOpportunities.length > 0 && (
         <div className="bg-surface-50 dark:bg-surface-900/30 border-t border-surface-200 dark:border-surface-800 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

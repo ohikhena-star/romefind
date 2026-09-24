@@ -428,3 +428,24 @@ export const addOpportunityAdvice = async (req: Request, res: Response, next: Ne
   }
 };
 
+// DELETE /api/opportunities/:id/advice/:adviceId
+export const deleteOpportunityAdvice = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user.id;
+    const { adviceId } = req.params;
+
+    const advice = await prisma.communityAdvice.findUnique({ where: { id: adviceId } });
+    if (!advice) {
+      return res.status(404).json({ success: false, message: 'Advice not found' });
+    }
+    if (advice.userId !== userId) {
+      return res.status(403).json({ success: false, message: 'You can only remove your own posts' });
+    }
+
+    await prisma.communityAdvice.delete({ where: { id: adviceId } });
+
+    res.json({ success: true, message: 'Your review has been removed.' });
+  } catch (error) {
+    next(error);
+  }
+};

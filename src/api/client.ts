@@ -280,6 +280,12 @@ class ApiClient {
     });
   }
 
+  async deleteOpportunityAdvice(opportunityId: string, adviceId: string) {
+    return this.request<any>(`/opportunities/${opportunityId}/advice/${adviceId}`, {
+      method: 'DELETE'
+    });
+  }
+
   // ── Learning Resources ────────────────────────────
   async getLearningResources(params: Record<string, any> = {}) {
     const query = new URLSearchParams();

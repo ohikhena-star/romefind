@@ -53,6 +53,7 @@ apiRouter.post('/opportunities/:id/reject', authenticateToken, opportunityContro
 apiRouter.post('/opportunities/:id/report', optionalAuth, opportunityController.reportOpportunity);
 apiRouter.get('/opportunities/:id/advice', opportunityController.getOpportunityAdvice);
 apiRouter.post('/opportunities/:id/advice', authenticateToken, opportunityController.addOpportunityAdvice);
+apiRouter.delete('/opportunities/:id/advice/:adviceId', authenticateToken, opportunityController.deleteOpportunityAdvice);
 
 // ── Search & Discovery Endpoints ────────────────────────────────────────
 apiRouter.get('/search', optionalAuth, searchController.searchOpportunities);

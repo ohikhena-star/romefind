@@ -28820,6 +28820,23 @@ var addOpportunityAdvice = async (req, res, next) => {
     next(error);
   }
 };
+var deleteOpportunityAdvice = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { adviceId } = req.params;
+    const advice = await prisma.communityAdvice.findUnique({ where: { id: adviceId } });
+    if (!advice) {
+      return res.status(404).json({ success: false, message: "Advice not found" });
+    }
+    if (advice.userId !== userId) {
+      return res.status(403).json({ success: false, message: "You can only remove your own posts" });
+    }
+    await prisma.communityAdvice.delete({ where: { id: adviceId } });
+    res.json({ success: true, message: "Your review has been removed." });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // server/src/modules/recommendations/recommendation.service.ts
 var ALTERNATIVE_TYPE_MAP = {
@@ -30149,6 +30166,7 @@ apiRouter.post("/opportunities/:id/reject", authenticateToken, rejectOpportunity
 apiRouter.post("/opportunities/:id/report", optionalAuth, reportOpportunity);
 apiRouter.get("/opportunities/:id/advice", getOpportunityAdvice);
 apiRouter.post("/opportunities/:id/advice", authenticateToken, addOpportunityAdvice);
+apiRouter.delete("/opportunities/:id/advice/:adviceId", authenticateToken, deleteOpportunityAdvice);
 apiRouter.get("/search", optionalAuth, searchOpportunities);
 apiRouter.get("/search/suggestions", getSearchSuggestions);
 apiRouter.get("/recommendations", authenticateToken, getRecommendations);
