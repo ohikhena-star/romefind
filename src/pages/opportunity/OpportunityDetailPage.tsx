@@ -41,13 +41,18 @@ export default function OpportunityDetailPage() {
   const [adviceLoading, setAdviceLoading] = useState(false);
 
   useEffect(() => {
-    if (id) {
+    if (!id) return;
+    const fetchAdvice = () => {
       api.getOpportunityAdvice(id)
         .then(data => {
           if (Array.isArray(data)) setAdviceList(data);
         })
         .catch(() => {});
-    }
+    };
+    fetchAdvice();
+    // Poll every 30s so other users' new posts appear without a manual refresh
+    const interval = setInterval(fetchAdvice, 30000);
+    return () => clearInterval(interval);
   }, [id]);
 
   const handleReportSubmit = async (e: React.FormEvent) => {
@@ -70,7 +75,7 @@ export default function OpportunityDetailPage() {
     if (!id || !adviceTitle || !adviceContent) return;
     setAdviceLoading(true);
     try {
-      const res = await api.addOpportunityAdvice(id, {
+      const newAdvice = await api.addOpportunityAdvice(id, {
         authorName: adviceAuthorName || user?.profile?.name || 'Anonymous Applicant',
         authorRole: adviceAuthorRole || user?.profile?.currentStatus || 'Applicant',
         adviceType,
@@ -78,14 +83,21 @@ export default function OpportunityDetailPage() {
         title: adviceTitle,
         content: adviceContent
       });
-      if (res?.data) {
-        setAdviceList(prev => [res.data, ...prev]);
+      // Optimistically prepend the new advice, then re-fetch to confirm
+      if (newAdvice && newAdvice.id) {
+        setAdviceList(prev => [newAdvice, ...prev]);
       }
+      // Re-fetch full list so any other user's posts also appear
+      api.getOpportunityAdvice(id).then(fresh => {
+        if (Array.isArray(fresh)) setAdviceList(fresh);
+      }).catch(() => {});
       setShowAdviceModal(false);
       setAdviceTitle('');
       setAdviceContent('');
-    } catch {
-      // fallback
+      setAdviceAuthorName('');
+      setAdviceAuthorRole('');
+    } catch (err: any) {
+      alert(err?.message || 'Failed to post review. Please make sure you are logged in.');
     } finally {
       setAdviceLoading(false);
     }
