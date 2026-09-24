@@ -10,7 +10,7 @@
     "start": "concurrently -k -p \"[{name}]\" -n \"SERVER,VITE\" -c \"cyan.bold,green.bold\" \"npm run server:dev\" \"npm run dev:vite\"",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "vercel-build": "npx prisma generate --schema=server/prisma/schema.prisma && npx esbuild server/src/server.ts --bundle --platform=node --format=cjs --outfile=api/index.js --external:@prisma/client --external:bcryptjs && vite build",
+    "vercel-build": "npx prisma generate --schema=server/prisma/schema.prisma && npx esbuild server/src/server.ts --bundle --platform=node --format=cjs --outfile=api/index.cjs --external:@prisma/client --external:bcryptjs && vite build",
     "server:dev": "cd server && npm run dev",
     "server:seed": "cd server && npm run seed",
     "prisma:generate": "prisma generate --schema=server/prisma/schema.prisma",
