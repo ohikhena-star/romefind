@@ -152,6 +152,296 @@ const Nav = () => {
   );
 };
 
+// ─── SURFBALI STYLE EXPERIENCE LEVEL SWITCHER ────────────────────────────────
+const LEVEL_DATA = [
+  {
+    id: 'newbie',
+    tag: 'first-time',
+    title: 'Total Newbie',
+    subtitle: 'Student / Transitioning',
+    emoji: '🌱',
+    highlight: 'Foundation Fellowships & Curated Internships',
+    desc: 'You’re taking your first steps and want to discover accessible entry points with zero gatekeeping.',
+    fitScore: 98,
+    sampleOrg: 'WHO / Mozilla Foundation',
+    funding: 'Fully Funded',
+    action: 'Explore Beginner Opportunities'
+  },
+  {
+    id: 'learning',
+    tag: 'beginner',
+    title: 'Still Learning',
+    subtitle: 'Early Career / Graduate',
+    emoji: '🚀',
+    highlight: 'Funded Research Roles & Open-Source Fellowships',
+    desc: 'You have foundational knowledge and want to build a standout portfolio and international credibility.',
+    fitScore: 96,
+    sampleOrg: 'Figma / Wikimedia Foundation',
+    funding: 'Competitive Stipend',
+    action: 'Explore Early Career Paths'
+  },
+  {
+    id: 'confident',
+    tag: 'intermediate',
+    title: 'Pretty Confident',
+    subtitle: '2–4 Yrs Experience',
+    emoji: '⚡',
+    highlight: 'Specialized Fellowships & Accelerator Grants',
+    desc: 'You have solid execution capability and are targeting competitive global awards and high-impact roles.',
+    fitScore: 94,
+    sampleOrg: 'Canva / Gates Foundation',
+    funding: '$45,000+ Grant',
+    action: 'Explore Mid-Level Paths'
+  },
+  {
+    id: 'pro',
+    tag: 'advanced',
+    title: 'Already a Pro',
+    subtitle: 'Senior / Lead / PhD',
+    emoji: '👑',
+    highlight: 'Principal Awards & Global Leadership Grants',
+    desc: 'You lead projects and seek prestigious international research grants, residencies, and leadership programs.',
+    fitScore: 99,
+    sampleOrg: 'CERN / OpenAI Fellowship',
+    funding: 'Full Grant + Travel',
+    action: 'Explore Advanced Opportunities'
+  },
+];
+
+const ExperienceLevelSwitcher = () => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const active = LEVEL_DATA[activeIdx];
+
+  return (
+    <div className="space-y-6">
+      {/* 4 Cards Grid (SurfBali Pattern) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {LEVEL_DATA.map((lvl, idx) => {
+          const isSelected = activeIdx === idx;
+          return (
+            <button
+              key={lvl.id}
+              onClick={() => setActiveIdx(idx)}
+              className={cn(
+                "rounded-3xl p-6 text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-[220px] cursor-pointer",
+                isSelected
+                  ? "bg-white dark:bg-surface-900 border-2 border-rome-500 shadow-xl scale-[1.02] ring-4 ring-rome-100 dark:ring-rome-950/60"
+                  : "bg-white/80 dark:bg-surface-900/60 border border-surface-200 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700 hover:bg-white dark:hover:bg-surface-900 shadow-xs"
+              )}
+            >
+              <div className="flex items-center justify-between w-full mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-surface-100 dark:bg-surface-800 flex items-center justify-center text-lg shadow-xs">
+                  {lvl.emoji}
+                </div>
+                <span className={cn(
+                  "text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full",
+                  isSelected
+                    ? "bg-[#bef264] text-surface-950"
+                    : "bg-surface-100 dark:bg-surface-800 text-surface-500"
+                )}>
+                  {lvl.tag}
+                </span>
+              </div>
+
+              <div>
+                <h4 className="text-base font-black text-surface-900 dark:text-white tracking-tight leading-snug">
+                  {lvl.title}
+                </h4>
+                <p className="text-xs text-surface-500 dark:text-surface-400 mt-1 font-medium">
+                  {lvl.subtitle}
+                </p>
+              </div>
+
+              {isSelected && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-rome-400 via-rome-500 to-[#bef264]" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Dynamic Detail Card Below Active Tab */}
+      <div className="rounded-3xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 md:p-8 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in duration-300">
+        <div className="max-w-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-black uppercase tracking-wider text-rome-500 bg-rome-50 dark:bg-rome-950/60 px-3 py-0.5 rounded-full border border-rome-200 dark:border-rome-800">
+              Matched Pathway
+            </span>
+            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-0.5 rounded-full">
+              {active.fitScore}% Match Fit
+            </span>
+          </div>
+          <h3 className="text-xl font-black text-surface-900 dark:text-white tracking-tight mb-2">
+            {active.highlight}
+          </h3>
+          <p className="text-sm text-surface-600 dark:text-surface-300 leading-relaxed font-medium">
+            {active.desc} Includes verified opportunities from <strong className="text-surface-900 dark:text-white">{active.sampleOrg}</strong> with <strong className="text-rome-500">{active.funding}</strong>.
+          </p>
+        </div>
+
+        <Link
+          to="/discover"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 text-xs font-black uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg flex-shrink-0"
+        >
+          {active.action} <ArrowRight size={14} />
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+// ─── IMAGE 3 STYLE INTERACTIVE WORKSPACE WIDGET ─────────────────────────────
+const InteractiveWorkspaceWidget = () => {
+  const [tasks, setTasks] = useState([
+    {
+      id: 1,
+      title: 'UX Portfolio Case Study',
+      time: 'Tomorrow',
+      timeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+      status: 'Incoming',
+      statusColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
+      desc: 'Highlight end-to-end design research & user synthesis for WHO Fellowship.',
+      collab: 'Collaborate with Miguel, Jhon, Hane',
+      completed: true,
+      avatars: ['men/32', 'women/44', 'men/75']
+    },
+    {
+      id: 2,
+      title: 'Personal Statement & Motivation',
+      time: 'Today',
+      timeColor: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300',
+      status: 'Ongoing',
+      statusColor: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
+      desc: 'Align research goals with Mozilla open source accessibility initiatives.',
+      collab: 'Review with Elena, Sarah, Alex',
+      completed: false,
+      avatars: ['women/68', 'men/22', 'women/12']
+    },
+    {
+      id: 3,
+      title: 'Academic Transcripts & Verification',
+      time: 'Yesterday',
+      timeColor: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+      status: 'Verified',
+      statusColor: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300',
+      desc: 'Official registrar certified documents uploaded and verified.',
+      collab: 'Verified by University Registrar',
+      completed: true,
+      avatars: ['men/41', 'women/55']
+    }
+  ]);
+
+  const toggleTask = (id: number) => {
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+  };
+
+  const completedCount = tasks.filter(t => t.completed).length;
+  const progressPercent = Math.round((completedCount / tasks.length) * 100);
+
+  return (
+    <div className="rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 md:p-8 shadow-xl">
+      {/* Top Header Row (Exact Image 3 Style) */}
+      <div className="flex items-center justify-between pb-5 border-b border-surface-200 dark:border-surface-800">
+        <div className="flex items-center gap-2">
+          <BookOpen size={18} className="text-surface-900 dark:text-white" />
+          <h3 className="text-base font-black text-surface-900 dark:text-white tracking-tight">
+            Application Milestones
+          </h3>
+        </div>
+        <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-xs font-bold text-surface-800 dark:text-surface-200 shadow-xs hover:bg-surface-100 transition-colors">
+          <span>+ Add Task</span>
+        </button>
+      </div>
+
+      {/* Filter Tabs (Task: All, Time: All, Status: All) */}
+      <div className="flex items-center gap-2 pt-4 pb-4 overflow-x-auto">
+        {['Task: All', 'Time: All', 'Status: Active', 'Verified'].map((filter, i) => (
+          <span 
+            key={i} 
+            className={cn(
+              "px-3 py-1 rounded-xl text-xs font-bold border transition-colors cursor-pointer",
+              i === 0 
+                ? "bg-white dark:bg-surface-800 text-surface-900 dark:text-white border-surface-300 dark:border-surface-700 shadow-xs" 
+                : "bg-surface-100 dark:bg-surface-800/60 text-surface-500 border-transparent hover:border-surface-200"
+            )}
+          >
+            {filter}
+          </span>
+        ))}
+      </div>
+
+      {/* Progress Bar */}
+      <div className="mb-5 bg-white dark:bg-surface-950 p-3.5 rounded-2xl border border-surface-200 dark:border-surface-800">
+        <div className="flex items-center justify-between text-xs font-bold mb-2">
+          <span className="text-surface-600 dark:text-surface-400">Preparation Progress</span>
+          <span className="text-rome-500 font-extrabold">{progressPercent}% Ready</span>
+        </div>
+        <div className="w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2 overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-rome-500 to-[#bef264] rounded-full transition-all duration-500" 
+            style={{ width: `${progressPercent}%` }} 
+          />
+        </div>
+      </div>
+
+      {/* Tasks Stack (Exact Image 3 iOS/macOS card style) */}
+      <div className="space-y-3">
+        {tasks.map(task => (
+          <div
+            key={task.id}
+            onClick={() => toggleTask(task.id)}
+            className={cn(
+              "p-4 rounded-2xl border transition-all duration-200 bg-white dark:bg-surface-950 cursor-pointer group shadow-xs",
+              task.completed 
+                ? "border-surface-200 dark:border-surface-800/80 opacity-80" 
+                : "border-rome-300 dark:border-rome-800 shadow-md ring-1 ring-rome-200/50 dark:ring-rome-900/30"
+            )}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className={cn(
+                  "w-5 h-5 rounded-md flex items-center justify-center border text-xs font-black transition-colors",
+                  task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-900"
+                )}>
+                  {task.completed && "✓"}
+                </div>
+                <h4 className={cn("text-xs sm:text-sm font-black text-surface-900 dark:text-white", task.completed && "line-through text-surface-400 dark:text-surface-500")}>
+                  {task.title}
+                </h4>
+                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.timeColor)}>
+                  {task.time}
+                </span>
+                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.statusColor)}>
+                  {task.status}
+                </span>
+              </div>
+              <ChevronRight size={14} className="text-surface-400 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+
+            <p className="text-xs text-surface-500 dark:text-surface-400 mb-3 pl-7 font-medium leading-relaxed">
+              {task.desc}
+            </p>
+
+            <div className="flex items-center gap-2 pl-7 pt-2 border-t border-surface-100 dark:border-surface-800/80 text-[11px] text-surface-400 font-medium">
+              <div className="flex -space-x-1.5">
+                {task.avatars.map((av, i) => (
+                  <img 
+                    key={i} 
+                    src={`https://randomuser.me/api/portraits/thumb/${av}.jpg`} 
+                    alt="Peer" 
+                    className="w-5 h-5 rounded-full border border-white dark:border-surface-900" 
+                  />
+                ))}
+              </div>
+              <span className="truncate">{task.collab}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // ─── Provider Logos Marquee ──────────────────────────────────────────────────
 const PARTNERS = [
   { name: 'Google', category: 'Technology' },
@@ -732,111 +1022,81 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── COMPARE — product UI center (Payno pricing layout) ───────────── */}
-      <section className="py-20 bg-white dark:bg-surface-950">
+      {/* ── 6. SURFBALI STYLE — INTERACTIVE EXPERIENCE LEVEL SWITCHER ────────── */}
+      <section className="py-24 bg-surface-50 dark:bg-surface-900/40 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="max-w-xl mx-auto text-center mb-14">
-            <Pill>Compare</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight mb-4">
-              Don't just find an opportunity.<br />Understand your options.
-            </h2>
-            <p className="text-surface-500 dark:text-surface-400 text-lg">See opportunities side by side. Compare what matters.</p>
-          </div>
-          <div className="max-w-4xl mx-auto overflow-hidden rounded-3xl border border-surface-200 dark:border-surface-800 shadow-elevated">
-            {/* Column headers */}
-            <div className="grid grid-cols-3">
-              <div className="p-5 border-r border-surface-100 dark:border-surface-800 bg-surface-50 dark:bg-surface-900">
-                <span className="text-xs font-bold uppercase tracking-wider text-surface-400">Compare</span>
-              </div>
-              {/* Highlighted center (Payno pattern) */}
-              <div className="p-5 border-r border-rome-200 dark:border-rome-800 bg-rome-500 text-white">
-                <Chip color="sky"><span className="text-white font-bold">Fellowship</span></Chip>
-                <p className="text-sm font-black mt-2 leading-tight">Product Design Fellowship</p>
-                <p className="text-xs text-rome-100 mt-1">Design Foundation</p>
-              </div>
-              <div className="p-5 bg-surface-50 dark:bg-surface-900">
-                <Chip color="teal">Programme</Chip>
-                <p className="text-sm font-black text-surface-900 dark:text-white mt-2 leading-tight">UX Research Programme</p>
-                <p className="text-xs text-surface-500 mt-1">Human-Centred Inst.</p>
-              </div>
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-rome-500 mb-2 block">
+                ★ LEVELS &amp; READINESS
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight">
+                Find the right opportunity regardless<br />of your <span className="text-rome-500">experience level</span>
+              </h2>
             </div>
-            {[
-              { label: 'Deadline', a: 'October 12', b: 'October 28' },
-              { label: 'Duration', a: '6 months', b: '3 months' },
-              { label: 'Funding', a: '✓ Fully funded + stipend', b: '✓ Fully funded' },
-              { label: 'Location', a: 'Remote (Global)', b: 'UK / Remote' },
-              { label: 'Level', a: 'Early-career / Graduate', b: 'Student / Graduate' },
-              { label: 'Application', a: 'CV, Portfolio, Essay', b: 'CV, Research proposal' },
-            ].map((row, i) => (
-              <div key={i} className="grid grid-cols-3 border-t border-surface-100 dark:border-surface-800">
-                <div className="px-5 py-3.5 border-r border-surface-100 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/50">
-                  <span className="text-xs font-semibold text-surface-500">{row.label}</span>
-                </div>
-                <div className="px-5 py-3.5 border-r border-rome-100 dark:border-rome-900 bg-rome-50/60 dark:bg-rome-950/10">
-                  <span className="text-xs font-semibold text-rome-800 dark:text-rome-200">{row.a}</span>
-                </div>
-                <div className="px-5 py-3.5 bg-white dark:bg-surface-950">
-                  <span className="text-xs text-surface-700 dark:text-surface-300">{row.b}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-8">
-            <Link to="/compare" className="inline-flex items-center gap-2 px-6 py-3 bg-surface-900 dark:bg-white hover:bg-surface-800 dark:hover:bg-surface-100 text-white dark:text-surface-900 font-bold rounded-xl text-sm transition-colors shadow-sm">
-              Compare opportunities <ArrowRight size={14} />
+            <Link 
+              to="/signup" 
+              className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-surface-900 dark:text-white hover:text-rome-500 transition-colors"
+            >
+              Explore All Paths <ArrowUpRight size={14} className="stroke-[3]" />
             </Link>
           </div>
+
+          {/* 4 Interactive Level Cards (SurfBali Pattern) */}
+          <ExperienceLevelSwitcher />
+
         </div>
       </section>
 
-      {/* ── PREPARE — right UI, left text (alternating Payno) ────────────── */}
-      <section className="py-20 bg-surface-50 dark:bg-surface-900/40">
+      {/* ── 7. IMAGE 3 STYLE — COLLABORATIVE NOTES & APPLICATION WORKSPACE ─── */}
+      <section className="py-24 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Checklist UI mockup */}
-            <div className="rounded-3xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-7 shadow-card">
-              <div className="flex items-start justify-between mb-5">
-                <div>
-                  <Chip color="purple">Fellowship</Chip>
-                  <h4 className="text-sm font-black text-surface-900 dark:text-white mt-2">Product Design Fellowship</h4>
-                  <p className="text-xs text-surface-500 mt-0.5">Deadline: October 12</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-3xl font-black text-rome-500">67%</span>
-                  <p className="text-xs text-surface-500">prepared</p>
-                </div>
-              </div>
-              <div className="w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2 mb-6 overflow-hidden">
-                <div className="h-2 rounded-full bg-gradient-to-r from-rome-400 to-rome-500 transition-all" style={{ width: '67%' }} />
-              </div>
-              <p className="text-xs font-black uppercase tracking-wider text-surface-400 mb-4">Application checklist</p>
-              <div className="space-y-3">
-                {CHECKLIST.map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    {item.done
-                      ? <CheckCircle2 size={16} className="text-rome-500 flex-shrink-0" />
-                      : <Circle size={16} className="text-surface-300 dark:text-surface-600 flex-shrink-0" />}
-                    <span className={cn('text-sm', item.done ? 'text-surface-400 line-through' : 'text-surface-800 dark:text-surface-200 font-medium')}>{item.label}</span>
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Description Column */}
+            <div className="lg:col-span-5">
+              <Pill>• Application Workspace</Pill>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
+                Organize every milestone with precision
+              </h2>
+              <p className="text-base sm:text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed font-medium">
+                Keep requirements, team feedback, and upcoming deadlines synced in one clean dashboard. Never scramble for submission materials again.
+              </p>
+              
+              <div className="space-y-4">
+                {[
+                  { title: 'Verified Requirement Checklists', desc: 'Auto-populated from official provider specifications.' },
+                  { title: 'Peer & Mentor Collaboration', desc: 'Gather feedback on statements, case studies, and CV drafts.' },
+                  { title: 'Multi-Cycle Deadline Timers', desc: 'Live alerts before application portals close.' },
+                ].map((f, idx) => (
+                  <div key={idx} className="flex items-start gap-3.5">
+                    <div className="w-6 h-6 rounded-full bg-[#bef264]/50 text-surface-950 flex items-center justify-center text-xs font-black flex-shrink-0 mt-0.5">
+                      ✓
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-extrabold text-surface-900 dark:text-white">{f.title}</h4>
+                      <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5 font-medium">{f.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
+
+              <div className="mt-10">
+                <Link 
+                  to="/my-opportunities"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
+                >
+                  View Workspace <ArrowRight size={14} />
+                </Link>
+              </div>
             </div>
-            <div>
-              <Pill>Prepare</Pill>
-              <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight mb-5">
-                Know what you're getting into.
-              </h2>
-              <p className="text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed">
-                Every opportunity in ROMEfind comes with a preparation checklist, deadline tracker, and guidance on what you'll need to apply.
-              </p>
-              <ul className="space-y-3">
-                {['Eligibility check against your profile', 'Step-by-step preparation checklist', 'What you\'ll need to apply', 'Possible gaps and how to address them', 'Links to official application pages'].map(item => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-surface-700 dark:text-surface-300">
-                    <Check size={14} className="text-rome-500 flex-shrink-0 mt-0.5" />{item}
-                  </li>
-                ))}
-              </ul>
+
+            {/* Right Column: Exact Image 3 Notes & Tasks Interactive Card */}
+            <div className="lg:col-span-7">
+              <InteractiveWorkspaceWidget />
             </div>
+
           </div>
         </div>
       </section>

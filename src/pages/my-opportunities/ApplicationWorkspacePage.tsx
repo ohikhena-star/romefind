@@ -7,6 +7,7 @@ import { Badge, DeadlineIndicator, ProgressBar, Checkbox, Button, WorkspaceSkele
 import { OutcomeReportingModal } from '@/components/opportunity/OutcomeReportingModal';
 import { ApplicationStatus, ApplicationTask, ApplicationNote } from '@/types/models';
 import { formatRelative } from '@/utils/format';
+import { cn } from '@/utils/cn';
 
 export default function ApplicationWorkspacePage() {
   const { id } = useParams<{ id: string }>();
@@ -142,65 +143,98 @@ export default function ApplicationWorkspacePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column */}
-        <div className="lg:col-span-2 flex flex-col gap-8">
+        <div className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* Next Best Action */}
+          {/* Next Best Action Card */}
           {firstUncompletedTask && !isAccepted && (
-            <div className="bg-rome-50 dark:bg-rome-900/20 border border-rome-200 dark:border-rome-800 rounded-lg p-6 flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-rome-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">
+            <div className="bg-gradient-to-r from-rome-50 via-sky-50/50 to-emerald-50/30 dark:from-rome-950/40 dark:via-surface-900 dark:to-emerald-950/20 border border-rome-200 dark:border-rome-800/80 rounded-3xl p-6 flex items-start gap-4 shadow-xs">
+              <div className="w-10 h-10 rounded-2xl bg-rome-500 text-white flex items-center justify-center flex-shrink-0 text-sm font-black shadow-xs">
                 →
               </div>
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-rome-700 dark:text-rome-400 mb-1">
-                  Next Best Action
-                </h3>
-                <p className="text-lg font-medium text-surface-900 dark:text-surface-100">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-rome-700 dark:text-rome-300 bg-rome-100 dark:bg-rome-900/60 px-2.5 py-0.5 rounded-full">
+                    Priority Task
+                  </span>
+                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/50 px-2 py-0.5 rounded-full">
+                    Action Required
+                  </span>
+                </div>
+                <h3 className="text-base font-black text-surface-950 dark:text-white leading-snug">
                   {firstUncompletedTask.label}
-                </p>
+                </h3>
               </div>
             </div>
           )}
 
-          {/* Checklist */}
-          <div className="bg-white dark:bg-surface-900 rounded-lg p-6 shadow-card border border-surface-200 dark:border-surface-800">
+          {/* Checklist (Image 3 iOS/macOS Task Card Pattern) */}
+          <div className="bg-white dark:bg-surface-900 rounded-3xl p-6 sm:p-7 shadow-xs border border-surface-200/90 dark:border-surface-800">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-surface-950 dark:text-surface-50">Application Checklist</h3>
-              <span className="text-xs font-semibold text-surface-500 bg-surface-100 dark:bg-surface-800 px-2.5 py-1 rounded-full">
-                {completedTasks}/{totalTasks} Completed
+              <div>
+                <h3 className="text-base font-black text-surface-950 dark:text-white tracking-tight">Application Checklist</h3>
+                <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">Track key requirements and materials required for submission.</p>
+              </div>
+              <span className="text-xs font-black text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full border border-surface-200/80 dark:border-surface-700">
+                {completedTasks}/{totalTasks} Ready
               </span>
             </div>
+
             <ProgressBar value={progress} className="mb-6" />
-            <div className="flex flex-col gap-2.5">
-              {tasks.map((task: ApplicationTask) => (
+
+            <div className="flex flex-col gap-3">
+              {tasks.map((task: ApplicationTask, idx: number) => (
                 <div 
                   key={task.id} 
-                  className={`flex items-start gap-3 p-3.5 rounded-lg border transition-colors ${
+                  onClick={() => app && toggleTask(app.id, task.id)}
+                  className={`flex items-start justify-between gap-3.5 p-4 rounded-2xl border transition-all cursor-pointer group shadow-2xs ${
                     task.completed 
-                      ? 'bg-surface-50/60 dark:bg-surface-800/40 border-surface-200 dark:border-surface-800' 
-                      : 'bg-white dark:bg-surface-900 border-surface-200 dark:border-surface-800 hover:border-rome-300'
+                      ? 'bg-surface-50/60 dark:bg-surface-800/30 border-surface-200/80 dark:border-surface-800/80 opacity-80' 
+                      : 'bg-white dark:bg-surface-900 border-surface-200 dark:border-surface-700/80 hover:border-rome-400 hover:shadow-xs'
                   }`}
                 >
-                  <Checkbox 
-                    checked={task.completed} 
-                    onChange={() => app && toggleTask(app.id, task.id)}
-                    className="mt-0.5"
-                  />
-                  <span className={`text-sm ${task.completed ? 'line-through text-surface-400 dark:text-surface-500' : 'text-surface-900 dark:text-surface-100 font-medium'}`}>
-                    {task.label}
-                  </span>
+                  <div className="flex items-start gap-3">
+                    <div className={cn(
+                      "w-5 h-5 rounded-lg flex items-center justify-center border text-xs font-black transition-colors mt-0.5 flex-shrink-0",
+                      task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-800"
+                    )}>
+                      {task.completed && "✓"}
+                    </div>
+                    <div>
+                      <span className={`text-sm font-bold ${task.completed ? 'line-through text-surface-400 dark:text-surface-500' : 'text-surface-900 dark:text-surface-100'}`}>
+                        {task.label}
+                      </span>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span className={cn(
+                          "text-[10px] font-bold px-2 py-0.5 rounded-md",
+                          task.completed 
+                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300" 
+                            : idx === 0 
+                              ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300" 
+                              : "bg-surface-100 text-surface-600 dark:bg-surface-800 dark:text-surface-400"
+                        )}>
+                          {task.completed ? 'Verified' : idx === 0 ? 'Next Up' : 'Pending'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Notes & Journal */}
-          <div className="bg-white dark:bg-surface-900 rounded-lg p-6 shadow-card border border-surface-200 dark:border-surface-800 flex flex-col gap-6">
-            <h3 className="text-lg font-semibold text-surface-950 dark:text-surface-50">Preparation Notes & Journal</h3>
+          {/* Notes & Journal (Image 3 Notes Widget Pattern) */}
+          <div className="bg-white dark:bg-surface-900 rounded-3xl p-6 sm:p-7 shadow-xs border border-surface-200/90 dark:border-surface-800 flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-black text-surface-950 dark:text-white tracking-tight">Notes &amp; Strategy Journal</h3>
+                <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">Brainstorm essay hooks, record interview insights, or log feedback.</p>
+              </div>
+            </div>
             
             <div className="flex flex-col gap-3">
               <textarea 
-                className="w-full p-3 rounded-lg border border-surface-300 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm text-surface-900 dark:text-surface-100 placeholder:text-surface-400 focus:outline-none focus:ring-1 focus:ring-rome-500"
-                placeholder="Jot down notes, brainstorm essay hooks, list questions for alumni, or log your interview takeaways..."
+                className="w-full p-4 rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800/80 text-sm text-surface-900 dark:text-surface-100 placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-rome-500/40 font-medium"
+                placeholder="Jot down application notes, mentor feedback, or essay hooks..."
                 rows={3}
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
@@ -212,12 +246,12 @@ export default function ApplicationWorkspacePage() {
               </div>
             </div>
             
-            <div className="flex flex-col gap-3">
+            <div className="space-y-3">
               {app?.notes?.sort((a: ApplicationNote, b: ApplicationNote) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((note: ApplicationNote) => (
-                <div key={note.id} className="p-4 rounded-lg bg-surface-50 dark:bg-surface-800/60 border border-surface-100 dark:border-surface-700 flex justify-between gap-4 group">
+                <div key={note.id} className="p-4 rounded-2xl bg-surface-50 dark:bg-surface-800/60 border border-surface-200/70 dark:border-surface-700/70 flex justify-between gap-4 group hover:border-surface-300 transition-colors shadow-2xs">
                   <div>
-                    <p className="text-sm text-surface-800 dark:text-surface-200 whitespace-pre-wrap">{note.content}</p>
-                    <span className="text-xs text-surface-400 mt-2 block">{formatRelative(note.createdAt)}</span>
+                    <p className="text-xs sm:text-sm text-surface-800 dark:text-surface-200 whitespace-pre-wrap font-medium">{note.content}</p>
+                    <span className="text-[11px] text-surface-400 mt-2 block font-semibold">{formatRelative(note.createdAt)}</span>
                   </div>
                   <button 
                     onClick={() => app && removeNote(app.id, note.id)}
@@ -229,7 +263,7 @@ export default function ApplicationWorkspacePage() {
                 </div>
               ))}
               {(!app?.notes || app.notes.length === 0) && (
-                <p className="text-surface-400 italic text-center py-4 text-xs">No notes yet.</p>
+                <p className="text-surface-400 italic text-center py-6 text-xs font-medium">No journal notes added yet.</p>
               )}
             </div>
           </div>
