@@ -1,6 +1,6 @@
 import { prisma } from '../config/prisma.js';
 import bcrypt from 'bcryptjs';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import { organizationsData, learningResourcesData, communityAdvicesData } from './seed-data.js';
 
@@ -181,7 +181,13 @@ async function main() {
   console.log(`📚 Seeded ${learningResourcesData.length} Learning Resources.`);
 
   // 5. Seed Opportunities from frontend data
-  const content = readFileSync(resolve('../src/data/opportunities.ts'), 'utf-8');
+  const candidates = [
+    resolve(process.cwd(), 'src/data/opportunities.ts'),
+    resolve(process.cwd(), '../src/data/opportunities.ts'),
+    resolve(process.cwd(), 'romefind/src/data/opportunities.ts')
+  ];
+  const oppPath = candidates.find(p => existsSync(p)) || resolve(process.cwd(), 'src/data/opportunities.ts');
+  const content = readFileSync(oppPath, 'utf-8');
   const sanitized = content
     .replace(/import\s+.*?;\s*/g, '')
     .replace(/const org\s*=.*?;/g, '')
@@ -202,6 +208,22 @@ async function main() {
     // Normalize opportunity type
     let oppType = opp.type || 'Fellowship';
     if (oppType === 'Conference') oppType = 'Conference/Event';
+
+    // Ensure organization exists in database before inserting opportunity
+    await prisma.organization.upsert({
+      where: { id: orgId },
+      update: {},
+      create: {
+        id: orgId,
+        name: typeof opp.organization === 'object' && opp.organization?.name 
+          ? opp.organization.name 
+          : orgId.replace('org-', '').replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+        website: (typeof opp.organization === 'object' && opp.organization?.website) || 'https://romefind.com',
+        description: (typeof opp.organization === 'object' && opp.organization?.description) || 'Verified organization offering opportunities on ROMEfind.',
+        country: opp.country || 'Global',
+        verificationStatus: 'VERIFIED'
+      }
+    });
 
     // Normalize remote status
     let remoteStatus = opp.remoteStatus || 'In-Person';
