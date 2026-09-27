@@ -9,6 +9,8 @@ import { RemoteStatus, Opportunity } from '@/types/models';
 
 type RecTab = 'all' | 'high_match' | 'public_health' | 'remote' | 'funded' | 'alternative';
 
+import { calculateRelevanceScore } from '@/services/personalization.service';
+
 export const RecommendationsPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<RecTab>('all');
@@ -21,128 +23,29 @@ export const RecommendationsPage: React.FC = () => {
     return fields.map((f: string) => f.toLowerCase().trim());
   }, [user]);
 
-  const userTypes = useMemo(() => {
-    const types = user?.preferences?.opportunityTypes || [];
-    return types.map((t: string) => t.toLowerCase().trim());
-  }, [user]);
-
   const remotePref = useMemo(() => {
-    return user?.preferences?.remotePreference || [];
-  }, [user]);
-
-  const userSkills = useMemo(() => {
-    const skills = user?.profile?.skills || [];
-    return skills.map((s: string) => s.toLowerCase().trim());
-  }, [user]);
-
-  const locationPref = useMemo(() => {
     return user?.preferences?.locationPreference || [];
   }, [user]);
 
-  // Generate multi-factor, realistic, dynamic scored recommendations
+  // Unified relevance scoring through centralized personalization service
   const scoredOpportunities = useMemo(() => {
+    if (!user?.profile || !user?.preferences) {
+      return opportunities.map(opp => ({
+        opportunity: opp,
+        score: 55,
+        reasons: ['Curated open opportunity']
+      }));
+    }
     return opportunities.map(opp => {
-      let score = 25; // Transparent baseline
-      const matchReasons: string[] = [];
-
-      const oppFields = (opp.field || []).map(f => f.toLowerCase());
-      const oppTitle = (opp.title || '').toLowerCase();
-      const oppDesc = (opp.description || '').toLowerCase();
-      const oppTags = (opp.tags || []).map(t => t.toLowerCase());
-
-      // 1. Target Field Match (0 - 35 points)
-      if (userFields.length > 0) {
-        const directFieldMatches = oppFields.filter(f => 
-          userFields.some(uf => f.includes(uf) || uf.includes(f))
-        );
-        if (directFieldMatches.length > 0) {
-          score += Math.min(35, directFieldMatches.length * 18);
-          matchReasons.push(`Direct match for your interest in ${directFieldMatches.join(', ')}`);
-        } else {
-          // Check title / description for keyword alignment
-          const textMatches = userFields.filter(uf => oppTitle.includes(uf) || oppDesc.includes(uf));
-          if (textMatches.length > 0) {
-            score += 15;
-            matchReasons.push(`Relates to your target domain (${textMatches[0]})`);
-          }
-        }
-      } else {
-        score += 15; // default domain credit
-      }
-
-      // 2. Opportunity Type Match (0 - 15 points)
-      if (userTypes.length > 0) {
-        const oppTypeStr = String(opp.type).toLowerCase();
-        if (userTypes.some(ut => ut.includes(oppTypeStr) || oppTypeStr.includes(ut))) {
-          score += 15;
-          matchReasons.push(`Matches your preferred format: ${opp.type}`);
-        }
-      } else {
-        score += 8;
-      }
-
-      // 3. Modality & Remote Match (0 - 18 points)
-      const isOppRemote = opp.remoteStatus === RemoteStatus.Remote || String(opp.remoteStatus).toLowerCase().includes('remote');
-      const wantsRemote = remotePref.some((r: any) => String(r).toLowerCase().includes('remote'));
-
-      if (isOppRemote) {
-        if (wantsRemote || remotePref.length === 0) {
-          score += 18;
-          matchReasons.push('100% Full-Time Remote flexibility');
-        } else {
-          score += 10;
-        }
-      } else if (remotePref.length > 0) {
-        const statusStr = String(opp.remoteStatus).toLowerCase();
-        if (remotePref.some((r: any) => String(r).toLowerCase() === statusStr)) {
-          score += 14;
-          matchReasons.push(`Matches your ${opp.remoteStatus} preference`);
-        }
-      }
-
-      // 4. Skills Match (0 - 15 points)
-      if (userSkills.length > 0) {
-        const skillMatches = userSkills.filter(sk => 
-          oppTags.some(t => t.includes(sk) || sk.includes(t)) || oppDesc.includes(sk)
-        );
-        if (skillMatches.length > 0) {
-          score += Math.min(15, skillMatches.length * 8);
-          matchReasons.push(`Leverages your skill in ${skillMatches[0]}`);
-        }
-      }
-
-      // 5. Funding Match (0 - 12 points)
-      const hasFunding = opp.funding && (
-        opp.funding.toLowerCase().includes('full') ||
-        opp.funding.toLowerCase().includes('stipend') ||
-        opp.funding.toLowerCase().includes('$') ||
-        opp.funding.toLowerCase().includes('£') ||
-        opp.funding.toLowerCase().includes('€') ||
-        opp.funding.toLowerCase().includes('grant') ||
-        opp.funding.toLowerCase().includes('award')
-      );
-
-      if (hasFunding) {
-        score += 12;
-        matchReasons.push('Verified funding & financial support');
-      }
-
-      // 6. Location Match (0 - 8 points)
-      if (opp.location === 'Global' || locationPref.some(lp => opp.location.toLowerCase().includes(lp.toLowerCase()))) {
-        score += 8;
-        matchReasons.push('Open to your location & eligibility');
-      }
-
-      // Dynamic clamping between 38% and 94% (realistic, credible distribution)
-      const finalScore = Math.min(94, Math.max(38, score));
-
+      const { score, reasons, matchSignals } = calculateRelevanceScore(opp, user.profile, user.preferences);
       return {
         opportunity: opp,
-        score: finalScore,
-        reasons: matchReasons.length > 0 ? matchReasons : ['High-quality curated opportunity for your profile']
+        score,
+        reasons,
+        matchSignals
       };
     }).sort((a, b) => b.score - a.score);
-  }, [opportunities, userFields, userTypes, remotePref, userSkills, locationPref]);
+  }, [opportunities, user]);
 
   // Tab categorization filter logic
   const tabFiltered = useMemo(() => {

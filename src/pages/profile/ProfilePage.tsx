@@ -233,7 +233,7 @@ export default function ProfilePage() {
                 {localProfile.currentStatus || 'Student / Professional'}
                 {localProfile.location ? ` · ${localProfile.location}` : ''}
               </p>
-              <p className="text-xs text-surface-400 mt-0.5">{user.email}</p>
+              <p className="text-xs text-surface-400 mt-0.5">{user.profile.email}</p>
             </div>
             <div className="flex gap-2 flex-shrink-0">
               {isEditing ? (
@@ -545,7 +545,7 @@ export default function ProfilePage() {
             <div>
               <span className="text-xs font-semibold text-surface-500 uppercase tracking-wider block mb-1.5">Account</span>
               <p className="text-xs text-surface-600 dark:text-surface-400">
-                Email: <span className="font-medium text-surface-900 dark:text-surface-100">{user.email}</span>
+                Email: <span className="font-medium text-surface-900 dark:text-surface-100">{user.profile.email}</span>
               </p>
             </div>
           </section>

@@ -12,6 +12,7 @@ const SECTIONS = [
   { id: 'useful', title: '7. Share useful experiences' },
   { id: 'distinction', title: '8. Official vs community information' },
   { id: 'report', title: '9. Report a problem' },
+  { id: 'contributions', title: '10. Contributions & Future Submissions' },
 ];
 
 function DistinctionCard({ label, description, accent, bg, border }: {
@@ -172,14 +173,30 @@ export default function CommunityGuidelinesPage() {
           'Privacy violations',
           'Any other concern not covered above',
         ]} />
-        <LegalP>
-          To report something, please contact us directly:
-        </LegalP>
-        <LegalContact />
-        <LegalP>
-          We take reports seriously. We will review them and take appropriate action. We may not always be able to share the outcome of a specific report, but we appreciate every contribution that helps keep ROMEfind useful and trustworthy.
-        </LegalP>
       </LegalSection>
+
+      <LegalSection id="contributions" title="10. Contributions & Future Submissions">
+        <LegalP>
+          As community functionality develops, contributions may be reviewed, moderated, removed, or otherwise handled according to ROMEfind's standards to maintain a trustworthy and respectful environment.
+        </LegalP>
+        <LegalCallout variant="warn">
+          <strong>Opportunity submissions are coming soon.</strong> ROMEfind is working toward a system that allows people to share opportunities while maintaining trustworthy, accurate, and up-to-date information. In the meantime, all opportunities listed on ROMEfind are directly curated from official public sources.
+        </LegalCallout>
+      </LegalSection>
+
+      {/* Closing Statement */}
+      <div className="mt-12 p-8 rounded-2xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-center">
+        <p className="text-xl font-black text-surface-900 dark:text-white mb-2">
+          Make the path easier for the person coming after you.
+        </p>
+        <p className="text-sm text-surface-500 dark:text-surface-400 max-w-lg mx-auto leading-relaxed mb-6">
+          A useful experience can save someone hours of confusion. A thoughtful contribution can help someone prepare better. That's the kind of community we're building.
+        </p>
+        <div className="inline-flex items-center gap-2 text-xs font-semibold text-rome-600 dark:text-rome-400 bg-rome-50 dark:bg-rome-950/50 px-4 py-2 rounded-xl border border-rome-200 dark:border-rome-800">
+          <span>Contact ROMEfind Support:</span>
+          <a href="mailto:romefind.support@gmail.com" className="underline hover:text-rome-700">romefind.support@gmail.com</a>
+        </div>
+      </div>
     </LegalPage>
   );
 }

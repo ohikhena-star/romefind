@@ -74,11 +74,12 @@ export const sortByRelevance = (
   preferences: UserPreferences
 ): SearchResult[] => {
   return results.map((opp: Opportunity) => {
-    const { score, reasons } = calculateRelevanceScore(opp, profile, preferences);
+    const { score, reasons, matchSignals } = calculateRelevanceScore(opp, profile, preferences);
     return {
       opportunity: opp,
       relevanceScore: score,
-      relevanceReasons: reasons
+      relevanceReasons: reasons,
+      matchSignals
     };
   }).sort((a: SearchResult, b: SearchResult) => b.relevanceScore - a.relevanceScore);
 };

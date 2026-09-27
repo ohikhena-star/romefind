@@ -810,7 +810,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
-      <section className="py-24 bg-white dark:bg-surface-950">
+      <section id="faq" className="py-24 bg-white dark:bg-surface-950 scroll-mt-12">
         <div className="max-w-3xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-14">
             <Pill>FAQ</Pill>
@@ -854,10 +854,10 @@ export default function LandingPage() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-rome-500 hover:bg-rome-600 text-white font-black rounded-xl text-base transition-all shadow-lg hover:shadow-xl">
               Explore opportunities <ArrowRight size={16} />
             </Link>
-            <a href="#how-it-works"
+            <Link to="/about"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 hover:border-rome-400 hover:text-rome-600 dark:hover:text-rome-400 font-semibold rounded-xl text-base transition-all">
-              See how ROMEfind works
-            </a>
+              About ROMEfind
+            </Link>
           </div>
         </div>
       </section>
@@ -871,40 +871,47 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
-            <div className="col-span-2 md:col-span-1">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 mb-16">
+            <div className="col-span-2 sm:col-span-3 md:col-span-1">
               <p className="font-black text-xl text-white mb-2">ROME<span className="text-rome-400">find</span></p>
-              <p className="text-sm text-surface-500 leading-relaxed">Find what's possible.</p>
+              <p className="text-sm text-surface-400 leading-relaxed mb-3">Find what's possible.</p>
+              <p className="text-xs text-surface-500 leading-relaxed">Opportunity discovery and decision support platform.</p>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-600 mb-4">Product</p>
+              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Product</p>
               <ul className="space-y-2.5">
                 {['Discover', 'Explore', 'Compare', 'My Opportunities', 'Learn'].map(l => (
-                  <li key={l}><Link to={`/${l.toLowerCase().replace(' ', '-')}`} className="text-sm text-surface-500 hover:text-rome-400 transition-colors">{l}</Link></li>
+                  <li key={l}><Link to={`/${l.toLowerCase().replace(' ', '-')}`} className="text-sm text-surface-400 hover:text-rome-400 transition-colors">{l}</Link></li>
                 ))}
               </ul>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-600 mb-4">Resources</p>
+              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">About</p>
               <ul className="space-y-2.5">
-                {['FAQ', 'Support', 'Contact Us', 'Share an Opportunity'].map(l => (
-                  <li key={l}><a href="#" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">{l}</a></li>
-                ))}
+                <li><Link to="/about" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">About ROMEfind</Link></li>
               </ul>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-600 mb-4">Legal</p>
+              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Help</p>
               <ul className="space-y-2.5">
-                <li><Link to="/privacy" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/terms" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">Terms & Conditions</Link></li>
-                <li><Link to="/community-guidelines" className="text-sm text-surface-500 hover:text-rome-400 transition-colors">Community Guidelines</Link></li>
+                <li><a href="#faq" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">FAQ</a></li>
+                <li><a href="mailto:romefind.support@gmail.com" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Support</a></li>
+                <li><a href="mailto:romefind.support@gmail.com" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Contact Us</a></li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Trust</p>
+              <ul className="space-y-2.5">
+                <li><Link to="/community-guidelines" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Community Guidelines</Link></li>
+                <li><Link to="/privacy" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Terms & Conditions</Link></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-surface-800/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-surface-700">© {new Date().getFullYear()} ROMEfind. All rights reserved.</p>
-            <p className="text-xs text-surface-700">Find what's possible.</p>
+            <p className="text-xs text-surface-500">© {new Date().getFullYear()} ROMEfind. All rights reserved.</p>
+            <p className="text-xs text-surface-500">Rome wasn't built in a day. Neither is your path.</p>
           </div>
         </div>
       </footer>

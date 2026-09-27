@@ -48,13 +48,15 @@ const PublicLayout = () => {
               <span className="text-lg font-black text-rome-500 tracking-tight">find</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-5 text-sm text-surface-500 dark:text-surface-400">
-              <Link to="/about" className="hover:text-rome-500 transition-colors">About</Link>
-              <Link to="/privacy" className="hover:text-rome-500 transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-rome-500 transition-colors">Terms</Link>
+              <Link to="/about" className="hover:text-rome-500 transition-colors">About ROMEfind</Link>
+              <a href="/#faq" className="hover:text-rome-500 transition-colors">FAQ</a>
+              <a href="mailto:romefind.support@gmail.com" className="hover:text-rome-500 transition-colors">Support</a>
               <Link to="/community-guidelines" className="hover:text-rome-500 transition-colors">Community Guidelines</Link>
+              <Link to="/privacy" className="hover:text-rome-500 transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-rome-500 transition-colors">Terms & Conditions</Link>
             </div>
-            <p className="text-sm text-surface-400 dark:text-surface-500">
-              &copy; {new Date().getFullYear()} ROMEfind
+            <p className="text-xs text-surface-400 dark:text-surface-500">
+              &copy; {new Date().getFullYear()} ROMEfind. All rights reserved.
             </p>
           </div>
         </footer>

@@ -271,6 +271,22 @@ export interface SearchResult {
   opportunity: Opportunity;
   relevanceScore: number;
   relevanceReasons: string[];
+  matchSignals?: {
+    interestMatch: boolean;
+    goalMatch: boolean;
+    skillMatch: boolean;
+    typeMatch: boolean;
+    eligibilityMatch: boolean;
+    locationMatch: boolean;
+    experienceMatch: boolean;
+    fieldMatchScore: number;
+    skillMatchScore: number;
+    goalMatchScore: number;
+    typeMatchScore: number;
+    eligibilityScore: number;
+    locationScore: number;
+    fundingScore: number;
+  };
 }
 
 // ─── Personalization ────────────────────────────────────
