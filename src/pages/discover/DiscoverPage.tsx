@@ -124,67 +124,6 @@ export default function DiscoverPage() {
         </div>
       </header>
 
-      {/* ─── KITAL STYLE DASHBOARD OVERVIEW ROW (Image 4 Pattern) ─── */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        
-        {/* Card 1: Match Score & Domain Fit */}
-        <div className="rounded-3xl bg-white dark:bg-surface-900 border border-surface-200/90 dark:border-surface-800 p-5 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-surface-500 uppercase tracking-wider">Opportunity Fit Score</span>
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
-              High Match
-            </span>
-          </div>
-          <div className="flex items-baseline gap-2 mb-3">
-            <span className="text-3xl font-black text-surface-950 dark:text-white">96</span>
-            <span className="text-xs text-surface-400 font-bold">/ 100</span>
-          </div>
-          <div className="space-y-1.5">
-            <div className="w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2 overflow-hidden">
-              <div className="bg-gradient-to-r from-rome-500 to-[#bef264] h-full rounded-full" style={{ width: '96%' }} />
-            </div>
-            <p className="text-[11px] text-surface-500 dark:text-surface-400 font-medium">
-              Calibrated to your {user.profile?.interests?.[0] || 'Target'} domain &amp; modality.
-            </p>
-          </div>
-        </div>
-
-        {/* Card 2: Verified Opportunity Coverage */}
-        <div className="rounded-3xl bg-white dark:bg-surface-900 border border-surface-200/90 dark:border-surface-800 p-5 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-surface-500 uppercase tracking-wider">Verified Opportunities</span>
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#bef264] text-surface-950">
-              Live
-            </span>
-          </div>
-          <div className="text-3xl font-black text-surface-950 dark:text-white mb-2">93+</div>
-          <div className="flex items-center justify-between text-xs text-surface-500 dark:text-surface-400 pt-2 border-t border-surface-100 dark:border-surface-800">
-            <span>22 Verified Jobs</span>
-            <span>44 Global Orgs</span>
-          </div>
-        </div>
-
-        {/* Card 3: Tracked Applications Status */}
-        <div className="rounded-3xl bg-white dark:bg-surface-900 border border-surface-200/90 dark:border-surface-800 p-5 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-surface-500 uppercase tracking-wider">Application Tracking</span>
-            <Link to="/my-opportunities" className="text-[11px] font-bold text-rome-500 hover:underline">
-              Workspace ↗
-            </Link>
-          </div>
-          <div className="flex items-baseline gap-2 mb-2">
-            <span className="text-3xl font-black text-surface-950 dark:text-white">
-              {trackedApplications?.length || 0}
-            </span>
-            <span className="text-xs text-surface-400 font-bold">Active in pipeline</span>
-          </div>
-          <p className="text-[11px] text-surface-500 dark:text-surface-400 font-medium pt-2 border-t border-surface-100 dark:border-surface-800">
-            {savedOpportunities?.length || 0} opportunities bookmarked for review.
-          </p>
-        </div>
-
-      </section>
-
       {/* ─── PRIMARY FIRST-ACTION HERO: WHAT ARE YOU LOOKING FOR? ─── */}
       <section className="rounded-3xl border border-surface-200/90 dark:border-surface-800 bg-gradient-to-b from-white to-surface-50/70 dark:from-surface-900 dark:to-surface-950 p-6 sm:p-8 shadow-xs">
         <div className="max-w-3xl">

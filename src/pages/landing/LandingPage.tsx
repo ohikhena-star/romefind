@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import {
-  Search, ArrowRight, CheckCircle2, Circle, ChevronDown,
-  MapPin, Calendar, DollarSign, Clock, ExternalLink,
+  ArrowRight, CheckCircle2, Circle, ChevronDown,
+  Calendar, Clock,
   Compass, Users, Award, Globe, Briefcase, GraduationCap,
-  Heart, Lightbulb, Rocket, Check, ChevronRight,
-  Star, BookOpen, Target, TrendingUp, Zap, X, Menu,
-  ArrowUpRight, Sparkles, BarChart2, Share2, ShieldCheck, CheckCircle
+  Heart, Rocket, ChevronRight,
+  Star, BookOpen, Target, X, Menu,
+  ArrowUpRight, Sparkles, BarChart2, Share2, CheckCircle
 } from 'lucide-react';
 
-// ─── Pill label used above section headings (Aeline / WizardUI pattern) ─────
+// ─── Pill label used above section headings (Aeline / SurfBali pattern) ─────
 const Pill = ({ children, light = false }: { children: React.ReactNode; light?: boolean }) => (
   <span className={cn(
-    'inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4',
+    'inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-5 transition-all',
     light
-      ? 'bg-white/15 text-white border border-white/25 shadow-xs backdrop-blur-sm'
-      : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-700'
+      ? 'bg-white/20 text-white border border-white/30 shadow-sm backdrop-blur-md'
+      : 'bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 border border-surface-200 dark:border-surface-700 shadow-xs'
   )}>
-    <span className={cn('w-1.5 h-1.5 rounded-full', light ? 'bg-[#bef264]' : 'bg-rome-500')} />
+    <span className={cn('w-2 h-2 rounded-full', light ? 'bg-[#bef264] shadow-[0_0_8px_#bef264]' : 'bg-rome-500')} />
     {children}
   </span>
 );
@@ -61,7 +61,7 @@ const Nav = () => {
         ? 'bg-white/95 dark:bg-surface-950/95 backdrop-blur-md border-b border-surface-200/80 dark:border-surface-800/80 shadow-xs' 
         : 'bg-transparent'
     )}>
-      <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-18 flex items-center justify-between" aria-label="Main navigation">
+      <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between" aria-label="Main navigation">
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-xl bg-white/20 dark:bg-white/10 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
@@ -75,17 +75,17 @@ const Nav = () => {
           </span>
         </Link>
 
-        {/* Center Nav Links */}
+        {/* Center Nav Links (Aeline exact nav pattern) */}
         <div className={cn(
-          "hidden md:flex items-center gap-8 text-sm font-semibold transition-colors",
+          "hidden md:flex items-center gap-8 text-xs font-black uppercase tracking-wider transition-colors",
           scrolled ? "text-surface-600 dark:text-surface-300" : "text-white/90"
         )}>
-          <Link to="/" className="hover:text-white transition-colors">Home</Link>
-          <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
-          <Link to="/discover" className="hover:text-white transition-colors">Discover</Link>
-          <Link to="/explore" className="hover:text-white transition-colors">Explore</Link>
-          <Link to="/compare" className="hover:text-white transition-colors">Compare</Link>
-          <Link to="/learn" className="hover:text-white transition-colors">Learn</Link>
+          <Link to="/" className="hover:text-white dark:hover:text-white hover:text-rome-500 transition-colors">Home</Link>
+          <Link to="/about" className="hover:text-white dark:hover:text-white hover:text-rome-500 transition-colors">About Us</Link>
+          <Link to="/discover" className="hover:text-white dark:hover:text-white hover:text-rome-500 transition-colors">Discover</Link>
+          <Link to="/explore" className="hover:text-white dark:hover:text-white hover:text-rome-500 transition-colors">Explore</Link>
+          <Link to="/compare" className="hover:text-white dark:hover:text-white hover:text-rome-500 transition-colors">Compare</Link>
+          <Link to="/learn" className="hover:text-white dark:hover:text-white hover:text-rome-500 transition-colors">Learn</Link>
         </div>
 
         {/* Action Button */}
@@ -93,7 +93,7 @@ const Nav = () => {
           <Link 
             to="/login" 
             className={cn(
-              "text-sm font-bold px-3.5 py-2 transition-colors",
+              "text-xs font-bold px-3.5 py-2 transition-colors uppercase tracking-wider",
               scrolled ? "text-surface-600 hover:text-surface-900 dark:text-surface-300" : "text-white hover:text-white/80"
             )}
           >
@@ -290,46 +290,48 @@ const ExperienceLevelSwitcher = () => {
   );
 };
 
-// ─── IMAGE 3 STYLE INTERACTIVE WORKSPACE WIDGET ─────────────────────────────
-const InteractiveWorkspaceWidget = () => {
+// ─── IMAGE 3 STYLE INTERACTIVE NOTES CARD WIDGET ────────────────────────────
+const InteractiveNotesWidget = () => {
   const [tasks, setTasks] = useState([
     {
       id: 1,
-      title: 'UX Portfolio Case Study',
+      title: 'User Interface Case Study',
       time: 'Tomorrow',
-      timeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+      timeBadge: 'bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300',
       status: 'Incoming',
-      statusColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
-      desc: 'Highlight end-to-end design research & user synthesis for WHO Fellowship.',
+      statusBadge: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300',
+      desc: 'Showcasing new design elements, user interviews, and high-fidelity prototype flows.',
       collab: 'Collaborate with Miguel, Jhon, Hane',
       completed: true,
       avatars: ['men/32', 'women/44', 'men/75']
     },
     {
       id: 2,
-      title: 'Personal Statement & Motivation',
+      title: 'Design System & Architecture',
       time: 'Today',
-      timeColor: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300',
+      timeBadge: 'bg-rose-100 text-rose-900 dark:bg-rose-950/60 dark:text-rose-300',
       status: 'Ongoing',
-      statusColor: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
-      desc: 'Align research goals with Mozilla open source accessibility initiatives.',
-      collab: 'Review with Elena, Sarah, Alex',
+      statusBadge: 'bg-blue-100 text-blue-900 dark:bg-blue-950/60 dark:text-blue-300',
+      desc: 'Key components of a design system (e.g., UI components, guidelines, tokens).',
+      collab: 'Collaborate with Elena, Sarah, Alex',
       completed: false,
       avatars: ['women/68', 'men/22', 'women/12']
     },
     {
       id: 3,
-      title: 'Academic Transcripts & Verification',
+      title: 'Typography & Motivation Draft',
       time: 'Yesterday',
-      timeColor: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-      status: 'Verified',
-      statusColor: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300',
-      desc: 'Official registrar certified documents uploaded and verified.',
-      collab: 'Verified by University Registrar',
+      timeBadge: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300',
+      status: 'Past',
+      statusBadge: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300',
+      desc: 'Discussing font choices, personal statement narrative, and institutional fit.',
+      collab: 'Collaborate with Miguel, Angel, Hane',
       completed: true,
       avatars: ['men/41', 'women/55']
     }
   ]);
+
+  const [activeTab, setActiveTab] = useState('All');
 
   const toggleTask = (id: number) => {
     setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
@@ -339,61 +341,79 @@ const InteractiveWorkspaceWidget = () => {
   const progressPercent = Math.round((completedCount / tasks.length) * 100);
 
   return (
-    <div className="rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 md:p-8 shadow-xl">
-      {/* Top Header Row (Exact Image 3 Style) */}
-      <div className="flex items-center justify-between pb-5 border-b border-surface-200 dark:border-surface-800">
-        <div className="flex items-center gap-2">
-          <BookOpen size={18} className="text-surface-900 dark:text-white" />
-          <h3 className="text-base font-black text-surface-900 dark:text-white tracking-tight">
-            Application Milestones
+    <div className="rounded-3xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 sm:p-8 shadow-xl">
+      {/* Header matching Image 3 */}
+      <div className="flex items-center justify-between pb-5 border-b border-surface-100 dark:border-surface-800">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-surface-100 dark:bg-surface-800 flex items-center justify-center text-surface-900 dark:text-white">
+            <BookOpen size={16} />
+          </div>
+          <h3 className="text-lg font-black text-surface-900 dark:text-white tracking-tight">
+            Notes
           </h3>
         </div>
-        <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-xs font-bold text-surface-800 dark:text-surface-200 shadow-xs hover:bg-surface-100 transition-colors">
-          <span>+ Add Task</span>
+        <button 
+          onClick={() => {
+            const newTask = {
+              id: Date.now(),
+              title: 'Letter of Recommendation',
+              time: 'Next Week',
+              timeBadge: 'bg-purple-100 text-purple-900 dark:bg-purple-950/60 dark:text-purple-300',
+              status: 'Draft',
+              statusBadge: 'bg-sky-100 text-sky-900 dark:bg-sky-950/60 dark:text-sky-300',
+              desc: 'Follow up with faculty advisor regarding WHO reference submission.',
+              collab: 'Collaborate with Prof. Adams',
+              completed: false,
+              avatars: ['men/52']
+            };
+            setTasks(prev => [newTask, ...prev]);
+          }}
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 text-xs font-bold text-surface-900 dark:text-white transition-colors cursor-pointer shadow-xs"
+        >
+          + Add Notes
         </button>
       </div>
 
-      {/* Filter Tabs (Task: All, Time: All, Status: All) */}
-      <div className="flex items-center gap-2 pt-4 pb-4 overflow-x-auto">
-        {['Task: All', 'Time: All', 'Status: Active', 'Verified'].map((filter, i) => (
-          <span 
-            key={i} 
+      {/* Filter Pills row (Image 3) */}
+      <div className="flex items-center gap-2 py-4 border-b border-surface-100 dark:border-surface-800">
+        {['Task: All', 'Time: All', 'Status: All'].map((filter, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveTab(filter)}
             className={cn(
-              "px-3 py-1 rounded-xl text-xs font-bold border transition-colors cursor-pointer",
-              i === 0 
-                ? "bg-white dark:bg-surface-800 text-surface-900 dark:text-white border-surface-300 dark:border-surface-700 shadow-xs" 
-                : "bg-surface-100 dark:bg-surface-800/60 text-surface-500 border-transparent hover:border-surface-200"
+              "px-3.5 py-1 rounded-full text-xs font-bold transition-colors border",
+              activeTab === filter 
+                ? "bg-surface-900 text-white dark:bg-white dark:text-surface-950 border-surface-900 dark:border-white shadow-xs" 
+                : "bg-surface-50 dark:bg-surface-800/80 text-surface-600 dark:text-surface-300 border-surface-200/80 dark:border-surface-700"
             )}
           >
             {filter}
-          </span>
+          </button>
         ))}
       </div>
 
-      {/* Progress Bar */}
-      <div className="mb-5 bg-white dark:bg-surface-950 p-3.5 rounded-2xl border border-surface-200 dark:border-surface-800">
-        <div className="flex items-center justify-between text-xs font-bold mb-2">
-          <span className="text-surface-600 dark:text-surface-400">Preparation Progress</span>
-          <span className="text-rome-500 font-extrabold">{progressPercent}% Ready</span>
-        </div>
-        <div className="w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2 overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-rome-500 to-[#bef264] rounded-full transition-all duration-500" 
-            style={{ width: `${progressPercent}%` }} 
-          />
-        </div>
+      {/* Progress Metric */}
+      <div className="py-3 flex items-center justify-between text-xs font-bold text-surface-500">
+        <span>Preparation Milestones</span>
+        <span className="text-rome-500">{completedCount} of {tasks.length} completed ({progressPercent}%)</span>
+      </div>
+      <div className="w-full bg-surface-100 dark:bg-surface-800 rounded-full h-1.5 mb-4 overflow-hidden">
+        <div 
+          className="h-full bg-gradient-to-r from-rome-500 to-[#bef264] rounded-full transition-all duration-500" 
+          style={{ width: `${progressPercent}%` }} 
+        />
       </div>
 
-      {/* Tasks Stack (Exact Image 3 iOS/macOS card style) */}
+      {/* Notes Stack */}
       <div className="space-y-3">
         {tasks.map(task => (
           <div
             key={task.id}
             onClick={() => toggleTask(task.id)}
             className={cn(
-              "p-4 rounded-2xl border transition-all duration-200 bg-white dark:bg-surface-950 cursor-pointer group shadow-xs",
+              "p-4 rounded-2xl border transition-all duration-200 bg-surface-50/70 dark:bg-surface-950/60 hover:bg-white dark:hover:bg-surface-900 cursor-pointer group shadow-xs",
               task.completed 
-                ? "border-surface-200 dark:border-surface-800/80 opacity-80" 
+                ? "border-surface-200 dark:border-surface-800/80 opacity-85" 
                 : "border-rome-300 dark:border-rome-800 shadow-md ring-1 ring-rome-200/50 dark:ring-rome-900/30"
             )}
           >
@@ -408,10 +428,10 @@ const InteractiveWorkspaceWidget = () => {
                 <h4 className={cn("text-xs sm:text-sm font-black text-surface-900 dark:text-white", task.completed && "line-through text-surface-400 dark:text-surface-500")}>
                   {task.title}
                 </h4>
-                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.timeColor)}>
+                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.timeBadge)}>
                   {task.time}
                 </span>
-                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.statusColor)}>
+                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.statusBadge)}>
                   {task.status}
                 </span>
               </div>
@@ -422,7 +442,7 @@ const InteractiveWorkspaceWidget = () => {
               {task.desc}
             </p>
 
-            <div className="flex items-center gap-2 pl-7 pt-2 border-t border-surface-100 dark:border-surface-800/80 text-[11px] text-surface-400 font-medium">
+            <div className="flex items-center gap-2 pl-7 pt-2 border-t border-surface-200/60 dark:border-surface-800/80 text-[11px] text-surface-500 dark:text-surface-400 font-medium">
               <div className="flex -space-x-1.5">
                 {task.avatars.map((av, i) => (
                   <img 
@@ -459,13 +479,13 @@ const PARTNERS = [
 ];
 
 const LogoMarquee = () => (
-  <div className="py-7 bg-white dark:bg-surface-950 border-b border-surface-200 dark:border-surface-800/80 overflow-hidden">
+  <div className="py-8 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80 overflow-hidden">
     <div className="max-w-7xl mx-auto px-5 mb-3 text-center">
-      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-surface-400 dark:text-surface-500">
+      <span className="text-[11px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-500">
         Verified opportunities curated directly from global leaders
       </span>
     </div>
-    <div className="flex gap-12 items-center animate-[marquee_28s_linear_infinite] whitespace-nowrap opacity-70 hover:opacity-100 transition-opacity">
+    <div className="flex gap-12 items-center animate-[marquee_28s_linear_infinite] whitespace-nowrap opacity-75 hover:opacity-100 transition-opacity">
       {[...PARTNERS, ...PARTNERS].map((p, i) => (
         <div key={i} className="flex items-center gap-2.5 flex-shrink-0 text-surface-700 dark:text-surface-300 font-extrabold text-sm tracking-tight">
           <div className="w-2 h-2 rounded-full bg-rome-400/60" />
@@ -495,23 +515,40 @@ export default function LandingPage() {
     { q: 'How does ROMEfind keep opportunity information current?', a: 'Opportunities can be verified, updated, reported as broken, or marked expired. We display when an opportunity was last verified and link to the official source.' },
   ];
 
-  const CHECKLIST = [
-    { label: 'Confirm eligibility criteria', done: true },
-    { label: 'Prepare CV & Experience summaries', done: true },
-    { label: 'Draft tailored personal statement', done: false },
-    { label: 'Request recommendation letters', done: false },
-    { label: 'Review official application guidelines', done: false }
-  ];
-
   return (
-    <div className="bg-white dark:bg-surface-950 text-surface-900 dark:text-surface-50 overflow-x-hidden font-sans">
+    <div className="bg-white dark:bg-surface-950 text-surface-900 dark:text-surface-50 overflow-x-hidden font-sans selection:bg-[#bef264] selection:text-surface-950">
+      
+      {/* ─── Custom CSS Animations for floating clouds & 3D Cylindrical Arc ─── */}
       <style>{`
         @keyframes marquee { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
-        @keyframes floatSlow { 0%, 100% { transform: translateY(0px) } 50% { transform: translateY(-8px) } }
-        @keyframes pulseGlow { 0%, 100% { opacity: 0.6 } 50% { opacity: 0.9 } }
-        .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
-        .card-perspective-container {
-          perspective: 1200px;
+        
+        @keyframes floatSlow1 { 0%, 100% { transform: translateY(0px) rotateY(18deg) translateZ(-15px); } 50% { transform: translateY(-10px) rotateY(18deg) translateZ(-15px); } }
+        @keyframes floatSlow2 { 0%, 100% { transform: translateY(0px) rotateY(9deg) translateZ(-4px); } 50% { transform: translateY(-14px) rotateY(9deg) translateZ(-4px); } }
+        @keyframes floatSlow3 { 0%, 100% { transform: translateY(0px) translateZ(30px) scale(1.05); } 50% { transform: translateY(-16px) translateZ(30px) scale(1.05); } }
+        @keyframes floatSlow4 { 0%, 100% { transform: translateY(0px) rotateY(-9deg) translateZ(-4px); } 50% { transform: translateY(-12px) rotateY(-9deg) translateZ(-4px); } }
+        @keyframes floatSlow5 { 0%, 100% { transform: translateY(0px) rotateY(-18deg) translateZ(-15px); } 50% { transform: translateY(-8px) rotateY(-18deg) translateZ(-15px); } }
+        
+        @keyframes cloudDriftLeft {
+          0%, 100% { transform: translateX(0px) translateY(0px); }
+          50% { transform: translateX(40px) translateY(-12px); }
+        }
+        @keyframes cloudDriftRight {
+          0%, 100% { transform: translateX(0px) translateY(0px); }
+          50% { transform: translateX(-35px) translateY(10px); }
+        }
+        
+        .animate-float-1 { animation: floatSlow1 7s ease-in-out infinite; }
+        .animate-float-2 { animation: floatSlow2 6s ease-in-out infinite 0.8s; }
+        .animate-float-3 { animation: floatSlow3 6.5s ease-in-out infinite 1.6s; }
+        .animate-float-4 { animation: floatSlow4 7.2s ease-in-out infinite 0.4s; }
+        .animate-float-5 { animation: floatSlow5 6.8s ease-in-out infinite 1.2s; }
+
+        .animate-cloud-left { animation: cloudDriftLeft 14s ease-in-out infinite; }
+        .animate-cloud-right { animation: cloudDriftRight 16s ease-in-out infinite; }
+
+        .card-perspective-stage {
+          perspective: 1400px;
+          perspective-origin: 50% 50%;
           transform-style: preserve-3d;
         }
       `}</style>
@@ -519,29 +556,30 @@ export default function LandingPage() {
       <Nav />
 
       {/* ── 1. HERO — AELINE RADIANT SKY BLUE + 3D CURVED CAROUSEL ─────────── */}
-      <section className="relative min-h-[96vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#1d63ed] via-[#2a7bf8] to-[#4096ff] pt-24 pb-12 text-white">
-        {/* Soft volumetric atmospheric cloud layers */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Top Cloud Glow */}
-          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-white/20 rounded-full blur-3xl opacity-70" />
+      <section className="relative min-h-[96vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#1b64f2] via-[#2a7bf8] to-[#4fa0ff] pt-24 pb-14 text-white">
+        
+        {/* Realistic Volumetric Cloud Atmosphere (Aeline Style) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          {/* Top Sun & Cloud Glow */}
+          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[1100px] h-[450px] bg-white/25 rounded-full blur-3xl opacity-80" />
           
-          {/* Atmospheric Horizon Light */}
-          <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/30 via-white/10 to-transparent pointer-events-none" />
+          {/* Bottom Horizon Gradient Mist */}
+          <div className="absolute bottom-0 left-0 right-0 h-[380px] bg-gradient-to-t from-white/35 via-white/10 to-transparent pointer-events-none" />
           
-          {/* Soft Left Cloud Accent */}
-          <div className="absolute top-1/4 -left-24 w-96 h-96 bg-white/25 rounded-full blur-2xl opacity-60" />
+          {/* Floating Atmospheric Cloud Left */}
+          <div className="absolute top-1/4 -left-20 w-[450px] h-[350px] bg-white/30 rounded-full blur-3xl opacity-70 animate-cloud-left" />
           
-          {/* Soft Right Cloud Accent */}
-          <div className="absolute top-1/3 -right-24 w-[500px] h-[500px] bg-sky-200/30 rounded-full blur-3xl opacity-70" />
+          {/* Floating Atmospheric Cloud Right */}
+          <div className="absolute top-1/3 -right-24 w-[550px] h-[400px] bg-sky-100/35 rounded-full blur-3xl opacity-75 animate-cloud-right" />
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full text-center flex-1 flex flex-col justify-center items-center pt-8 pb-10">
+        {/* Hero Central Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full text-center flex-1 flex flex-col justify-center items-center pt-8 pb-8">
           
-          {/* Main Headline */}
+          {/* Main Headline (Aeline Typography) */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6 drop-shadow-sm">
-            Discover your future with<br className="hidden sm:block" />
-            <span className="text-white">clarity and strategy</span>
+            Building your future with<br className="hidden sm:block" />
+            <span className="text-white">AI and opportunity strategy</span>
           </h1>
 
           {/* Subtitle */}
@@ -549,112 +587,99 @@ export default function LandingPage() {
             We help ambitious individuals unlock opportunities and expand their potential through verified global data and intelligent multi-factor matching.
           </p>
 
-          {/* Action Button Row (Aeline Dual Buttons) */}
+          {/* Action Button Row (Aeline Dual Buttons: View Demo + Neon Lime Get Started) */}
           <div className="flex flex-row items-center justify-center gap-3.5 mb-14">
             <Link 
               to="/discover"
-              className="inline-flex items-center justify-center px-6 py-3 bg-surface-950/40 hover:bg-surface-950/60 text-white font-bold text-xs uppercase tracking-wider rounded-full backdrop-blur-md border border-white/20 transition-all shadow-sm hover:scale-[1.02]"
+              className="inline-flex items-center justify-center px-7 py-3.5 bg-surface-950/35 hover:bg-surface-950/55 text-white font-black text-xs uppercase tracking-wider rounded-full backdrop-blur-md border border-white/25 transition-all shadow-sm hover:scale-[1.02]"
             >
               View Catalog
             </Link>
             <Link 
               to="/signup"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
             >
               Get Started <ArrowUpRight size={15} className="stroke-[3]" />
             </Link>
           </div>
 
           {/* ── 3D CURVED CAROUSEL OF 5 APP CARDS (Aeline Exact Structure) ─── */}
-          <div className="w-full max-w-6xl mx-auto px-4 card-perspective-container">
-            <div className="flex items-center justify-center gap-3 md:gap-5 overflow-x-auto lg:overflow-visible py-4 no-scrollbar">
+          <div className="w-full max-w-6xl mx-auto px-2 card-perspective-stage">
+            <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 overflow-x-auto lg:overflow-visible py-6 no-scrollbar">
               
-              {/* Card 1 — Left Outer (Tilted Inward) */}
+              {/* Card 1 — Left Outer (Tilted Inward with Nature / Verified) */}
               <div 
-                className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-2xl p-4 text-left shadow-2xl border border-white/40 dark:border-surface-700 transition-all duration-300 hover:scale-105"
-                style={{ 
-                  transform: 'rotateY(16deg) translateZ(-20px)',
-                  transformStyle: 'preserve-3d'
-                }}
+                className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-3xl p-5 text-left shadow-2xl border border-white/50 dark:border-surface-700 transition-all duration-300 hover:scale-105 animate-float-1 group cursor-pointer"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-purple-100 text-purple-700">Fellowship</span>
-                  <span className="text-[11px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">98% Match</span>
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">Fellowship</span>
+                  <span className="text-[11px] font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full">98% Match</span>
                 </div>
-                <h4 className="text-xs font-black text-surface-900 dark:text-white leading-snug mb-1">Product Design Fellowship</h4>
-                <p className="text-[11px] text-surface-500 mb-3 font-medium">Design Foundation · Global</p>
-                <div className="pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-semibold">
-                  <span>Full Funding</span>
+                <h4 className="text-xs sm:text-sm font-black text-surface-900 dark:text-white leading-snug mb-1">Product Design Fellowship</h4>
+                <p className="text-[11px] text-surface-500 mb-4 font-medium">Design Foundation · Global</p>
+                <div className="pt-2.5 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-bold">
+                  <span className="text-rome-500">Full Funding</span>
                   <span>Closes Nov 15</span>
                 </div>
               </div>
 
-              {/* Card 2 — Left Inner (Subtle Angle) */}
+              {/* Card 2 — Left Inner (Dark Card with Performance / 93+ Opps) */}
               <div 
-                className="w-56 sm:w-64 flex-shrink-0 bg-surface-950/95 backdrop-blur-xl rounded-2xl p-5 text-left text-white shadow-2xl border border-surface-800 transition-all duration-300 hover:scale-105"
-                style={{ 
-                  transform: 'rotateY(8deg) translateZ(-5px)',
-                  transformStyle: 'preserve-3d'
-                }}
+                className="w-56 sm:w-64 flex-shrink-0 bg-surface-950/95 backdrop-blur-xl rounded-3xl p-5 text-left text-white shadow-2xl border border-surface-800 transition-all duration-300 hover:scale-105 animate-float-2 group cursor-pointer"
               >
-                <div className="flex items-center justify-between mb-3 text-[10px] text-surface-400 font-bold uppercase tracking-wider">
+                <div className="flex items-center justify-between mb-3 text-[10px] text-surface-400 font-black uppercase tracking-wider">
                   <span>Performance</span>
-                  <span className="text-[#bef264]">Active</span>
+                  <span className="text-[#bef264] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#bef264] animate-ping" />
+                    Active
+                  </span>
                 </div>
                 <div className="text-3xl font-black text-white tracking-tight mb-1">93+</div>
                 <p className="text-xs text-surface-400 mb-4 font-medium">Verified opportunities curated directly from top organizations.</p>
-                <div className="grid grid-cols-2 gap-2 text-[10px] bg-surface-900 p-2.5 rounded-xl border border-surface-800">
+                <div className="grid grid-cols-2 gap-2 text-[10px] bg-surface-900 p-2.5 rounded-2xl border border-surface-800">
                   <div>
-                    <span className="text-surface-500 block">Orgs</span>
+                    <span className="text-surface-500 block font-semibold">Orgs</span>
                     <span className="font-bold text-white">44 Global</span>
                   </div>
                   <div>
-                    <span className="text-surface-500 block">Jobs</span>
+                    <span className="text-surface-500 block font-semibold">Jobs</span>
                     <span className="font-bold text-[#bef264]">22 Verified</span>
                   </div>
                 </div>
               </div>
 
-              {/* Card 3 — Center Hero Card (Elevated & Glowing Hub) */}
+              {/* Card 3 — Center Hero Card (Elevated & Glowing Hub - Aeline Centerpiece) */}
               <div 
-                className="w-60 sm:w-72 flex-shrink-0 bg-gradient-to-b from-sky-500 to-sky-600 rounded-3xl p-6 text-center text-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-white/60 transition-all duration-300 scale-105 z-20"
-                style={{ 
-                  transform: 'translateZ(30px)',
-                  transformStyle: 'preserve-3d'
-                }}
+                className="w-60 sm:w-72 flex-shrink-0 bg-gradient-to-b from-sky-500 to-sky-600 rounded-3xl p-6 text-center text-white shadow-[0_25px_60px_rgba(0,0,0,0.35)] border-2 border-white/80 transition-all duration-300 hover:scale-110 z-20 animate-float-3 cursor-pointer"
               >
                 <div className="w-14 h-14 mx-auto rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center mb-4 shadow-inner">
                   <Sparkles className="w-7 h-7 text-white animate-pulse" />
                 </div>
                 <h3 className="text-base font-black tracking-tight mb-1.5">Decision Engine</h3>
                 <p className="text-xs text-sky-100 font-medium leading-relaxed mb-4">
-                  Multi-factor precision scoring based on your skills, goals & eligibility.
+                  Multi-factor precision scoring based on your skills, goals &amp; eligibility.
                 </p>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-surface-900 text-[11px] font-black shadow-xs">
-                  <CheckCircle size={12} className="text-emerald-500" />
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white text-surface-950 text-[11px] font-black shadow-sm">
+                  <CheckCircle size={13} className="text-emerald-500" />
                   <span>100% Verified Sources</span>
                 </div>
               </div>
 
-              {/* Card 4 — Right Inner (Subtle Angle) */}
+              {/* Card 4 — Right Inner (Dark Card with Multi-Path Strategy) */}
               <div 
-                className="w-56 sm:w-64 flex-shrink-0 bg-surface-900/95 backdrop-blur-xl rounded-2xl p-5 text-left text-white shadow-2xl border border-surface-800 transition-all duration-300 hover:scale-105"
-                style={{ 
-                  transform: 'rotateY(-8deg) translateZ(-5px)',
-                  transformStyle: 'preserve-3d'
-                }}
+                className="w-56 sm:w-64 flex-shrink-0 bg-surface-900/95 backdrop-blur-xl rounded-3xl p-5 text-left text-white shadow-2xl border border-surface-800 transition-all duration-300 hover:scale-105 animate-float-4 group cursor-pointer"
               >
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 rounded-full bg-[#bef264]" />
-                  <span className="text-[10px] font-bold text-surface-300 uppercase tracking-wider">Multi-Path Discovery</span>
+                  <span className="text-[10px] font-black text-surface-300 uppercase tracking-wider">Multi-Path Discovery</span>
                 </div>
                 <p className="text-xs font-semibold text-surface-200 leading-relaxed mb-4">
                   Combines Fellowships, Grants, Internships, and Research alongside traditional jobs.
                 </p>
                 <div className="space-y-1.5 text-[11px]">
-                  <div className="flex justify-between text-surface-400">
+                  <div className="flex justify-between text-surface-400 font-bold">
                     <span>Direct Jobs</span>
-                    <span className="text-white font-bold">24%</span>
+                    <span className="text-white">24%</span>
                   </div>
                   <div className="w-full bg-surface-800 rounded-full h-1.5 overflow-hidden">
                     <div className="bg-[#bef264] h-full rounded-full" style={{ width: '65%' }} />
@@ -662,22 +687,18 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Card 5 — Right Outer (Tilted Inward) */}
+              {/* Card 5 — Right Outer (Tilted Inward with Remote Job) */}
               <div 
-                className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-2xl p-4 text-left shadow-2xl border border-white/40 dark:border-surface-700 transition-all duration-300 hover:scale-105"
-                style={{ 
-                  transform: 'rotateY(-16deg) translateZ(-20px)',
-                  transformStyle: 'preserve-3d'
-                }}
+                className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-3xl p-5 text-left shadow-2xl border border-white/50 dark:border-surface-700 transition-all duration-300 hover:scale-105 animate-float-5 group cursor-pointer"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-sky-100 text-sky-700">Remote Job</span>
-                  <span className="text-[11px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Verified</span>
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700">Remote Job</span>
+                  <span className="text-[11px] font-extrabold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">Verified</span>
                 </div>
-                <h4 className="text-xs font-black text-surface-900 dark:text-white leading-snug mb-1">Frontend Systems Engineer</h4>
-                <p className="text-[11px] text-surface-500 mb-3 font-medium">Mozilla · 100% Remote</p>
-                <div className="pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-semibold">
-                  <span>Competitive</span>
+                <h4 className="text-xs sm:text-sm font-black text-surface-900 dark:text-white leading-snug mb-1">Frontend Systems Engineer</h4>
+                <p className="text-[11px] text-surface-500 mb-4 font-medium">Mozilla · 100% Remote</p>
+                <div className="pt-2.5 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-bold">
+                  <span className="text-emerald-600">Competitive</span>
                   <span>Direct Apply ↗</span>
                 </div>
               </div>
@@ -686,7 +707,7 @@ export default function LandingPage() {
           </div>
 
           {/* Social Proof Star Rating below the 3D Cards */}
-          <div className="mt-8 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-white/90">
+          <div className="mt-8 inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-bold text-white/95 shadow-sm">
             <div className="flex text-[#bef264] text-xs">
               {'★'.repeat(5)}
             </div>
@@ -699,7 +720,7 @@ export default function LandingPage() {
       {/* ── 2. LOGO MARQUEE BANNER ────────────────────────────────────────── */}
       <LogoMarquee />
 
-      {/* ── 3. ABOUT US / BENTO GRID & METRICS (Aeline Pattern) ─────────── */}
+      {/* ── 3. ABOUT US / BENTO GRID & METRICS (Aeline Exact Pattern) ──────── */}
       <section id="about" className="py-24 md:py-32 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           
@@ -707,25 +728,25 @@ export default function LandingPage() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <Pill>• About ROMEfind</Pill>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-[1.15]">
-              A global discovery engine dedicated to building{' '}
-              <span className="inline-flex items-center align-middle mx-1 px-2.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 text-sm font-extrabold border border-sky-300 dark:border-sky-800">
-                <span className="w-2 h-2 rounded-full bg-sky-500 mr-1.5 animate-pulse" />
+              A global discovery partner dedicated to building{' '}
+              <span className="inline-flex items-center align-middle mx-1 px-3 py-1 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 text-sm font-black border border-sky-300 dark:border-sky-800">
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 mr-2 shadow-[0_0_6px_#0ea5e9]" />
                 smarter
               </span>{' '}
               and{' '}
-              <span className="inline-flex items-center align-middle mx-1 px-2.5 py-0.5 rounded-full bg-[#bef264]/40 dark:bg-[#bef264]/20 text-surface-900 dark:text-[#bef264] text-sm font-black border border-[#bef264] dark:border-[#bef264]/40">
-                <span className="w-2 h-2 rounded-full bg-[#bef264] mr-1.5" />
+              <span className="inline-flex items-center align-middle mx-1 px-3 py-1 rounded-full bg-[#bef264]/40 dark:bg-[#bef264]/20 text-surface-900 dark:text-[#bef264] text-sm font-black border border-[#bef264] dark:border-[#bef264]/40">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#bef264] mr-2 shadow-[0_0_6px_#bef264]" />
                 more adaptive
               </span>{' '}
-              career paths
+              opportunity paths
             </h2>
           </div>
 
           {/* Bento Grid Layout (Exact Aeline Composition) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 items-stretch">
             
-            {/* Bento Card 1 (Left 5 Cols) — Photo with High-Contrast Stat Overlay */}
-            <div className="lg:col-span-5 rounded-3xl overflow-hidden relative min-h-[380px] bg-gradient-to-br from-sky-600 via-sky-700 to-surface-950 text-white p-7 flex flex-col justify-between shadow-xl group border border-sky-500/30">
+            {/* Bento Card 1 (Left 5 Cols) — Blue Hero Photo with High-Contrast Stat Overlay */}
+            <div className="lg:col-span-5 rounded-3xl overflow-hidden relative min-h-[400px] bg-gradient-to-br from-sky-600 via-sky-700 to-surface-950 text-white p-7 flex flex-col justify-between shadow-xl group border border-sky-500/30">
               <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/40 to-transparent z-10" />
               <div 
                 className="absolute inset-0 opacity-40 bg-cover bg-center group-hover:scale-105 transition-transform duration-700 mix-blend-overlay"
@@ -747,11 +768,11 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Bento Card 2 (Middle 4 Cols) — Accuracy Metric + Quote */}
+            {/* Bento Card 2 (Middle 4 Cols) — Accuracy Metric + Overlapping Avatars & Quote */}
             <div className="lg:col-span-4 rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-7 flex flex-col justify-between shadow-sm hover:border-surface-300 dark:hover:border-surface-700 transition-colors">
               <div>
                 <span className="text-xs font-bold text-surface-400 dark:text-surface-500 uppercase tracking-wider block mb-2">
-                  Commitment to accuracy
+                  Commitment to measurable
                 </span>
                 <div className="text-4xl sm:text-5xl font-black text-surface-900 dark:text-white tracking-tight mb-6">
                   100%
@@ -764,10 +785,10 @@ export default function LandingPage() {
                       key={idx} 
                       src={`https://randomuser.me/api/portraits/thumb/${id}.jpg`} 
                       alt="User avatar" 
-                      className="w-8 h-8 rounded-full border-2 border-white dark:border-surface-900 shadow-xs" 
+                      className="w-9 h-9 rounded-full border-2 border-white dark:border-surface-900 shadow-xs" 
                     />
                   ))}
-                  <div className="w-8 h-8 rounded-full bg-rome-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white dark:border-surface-900 shadow-xs">
+                  <div className="w-9 h-9 rounded-full bg-rome-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-white dark:border-surface-900 shadow-xs">
                     +1k
                   </div>
                 </div>
@@ -780,18 +801,18 @@ export default function LandingPage() {
             {/* Bento Card 3 & 4 (Right 3 Cols) — Vibrant Neon Lime Card & Dark Pill */}
             <div className="lg:col-span-3 flex flex-col gap-5">
               
-              {/* Neon Lime Data Card */}
+              {/* Neon Lime Data Card (Exact Aeline) */}
               <div className="flex-1 rounded-3xl bg-[#bef264] text-surface-950 p-6 flex flex-col justify-between shadow-lg border border-[#a3e635] hover:scale-[1.02] transition-transform">
                 <div>
                   <span className="text-[11px] font-black uppercase tracking-wider text-surface-900/70 block mb-1">
-                    Verified Coverage
+                    Data Points
                   </span>
                   <div className="text-3xl sm:text-4xl font-black tracking-tight text-surface-950 mb-2">
-                    93+ Opps
+                    520k+
                   </div>
                 </div>
                 <p className="text-xs font-bold text-surface-900/90 leading-relaxed">
-                  Analyzed directly from official provider sources to power smarter decision pathways.
+                  Analyzed monthly to power smarter opportunity decision strategies.
                 </p>
               </div>
 
@@ -827,12 +848,12 @@ export default function LandingPage() {
                 Comprehensive discovery<br />and intelligent innovation
               </h2>
               <p className="mt-4 text-base sm:text-lg text-surface-500 dark:text-surface-400 max-w-xl leading-relaxed">
-                Whether you're optimizing your applications today or building for tomorrow, we help you discover and apply with confidence.
+                Whether you're exploring today or building for tomorrow, we help you discover and apply with confidence.
               </p>
             </div>
             <Link 
               to="/signup"
-              className="inline-flex items-center gap-2 px-6 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md self-start md:self-auto"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md self-start md:self-auto"
             >
               Get Started <ArrowUpRight size={14} className="stroke-[3]" />
             </Link>
@@ -841,15 +862,15 @@ export default function LandingPage() {
           {/* 4-Card Row (3 Feature Cards + 1 High Quality Visual Card) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             
-            {/* Service 1 */}
+            {/* Service 1: AI Strategy */}
             <div className="rounded-3xl bg-white dark:bg-surface-900 p-6 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between hover:border-rome-300 dark:hover:border-rome-700 transition-all group">
               <div>
                 <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <Sparkles size={18} className="text-surface-950" />
                 </div>
-                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Opportunity AI</h3>
+                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">AI Strategy</h3>
                 <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
-                  We help you discover tailored matches for your field, skills, and funding requirements without clutter.
+                  We help you pinpoint opportunities aligned with your background and funding criteria with zero noise.
                 </p>
               </div>
               <div className="pt-6 mt-6 border-t border-surface-100 dark:border-surface-800/80 flex items-center justify-between text-xs font-bold text-rome-600 dark:text-rome-400">
@@ -858,7 +879,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Service 2 */}
+            {/* Service 2: Multi-Path Strategy */}
             <div className="rounded-3xl bg-white dark:bg-surface-900 p-6 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between hover:border-rome-300 dark:hover:border-rome-700 transition-all group">
               <div>
                 <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
@@ -866,7 +887,7 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Multi-Path Strategy</h3>
                 <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
-                  Expand your opportunities with parallel fellowships, research positions, grants, and programmes.
+                  Expand your opportunities with parallel tracks: fellowships, grants, research roles, and programmes.
                 </p>
               </div>
               <div className="pt-6 mt-6 border-t border-surface-100 dark:border-surface-800/80 flex items-center justify-between text-xs font-bold text-rome-600 dark:text-rome-400">
@@ -875,15 +896,15 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Service 3 */}
+            {/* Service 3: Data & Insights */}
             <div className="rounded-3xl bg-white dark:bg-surface-900 p-6 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between hover:border-rome-300 dark:hover:border-rome-700 transition-all group">
               <div>
                 <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <BarChart2 size={18} className="text-surface-950" />
                 </div>
-                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Data & Insights</h3>
+                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Data &amp; Insights</h3>
                 <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
-                  We turn opportunity requirements into clear preparation milestones using verified criteria and historical data.
+                  We turn complex eligibility requirements into clear, structured preparation roadmaps.
                 </p>
               </div>
               <div className="pt-6 mt-6 border-t border-surface-100 dark:border-surface-800/80 flex items-center justify-between text-xs font-bold text-rome-600 dark:text-rome-400">
@@ -912,118 +933,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 5. NEARO PRODUCT UI PREVIEW & WIDGETS ──────────────────────────── */}
+      {/* ── 5. SURFBALI STYLE — INTERACTIVE EXPERIENCE LEVEL SWITCHER ────────── */}
       <section className="py-24 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <Pill>• Platform Preview</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight">
-              Features designed for your success
-            </h2>
-            <p className="mt-3 text-base text-surface-500 dark:text-surface-400">
-              Explore the decision tools built to keep your opportunity discovery organized and on track.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            
-            {/* Widget 1: Task Checklist */}
-            <div className="rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 flex flex-col justify-between shadow-sm">
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center justify-between text-xs font-bold text-surface-400 uppercase tracking-wider">
-                  <span>Application Tasks</span>
-                  <span className="text-emerald-500">2 of 4 done</span>
-                </div>
-                <div className="bg-white dark:bg-surface-950 p-3 rounded-2xl border border-surface-200/80 dark:border-surface-800 flex items-center gap-2.5 shadow-xs">
-                  <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
-                  <span className="text-xs font-bold text-surface-800 dark:text-surface-200 line-through">Confirm Eligibility</span>
-                </div>
-                <div className="bg-white dark:bg-surface-950 p-3 rounded-2xl border border-surface-200/80 dark:border-surface-800 flex items-center gap-2.5 shadow-xs">
-                  <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
-                  <span className="text-xs font-bold text-surface-800 dark:text-surface-200 line-through">Draft Statement</span>
-                </div>
-                <div className="bg-white dark:bg-surface-950 p-3 rounded-2xl border border-rome-300 dark:border-rome-700 flex items-center gap-2.5 shadow-xs">
-                  <Circle size={16} className="text-rome-500 flex-shrink-0" />
-                  <span className="text-xs font-bold text-surface-900 dark:text-white">Request Recommendations</span>
-                </div>
-              </div>
-              <div>
-                <h4 className="text-sm font-black text-surface-900 dark:text-white mb-1">Task Management</h4>
-                <p className="text-xs text-surface-500 leading-relaxed">
-                  Stay on top of every requirement, from eligibility checks to final submission.
-                </p>
-              </div>
-            </div>
-
-            {/* Widget 2: Countdown & Deadline Timer */}
-            <div className="rounded-3xl bg-gradient-to-b from-sky-500 to-sky-600 text-white p-6 flex flex-col justify-between shadow-xl">
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-bold mb-4 backdrop-blur-sm">
-                  <Clock size={12} />
-                  <span>Closing Soon</span>
-                </div>
-                <h4 className="text-sm font-black leading-snug mb-4">WHO Global Health Internship</h4>
-                
-                {/* Glassmorphic Countdown Blocks */}
-                <div className="grid grid-cols-3 gap-2 text-center mb-6">
-                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-2 border border-white/30">
-                    <span className="text-xl font-black block leading-tight">24</span>
-                    <span className="text-[9px] uppercase tracking-wider text-sky-100 font-bold">Days</span>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-2 border border-white/30">
-                    <span className="text-xl font-black block leading-tight">08</span>
-                    <span className="text-[9px] uppercase tracking-wider text-sky-100 font-bold">Hours</span>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-2 border border-white/30">
-                    <span className="text-xl font-black block leading-tight">45</span>
-                    <span className="text-[9px] uppercase tracking-wider text-sky-100 font-bold">Mins</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-black text-white mb-1">Deadline Tracking</h4>
-                <p className="text-xs text-sky-100 leading-relaxed font-medium">
-                  Never miss an application cycle with automated alerts and time tracking.
-                </p>
-              </div>
-            </div>
-
-            {/* Widget 3: Multi-Factor Match Engine */}
-            <div className="rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 flex flex-col justify-between shadow-sm">
-              <div className="space-y-2 mb-6">
-                <div className="flex items-center justify-between text-xs font-bold text-surface-400 uppercase tracking-wider">
-                  <span>Match Signals</span>
-                  <span className="text-sky-500 font-black">96% Fit</span>
-                </div>
-                <div className="bg-white dark:bg-surface-950 p-2.5 rounded-xl border border-surface-200/80 dark:border-surface-800 flex items-center justify-between text-xs">
-                  <span className="font-semibold text-surface-700 dark:text-surface-300">Field Domain</span>
-                  <span className="font-bold text-emerald-500">✓ Strong (+35)</span>
-                </div>
-                <div className="bg-white dark:bg-surface-950 p-2.5 rounded-xl border border-surface-200/80 dark:border-surface-800 flex items-center justify-between text-xs">
-                  <span className="font-semibold text-surface-700 dark:text-surface-300">Modality (Remote)</span>
-                  <span className="font-bold text-emerald-500">✓ 100% (+10)</span>
-                </div>
-                <div className="bg-white dark:bg-surface-950 p-2.5 rounded-xl border border-surface-200/80 dark:border-surface-800 flex items-center justify-between text-xs">
-                  <span className="font-semibold text-surface-700 dark:text-surface-300">Full Funding</span>
-                  <span className="font-bold text-emerald-500">✓ Stipend (+5)</span>
-                </div>
-              </div>
-              <div>
-                <h4 className="text-sm font-black text-surface-900 dark:text-white mb-1">Decision Intelligence</h4>
-                <p className="text-xs text-surface-500 leading-relaxed">
-                  Transparent scoring signals show you exactly why an opportunity fits your goals.
-                </p>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ── 6. SURFBALI STYLE — INTERACTIVE EXPERIENCE LEVEL SWITCHER ────────── */}
-      <section className="py-24 bg-surface-50 dark:bg-surface-900/40 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
@@ -1032,11 +943,11 @@ export default function LandingPage() {
                 ★ LEVELS &amp; READINESS
               </span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight">
-                Find the right opportunity regardless<br />of your <span className="text-rome-500">experience level</span>
+                Find your path regardless<br />of your <span className="text-rome-500">experience level</span>
               </h2>
             </div>
             <Link 
-              to="/signup" 
+              to="/discover" 
               className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-surface-900 dark:text-white hover:text-rome-500 transition-colors"
             >
               Explore All Paths <ArrowUpRight size={14} className="stroke-[3]" />
@@ -1049,7 +960,65 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 7. IMAGE 3 STYLE — COLLABORATIVE NOTES & APPLICATION WORKSPACE ─── */}
+      {/* ── 6. SURFBALI STYLE — WHOLE ECOSYSTEM STACK (4 Cards with 3D Emojis) ── */}
+      <section className="py-24 bg-surface-50 dark:bg-surface-900/40 border-b border-surface-200/80 dark:border-surface-800/80">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Headline */}
+            <div className="lg:col-span-5">
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-rome-500 mb-2 block">
+                ★ COMPLETE ECOSYSTEM
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
+                Preparation, funding, mentorship, and execution — <span className="text-surface-400">we've got it all</span>
+              </h2>
+              <p className="text-base sm:text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed font-medium">
+                Opportunity discovery is not just about finding a listing. It’s about understanding the criteria, connecting with past applicants, building skills, and tracking deadlines.
+              </p>
+              <Link 
+                to="/signup"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
+              >
+                Join ROMEfind <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            {/* Right Stack of 4 Interactive Cards (SurfBali Pattern) */}
+            <div className="lg:col-span-7 space-y-3.5">
+              {[
+                { emoji: '🧘', title: 'Mentorship and Guidance', sub: 'For guidance', desc: 'Connect with mentors and alumni who share application advice and portfolio reviews.' },
+                { emoji: '🏛️', title: 'Global Fellowships & Funding', sub: 'For security', desc: 'Discover fully funded opportunities, stipends, living allowances, and research awards.' },
+                { emoji: '🏔️', title: 'Research and Growth', sub: 'For impact', desc: 'Access university labs, independent research institutes, and scientific grants worldwide.' },
+                { emoji: '🏄', title: 'Career Accelerators & Jobs', sub: 'For momentum', desc: 'Direct pipelines to verified tech roles, innovative fellowships, and high-growth opportunities.' },
+              ].map((item, idx) => (
+                <div 
+                  key={idx}
+                  className="rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-5 shadow-xs hover:shadow-md hover:border-rome-300 dark:hover:border-rome-700 transition-all flex items-center justify-between gap-4 group"
+                >
+                  <div className="max-w-md">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-surface-400 block mb-1">
+                      {item.sub}
+                    </span>
+                    <h4 className="text-base font-black text-surface-900 dark:text-white tracking-tight mb-1 group-hover:text-rome-500 transition-colors">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs text-surface-500 dark:text-surface-400 font-medium leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-surface-100 dark:bg-surface-800 flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition-transform shadow-xs">
+                    {item.emoji}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 7. IMAGE 3 STYLE — NOTES & APPLICATION WORKSPACE ────────────────── */}
       <section className="py-24 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
@@ -1061,7 +1030,7 @@ export default function LandingPage() {
                 Organize every milestone with precision
               </h2>
               <p className="text-base sm:text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed font-medium">
-                Keep requirements, team feedback, and upcoming deadlines synced in one clean dashboard. Never scramble for submission materials again.
+                Keep requirements, team feedback, and upcoming deadlines synced in one clean workspace. Never scramble for submission materials again.
               </p>
               
               <div className="space-y-4">
@@ -1085,7 +1054,7 @@ export default function LandingPage() {
               <div className="mt-10">
                 <Link 
                   to="/my-opportunities"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
                 >
                   View Workspace <ArrowRight size={14} />
                 </Link>
@@ -1094,59 +1063,60 @@ export default function LandingPage() {
 
             {/* Right Column: Exact Image 3 Notes & Tasks Interactive Card */}
             <div className="lg:col-span-7">
-              <InteractiveWorkspaceWidget />
+              <InteractiveNotesWidget />
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* ── LEARN — text left / mockup right ────────────────────────────── */}
-      <section className="py-20 bg-white dark:bg-surface-950">
+      {/* ── 8. LEARN & PREPARATION SECTION ─────────────────────────────────── */}
+      <section className="py-24 bg-surface-50 dark:bg-surface-900/40 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <Pill>Learn</Pill>
-              <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight mb-5">
+              <Pill>• Learn &amp; Grow</Pill>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
                 Learn for what<br />you're trying to pursue.
               </h2>
-              <p className="text-lg text-surface-500 dark:text-surface-400 mb-6 leading-relaxed">
-                Learning in ROMEfind is connected to real opportunities. Not generic courses — specific preparation for a specific goal.
+              <p className="text-base sm:text-lg text-surface-500 dark:text-surface-400 mb-6 leading-relaxed font-medium">
+                Learning in ROMEfind is connected directly to verified opportunities. Not generic course directories — targeted preparation for a specific ambition.
               </p>
-              <div className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-3 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-700 mb-8">
-                <Target size={14} className="text-rome-500" />
-                Opportunity → Requirement → Skill gap → Learning
+              <div className="inline-flex items-center gap-2 text-xs font-bold px-4 py-3 rounded-2xl bg-white dark:bg-surface-900 text-surface-800 dark:text-surface-200 border border-surface-200 dark:border-surface-800 mb-8 shadow-xs">
+                <Target size={15} className="text-rome-500" />
+                Opportunity → Criteria → Skill gap → Tailored Learning
               </div>
               <div>
-                <Link to="/learn" className="inline-flex items-center gap-1.5 text-sm font-bold text-rome-600 dark:text-rome-400 hover:text-rome-700 transition-colors">
-                  Explore learning resources <ArrowUpRight size={14} />
+                <Link to="/learn" className="inline-flex items-center gap-1.5 text-sm font-extrabold text-rome-600 dark:text-rome-400 hover:text-rome-700 transition-colors">
+                  Explore curated learning resources <ArrowUpRight size={14} />
                 </Link>
               </div>
             </div>
-            <div className="rounded-3xl border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-7 shadow-card">
-              <Chip color="purple">Fellowship</Chip>
-              <h4 className="text-sm font-black text-surface-900 dark:text-white mt-2 mb-1">Product Design Fellowship</h4>
-              <p className="text-xs text-surface-500 mb-5">Skills you may need for this opportunity:</p>
-              <div className="space-y-1.5 mb-6">
-                {['UX Research methods', 'User interviews & synthesis', 'Portfolio case study writing', 'Presentation & storytelling'].map((s, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rome-400 flex-shrink-0" />
-                    <span className="text-sm text-surface-700 dark:text-surface-300">{s}</span>
+
+            <div className="rounded-3xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-7 shadow-xl">
+              <Chip color="purple">Fellowship Track</Chip>
+              <h4 className="text-base font-black text-surface-900 dark:text-white mt-3 mb-1">Product Design Fellowship</h4>
+              <p className="text-xs text-surface-500 mb-5 font-medium">Core skills required for this fellowship path:</p>
+              <div className="space-y-2 mb-6">
+                {['UX Research methods & synthesis', 'Portfolio case study presentation', 'Cross-functional stakeholder alignment'].map((s, i) => (
+                  <div key={i} className="flex items-center gap-2.5">
+                    <span className="w-2 h-2 rounded-full bg-rome-500 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm font-semibold text-surface-700 dark:text-surface-300">{s}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs font-black uppercase tracking-wider text-surface-400 mb-3">Your preparation</p>
+              <p className="text-xs font-black uppercase tracking-wider text-surface-400 mb-3">Your preparation status</p>
               {[
                 { skill: 'UX Research', progress: 40 },
-                { skill: 'Portfolio storytelling', progress: 15 },
-                { skill: 'User interviews', progress: 60 },
+                { skill: 'Portfolio Storytelling', progress: 85 },
+                { skill: 'User Interviews', progress: 60 },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 mb-2.5">
-                  <span className="text-xs font-semibold text-surface-700 dark:text-surface-300 w-36 flex-shrink-0">{item.skill}</span>
-                  <div className="flex-1 bg-surface-200 dark:bg-surface-700 rounded-full h-1.5 overflow-hidden">
-                    <div className="h-1.5 rounded-full bg-rome-400" style={{ width: `${item.progress}%` }} />
+                <div key={i} className="flex items-center gap-3 mb-3">
+                  <span className="text-xs font-bold text-surface-700 dark:text-surface-300 w-36 flex-shrink-0">{item.skill}</span>
+                  <div className="flex-1 bg-surface-100 dark:bg-surface-800 rounded-full h-2 overflow-hidden">
+                    <div className="h-full rounded-full bg-gradient-to-r from-rome-500 to-[#bef264]" style={{ width: `${item.progress}%` }} />
                   </div>
-                  <Link to="/learn" className="text-xs font-bold text-rome-500 hover:text-rome-600 flex-shrink-0">Learn</Link>
+                  <Link to="/learn" className="text-xs font-bold text-rome-500 hover:underline flex-shrink-0">Study</Link>
                 </div>
               ))}
             </div>
@@ -1154,104 +1124,63 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── TRACK ───────────────────────────────────────────────────────── */}
-      <section className="py-20 bg-surface-50 dark:bg-surface-900/40">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="max-w-xl mx-auto text-center mb-14">
-            <Pill>Track</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight mb-4">
-              Keep moving after you find it.
-            </h2>
-            <p className="text-surface-500 dark:text-surface-400 text-lg">ROMEfind tracks every opportunity from saved to submitted.</p>
-          </div>
-          {/* Status bar */}
-          <div className="flex items-center gap-0 overflow-x-auto pb-2 max-w-2xl mx-auto mb-10 justify-center">
-            {['Saved', 'Considering', 'Preparing', 'Applying', 'Submitted', 'Outcome'].map((stage, i) => (
-              <React.Fragment key={stage}>
-                <div className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold',
-                  i <= 2 ? 'bg-rome-500 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-500 dark:text-surface-400'
-                )}>{stage}</div>
-                {i < 5 && <div className={cn('w-4 h-px flex-shrink-0', i < 2 ? 'bg-rome-400' : 'bg-surface-200 dark:bg-surface-700')} />}
-              </React.Fragment>
-            ))}
-          </div>
-          <div className="max-w-2xl mx-auto space-y-3">
-            {[
-              { title: 'Product Design Fellowship', status: 'Preparing', col: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300', next: 'Finish portfolio', deadline: 'Oct 12' },
-              { title: 'Global Innovators Grant', status: 'Submitted', col: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300', next: 'Await decision', deadline: 'Nov 5' },
-              { title: 'UX Research Programme', status: 'Saved', col: 'bg-surface-100 text-surface-600 dark:bg-surface-800 dark:text-surface-400', next: 'Review requirements', deadline: 'Dec 1' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between gap-4 px-5 py-4 rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 shadow-card">
-                <div>
-                  <span className={cn('text-xs font-bold px-2.5 py-0.5 rounded-full', item.col)}>{item.status}</span>
-                  <p className="text-sm font-bold text-surface-900 dark:text-white mt-1.5">{item.title}</p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-xs text-surface-500">Next: <span className="font-semibold text-surface-700 dark:text-surface-300">{item.next}</span></p>
-                  <p className="text-xs text-surface-400 mt-0.5 flex items-center gap-1 justify-end"><Calendar size={10} />{item.deadline}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── COMMUNITY — dark editorial (Finexa tone) ─────────────────────── */}
-      <section className="py-24 bg-surface-950">
+      {/* ── 9. COMMUNITY & OUTCOMES ────────────────────────────────────────── */}
+      <section className="py-24 bg-surface-950 text-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <Pill light>Outcomes & Community</Pill>
-              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-5">
+              <Pill light>Outcomes &amp; Experience</Pill>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-5 leading-tight">
                 Someone has been<br />through it before.
               </h2>
-              <p className="text-lg text-surface-400 mb-8 leading-relaxed">
-                People who have applied share what helped, what they'd do differently, and their outcome. Clearly labelled — separate from official information.
+              <p className="text-base sm:text-lg text-surface-400 mb-8 leading-relaxed font-medium">
+                People who have applied share what helped, what they'd do differently, and their outcome. Clearly labeled — separate from official provider specifications.
               </p>
               <div className="space-y-3">
                 {[
-                  { icon: Award, label: 'Official opportunity information', sub: 'From the organization or source', bg: 'bg-surface-800', accent: '' },
-                  { icon: Users, label: 'Community experience', sub: 'Shared by people who\'ve been through it', bg: 'bg-rome-950/60', accent: 'border-rome-800' },
-                  { icon: BookOpen, label: 'Your private notes', sub: 'Only visible to you', bg: 'bg-surface-800', accent: '' },
-                ].map(({ icon: Icon, label, sub, bg, accent }) => (
-                  <div key={label} className={cn('flex items-start gap-3 p-3.5 rounded-xl border border-surface-800', bg, accent)}>
-                    <Icon size={14} className="text-rome-400 flex-shrink-0 mt-0.5" />
+                  { icon: Award, label: 'Official opportunity requirements', sub: 'Curated directly from verified provider links' },
+                  { icon: Users, label: 'Community applicant reviews', sub: 'Shared by peers who went through the exact cycle' },
+                  { icon: BookOpen, label: 'Your private workspace notes', sub: 'Only visible to you during drafting' },
+                ].map(({ icon: Icon, label, sub }, idx) => (
+                  <div key={idx} className="flex items-start gap-3.5 p-4 rounded-2xl border border-surface-800 bg-surface-900/80">
+                    <Icon size={16} className="text-[#bef264] flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-bold text-surface-200">{label}</p>
-                      <p className="text-xs text-surface-500">{sub}</p>
+                      <p className="text-xs font-black text-surface-200">{label}</p>
+                      <p className="text-xs text-surface-400 font-medium">{sub}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="space-y-3">
-              <div className="rounded-2xl border border-surface-800 bg-surface-900 p-5">
+
+            <div className="space-y-4">
+              <div className="rounded-3xl border border-surface-800 bg-surface-900 p-6 shadow-xl">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-surface-500">Community Experience</span>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-surface-800 text-surface-500">Not official</span>
+                  <span className="text-xs font-black uppercase tracking-wider text-surface-400">Community Experience</span>
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-surface-800 text-surface-400 font-bold">Not official</span>
                 </div>
                 {[
                   { dot: 'bg-emerald-400', text: '"Start your portfolio early — the case study takes longer than you think."' },
-                  { dot: 'bg-rome-400', text: '"They care about your process more than the final output. Document everything."' },
-                  { dot: 'bg-amber-400', text: '"Applied twice — the second time I got more specific about impact."' },
+                  { dot: 'bg-rome-400', text: '"They care about your thought process more than polished visuals. Document everything."' },
+                  { dot: 'bg-amber-400', text: '"Applied twice — the second time I got more specific about measurable user impact."' },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-2.5 mb-3 last:mb-0">
+                  <div key={i} className="flex items-start gap-3 mb-3.5 last:mb-0">
                     <span className={cn('w-2 h-2 rounded-full flex-shrink-0 mt-1.5', item.dot)} />
-                    <p className="text-sm text-surface-300 leading-relaxed">{item.text}</p>
+                    <p className="text-xs sm:text-sm text-surface-300 leading-relaxed font-medium">{item.text}</p>
                   </div>
                 ))}
-                <div className="mt-4 pt-4 border-t border-surface-800 flex flex-wrap gap-2">
+                <div className="mt-5 pt-4 border-t border-surface-800 flex flex-wrap gap-2">
                   {['Application advice', 'Portfolio tips', 'Interview experience', 'What I\'d do differently'].map(tag => (
-                    <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-500">{tag}</span>
+                    <span key={tag} className="text-xs px-3 py-1 rounded-full bg-surface-800 text-surface-400 font-bold">{tag}</span>
                   ))}
                 </div>
               </div>
-              <div className="flex items-center gap-3 px-5 py-4 rounded-2xl border border-emerald-900 bg-emerald-950/30">
-                <span className="font-black text-sm px-3 py-1 rounded-full bg-emerald-900/60 text-emerald-300">🟢 ACCEPTED</span>
+
+              <div className="flex items-center gap-3.5 px-6 py-4 rounded-3xl border border-emerald-900 bg-emerald-950/40">
+                <span className="font-black text-xs px-3 py-1 rounded-full bg-emerald-900/80 text-emerald-300">🟢 ACCEPTED</span>
                 <div>
-                  <p className="text-xs font-semibold text-emerald-300">Product Design Fellowship</p>
-                  <p className="text-xs text-emerald-600">Shared by a past applicant</p>
+                  <p className="text-xs font-black text-emerald-300">Product Design Fellowship</p>
+                  <p className="text-[11px] text-emerald-500 font-medium">Shared by past fellow</p>
                 </div>
               </div>
             </div>
@@ -1259,100 +1188,27 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CONTRIBUTION ────────────────────────────────────────────────── */}
-      <section className="py-24 bg-white dark:bg-surface-950">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="max-w-3xl mx-auto text-center mb-14">
-            <Pill>Contribute</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight mb-4">
-              Your find could become<br />someone else's next opportunity.
-            </h2>
-            <p className="text-surface-500 dark:text-surface-400 text-lg max-w-xl mx-auto">
-              The knowledge loop: discover → apply → experience → contribute → someone else benefits.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-8">
-            {[
-              { icon: Globe, label: 'Paste a link', desc: 'Share the URL of an opportunity you found' },
-              { icon: Share2, label: 'Upload a file', desc: 'Screenshot or PDF of an opportunity flyer' },
-              { icon: Briefcase, label: 'Add manually', desc: 'Enter the details yourself' },
-            ].map(({ icon: Icon, label, desc }) => (
-              <div key={label} className="rounded-2xl border border-surface-200 dark:border-surface-800 p-5 text-center bg-surface-50 dark:bg-surface-900">
-                <div className="w-10 h-10 rounded-xl bg-rome-100 dark:bg-rome-900/30 flex items-center justify-center mx-auto mb-3">
-                  <Icon size={18} className="text-rome-600 dark:text-rome-400" />
-                </div>
-                <p className="text-sm font-black text-surface-900 dark:text-white mb-1">{label}</p>
-                <p className="text-xs text-surface-500">{desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center justify-center gap-0 max-w-lg mx-auto overflow-x-auto pb-1">
-            {['Submitted', 'Reviewing', 'Verified', 'Published'].map((stage, i) => (
-              <React.Fragment key={stage}>
-                <div className={cn(
-                  'flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold',
-                  stage === 'Verified' || stage === 'Published' ? 'bg-rome-500 text-white' : 'bg-surface-100 dark:bg-surface-800 text-surface-500'
-                )}>{stage}</div>
-                {i < 3 && <div className="w-5 h-px bg-surface-200 dark:bg-surface-700 flex-shrink-0" />}
-              </React.Fragment>
-            ))}
-          </div>
-          <p className="text-center text-xs text-surface-400 mt-3">Submissions reviewed before being listed as verified opportunities</p>
-        </div>
-      </section>
-
-      {/* ── WHO IT'S FOR — bento (Aeline pattern) ────────────────────────── */}
-      <section className="py-24 bg-surface-950 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.05]"
-          style={{ backgroundImage: 'radial-gradient(ellipse 60% 40% at 80% 100%, #0ea5e9, transparent)' }} />
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 relative">
-          <div className="max-w-2xl mx-auto text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
-              ROMEfind starts with<br />what you're looking for.
-            </h2>
-            <p className="text-lg text-surface-400">And helps you discover where else that search could lead.</p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto">
-            {[
-              { label: 'Looking for your next role?', icon: Briefcase },
-              { label: 'Trying to find funding?', icon: DollarSign },
-              { label: 'Building your portfolio?', icon: Star },
-              { label: 'Exploring research?', icon: Rocket },
-              { label: 'Looking for a fellowship?', icon: GraduationCap },
-              { label: 'Changing direction?', icon: Compass },
-              { label: 'Seeking study abroad?', icon: Globe },
-              { label: 'Making an impact?', icon: Heart },
-            ].map(({ label, icon: Icon }) => (
-              <div key={label} className="flex items-start gap-3 px-4 py-4 rounded-2xl bg-surface-900 border border-surface-800 hover:border-rome-700 hover:bg-surface-800/80 transition-all group cursor-default">
-                <Icon size={14} className="text-rome-400 flex-shrink-0 mt-0.5 group-hover:text-rome-300 transition-colors" />
-                <span className="text-xs font-semibold text-surface-400 group-hover:text-surface-200 transition-colors leading-snug">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+      {/* ── 10. FAQ SECTION ────────────────────────────────────────────────── */}
       <section id="faq" className="py-24 bg-white dark:bg-surface-950 scroll-mt-12">
         <div className="max-w-3xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-14">
-            <Pill>FAQ</Pill>
+            <Pill>• FAQ</Pill>
             <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight">Common questions</h2>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {FAQ_ITEMS.map((item, i) => (
               <div key={i} className="rounded-2xl border border-surface-200 dark:border-surface-800 overflow-hidden">
                 <button
                   onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left bg-white dark:bg-surface-900 hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors"
+                  className="w-full flex items-center justify-between px-5 py-4 text-left bg-white dark:bg-surface-900 hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors cursor-pointer"
                   aria-expanded={faqOpen === i}
                 >
-                  <span className="text-sm font-bold text-surface-900 dark:text-white pr-4">{item.q}</span>
+                  <span className="text-sm font-black text-surface-900 dark:text-white pr-4">{item.q}</span>
                   <ChevronDown size={16} className={cn('text-surface-400 flex-shrink-0 transition-transform duration-200', faqOpen === i && 'rotate-180')} />
                 </button>
                 {faqOpen === i && (
                   <div className="px-5 pb-5 pt-1 bg-white dark:bg-surface-900">
-                    <p className="text-sm text-surface-500 dark:text-surface-400 leading-relaxed">{item.a}</p>
+                    <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400 leading-relaxed font-medium">{item.a}</p>
                   </div>
                 )}
               </div>
@@ -1361,31 +1217,29 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FINAL CTA — editorial, confident ────────────────────────────── */}
+      {/* ── 11. FINAL CTA ──────────────────────────────────────────────────── */}
       <section className="py-28 relative overflow-hidden bg-gradient-to-b from-rome-50 to-white dark:from-rome-950/10 dark:to-surface-950">
-        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{ backgroundImage: 'radial-gradient(circle, #0ea5e9 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
         <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center relative">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-surface-900 dark:text-white tracking-tight mb-6 leading-tight">
             Your path doesn't<br />have to be obvious.
           </h2>
-          <p className="text-xl text-surface-500 dark:text-surface-400 mb-10 leading-relaxed">
+          <p className="text-lg sm:text-xl text-surface-500 dark:text-surface-400 mb-10 leading-relaxed font-medium">
             Start with what you're looking for.<br className="hidden sm:block" />Discover where else it could take you.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Link to="/signup"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-rome-500 hover:bg-rome-600 text-white font-black rounded-xl text-base transition-all shadow-lg hover:shadow-xl">
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-rome-500 hover:bg-rome-600 text-white font-black rounded-full text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl">
               Explore opportunities <ArrowRight size={16} />
             </Link>
             <Link to="/about"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 hover:border-rome-400 hover:text-rome-600 dark:hover:text-rome-400 font-semibold rounded-xl text-base transition-all">
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-900 text-surface-800 dark:text-surface-200 hover:border-rome-400 hover:text-rome-600 font-bold rounded-full text-xs uppercase tracking-wider transition-all">
               About ROMEfind
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER — Finexa wordmark watermark pattern ───────────────────── */}
+      {/* ── 12. FOOTER — FINEXA WORDMARK WATERMARK PATTERN ─────────────────── */}
       <footer className="bg-surface-950 border-t border-surface-800 relative overflow-hidden">
         {/* Giant wordmark watermark (Finexa) */}
         <div className="absolute bottom-0 left-0 right-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
@@ -1394,10 +1248,10 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-6">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-8">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 mb-16">
             <div className="col-span-2 sm:col-span-3 md:col-span-1">
-              <p className="font-black text-xl text-white mb-2">ROME<span className="text-rome-400">find</span></p>
+              <p className="font-black text-xl text-white mb-2">ROME<span className="text-[#bef264]">find</span></p>
               <p className="text-sm text-surface-400 leading-relaxed mb-3">Find what's possible.</p>
               <p className="text-xs text-surface-500 leading-relaxed">Opportunity discovery and decision support platform.</p>
             </div>
@@ -1405,36 +1259,36 @@ export default function LandingPage() {
               <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Product</p>
               <ul className="space-y-2.5">
                 {['Discover', 'Explore', 'Compare', 'My Opportunities', 'Learn'].map(l => (
-                  <li key={l}><Link to={`/${l.toLowerCase().replace(' ', '-')}`} className="text-sm text-surface-400 hover:text-rome-400 transition-colors">{l}</Link></li>
+                  <li key={l}><Link to={`/${l.toLowerCase().replace(' ', '-')}`} className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">{l}</Link></li>
                 ))}
               </ul>
             </div>
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">About</p>
               <ul className="space-y-2.5">
-                <li><Link to="/about" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">About ROMEfind</Link></li>
+                <li><Link to="/about" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">About ROMEfind</Link></li>
               </ul>
             </div>
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Help</p>
               <ul className="space-y-2.5">
-                <li><a href="#faq" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">FAQ</a></li>
-                <li><a href="mailto:romefind.support@gmail.com" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Support</a></li>
-                <li><a href="mailto:romefind.support@gmail.com" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Contact Us</a></li>
+                <li><a href="#faq" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">FAQ</a></li>
+                <li><a href="mailto:romefind.support@gmail.com" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Support</a></li>
+                <li><a href="mailto:romefind.support@gmail.com" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Contact Us</a></li>
               </ul>
             </div>
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Trust</p>
               <ul className="space-y-2.5">
-                <li><Link to="/community-guidelines" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Community Guidelines</Link></li>
-                <li><Link to="/privacy" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/terms" className="text-sm text-surface-400 hover:text-rome-400 transition-colors">Terms & Conditions</Link></li>
+                <li><Link to="/community-guidelines" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Community Guidelines</Link></li>
+                <li><Link to="/privacy" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Terms &amp; Conditions</Link></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-surface-800/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-surface-500">© {new Date().getFullYear()} ROMEfind. All rights reserved.</p>
-            <p className="text-xs text-surface-500">Rome wasn't built in a day. Neither is your path.</p>
+            <p className="text-xs text-surface-500 font-medium">© {new Date().getFullYear()} ROMEfind. All rights reserved.</p>
+            <p className="text-xs text-surface-500 font-medium">Rome wasn't built in a day. Neither is your path.</p>
           </div>
         </div>
       </footer>
