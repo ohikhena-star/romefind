@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import {
-  ArrowRight, CheckCircle2, Circle, ChevronDown,
-  Calendar, Clock,
-  Compass, Users, Award, Globe, Briefcase, GraduationCap,
-  Heart, Rocket, ChevronRight,
-  Star, BookOpen, Target, X, Menu,
-  ArrowUpRight, Sparkles, BarChart2, Share2, CheckCircle
+  ArrowRight, CheckCircle2, ChevronDown,
+  Compass, Users, Award, Briefcase,
+  ChevronRight,
+  BookOpen, Target, X, Menu,
+  ArrowUpRight, Sparkles, BarChart2, CheckCircle
 } from 'lucide-react';
 
 // ─── Pill label used above section headings (Aeline / SurfBali pattern) ─────
@@ -349,7 +348,7 @@ const InteractiveNotesWidget = () => {
             <BookOpen size={16} />
           </div>
           <h3 className="text-lg font-black text-surface-900 dark:text-white tracking-tight">
-            Notes
+            Notes &amp; Tasks
           </h3>
         </div>
         <button 
@@ -576,15 +575,15 @@ export default function LandingPage() {
         {/* Hero Central Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full text-center flex-1 flex flex-col justify-center items-center pt-8 pb-8">
           
-          {/* Main Headline (Aeline Typography) */}
+          {/* Main Headline (User's authentic brand text + modern typography) */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6 drop-shadow-sm">
-            Building your future with<br className="hidden sm:block" />
-            <span className="text-white">AI and opportunity strategy</span>
+            Rome wasn't built in a day.<br className="hidden sm:block" />
+            <span className="text-white">Neither is your path.</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-8 drop-shadow-xs font-medium">
-            We help ambitious individuals unlock opportunities and expand their potential through verified global data and intelligent multi-factor matching.
+            Your next breakthrough might be something you haven't searched for yet. Discover global fellowships, grants, research roles, and internships with multi-factor matching and verified criteria.
           </p>
 
           {/* Action Button Row (Aeline Dual Buttons: View Demo + Neon Lime Get Started) */}
@@ -1221,7 +1220,7 @@ export default function LandingPage() {
       <section className="py-28 relative overflow-hidden bg-gradient-to-b from-rome-50 to-white dark:from-rome-950/10 dark:to-surface-950">
         <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center relative">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-surface-900 dark:text-white tracking-tight mb-6 leading-tight">
-            Your path doesn't<br />have to be obvious.
+            Rome wasn't built in a day.<br />Neither is your path.
           </h2>
           <p className="text-lg sm:text-xl text-surface-500 dark:text-surface-400 mb-10 leading-relaxed font-medium">
             Start with what you're looking for.<br className="hidden sm:block" />Discover where else it could take you.
