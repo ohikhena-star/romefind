@@ -7,21 +7,18 @@ import {
   Compass, Users, Award, Globe, Briefcase, GraduationCap,
   Heart, Lightbulb, Rocket, Check, ChevronRight,
   Star, BookOpen, Target, TrendingUp, Zap, X, Menu,
-  ArrowUpRight, Sparkles, BarChart2, Share2
+  ArrowUpRight, Sparkles, BarChart2, Share2, ShieldCheck, CheckCircle
 } from 'lucide-react';
 
-// ─── Design tokens ──────────────────────────────────────────────────────────
-// sky blue = rome-500 (#0ea5e9)
-
-// ─── Pill label used above section headings (WizardUI / Aeline pattern) ─────
+// ─── Pill label used above section headings (Aeline / WizardUI pattern) ─────
 const Pill = ({ children, light = false }: { children: React.ReactNode; light?: boolean }) => (
   <span className={cn(
-    'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4',
+    'inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4',
     light
-      ? 'bg-white/10 text-white/80 border border-white/20'
-      : 'bg-rome-100 dark:bg-rome-950/60 text-rome-700 dark:text-rome-300 border border-rome-200 dark:border-rome-800'
+      ? 'bg-white/15 text-white border border-white/25 shadow-xs backdrop-blur-sm'
+      : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-700'
   )}>
-    <span className={cn('w-1.5 h-1.5 rounded-full', light ? 'bg-white/60' : 'bg-rome-500')} />
+    <span className={cn('w-1.5 h-1.5 rounded-full', light ? 'bg-[#bef264]' : 'bg-rome-500')} />
     {children}
   </span>
 );
@@ -38,42 +35,16 @@ const Chip = ({ children, color = 'sky' }: { children: React.ReactNode; color?: 
     indigo: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300',
     blue: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
     slate: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+    lime: 'bg-[#bef264] text-surface-950 font-bold',
   };
   return (
-    <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-tight', map[color] || map.sky)}>
+    <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-tight', map[color] || map.sky)}>
       {children}
     </span>
   );
 };
 
-// ─── Mini opportunity card (used in product mockups) ─────────────────────────
-const MiniCard = ({
-  title, org, type, color, deadline, location, funded, ring = false, muted = false
-}: {
-  title: string; org: string; type: string; color: string;
-  deadline?: string; location?: string; funded?: boolean; ring?: boolean; muted?: boolean;
-}) => (
-  <div className={cn(
-    'rounded-2xl border bg-white dark:bg-surface-900 p-4 transition-all select-none',
-    ring ? 'border-rome-400 shadow-lg shadow-rome-200/40 dark:shadow-rome-900/40 ring-2 ring-rome-200 dark:ring-rome-800/60' : 'border-surface-200 dark:border-surface-800 shadow-sm',
-    muted && 'opacity-60'
-  )}>
-    <div className="flex items-start justify-between gap-2 mb-2.5">
-      <Chip color={color}>{type}</Chip>
-      {funded && <Chip color="emerald">Funded</Chip>}
-    </div>
-    <h4 className="text-sm font-bold text-surface-900 dark:text-white leading-snug mb-1">{title}</h4>
-    <p className="text-xs text-surface-500 mb-3">{org}</p>
-    {(deadline || location) && (
-      <div className="flex items-center gap-3 text-xs text-surface-400">
-        {deadline && <span className="flex items-center gap-1"><Calendar size={10} />{deadline}</span>}
-        {location && <span className="flex items-center gap-1"><MapPin size={10} />{location}</span>}
-      </div>
-    )}
-  </div>
-);
-
-// ─── Sticky Nav ──────────────────────────────────────────────────────────────
+// ─── Sticky Nav (Aeline Style) ──────────────────────────────────────────────
 const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -86,42 +57,94 @@ const Nav = () => {
   return (
     <header className={cn(
       'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-      scrolled ? 'bg-white/95 dark:bg-surface-950/95 backdrop-blur-lg border-b border-surface-200/80 dark:border-surface-800/80' : 'bg-transparent'
+      scrolled 
+        ? 'bg-white/95 dark:bg-surface-950/95 backdrop-blur-md border-b border-surface-200/80 dark:border-surface-800/80 shadow-xs' 
+        : 'bg-transparent'
     )}>
-      <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between" aria-label="Main navigation">
-        <Link to="/" className="font-black text-xl tracking-tight text-surface-900 dark:text-white">
-          ROME<span className="text-rome-500">find</span>
+      <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-18 flex items-center justify-between" aria-label="Main navigation">
+        {/* Brand Logo */}
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-xl bg-white/20 dark:bg-white/10 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+            <Sparkles className="w-4 h-4 text-white drop-shadow-sm" />
+          </div>
+          <span className={cn(
+            "font-black text-xl tracking-tight transition-colors",
+            scrolled ? "text-surface-900 dark:text-white" : "text-white"
+          )}>
+            ROME<span className={scrolled ? "text-rome-500" : "text-[#bef264]"}>find</span>
+          </span>
         </Link>
-        <div className="hidden md:flex items-center gap-7">
-          {['Discover', 'Explore', 'Compare', 'Learn'].map(l => (
-            <Link key={l} to={`/${l.toLowerCase()}`}
-              className="text-sm font-medium text-surface-500 dark:text-surface-400 hover:text-rome-600 dark:hover:text-rome-400 transition-colors">
-              {l}
-            </Link>
-          ))}
+
+        {/* Center Nav Links */}
+        <div className={cn(
+          "hidden md:flex items-center gap-8 text-sm font-semibold transition-colors",
+          scrolled ? "text-surface-600 dark:text-surface-300" : "text-white/90"
+        )}>
+          <Link to="/" className="hover:text-white transition-colors">Home</Link>
+          <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+          <Link to="/discover" className="hover:text-white transition-colors">Discover</Link>
+          <Link to="/explore" className="hover:text-white transition-colors">Explore</Link>
+          <Link to="/compare" className="hover:text-white transition-colors">Compare</Link>
+          <Link to="/learn" className="hover:text-white transition-colors">Learn</Link>
         </div>
+
+        {/* Action Button */}
         <div className="hidden md:flex items-center gap-3">
-          <Link to="/login" className="text-sm font-medium text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-white transition-colors px-3 py-2">Sign in</Link>
-          <Link to="/signup"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-surface-900 dark:bg-white hover:bg-surface-800 dark:hover:bg-surface-100 text-white dark:text-surface-900 text-sm font-bold rounded-xl transition-colors">
-            Get started <ArrowRight size={13} />
+          <Link 
+            to="/login" 
+            className={cn(
+              "text-sm font-bold px-3.5 py-2 transition-colors",
+              scrolled ? "text-surface-600 hover:text-surface-900 dark:text-surface-300" : "text-white hover:text-white/80"
+            )}
+          >
+            Sign in
+          </Link>
+          <Link 
+            to="/signup"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 text-xs font-black uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Get Started <ArrowUpRight size={14} className="stroke-[3]" />
           </Link>
         </div>
-        <button className="md:hidden p-2 rounded-lg" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu" aria-expanded={menuOpen}>
-          {menuOpen ? <X size={20} className="text-surface-700 dark:text-surface-300" /> : <Menu size={20} className="text-surface-700 dark:text-surface-300" />}
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden p-2 rounded-xl text-white focus:outline-none" 
+          onClick={() => setMenuOpen(!menuOpen)} 
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </nav>
+
+      {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-surface-950 border-b border-surface-200 dark:border-surface-800 px-5 pb-5">
-          {['Discover', 'Explore', 'Compare', 'Learn'].map(l => (
-            <Link key={l} to={`/${l.toLowerCase()}`} onClick={() => setMenuOpen(false)}
-              className="block py-3 text-sm font-semibold text-surface-700 dark:text-surface-300 border-b border-surface-100 dark:border-surface-800 last:border-0">
+        <div className="md:hidden bg-surface-900/98 backdrop-blur-xl border-b border-surface-800 px-6 py-6 space-y-4 animate-in fade-in slide-in-from-top-4 duration-200">
+          {['Discover', 'Explore', 'Compare', 'Learn', 'About'].map(l => (
+            <Link 
+              key={l} 
+              to={l === 'About' ? '/about' : `/${l.toLowerCase()}`} 
+              onClick={() => setMenuOpen(false)}
+              className="block py-2 text-base font-bold text-white/90 hover:text-[#bef264] transition-colors border-b border-surface-800/80"
+            >
               {l}
             </Link>
           ))}
-          <div className="pt-4 space-y-2">
-            <Link to="/login" onClick={() => setMenuOpen(false)} className="block py-2.5 text-center text-sm font-semibold text-surface-600 dark:text-surface-400 border border-surface-200 dark:border-surface-700 rounded-xl">Sign in</Link>
-            <Link to="/signup" onClick={() => setMenuOpen(false)} className="block py-2.5 text-center text-sm font-bold text-white bg-surface-900 dark:bg-white dark:text-surface-900 rounded-xl">Get started</Link>
+          <div className="pt-2 space-y-2.5">
+            <Link 
+              to="/login" 
+              onClick={() => setMenuOpen(false)} 
+              className="block py-3 text-center text-sm font-bold text-white border border-surface-700 rounded-xl"
+            >
+              Sign in
+            </Link>
+            <Link 
+              to="/signup" 
+              onClick={() => setMenuOpen(false)} 
+              className="block py-3 text-center text-sm font-black text-surface-950 bg-[#bef264] rounded-xl"
+            >
+              Get Started ↗
+            </Link>
           </div>
         </div>
       )}
@@ -129,38 +152,46 @@ const Nav = () => {
   );
 };
 
-// ─── Marquee strip (WizardUI pattern) ────────────────────────────────────────
-const PATHS = ['Fellowships', 'Scholarships', 'Internships', 'Research Roles', 'Grants & Funding', 'Competitions', 'Programmes', 'Volunteering', 'Full-time Jobs', 'Conferences'];
-const Marquee = () => (
-  <div className="py-5 border-y border-surface-200 dark:border-surface-800 overflow-hidden bg-surface-50/60 dark:bg-surface-900/30">
-    <div className="flex gap-8 animate-[marquee_22s_linear_infinite] whitespace-nowrap">
-      {[...PATHS, ...PATHS].map((p, i) => (
-        <span key={i} className="flex items-center gap-2 text-sm font-semibold text-surface-400 dark:text-surface-600 flex-shrink-0">
-          <span className="w-1.5 h-1.5 rounded-full bg-rome-400" />{p}
-        </span>
+// ─── Provider Logos Marquee ──────────────────────────────────────────────────
+const PARTNERS = [
+  { name: 'Google', category: 'Technology' },
+  { name: 'Mozilla', category: 'Open Source' },
+  { name: 'WHO', category: 'Global Health' },
+  { name: 'UNICEF', category: 'International' },
+  { name: 'Figma', category: 'Design' },
+  { name: 'Canva', category: 'Creativity' },
+  { name: 'CERN', category: 'Research' },
+  { name: 'Y Combinator', category: 'Ventures' },
+  { name: 'Gates Foundation', category: 'Philanthropy' },
+  { name: 'Datadog', category: 'Cloud' },
+  { name: 'Wikimedia', category: 'Knowledge' },
+  { name: 'Khan Academy', category: 'Education' }
+];
+
+const LogoMarquee = () => (
+  <div className="py-7 bg-white dark:bg-surface-950 border-b border-surface-200 dark:border-surface-800/80 overflow-hidden">
+    <div className="max-w-7xl mx-auto px-5 mb-3 text-center">
+      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-surface-400 dark:text-surface-500">
+        Verified opportunities curated directly from global leaders
+      </span>
+    </div>
+    <div className="flex gap-12 items-center animate-[marquee_28s_linear_infinite] whitespace-nowrap opacity-70 hover:opacity-100 transition-opacity">
+      {[...PARTNERS, ...PARTNERS].map((p, i) => (
+        <div key={i} className="flex items-center gap-2.5 flex-shrink-0 text-surface-700 dark:text-surface-300 font-extrabold text-sm tracking-tight">
+          <div className="w-2 h-2 rounded-full bg-rome-400/60" />
+          <span>{p.name}</span>
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-surface-100 dark:bg-surface-900 text-surface-400">
+            {p.category}
+          </span>
+        </div>
       ))}
     </div>
   </div>
 );
 
-// ─── LANDING PAGE ─────────────────────────────────────────────────────────────
+// ─── LANDING PAGE COMPONENT ──────────────────────────────────────────────────
 export default function LandingPage() {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
-
-  const DEMO_RESULTS = [
-    { title: 'Product Design Fellowship', org: 'Design Foundation', type: 'Fellowship', color: 'purple', deadline: 'Nov 1', location: 'Global', funded: true },
-    { title: 'UX Design Internship', org: 'Creative Labs', type: 'Internship', color: 'blue', deadline: 'Oct 12', location: 'Remote', funded: false },
-    { title: 'Design Research Programme', org: 'Human-Centred Institute', type: 'Programme', color: 'teal', deadline: 'Oct 28', location: 'UK', funded: true },
-    { title: 'UX Innovation Competition', org: 'Creative Guild', type: 'Competition', color: 'amber', deadline: 'Oct 20', location: 'Global', funded: false },
-  ];
-
-  const CHECKLIST = [
-    { label: 'Confirm eligibility', done: true },
-    { label: 'Prepare CV / Resume', done: true },
-    { label: 'Prepare portfolio', done: false },
-    { label: 'Write personal statement', done: false },
-    { label: 'Request recommendation letters', done: false },
-  ];
 
   const FAQ_ITEMS = [
     { q: 'What is ROMEfind?', a: 'ROMEfind is an opportunity discovery and decision-support platform. It helps you find opportunities — fellowships, scholarships, jobs, grants, internships, programmes, and more — and then helps you explore, compare, prepare, track, and learn.' },
@@ -174,298 +205,530 @@ export default function LandingPage() {
     { q: 'How does ROMEfind keep opportunity information current?', a: 'Opportunities can be verified, updated, reported as broken, or marked expired. We display when an opportunity was last verified and link to the official source.' },
   ];
 
+  const CHECKLIST = [
+    { label: 'Confirm eligibility criteria', done: true },
+    { label: 'Prepare CV & Experience summaries', done: true },
+    { label: 'Draft tailored personal statement', done: false },
+    { label: 'Request recommendation letters', done: false },
+    { label: 'Review official application guidelines', done: false }
+  ];
+
   return (
-    <div className="bg-white dark:bg-surface-950 text-surface-900 dark:text-surface-50 overflow-x-hidden">
-      {/* Marquee keyframe injected inline */}
+    <div className="bg-white dark:bg-surface-950 text-surface-900 dark:text-surface-50 overflow-x-hidden font-sans">
       <style>{`
         @keyframes marquee { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
-        @media (prefers-reduced-motion: reduce) { .animate-\\[marquee_22s_linear_infinite\\] { animation: none } }
+        @keyframes floatSlow { 0%, 100% { transform: translateY(0px) } 50% { transform: translateY(-8px) } }
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.6 } 50% { opacity: 0.9 } }
+        .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
+        .card-perspective-container {
+          perspective: 1200px;
+          transform-style: preserve-3d;
+        }
       `}</style>
 
       <Nav />
 
-      {/* ── HERO — full-bleed sky blue (Aeline + Payno) ─────────────────── */}
-      <section className="relative min-h-[92vh] flex flex-col justify-center overflow-hidden bg-gradient-to-br from-sky-600 via-rome-500 to-rome-600 pt-20">
-        {/* Subtle noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }} />
-
-        {/* Soft radial glows */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-30" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-20" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)' }} />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full py-20">
-          <div className="max-w-3xl">
-            {/* Pill label */}
-            <Pill light>Now in public beta</Pill>
-
-            {/* Main headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.03] tracking-tight mb-6">
-              Rome wasn't built<br />in a day.<br />
-              <span className="text-white/70">Neither is your path.</span>
-            </h1>
-
-            <p className="text-lg sm:text-xl text-white/80 max-w-xl leading-relaxed mb-10">
-              The right opportunity can change what comes next. ROMEfind helps you discover possibilities, explore paths you may have overlooked, and take the next step.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link to="/signup"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white hover:bg-slate-50 text-surface-900 font-black rounded-xl text-base transition-all shadow-lg hover:shadow-xl">
-                Explore opportunities <ArrowRight size={16} />
-              </Link>
-              <a href="#how-it-works"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold rounded-xl text-base transition-all backdrop-blur-sm">
-                See how it works
-              </a>
-            </div>
-          </div>
-
-          {/* Floating UI cards — 3D perspective (Aeline pattern) */}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden xl:block w-[480px] pr-8"
-            style={{ perspective: '1000px' }}>
-            <div style={{ transform: 'rotateY(-8deg) rotateX(4deg)', transformStyle: 'preserve-3d' }}
-              className="space-y-3">
-              {DEMO_RESULTS.map((r, i) => (
-                <div key={i} style={{ transform: `translateZ(${i * 8}px)` }}>
-                  <MiniCard {...r} ring={i === 0} muted={i === 3} />
-                </div>
-              ))}
-              {/* Alternative paths badge floating below */}
-              <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-white/90 dark:bg-surface-900/90 border border-rome-200 dark:border-rome-800 backdrop-blur-sm shadow-lg">
-                <Compass size={14} className="text-rome-500 flex-shrink-0" />
-                <span className="text-xs font-bold text-rome-700 dark:text-rome-300">You might also explore:</span>
-                <span className="text-xs text-rome-500">Research · Grants · Programmes</span>
-              </div>
-            </div>
-          </div>
+      {/* ── 1. HERO — AELINE RADIANT SKY BLUE + 3D CURVED CAROUSEL ─────────── */}
+      <section className="relative min-h-[96vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#1d63ed] via-[#2a7bf8] to-[#4096ff] pt-24 pb-12 text-white">
+        {/* Soft volumetric atmospheric cloud layers */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Top Cloud Glow */}
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-white/20 rounded-full blur-3xl opacity-70" />
+          
+          {/* Atmospheric Horizon Light */}
+          <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/30 via-white/10 to-transparent pointer-events-none" />
+          
+          {/* Soft Left Cloud Accent */}
+          <div className="absolute top-1/4 -left-24 w-96 h-96 bg-white/25 rounded-full blur-2xl opacity-60" />
+          
+          {/* Soft Right Cloud Accent */}
+          <div className="absolute top-1/3 -right-24 w-[500px] h-[500px] bg-sky-200/30 rounded-full blur-3xl opacity-70" />
         </div>
 
-        {/* Wave divider */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none" className="w-full h-12 md:h-16">
-            <path d="M0 60 L0 30 Q360 0 720 30 Q1080 60 1440 30 L1440 60 Z" fill="white" className="dark:fill-surface-950" />
-          </svg>
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full text-center flex-1 flex flex-col justify-center items-center pt-8 pb-10">
+          
+          {/* Main Headline */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6 drop-shadow-sm">
+            Discover your future with<br className="hidden sm:block" />
+            <span className="text-white">clarity and strategy</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-8 drop-shadow-xs font-medium">
+            We help ambitious individuals unlock opportunities and expand their potential through verified global data and intelligent multi-factor matching.
+          </p>
+
+          {/* Action Button Row (Aeline Dual Buttons) */}
+          <div className="flex flex-row items-center justify-center gap-3.5 mb-14">
+            <Link 
+              to="/discover"
+              className="inline-flex items-center justify-center px-6 py-3 bg-surface-950/40 hover:bg-surface-950/60 text-white font-bold text-xs uppercase tracking-wider rounded-full backdrop-blur-md border border-white/20 transition-all shadow-sm hover:scale-[1.02]"
+            >
+              View Catalog
+            </Link>
+            <Link 
+              to="/signup"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Get Started <ArrowUpRight size={15} className="stroke-[3]" />
+            </Link>
+          </div>
+
+          {/* ── 3D CURVED CAROUSEL OF 5 APP CARDS (Aeline Exact Structure) ─── */}
+          <div className="w-full max-w-6xl mx-auto px-4 card-perspective-container">
+            <div className="flex items-center justify-center gap-3 md:gap-5 overflow-x-auto lg:overflow-visible py-4 no-scrollbar">
+              
+              {/* Card 1 — Left Outer (Tilted Inward) */}
+              <div 
+                className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-2xl p-4 text-left shadow-2xl border border-white/40 dark:border-surface-700 transition-all duration-300 hover:scale-105"
+                style={{ 
+                  transform: 'rotateY(16deg) translateZ(-20px)',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-purple-100 text-purple-700">Fellowship</span>
+                  <span className="text-[11px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">98% Match</span>
+                </div>
+                <h4 className="text-xs font-black text-surface-900 dark:text-white leading-snug mb-1">Product Design Fellowship</h4>
+                <p className="text-[11px] text-surface-500 mb-3 font-medium">Design Foundation · Global</p>
+                <div className="pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-semibold">
+                  <span>Full Funding</span>
+                  <span>Closes Nov 15</span>
+                </div>
+              </div>
+
+              {/* Card 2 — Left Inner (Subtle Angle) */}
+              <div 
+                className="w-56 sm:w-64 flex-shrink-0 bg-surface-950/95 backdrop-blur-xl rounded-2xl p-5 text-left text-white shadow-2xl border border-surface-800 transition-all duration-300 hover:scale-105"
+                style={{ 
+                  transform: 'rotateY(8deg) translateZ(-5px)',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                <div className="flex items-center justify-between mb-3 text-[10px] text-surface-400 font-bold uppercase tracking-wider">
+                  <span>Performance</span>
+                  <span className="text-[#bef264]">Active</span>
+                </div>
+                <div className="text-3xl font-black text-white tracking-tight mb-1">93+</div>
+                <p className="text-xs text-surface-400 mb-4 font-medium">Verified opportunities curated directly from top organizations.</p>
+                <div className="grid grid-cols-2 gap-2 text-[10px] bg-surface-900 p-2.5 rounded-xl border border-surface-800">
+                  <div>
+                    <span className="text-surface-500 block">Orgs</span>
+                    <span className="font-bold text-white">44 Global</span>
+                  </div>
+                  <div>
+                    <span className="text-surface-500 block">Jobs</span>
+                    <span className="font-bold text-[#bef264]">22 Verified</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3 — Center Hero Card (Elevated & Glowing Hub) */}
+              <div 
+                className="w-60 sm:w-72 flex-shrink-0 bg-gradient-to-b from-sky-500 to-sky-600 rounded-3xl p-6 text-center text-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-white/60 transition-all duration-300 scale-105 z-20"
+                style={{ 
+                  transform: 'translateZ(30px)',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                <div className="w-14 h-14 mx-auto rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center mb-4 shadow-inner">
+                  <Sparkles className="w-7 h-7 text-white animate-pulse" />
+                </div>
+                <h3 className="text-base font-black tracking-tight mb-1.5">Decision Engine</h3>
+                <p className="text-xs text-sky-100 font-medium leading-relaxed mb-4">
+                  Multi-factor precision scoring based on your skills, goals & eligibility.
+                </p>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-surface-900 text-[11px] font-black shadow-xs">
+                  <CheckCircle size={12} className="text-emerald-500" />
+                  <span>100% Verified Sources</span>
+                </div>
+              </div>
+
+              {/* Card 4 — Right Inner (Subtle Angle) */}
+              <div 
+                className="w-56 sm:w-64 flex-shrink-0 bg-surface-900/95 backdrop-blur-xl rounded-2xl p-5 text-left text-white shadow-2xl border border-surface-800 transition-all duration-300 hover:scale-105"
+                style={{ 
+                  transform: 'rotateY(-8deg) translateZ(-5px)',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 rounded-full bg-[#bef264]" />
+                  <span className="text-[10px] font-bold text-surface-300 uppercase tracking-wider">Multi-Path Discovery</span>
+                </div>
+                <p className="text-xs font-semibold text-surface-200 leading-relaxed mb-4">
+                  Combines Fellowships, Grants, Internships, and Research alongside traditional jobs.
+                </p>
+                <div className="space-y-1.5 text-[11px]">
+                  <div className="flex justify-between text-surface-400">
+                    <span>Direct Jobs</span>
+                    <span className="text-white font-bold">24%</span>
+                  </div>
+                  <div className="w-full bg-surface-800 rounded-full h-1.5 overflow-hidden">
+                    <div className="bg-[#bef264] h-full rounded-full" style={{ width: '65%' }} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 5 — Right Outer (Tilted Inward) */}
+              <div 
+                className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-2xl p-4 text-left shadow-2xl border border-white/40 dark:border-surface-700 transition-all duration-300 hover:scale-105"
+                style={{ 
+                  transform: 'rotateY(-16deg) translateZ(-20px)',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-sky-100 text-sky-700">Remote Job</span>
+                  <span className="text-[11px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Verified</span>
+                </div>
+                <h4 className="text-xs font-black text-surface-900 dark:text-white leading-snug mb-1">Frontend Systems Engineer</h4>
+                <p className="text-[11px] text-surface-500 mb-3 font-medium">Mozilla · 100% Remote</p>
+                <div className="pt-2 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-semibold">
+                  <span>Competitive</span>
+                  <span>Direct Apply ↗</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Social Proof Star Rating below the 3D Cards */}
+          <div className="mt-8 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-white/90">
+            <div className="flex text-[#bef264] text-xs">
+              {'★'.repeat(5)}
+            </div>
+            <span>Rated <strong>4.9/5</strong> by 1,200+ applicants worldwide</span>
+          </div>
+
         </div>
       </section>
 
-      {/* ── MARQUEE (WizardUI pattern) ───────────────────────────────────── */}
-      <Marquee />
+      {/* ── 2. LOGO MARQUEE BANNER ────────────────────────────────────────── */}
+      <LogoMarquee />
 
-      {/* ── PROBLEM — bento grid (HiBob + Aeline) ───────────────────────── */}
-      <section id="how-it-works" className="py-24 md:py-32 bg-white dark:bg-surface-950">
+      {/* ── 3. ABOUT US / BENTO GRID & METRICS (Aeline Pattern) ─────────── */}
+      <section id="about" className="py-24 md:py-32 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="max-w-2xl mb-16">
-            <Pill>The problem</Pill>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight">
-              You might be searching<br />
-              <span className="text-surface-400 dark:text-surface-600">too narrowly.</span>
+          
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <Pill>• About ROMEfind</Pill>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-[1.15]">
+              A global discovery engine dedicated to building{' '}
+              <span className="inline-flex items-center align-middle mx-1 px-2.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 text-sm font-extrabold border border-sky-300 dark:border-sky-800">
+                <span className="w-2 h-2 rounded-full bg-sky-500 mr-1.5 animate-pulse" />
+                smarter
+              </span>{' '}
+              and{' '}
+              <span className="inline-flex items-center align-middle mx-1 px-2.5 py-0.5 rounded-full bg-[#bef264]/40 dark:bg-[#bef264]/20 text-surface-900 dark:text-[#bef264] text-sm font-black border border-[#bef264] dark:border-[#bef264]/40">
+                <span className="w-2 h-2 rounded-full bg-[#bef264] mr-1.5" />
+                more adaptive
+              </span>{' '}
+              career paths
             </h2>
-            <p className="mt-5 text-lg text-surface-500 dark:text-surface-400 max-w-lg leading-relaxed">
-              People search for what they know. ROMEfind shows you what you might be missing — paths that sit right beside what you're already looking for.
-            </p>
           </div>
 
-          {/* Bento grid layout (HiBob / Aeline) */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-            {/* Left — search demo, spans 3 cols */}
-            <div className="lg:col-span-3 rounded-3xl border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 md:p-8">
-              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-3">What are you looking for?</p>
-              <div className="flex items-center gap-3 bg-white dark:bg-surface-950 border-2 border-rome-400 dark:border-rome-500 rounded-xl px-4 py-3 mb-5 shadow-sm">
-                <Search size={15} className="text-rome-500 flex-shrink-0" />
-                <span className="text-sm font-bold text-surface-900 dark:text-white">UX internship</span>
-                <span className="ml-auto w-0.5 h-4 bg-rome-400 animate-pulse" />
+          {/* Bento Grid Layout (Exact Aeline Composition) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 items-stretch">
+            
+            {/* Bento Card 1 (Left 5 Cols) — Photo with High-Contrast Stat Overlay */}
+            <div className="lg:col-span-5 rounded-3xl overflow-hidden relative min-h-[380px] bg-gradient-to-br from-sky-600 via-sky-700 to-surface-950 text-white p-7 flex flex-col justify-between shadow-xl group border border-sky-500/30">
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/40 to-transparent z-10" />
+              <div 
+                className="absolute inset-0 opacity-40 bg-cover bg-center group-hover:scale-105 transition-transform duration-700 mix-blend-overlay"
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80')` }}
+              />
+              <div className="relative z-20 flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white">
+                  ROMEfind · Verified
+                </span>
+                <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
+                  <Sparkles size={14} className="text-white" />
+                </div>
               </div>
-
-              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-3">Opportunities found</p>
-              <div className="space-y-2">
-                {[
-                  { label: 'UX Design Internship', type: 'Internship', color: 'blue' },
-                  { label: 'Product Design Fellowship', type: 'Fellowship', color: 'purple' },
-                  { label: 'Design Research Programme', type: 'Programme', color: 'teal' },
-                  { label: 'UX Innovation Competition', type: 'Competition', color: 'amber' },
-                  { label: 'Research Grant – User Experience', type: 'Grant', color: 'emerald' },
-                ].map((r, i) => (
-                  <div key={i} className={cn(
-                    'flex items-center gap-3 px-4 py-2.5 rounded-xl border',
-                    i === 0 ? 'bg-white dark:bg-surface-950 border-rome-300 dark:border-rome-700' : 'bg-white/50 dark:bg-surface-900/50 border-surface-200 dark:border-surface-800'
-                  )}>
-                    <Chip color={r.color}>{r.type}</Chip>
-                    <span className="text-sm font-semibold text-surface-800 dark:text-surface-200 flex-1 truncate">{r.label}</span>
-                    {i === 0 && <Check size={13} className="text-rome-500 flex-shrink-0" />}
-                  </div>
-                ))}
+              <div className="relative z-20 pt-20">
+                <div className="text-5xl sm:text-6xl font-black text-white tracking-tight mb-2">93+</div>
+                <p className="text-sm sm:text-base text-white/90 font-medium leading-relaxed max-w-sm">
+                  Curated and verified opportunities from leading global tech, research, health, and policy institutions.
+                </p>
               </div>
             </div>
 
-            {/* Right — 2 tall cards stacked, spans 2 cols */}
-            <div className="lg:col-span-2 flex flex-col gap-4">
-              {/* Alternative paths card */}
-              <div className="flex-1 rounded-3xl border border-rome-200 dark:border-rome-800/60 bg-rome-50 dark:bg-rome-950/20 p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-xl bg-rome-500 flex items-center justify-center">
-                    <Compass size={15} className="text-white" />
-                  </div>
-                  <span className="text-sm font-black text-rome-800 dark:text-rome-200">You might also explore</span>
+            {/* Bento Card 2 (Middle 4 Cols) — Accuracy Metric + Quote */}
+            <div className="lg:col-span-4 rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-7 flex flex-col justify-between shadow-sm hover:border-surface-300 dark:hover:border-surface-700 transition-colors">
+              <div>
+                <span className="text-xs font-bold text-surface-400 dark:text-surface-500 uppercase tracking-wider block mb-2">
+                  Commitment to accuracy
+                </span>
+                <div className="text-4xl sm:text-5xl font-black text-surface-900 dark:text-white tracking-tight mb-6">
+                  100%
                 </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {['Fellowships', 'Research', 'Competitions', 'Grants', 'Programmes'].map(t => (
-                    <span key={t} className="px-3 py-1 text-xs font-bold rounded-full bg-white dark:bg-surface-900 border border-rome-300 dark:border-rome-700 text-rome-700 dark:text-rome-300">
-                      {t}
-                    </span>
+              </div>
+              <div>
+                <div className="flex items-center -space-x-2 mb-4">
+                  {['men/32', 'women/44', 'men/75', 'women/68'].map((id, idx) => (
+                    <img 
+                      key={idx} 
+                      src={`https://randomuser.me/api/portraits/thumb/${id}.jpg`} 
+                      alt="User avatar" 
+                      className="w-8 h-8 rounded-full border-2 border-white dark:border-surface-900 shadow-xs" 
+                    />
                   ))}
+                  <div className="w-8 h-8 rounded-full bg-rome-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white dark:border-surface-900 shadow-xs">
+                    +1k
+                  </div>
                 </div>
-                <p className="text-xs text-rome-600 dark:text-rome-400 leading-relaxed">
-                  You're exploring internships. These paths can also offer experience, mentorship, research exposure, or portfolio-building opportunities.
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 italic leading-relaxed font-medium">
+                  "Their multi-factor matching completely reshaped how we discover opportunities. It's efficient, intelligent, and seamless."
+                </p>
+              </div>
+            </div>
+
+            {/* Bento Card 3 & 4 (Right 3 Cols) — Vibrant Neon Lime Card & Dark Pill */}
+            <div className="lg:col-span-3 flex flex-col gap-5">
+              
+              {/* Neon Lime Data Card */}
+              <div className="flex-1 rounded-3xl bg-[#bef264] text-surface-950 p-6 flex flex-col justify-between shadow-lg border border-[#a3e635] hover:scale-[1.02] transition-transform">
+                <div>
+                  <span className="text-[11px] font-black uppercase tracking-wider text-surface-900/70 block mb-1">
+                    Verified Coverage
+                  </span>
+                  <div className="text-3xl sm:text-4xl font-black tracking-tight text-surface-950 mb-2">
+                    93+ Opps
+                  </div>
+                </div>
+                <p className="text-xs font-bold text-surface-900/90 leading-relaxed">
+                  Analyzed directly from official provider sources to power smarter decision pathways.
                 </p>
               </div>
 
-              {/* Stat card — no fake numbers, descriptive instead */}
-              <div className="rounded-3xl border border-surface-200 dark:border-surface-800 bg-surface-900 dark:bg-surface-900 p-6">
-                <p className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-3">Opportunity types</p>
-                <div className="space-y-2">
-                  {[
-                    { label: 'Fellowships', w: '80%', color: 'bg-purple-400' },
-                    { label: 'Grants', w: '60%', color: 'bg-emerald-400' },
-                    { label: 'Internships', w: '75%', color: 'bg-rome-400' },
-                    { label: 'Programmes', w: '50%', color: 'bg-teal-400' },
-                  ].map(r => (
-                    <div key={r.label}>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="font-medium text-surface-300">{r.label}</span>
-                      </div>
-                      <div className="w-full bg-surface-800 rounded-full h-1.5">
-                        <div className={cn('h-1.5 rounded-full', r.color)} style={{ width: r.w }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SIGNATURE STATEMENT — dark full-bleed (Finexa / Aeline) ──────── */}
-      <section className="py-24 bg-surface-950 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.06]"
-          style={{ backgroundImage: 'radial-gradient(ellipse 70% 50% at 50% 0%, #0ea5e9, transparent)' }} />
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 relative text-center">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-rome-400 mb-6">Your search is only the beginning</p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-tight mb-6 max-w-4xl mx-auto">
-            From discovery<br />
-            <span className="text-rome-400">to outcome.</span>
-          </h2>
-          <p className="text-xl text-surface-400 max-w-xl mx-auto leading-relaxed mb-16">
-            ROMEfind stays with you from the moment you find an opportunity to the moment you share your experience with the next person.
-          </p>
-
-          {/* Journey steps — horizontal scrollable on mobile, row on desktop */}
-          <div className="flex items-center justify-center overflow-x-auto pb-2 gap-0 -mx-5 px-5 sm:mx-0 sm:px-0">
-            {['Discover', 'Explore', 'Compare', 'Prepare', 'Apply', 'Track', 'Learn', 'Outcome', 'Contribute'].map((step, i) => (
-              <React.Fragment key={step}>
-                <div className="flex flex-col items-center flex-shrink-0">
-                  <div className={cn(
-                    'w-10 h-10 rounded-full flex items-center justify-center text-xs font-black border-2 mb-2',
-                    i < 5 ? 'bg-rome-500 border-rome-400 text-white' : 'bg-surface-800 border-surface-700 text-surface-500'
-                  )}>
-                    {i < 5 ? <Check size={13} /> : i + 1}
+              {/* Dark Pill / Metrics Card */}
+              <div className="rounded-3xl bg-surface-950 text-white p-5 border border-surface-800 shadow-md">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-surface-400 block">Continents</span>
+                    <span className="text-xl font-black text-white">6+ Global</span>
                   </div>
-                  <span className={cn('text-xs font-bold', i < 5 ? 'text-rome-300' : 'text-surface-600')}>{step}</span>
+                  <div className="text-right">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-surface-400 block">Fully Funded</span>
+                    <span className="text-xl font-black text-[#bef264]">70%+</span>
+                  </div>
                 </div>
-                {i < 8 && <div className={cn('w-6 h-px flex-shrink-0 mx-1 mb-5', i < 4 ? 'bg-rome-700' : 'bg-surface-800')} />}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3-STEP HOW IT WORKS (WizardUI pattern) ──────────────────────── */}
-      <section className="py-24 bg-white dark:bg-surface-950">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="max-w-xl mx-auto text-center mb-16">
-            <Pill>How it works</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight">Simple steps,<br />real results.</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                step: '01', icon: Search, label: 'Discover possibilities',
-                desc: 'Tell ROMEfind what you\'re looking for. Explore opportunities matched to your profile, field, and goals — plus paths you may not have considered.',
-                bg: 'bg-rome-50 dark:bg-rome-950/20', border: 'border-rome-200 dark:border-rome-800',
-                iconBg: 'bg-rome-500',
-              },
-              {
-                step: '02', icon: BarChart2, label: 'Compare & decide',
-                desc: 'Add opportunities to your comparison view. See deadlines, funding, requirements, and effort side-by-side to make an informed decision.',
-                bg: 'bg-surface-50 dark:bg-surface-900', border: 'border-surface-200 dark:border-surface-800',
-                iconBg: 'bg-surface-800 dark:bg-white',
-              },
-              {
-                step: '03', icon: Target, label: 'Prepare & track',
-                desc: 'Work through your preparation checklist, track your application through every status, and record your outcome when the time comes.',
-                bg: 'bg-surface-50 dark:bg-surface-900', border: 'border-surface-200 dark:border-surface-800',
-                iconBg: 'bg-surface-800 dark:bg-white',
-              },
-            ].map(({ step, icon: Icon, label, desc, bg, border, iconBg }) => (
-              <div key={step} className={cn('rounded-3xl border p-7 relative overflow-hidden', bg, border)}>
-                <span className="absolute top-5 right-6 text-5xl font-black text-surface-200/40 dark:text-surface-700/40 leading-none select-none">{step}</span>
-                <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center mb-5', iconBg)}>
-                  <Icon size={18} className={iconBg.includes('rome-500') ? 'text-white' : 'text-white dark:text-surface-900'} />
-                </div>
-                <h3 className="text-base font-black text-surface-900 dark:text-white mb-2">{label}</h3>
-                <p className="text-sm text-surface-500 dark:text-surface-400 leading-relaxed">{desc}</p>
               </div>
-            ))}
+
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ── DISCOVER — text left / cards right (Payno alternating) ─────── */}
-      <section className="py-20 bg-surface-50 dark:bg-surface-900/40">
+      {/* ── 4. SERVICES & INTELLIGENCE — 4-COLUMN CARDS ROW (Aeline Pattern) ── */}
+      <section className="py-24 bg-surface-50 dark:bg-surface-900/50 border-b border-surface-200/80 dark:border-surface-800/80">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          
+          {/* Section Header with CTA */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
-              <Pill>Discover & Explore</Pill>
-              <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight mb-5">
-                See more possibilities.
+              <Pill>• Platform Services</Pill>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight max-w-2xl">
+                Comprehensive discovery<br />and intelligent innovation
               </h2>
-              <p className="text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed">
-                ROMEfind surfaces opportunities matched to your interests, goals, experience, and preferences — and shows you adjacent paths you might have overlooked.
+              <p className="mt-4 text-base sm:text-lg text-surface-500 dark:text-surface-400 max-w-xl leading-relaxed">
+                Whether you're optimizing your applications today or building for tomorrow, we help you discover and apply with confidence.
               </p>
-              <ul className="space-y-3 mb-8">
-                {[
-                  'Personalized to your field and goals',
-                  'Alternative paths adjacent to your search',
-                  'Deadlines, funding status, and location at a glance',
-                  'Remote and globally accessible opportunities',
-                  'Public health, tech, climate, research, and more',
-                ].map(item => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-surface-700 dark:text-surface-300">
-                    <Check size={14} className="text-rome-500 flex-shrink-0 mt-0.5" />{item}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/discover" className="inline-flex items-center gap-1.5 text-sm font-bold text-rome-600 dark:text-rome-400 hover:text-rome-700 dark:hover:text-rome-300 transition-colors">
-                Browse opportunities <ArrowUpRight size={14} />
-              </Link>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { title: 'Global Health Leadership Fellowship', org: 'WHO Foundation', type: 'Fellowship', color: 'purple', deadline: 'Nov 15', funded: true },
-                { title: 'Climate Innovation Grant', org: 'Green Future Fund', type: 'Grant', color: 'emerald', deadline: 'Dec 10', funded: true },
-                { title: 'UX Research Programme', org: 'Design Council', type: 'Programme', color: 'teal', deadline: 'Oct 30', funded: true },
-                { title: 'AI for Good Internship', org: 'OpenAI Foundation', type: 'Internship', color: 'blue', deadline: 'Nov 1', funded: false },
-              ].map((opp, i) => (
-                <MiniCard key={i} {...opp} location="Remote" ring={i === 0} />
-              ))}
-              <div className="col-span-2 flex items-center gap-2 px-4 py-3 rounded-2xl border border-rome-200 dark:border-rome-800 bg-rome-50 dark:bg-rome-950/20">
-                <Compass size={14} className="text-rome-500 flex-shrink-0" />
-                <span className="text-xs font-bold text-rome-700 dark:text-rome-300">You might be overlooking:</span>
-                <span className="text-xs text-rome-500 dark:text-rome-400">Competitions · Research · Conferences</span>
+            <Link 
+              to="/signup"
+              className="inline-flex items-center gap-2 px-6 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md self-start md:self-auto"
+            >
+              Get Started <ArrowUpRight size={14} className="stroke-[3]" />
+            </Link>
+          </div>
+
+          {/* 4-Card Row (3 Feature Cards + 1 High Quality Visual Card) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            
+            {/* Service 1 */}
+            <div className="rounded-3xl bg-white dark:bg-surface-900 p-6 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between hover:border-rome-300 dark:hover:border-rome-700 transition-all group">
+              <div>
+                <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Sparkles size={18} className="text-surface-950" />
+                </div>
+                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Opportunity AI</h3>
+                <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
+                  We help you discover tailored matches for your field, skills, and funding requirements without clutter.
+                </p>
+              </div>
+              <div className="pt-6 mt-6 border-t border-surface-100 dark:border-surface-800/80 flex items-center justify-between text-xs font-bold text-rome-600 dark:text-rome-400">
+                <span>Multi-factor fit</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
+
+            {/* Service 2 */}
+            <div className="rounded-3xl bg-white dark:bg-surface-900 p-6 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between hover:border-rome-300 dark:hover:border-rome-700 transition-all group">
+              <div>
+                <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Compass size={18} className="text-surface-950" />
+                </div>
+                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Multi-Path Strategy</h3>
+                <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
+                  Expand your opportunities with parallel fellowships, research positions, grants, and programmes.
+                </p>
+              </div>
+              <div className="pt-6 mt-6 border-t border-surface-100 dark:border-surface-800/80 flex items-center justify-between text-xs font-bold text-rome-600 dark:text-rome-400">
+                <span>Alternative avenues</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Service 3 */}
+            <div className="rounded-3xl bg-white dark:bg-surface-900 p-6 border border-surface-200 dark:border-surface-800 shadow-sm flex flex-col justify-between hover:border-rome-300 dark:hover:border-rome-700 transition-all group">
+              <div>
+                <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <BarChart2 size={18} className="text-surface-950" />
+                </div>
+                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Data & Insights</h3>
+                <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
+                  We turn opportunity requirements into clear preparation milestones using verified criteria and historical data.
+                </p>
+              </div>
+              <div className="pt-6 mt-6 border-t border-surface-100 dark:border-surface-800/80 flex items-center justify-between text-xs font-bold text-rome-600 dark:text-rome-400">
+                <span>Decision comparison</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Service 4 — Visual Photo Card */}
+            <div className="rounded-3xl overflow-hidden relative min-h-[260px] shadow-sm border border-surface-200 dark:border-surface-800 group">
+              <img 
+                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" 
+                alt="Applicants collaborating" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-950/90 via-surface-950/30 to-transparent flex flex-col justify-end p-5 text-white">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#bef264] mb-1">Collaborative Community</span>
+                <p className="text-xs font-bold leading-snug">
+                  Learn from real application experiences and outcomes shared by peers.
+                </p>
+              </div>
+            </div>
+
           </div>
+
+        </div>
+      </section>
+
+      {/* ── 5. NEARO PRODUCT UI PREVIEW & WIDGETS ──────────────────────────── */}
+      <section className="py-24 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <Pill>• Platform Preview</Pill>
+            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight">
+              Features designed for your success
+            </h2>
+            <p className="mt-3 text-base text-surface-500 dark:text-surface-400">
+              Explore the decision tools built to keep your opportunity discovery organized and on track.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            
+            {/* Widget 1: Task Checklist */}
+            <div className="rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 flex flex-col justify-between shadow-sm">
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center justify-between text-xs font-bold text-surface-400 uppercase tracking-wider">
+                  <span>Application Tasks</span>
+                  <span className="text-emerald-500">2 of 4 done</span>
+                </div>
+                <div className="bg-white dark:bg-surface-950 p-3 rounded-2xl border border-surface-200/80 dark:border-surface-800 flex items-center gap-2.5 shadow-xs">
+                  <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+                  <span className="text-xs font-bold text-surface-800 dark:text-surface-200 line-through">Confirm Eligibility</span>
+                </div>
+                <div className="bg-white dark:bg-surface-950 p-3 rounded-2xl border border-surface-200/80 dark:border-surface-800 flex items-center gap-2.5 shadow-xs">
+                  <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+                  <span className="text-xs font-bold text-surface-800 dark:text-surface-200 line-through">Draft Statement</span>
+                </div>
+                <div className="bg-white dark:bg-surface-950 p-3 rounded-2xl border border-rome-300 dark:border-rome-700 flex items-center gap-2.5 shadow-xs">
+                  <Circle size={16} className="text-rome-500 flex-shrink-0" />
+                  <span className="text-xs font-bold text-surface-900 dark:text-white">Request Recommendations</span>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-black text-surface-900 dark:text-white mb-1">Task Management</h4>
+                <p className="text-xs text-surface-500 leading-relaxed">
+                  Stay on top of every requirement, from eligibility checks to final submission.
+                </p>
+              </div>
+            </div>
+
+            {/* Widget 2: Countdown & Deadline Timer */}
+            <div className="rounded-3xl bg-gradient-to-b from-sky-500 to-sky-600 text-white p-6 flex flex-col justify-between shadow-xl">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-bold mb-4 backdrop-blur-sm">
+                  <Clock size={12} />
+                  <span>Closing Soon</span>
+                </div>
+                <h4 className="text-sm font-black leading-snug mb-4">WHO Global Health Internship</h4>
+                
+                {/* Glassmorphic Countdown Blocks */}
+                <div className="grid grid-cols-3 gap-2 text-center mb-6">
+                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-2 border border-white/30">
+                    <span className="text-xl font-black block leading-tight">24</span>
+                    <span className="text-[9px] uppercase tracking-wider text-sky-100 font-bold">Days</span>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-2 border border-white/30">
+                    <span className="text-xl font-black block leading-tight">08</span>
+                    <span className="text-[9px] uppercase tracking-wider text-sky-100 font-bold">Hours</span>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-2 border border-white/30">
+                    <span className="text-xl font-black block leading-tight">45</span>
+                    <span className="text-[9px] uppercase tracking-wider text-sky-100 font-bold">Mins</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-black text-white mb-1">Deadline Tracking</h4>
+                <p className="text-xs text-sky-100 leading-relaxed font-medium">
+                  Never miss an application cycle with automated alerts and time tracking.
+                </p>
+              </div>
+            </div>
+
+            {/* Widget 3: Multi-Factor Match Engine */}
+            <div className="rounded-3xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 flex flex-col justify-between shadow-sm">
+              <div className="space-y-2 mb-6">
+                <div className="flex items-center justify-between text-xs font-bold text-surface-400 uppercase tracking-wider">
+                  <span>Match Signals</span>
+                  <span className="text-sky-500 font-black">96% Fit</span>
+                </div>
+                <div className="bg-white dark:bg-surface-950 p-2.5 rounded-xl border border-surface-200/80 dark:border-surface-800 flex items-center justify-between text-xs">
+                  <span className="font-semibold text-surface-700 dark:text-surface-300">Field Domain</span>
+                  <span className="font-bold text-emerald-500">✓ Strong (+35)</span>
+                </div>
+                <div className="bg-white dark:bg-surface-950 p-2.5 rounded-xl border border-surface-200/80 dark:border-surface-800 flex items-center justify-between text-xs">
+                  <span className="font-semibold text-surface-700 dark:text-surface-300">Modality (Remote)</span>
+                  <span className="font-bold text-emerald-500">✓ 100% (+10)</span>
+                </div>
+                <div className="bg-white dark:bg-surface-950 p-2.5 rounded-xl border border-surface-200/80 dark:border-surface-800 flex items-center justify-between text-xs">
+                  <span className="font-semibold text-surface-700 dark:text-surface-300">Full Funding</span>
+                  <span className="font-bold text-emerald-500">✓ Stipend (+5)</span>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-black text-surface-900 dark:text-white mb-1">Decision Intelligence</h4>
+                <p className="text-xs text-surface-500 leading-relaxed">
+                  Transparent scoring signals show you exactly why an opportunity fits your goals.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
