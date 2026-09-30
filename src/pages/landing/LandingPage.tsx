@@ -12,7 +12,7 @@ import {
 // ─── Pill label used above section headings (Aeline / SurfBali pattern) ─────
 const Pill = ({ children, light = false }: { children: React.ReactNode; light?: boolean }) => (
   <span className={cn(
-    'inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-5 transition-all',
+    'inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-5 transition-all',
     light
       ? 'bg-white/20 text-white border border-white/30 shadow-sm backdrop-blur-md'
       : 'bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 border border-surface-200 dark:border-surface-700 shadow-xs'
@@ -67,7 +67,7 @@ const Nav = () => {
             <Sparkles className="w-4 h-4 text-white drop-shadow-sm" />
           </div>
           <span className={cn(
-            "font-black text-xl tracking-tight transition-colors",
+            "font-bold text-xl tracking-tight transition-colors",
             scrolled ? "text-surface-900 dark:text-white" : "text-white"
           )}>
             ROME<span className={scrolled ? "text-rome-500" : "text-[#bef264]"}>find</span>
@@ -76,7 +76,7 @@ const Nav = () => {
 
         {/* Center Nav Links (Aeline exact nav pattern) */}
         <div className={cn(
-          "hidden md:flex items-center gap-8 text-xs font-black uppercase tracking-wider transition-colors",
+          "hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider transition-colors",
           scrolled ? "text-surface-600 dark:text-surface-300" : "text-white/90"
         )}>
           <Link to="/" className="hover:text-white dark:hover:text-white hover:text-rome-500 transition-colors">Home</Link>
@@ -100,7 +100,7 @@ const Nav = () => {
           </Link>
           <Link 
             to="/signup"
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 text-xs font-black uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 text-xs font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
           >
             Get Started <ArrowUpRight size={14} className="stroke-[3]" />
           </Link>
@@ -140,7 +140,7 @@ const Nav = () => {
             <Link 
               to="/signup" 
               onClick={() => setMenuOpen(false)} 
-              className="block py-3 text-center text-sm font-black text-surface-950 bg-[#bef264] rounded-xl"
+              className="block py-3 text-center text-sm font-bold text-surface-950 bg-[#bef264] rounded-xl"
             >
               Get Started ↗
             </Link>
@@ -233,7 +233,7 @@ const ExperienceLevelSwitcher = () => {
                   {lvl.emoji}
                 </div>
                 <span className={cn(
-                  "text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full",
+                  "text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full",
                   isSelected
                     ? "bg-[#bef264] text-surface-950"
                     : "bg-surface-100 dark:bg-surface-800 text-surface-500"
@@ -243,7 +243,7 @@ const ExperienceLevelSwitcher = () => {
               </div>
 
               <div>
-                <h4 className="text-base font-black text-surface-900 dark:text-white tracking-tight leading-snug">
+                <h4 className="text-base font-bold text-surface-900 dark:text-white tracking-tight leading-snug">
                   {lvl.title}
                 </h4>
                 <p className="text-xs text-surface-500 dark:text-surface-400 mt-1 font-medium">
@@ -263,14 +263,14 @@ const ExperienceLevelSwitcher = () => {
       <div className="rounded-3xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-6 md:p-8 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in duration-300">
         <div className="max-w-xl">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-black uppercase tracking-wider text-rome-500 bg-rome-50 dark:bg-rome-950/60 px-3 py-0.5 rounded-full border border-rome-200 dark:border-rome-800">
+            <span className="text-xs font-bold uppercase tracking-wider text-rome-500 bg-rome-50 dark:bg-rome-950/60 px-3 py-0.5 rounded-full border border-rome-200 dark:border-rome-800">
               Matched Pathway
             </span>
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-0.5 rounded-full">
               {active.fitScore}% Match Fit
             </span>
           </div>
-          <h3 className="text-xl font-black text-surface-900 dark:text-white tracking-tight mb-2">
+          <h3 className="text-xl font-bold text-surface-900 dark:text-white tracking-tight mb-2">
             {active.highlight}
           </h3>
           <p className="text-sm text-surface-600 dark:text-surface-300 leading-relaxed font-medium">
@@ -280,7 +280,7 @@ const ExperienceLevelSwitcher = () => {
 
         <Link
           to="/discover"
-          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 text-xs font-black uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg flex-shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 text-xs font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg flex-shrink-0"
         >
           {active.action} <ArrowRight size={14} />
         </Link>
@@ -347,7 +347,7 @@ const InteractiveNotesWidget = () => {
           <div className="w-8 h-8 rounded-xl bg-surface-100 dark:bg-surface-800 flex items-center justify-center text-surface-900 dark:text-white">
             <BookOpen size={16} />
           </div>
-          <h3 className="text-lg font-black text-surface-900 dark:text-white tracking-tight">
+          <h3 className="text-lg font-bold text-surface-900 dark:text-white tracking-tight">
             Notes &amp; Tasks
           </h3>
         </div>
@@ -419,18 +419,18 @@ const InteractiveNotesWidget = () => {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2 flex-wrap">
                 <div className={cn(
-                  "w-5 h-5 rounded-md flex items-center justify-center border text-xs font-black transition-colors",
+                  "w-5 h-5 rounded-md flex items-center justify-center border text-xs font-bold transition-colors",
                   task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-900"
                 )}>
                   {task.completed && "✓"}
                 </div>
-                <h4 className={cn("text-xs sm:text-sm font-black text-surface-900 dark:text-white", task.completed && "line-through text-surface-400 dark:text-surface-500")}>
+                <h4 className={cn("text-xs sm:text-sm font-bold text-surface-900 dark:text-white", task.completed && "line-through text-surface-400 dark:text-surface-500")}>
                   {task.title}
                 </h4>
-                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.timeBadge)}>
+                <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", task.timeBadge)}>
                   {task.time}
                 </span>
-                <span className={cn("text-[10px] font-black px-2 py-0.5 rounded-full", task.statusBadge)}>
+                <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", task.statusBadge)}>
                   {task.status}
                 </span>
               </div>
@@ -480,7 +480,7 @@ const PARTNERS = [
 const LogoMarquee = () => (
   <div className="py-8 bg-white dark:bg-surface-950 border-b border-surface-200/80 dark:border-surface-800/80 overflow-hidden">
     <div className="max-w-7xl mx-auto px-5 mb-3 text-center">
-      <span className="text-[11px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-500">
+      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-surface-400 dark:text-surface-500">
         Verified opportunities curated directly from global leaders
       </span>
     </div>
@@ -576,7 +576,7 @@ export default function LandingPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full text-center flex-1 flex flex-col justify-center items-center pt-8 pb-8">
           
           {/* Main Headline (User's authentic brand text + modern typography) */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6 drop-shadow-sm">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6 drop-shadow-sm">
             Rome wasn't built in a day.<br className="hidden sm:block" />
             <span className="text-white">Neither is your path.</span>
           </h1>
@@ -590,13 +590,13 @@ export default function LandingPage() {
           <div className="flex flex-row items-center justify-center gap-3.5 mb-14">
             <Link 
               to="/discover"
-              className="inline-flex items-center justify-center px-7 py-3.5 bg-surface-950/35 hover:bg-surface-950/55 text-white font-black text-xs uppercase tracking-wider rounded-full backdrop-blur-md border border-white/25 transition-all shadow-sm hover:scale-[1.02]"
+              className="inline-flex items-center justify-center px-7 py-3.5 bg-surface-950/35 hover:bg-surface-950/55 text-white font-bold text-xs uppercase tracking-wider rounded-full backdrop-blur-md border border-white/25 transition-all shadow-sm hover:scale-[1.02]"
             >
               View Catalog
             </Link>
             <Link 
               to="/signup"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 font-bold text-xs uppercase tracking-wider rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
             >
               Get Started <ArrowUpRight size={15} className="stroke-[3]" />
             </Link>
@@ -611,10 +611,10 @@ export default function LandingPage() {
                 className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-3xl p-5 text-left shadow-2xl border border-white/50 dark:border-surface-700 transition-all duration-300 hover:scale-105 animate-float-1 group cursor-pointer"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">Fellowship</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">Fellowship</span>
                   <span className="text-[11px] font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full">98% Match</span>
                 </div>
-                <h4 className="text-xs sm:text-sm font-black text-surface-900 dark:text-white leading-snug mb-1">Product Design Fellowship</h4>
+                <h4 className="text-xs sm:text-sm font-bold text-surface-900 dark:text-white leading-snug mb-1">Product Design Fellowship</h4>
                 <p className="text-[11px] text-surface-500 mb-4 font-medium">Design Foundation · Global</p>
                 <div className="pt-2.5 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-bold">
                   <span className="text-rome-500">Full Funding</span>
@@ -626,14 +626,14 @@ export default function LandingPage() {
               <div 
                 className="w-56 sm:w-64 flex-shrink-0 bg-surface-950/95 backdrop-blur-xl rounded-3xl p-5 text-left text-white shadow-2xl border border-surface-800 transition-all duration-300 hover:scale-105 animate-float-2 group cursor-pointer"
               >
-                <div className="flex items-center justify-between mb-3 text-[10px] text-surface-400 font-black uppercase tracking-wider">
+                <div className="flex items-center justify-between mb-3 text-[10px] text-surface-400 font-bold uppercase tracking-wider">
                   <span>Performance</span>
                   <span className="text-[#bef264] flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#bef264] animate-ping" />
                     Active
                   </span>
                 </div>
-                <div className="text-3xl font-black text-white tracking-tight mb-1">93+</div>
+                <div className="text-3xl font-bold text-white tracking-tight mb-1">93+</div>
                 <p className="text-xs text-surface-400 mb-4 font-medium">Verified opportunities curated directly from top organizations.</p>
                 <div className="grid grid-cols-2 gap-2 text-[10px] bg-surface-900 p-2.5 rounded-2xl border border-surface-800">
                   <div>
@@ -654,11 +654,11 @@ export default function LandingPage() {
                 <div className="w-14 h-14 mx-auto rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center mb-4 shadow-inner">
                   <Sparkles className="w-7 h-7 text-white animate-pulse" />
                 </div>
-                <h3 className="text-base font-black tracking-tight mb-1.5">Decision Engine</h3>
+                <h3 className="text-base font-bold tracking-tight mb-1.5">Decision Engine</h3>
                 <p className="text-xs text-sky-100 font-medium leading-relaxed mb-4">
                   Multi-factor precision scoring based on your skills, goals &amp; eligibility.
                 </p>
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white text-surface-950 text-[11px] font-black shadow-sm">
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white text-surface-950 text-[11px] font-bold shadow-sm">
                   <CheckCircle size={13} className="text-emerald-500" />
                   <span>100% Verified Sources</span>
                 </div>
@@ -670,7 +670,7 @@ export default function LandingPage() {
               >
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 rounded-full bg-[#bef264]" />
-                  <span className="text-[10px] font-black text-surface-300 uppercase tracking-wider">Multi-Path Discovery</span>
+                  <span className="text-[10px] font-bold text-surface-300 uppercase tracking-wider">Multi-Path Discovery</span>
                 </div>
                 <p className="text-xs font-semibold text-surface-200 leading-relaxed mb-4">
                   Combines Fellowships, Grants, Internships, and Research alongside traditional jobs.
@@ -691,10 +691,10 @@ export default function LandingPage() {
                 className="w-52 sm:w-60 flex-shrink-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl rounded-3xl p-5 text-left shadow-2xl border border-white/50 dark:border-surface-700 transition-all duration-300 hover:scale-105 animate-float-5 group cursor-pointer"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700">Remote Job</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700">Remote Job</span>
                   <span className="text-[11px] font-extrabold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">Verified</span>
                 </div>
-                <h4 className="text-xs sm:text-sm font-black text-surface-900 dark:text-white leading-snug mb-1">Frontend Systems Engineer</h4>
+                <h4 className="text-xs sm:text-sm font-bold text-surface-900 dark:text-white leading-snug mb-1">Frontend Systems Engineer</h4>
                 <p className="text-[11px] text-surface-500 mb-4 font-medium">Mozilla · 100% Remote</p>
                 <div className="pt-2.5 border-t border-surface-100 dark:border-surface-800 flex items-center justify-between text-[10px] text-surface-400 font-bold">
                   <span className="text-emerald-600">Competitive</span>
@@ -726,14 +726,14 @@ export default function LandingPage() {
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
             <Pill>• About ROMEfind</Pill>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-[1.15]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-[1.15]">
               A global discovery partner dedicated to building{' '}
-              <span className="inline-flex items-center align-middle mx-1 px-3 py-1 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 text-sm font-black border border-sky-300 dark:border-sky-800">
+              <span className="inline-flex items-center align-middle mx-1 px-3 py-1 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 text-sm font-bold border border-sky-300 dark:border-sky-800">
                 <span className="w-2.5 h-2.5 rounded-full bg-sky-500 mr-2 shadow-[0_0_6px_#0ea5e9]" />
                 smarter
               </span>{' '}
               and{' '}
-              <span className="inline-flex items-center align-middle mx-1 px-3 py-1 rounded-full bg-[#bef264]/40 dark:bg-[#bef264]/20 text-surface-900 dark:text-[#bef264] text-sm font-black border border-[#bef264] dark:border-[#bef264]/40">
+              <span className="inline-flex items-center align-middle mx-1 px-3 py-1 rounded-full bg-[#bef264]/40 dark:bg-[#bef264]/20 text-surface-900 dark:text-[#bef264] text-sm font-bold border border-[#bef264] dark:border-[#bef264]/40">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#bef264] mr-2 shadow-[0_0_6px_#bef264]" />
                 more adaptive
               </span>{' '}
@@ -752,7 +752,7 @@ export default function LandingPage() {
                 style={{ backgroundImage: `url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80')` }}
               />
               <div className="relative z-20 flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white">
+                <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white">
                   ROMEfind · Verified
                 </span>
                 <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
@@ -760,7 +760,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="relative z-20 pt-20">
-                <div className="text-5xl sm:text-6xl font-black text-white tracking-tight mb-2">93+</div>
+                <div className="text-5xl sm:text-6xl font-bold text-white tracking-tight mb-2">93+</div>
                 <p className="text-sm sm:text-base text-white/90 font-medium leading-relaxed max-w-sm">
                   Curated and verified opportunities from leading global tech, research, health, and policy institutions.
                 </p>
@@ -773,7 +773,7 @@ export default function LandingPage() {
                 <span className="text-xs font-bold text-surface-400 dark:text-surface-500 uppercase tracking-wider block mb-2">
                   Commitment to measurable
                 </span>
-                <div className="text-4xl sm:text-5xl font-black text-surface-900 dark:text-white tracking-tight mb-6">
+                <div className="text-4xl sm:text-5xl font-bold text-surface-900 dark:text-white tracking-tight mb-6">
                   100%
                 </div>
               </div>
@@ -787,7 +787,7 @@ export default function LandingPage() {
                       className="w-9 h-9 rounded-full border-2 border-white dark:border-surface-900 shadow-xs" 
                     />
                   ))}
-                  <div className="w-9 h-9 rounded-full bg-rome-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-white dark:border-surface-900 shadow-xs">
+                  <div className="w-9 h-9 rounded-full bg-rome-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white dark:border-surface-900 shadow-xs">
                     +1k
                   </div>
                 </div>
@@ -803,10 +803,10 @@ export default function LandingPage() {
               {/* Neon Lime Data Card (Exact Aeline) */}
               <div className="flex-1 rounded-3xl bg-[#bef264] text-surface-950 p-6 flex flex-col justify-between shadow-lg border border-[#a3e635] hover:scale-[1.02] transition-transform">
                 <div>
-                  <span className="text-[11px] font-black uppercase tracking-wider text-surface-900/70 block mb-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-surface-900/70 block mb-1">
                     Data Points
                   </span>
-                  <div className="text-3xl sm:text-4xl font-black tracking-tight text-surface-950 mb-2">
+                  <div className="text-3xl sm:text-4xl font-bold tracking-tight text-surface-950 mb-2">
                     520k+
                   </div>
                 </div>
@@ -820,11 +820,11 @@ export default function LandingPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-surface-400 block">Continents</span>
-                    <span className="text-xl font-black text-white">6+ Global</span>
+                    <span className="text-xl font-bold text-white">6+ Global</span>
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-surface-400 block">Fully Funded</span>
-                    <span className="text-xl font-black text-[#bef264]">70%+</span>
+                    <span className="text-xl font-bold text-[#bef264]">70%+</span>
                   </div>
                 </div>
               </div>
@@ -843,7 +843,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
               <Pill>• Platform Services</Pill>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight max-w-2xl">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight max-w-2xl">
                 Comprehensive discovery<br />and intelligent innovation
               </h2>
               <p className="mt-4 text-base sm:text-lg text-surface-500 dark:text-surface-400 max-w-xl leading-relaxed">
@@ -852,7 +852,7 @@ export default function LandingPage() {
             </div>
             <Link 
               to="/signup"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md self-start md:self-auto"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-bold text-xs uppercase tracking-wider rounded-full transition-all shadow-md self-start md:self-auto"
             >
               Get Started <ArrowUpRight size={14} className="stroke-[3]" />
             </Link>
@@ -867,7 +867,7 @@ export default function LandingPage() {
                 <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <Sparkles size={18} className="text-surface-950" />
                 </div>
-                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">AI Strategy</h3>
+                <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-2">AI Strategy</h3>
                 <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
                   We help you pinpoint opportunities aligned with your background and funding criteria with zero noise.
                 </p>
@@ -884,7 +884,7 @@ export default function LandingPage() {
                 <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <Compass size={18} className="text-surface-950" />
                 </div>
-                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Multi-Path Strategy</h3>
+                <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-2">Multi-Path Strategy</h3>
                 <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
                   Expand your opportunities with parallel tracks: fellowships, grants, research roles, and programmes.
                 </p>
@@ -901,7 +901,7 @@ export default function LandingPage() {
                 <div className="w-10 h-10 rounded-2xl bg-[#bef264] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <BarChart2 size={18} className="text-surface-950" />
                 </div>
-                <h3 className="text-lg font-black text-surface-900 dark:text-white mb-2">Data &amp; Insights</h3>
+                <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-2">Data &amp; Insights</h3>
                 <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed font-medium">
                   We turn complex eligibility requirements into clear, structured preparation roadmaps.
                 </p>
@@ -920,7 +920,7 @@ export default function LandingPage() {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-950/90 via-surface-950/30 to-transparent flex flex-col justify-end p-5 text-white">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#bef264] mb-1">Collaborative Community</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#bef264] mb-1">Collaborative Community</span>
                 <p className="text-xs font-bold leading-snug">
                   Learn from real application experiences and outcomes shared by peers.
                 </p>
@@ -938,16 +938,16 @@ export default function LandingPage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div>
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-rome-500 mb-2 block">
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-rome-500 mb-2 block">
                 ★ LEVELS &amp; READINESS
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight">
                 Find your path regardless<br />of your <span className="text-rome-500">experience level</span>
               </h2>
             </div>
             <Link 
               to="/discover" 
-              className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-surface-900 dark:text-white hover:text-rome-500 transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-surface-900 dark:text-white hover:text-rome-500 transition-colors"
             >
               Explore All Paths <ArrowUpRight size={14} className="stroke-[3]" />
             </Link>
@@ -966,10 +966,10 @@ export default function LandingPage() {
             
             {/* Left Headline */}
             <div className="lg:col-span-5">
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-rome-500 mb-2 block">
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-rome-500 mb-2 block">
                 ★ COMPLETE ECOSYSTEM
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
                 Preparation, funding, mentorship, and execution — <span className="text-surface-400">we've got it all</span>
               </h2>
               <p className="text-base sm:text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed font-medium">
@@ -977,7 +977,7 @@ export default function LandingPage() {
               </p>
               <Link 
                 to="/signup"
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-bold text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
               >
                 Join ROMEfind <ArrowRight size={14} />
               </Link>
@@ -996,10 +996,10 @@ export default function LandingPage() {
                   className="rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 p-5 shadow-xs hover:shadow-md hover:border-rome-300 dark:hover:border-rome-700 transition-all flex items-center justify-between gap-4 group"
                 >
                   <div className="max-w-md">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-surface-400 block mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-surface-400 block mb-1">
                       {item.sub}
                     </span>
-                    <h4 className="text-base font-black text-surface-900 dark:text-white tracking-tight mb-1 group-hover:text-rome-500 transition-colors">
+                    <h4 className="text-base font-bold text-surface-900 dark:text-white tracking-tight mb-1 group-hover:text-rome-500 transition-colors">
                       {item.title}
                     </h4>
                     <p className="text-xs text-surface-500 dark:text-surface-400 font-medium leading-relaxed">
@@ -1025,7 +1025,7 @@ export default function LandingPage() {
             {/* Left Description Column */}
             <div className="lg:col-span-5">
               <Pill>• Application Workspace</Pill>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
                 Organize every milestone with precision
               </h2>
               <p className="text-base sm:text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed font-medium">
@@ -1039,7 +1039,7 @@ export default function LandingPage() {
                   { title: 'Multi-Cycle Deadline Timers', desc: 'Live alerts before application portals close.' },
                 ].map((f, idx) => (
                   <div key={idx} className="flex items-start gap-3.5">
-                    <div className="w-6 h-6 rounded-full bg-[#bef264]/50 text-surface-950 flex items-center justify-center text-xs font-black flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-full bg-[#bef264]/50 text-surface-950 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                       ✓
                     </div>
                     <div>
@@ -1053,7 +1053,7 @@ export default function LandingPage() {
               <div className="mt-10">
                 <Link 
                   to="/my-opportunities"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-black text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-surface-900 hover:bg-surface-800 dark:bg-white dark:hover:bg-surface-100 text-white dark:text-surface-950 font-bold text-xs uppercase tracking-wider rounded-full transition-all shadow-md"
                 >
                   View Workspace <ArrowRight size={14} />
                 </Link>
@@ -1075,7 +1075,7 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <Pill>• Learn &amp; Grow</Pill>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
                 Learn for what<br />you're trying to pursue.
               </h2>
               <p className="text-base sm:text-lg text-surface-500 dark:text-surface-400 mb-6 leading-relaxed font-medium">
@@ -1094,7 +1094,7 @@ export default function LandingPage() {
 
             <div className="rounded-3xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-7 shadow-xl">
               <Chip color="purple">Fellowship Track</Chip>
-              <h4 className="text-base font-black text-surface-900 dark:text-white mt-3 mb-1">Product Design Fellowship</h4>
+              <h4 className="text-base font-bold text-surface-900 dark:text-white mt-3 mb-1">Product Design Fellowship</h4>
               <p className="text-xs text-surface-500 mb-5 font-medium">Core skills required for this fellowship path:</p>
               <div className="space-y-2 mb-6">
                 {['UX Research methods & synthesis', 'Portfolio case study presentation', 'Cross-functional stakeholder alignment'].map((s, i) => (
@@ -1104,7 +1104,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-xs font-black uppercase tracking-wider text-surface-400 mb-3">Your preparation status</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-surface-400 mb-3">Your preparation status</p>
               {[
                 { skill: 'UX Research', progress: 40 },
                 { skill: 'Portfolio Storytelling', progress: 85 },
@@ -1129,7 +1129,7 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <Pill light>Outcomes &amp; Experience</Pill>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-5 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-5 leading-tight">
                 Someone has been<br />through it before.
               </h2>
               <p className="text-base sm:text-lg text-surface-400 mb-8 leading-relaxed font-medium">
@@ -1144,7 +1144,7 @@ export default function LandingPage() {
                   <div key={idx} className="flex items-start gap-3.5 p-4 rounded-2xl border border-surface-800 bg-surface-900/80">
                     <Icon size={16} className="text-[#bef264] flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-black text-surface-200">{label}</p>
+                      <p className="text-xs font-bold text-surface-200">{label}</p>
                       <p className="text-xs text-surface-400 font-medium">{sub}</p>
                     </div>
                   </div>
@@ -1155,7 +1155,7 @@ export default function LandingPage() {
             <div className="space-y-4">
               <div className="rounded-3xl border border-surface-800 bg-surface-900 p-6 shadow-xl">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-black uppercase tracking-wider text-surface-400">Community Experience</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-surface-400">Community Experience</span>
                   <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-surface-800 text-surface-400 font-bold">Not official</span>
                 </div>
                 {[
@@ -1176,9 +1176,9 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-center gap-3.5 px-6 py-4 rounded-3xl border border-emerald-900 bg-emerald-950/40">
-                <span className="font-black text-xs px-3 py-1 rounded-full bg-emerald-900/80 text-emerald-300">🟢 ACCEPTED</span>
+                <span className="font-bold text-xs px-3 py-1 rounded-full bg-emerald-900/80 text-emerald-300">🟢 ACCEPTED</span>
                 <div>
-                  <p className="text-xs font-black text-emerald-300">Product Design Fellowship</p>
+                  <p className="text-xs font-bold text-emerald-300">Product Design Fellowship</p>
                   <p className="text-[11px] text-emerald-500 font-medium">Shared by past fellow</p>
                 </div>
               </div>
@@ -1192,7 +1192,7 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-14">
             <Pill>• FAQ</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight">Common questions</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white tracking-tight">Common questions</h2>
           </div>
           <div className="space-y-2.5">
             {FAQ_ITEMS.map((item, i) => (
@@ -1202,7 +1202,7 @@ export default function LandingPage() {
                   className="w-full flex items-center justify-between px-5 py-4 text-left bg-white dark:bg-surface-900 hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors cursor-pointer"
                   aria-expanded={faqOpen === i}
                 >
-                  <span className="text-sm font-black text-surface-900 dark:text-white pr-4">{item.q}</span>
+                  <span className="text-sm font-bold text-surface-900 dark:text-white pr-4">{item.q}</span>
                   <ChevronDown size={16} className={cn('text-surface-400 flex-shrink-0 transition-transform duration-200', faqOpen === i && 'rotate-180')} />
                 </button>
                 {faqOpen === i && (
@@ -1219,7 +1219,7 @@ export default function LandingPage() {
       {/* ── 11. FINAL CTA ──────────────────────────────────────────────────── */}
       <section className="py-28 relative overflow-hidden bg-gradient-to-b from-rome-50 to-white dark:from-rome-950/10 dark:to-surface-950">
         <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center relative">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-surface-900 dark:text-white tracking-tight mb-6 leading-tight">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-surface-900 dark:text-white tracking-tight mb-6 leading-tight">
             Rome wasn't built in a day.<br />Neither is your path.
           </h2>
           <p className="text-lg sm:text-xl text-surface-500 dark:text-surface-400 mb-10 leading-relaxed font-medium">
@@ -1227,7 +1227,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Link to="/signup"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-rome-500 hover:bg-rome-600 text-white font-black rounded-full text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl">
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-rome-500 hover:bg-rome-600 text-white font-bold rounded-full text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl">
               Explore opportunities <ArrowRight size={16} />
             </Link>
             <Link to="/about"
@@ -1242,7 +1242,7 @@ export default function LandingPage() {
       <footer className="bg-surface-950 border-t border-surface-800 relative overflow-hidden">
         {/* Giant wordmark watermark (Finexa) */}
         <div className="absolute bottom-0 left-0 right-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
-          <p className="text-[min(22vw,200px)] font-black text-surface-900 leading-none text-center whitespace-nowrap opacity-60 tracking-tight">
+          <p className="text-[min(22vw,200px)] font-bold text-surface-900 leading-none text-center whitespace-nowrap opacity-60 tracking-tight">
             ROMEfind
           </p>
         </div>
@@ -1250,12 +1250,12 @@ export default function LandingPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-8">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 mb-16">
             <div className="col-span-2 sm:col-span-3 md:col-span-1">
-              <p className="font-black text-xl text-white mb-2">ROME<span className="text-[#bef264]">find</span></p>
+              <p className="font-bold text-xl text-white mb-2">ROME<span className="text-[#bef264]">find</span></p>
               <p className="text-sm text-surface-400 leading-relaxed mb-3">Find what's possible.</p>
               <p className="text-xs text-surface-500 leading-relaxed">Opportunity discovery and decision support platform.</p>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Product</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">Product</p>
               <ul className="space-y-2.5">
                 {['Discover', 'Explore', 'Compare', 'My Opportunities', 'Learn'].map(l => (
                   <li key={l}><Link to={`/${l.toLowerCase().replace(' ', '-')}`} className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">{l}</Link></li>
@@ -1263,13 +1263,13 @@ export default function LandingPage() {
               </ul>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">About</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">About</p>
               <ul className="space-y-2.5">
                 <li><Link to="/about" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">About ROMEfind</Link></li>
               </ul>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Help</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">Help</p>
               <ul className="space-y-2.5">
                 <li><a href="#faq" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">FAQ</a></li>
                 <li><a href="mailto:romefind.support@gmail.com" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Support</a></li>
@@ -1277,7 +1277,7 @@ export default function LandingPage() {
               </ul>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Trust</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">Trust</p>
               <ul className="space-y-2.5">
                 <li><Link to="/community-guidelines" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Community Guidelines</Link></li>
                 <li><Link to="/privacy" className="text-xs font-bold text-surface-400 hover:text-[#bef264] transition-colors">Privacy Policy</Link></li>

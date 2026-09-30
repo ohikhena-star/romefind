@@ -20,7 +20,7 @@ function DistinctionCard({ label, description, accent, bg, border }: {
 }) {
   return (
     <div className={cn('rounded-xl border p-5', bg, border)}>
-      <p className={cn('text-xs font-black uppercase tracking-widest mb-2', accent)}>{label}</p>
+      <p className={cn('text-xs font-bold uppercase tracking-widest mb-2', accent)}>{label}</p>
       <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">{description}</p>
     </div>
   );
@@ -186,7 +186,7 @@ export default function CommunityGuidelinesPage() {
 
       {/* Closing Statement */}
       <div className="mt-12 p-8 rounded-2xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-center">
-        <p className="text-xl font-black text-surface-900 dark:text-white mb-2">
+        <p className="text-xl font-bold text-surface-900 dark:text-white mb-2">
           Make the path easier for the person coming after you.
         </p>
         <p className="text-sm text-surface-500 dark:text-surface-400 max-w-lg mx-auto leading-relaxed mb-6">

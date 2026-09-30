@@ -123,7 +123,7 @@ const TopNav = () => {
                   {profileOpen && (
                     <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-surface-900 rounded-2xl shadow-xl border border-surface-200 dark:border-surface-800 py-1.5 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
                       <div className="px-4 py-2.5 border-b border-surface-100 dark:border-surface-800 mb-1">
-                        <p className="text-sm font-black text-surface-900 dark:text-white truncate">{user?.profile?.name || 'Explorer'}</p>
+                        <p className="text-sm font-bold text-surface-900 dark:text-white truncate">{user?.profile?.name || 'Explorer'}</p>
                         <p className="text-xs text-surface-500 dark:text-surface-400 truncate">{user?.profile?.email}</p>
                       </div>
                       <Link
@@ -151,7 +151,7 @@ const TopNav = () => {
                 <Link to="/login" className="text-xs font-bold text-surface-600 hover:text-surface-900 dark:text-surface-300 dark:hover:text-white transition-colors px-3 py-1.5">
                   Sign in
                 </Link>
-                <Link to="/signup" className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#bef264] hover:bg-[#a3e635] text-surface-950 text-xs font-black uppercase tracking-wider rounded-full shadow-xs transition-all">
+                <Link to="/signup" className="inline-flex items-center gap-1.5 px-4 py-2 bg-rome-500 hover:bg-rome-600 text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-xs transition-all">
                   Get started ↗
                 </Link>
               </div>

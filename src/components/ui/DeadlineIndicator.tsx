@@ -15,14 +15,14 @@ export const DeadlineIndicator: React.FC<DeadlineIndicatorProps> = ({ deadline, 
   const days = daysUntil(targetDate);
   const formattedDate = formatDateShort(targetDate);
   
-  let colorClasses = "text-surface-600 dark:text-surface-400";
+  let colorClasses = "text-surface-400 dark:text-surface-500";
   let text = formattedDate;
 
   if (urgency === 'urgent') {
-    colorClasses = "text-red-600 dark:text-red-400 font-medium animate-pulse";
+    colorClasses = "text-red-500 font-medium animate-pulse";
     text = `Due in ${days} days (${formattedDate})`;
   } else if (urgency === 'soon') {
-    colorClasses = "text-amber-600 dark:text-amber-400 font-medium";
+    colorClasses = "text-amber-500 font-medium";
     text = `Due in ${days} days (${formattedDate})`;
   } else if (urgency === 'expired') {
     colorClasses = "text-surface-400 dark:text-surface-500 line-through";

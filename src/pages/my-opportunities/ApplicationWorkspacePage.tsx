@@ -148,19 +148,19 @@ export default function ApplicationWorkspacePage() {
           {/* Next Best Action Card */}
           {firstUncompletedTask && !isAccepted && (
             <div className="bg-gradient-to-r from-rome-50 via-sky-50/50 to-emerald-50/30 dark:from-rome-950/40 dark:via-surface-900 dark:to-emerald-950/20 border border-rome-200 dark:border-rome-800/80 rounded-3xl p-6 flex items-start gap-4 shadow-xs">
-              <div className="w-10 h-10 rounded-2xl bg-rome-500 text-white flex items-center justify-center flex-shrink-0 text-sm font-black shadow-xs">
+              <div className="w-10 h-10 rounded-2xl bg-rome-500 text-white flex items-center justify-center flex-shrink-0 text-sm font-bold shadow-xs">
                 →
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-rome-700 dark:text-rome-300 bg-rome-100 dark:bg-rome-900/60 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-rome-700 dark:text-rome-300 bg-rome-100 dark:bg-rome-900/60 px-2.5 py-0.5 rounded-full">
                     Priority Task
                   </span>
                   <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/50 px-2 py-0.5 rounded-full">
                     Action Required
                   </span>
                 </div>
-                <h3 className="text-base font-black text-surface-950 dark:text-white leading-snug">
+                <h3 className="text-base font-bold text-surface-950 dark:text-white leading-snug">
                   {firstUncompletedTask.label}
                 </h3>
               </div>
@@ -171,10 +171,10 @@ export default function ApplicationWorkspacePage() {
           <div className="bg-white dark:bg-surface-900 rounded-3xl p-6 sm:p-7 shadow-xs border border-surface-200/90 dark:border-surface-800">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <h3 className="text-base font-black text-surface-950 dark:text-white tracking-tight">Application Checklist</h3>
+                <h3 className="text-base font-bold text-surface-950 dark:text-white tracking-tight">Application Checklist</h3>
                 <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">Track key requirements and materials required for submission.</p>
               </div>
-              <span className="text-xs font-black text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full border border-surface-200/80 dark:border-surface-700">
+              <span className="text-xs font-bold text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full border border-surface-200/80 dark:border-surface-700">
                 {completedTasks}/{totalTasks} Ready
               </span>
             </div>
@@ -194,7 +194,7 @@ export default function ApplicationWorkspacePage() {
                 >
                   <div className="flex items-start gap-3">
                     <div className={cn(
-                      "w-5 h-5 rounded-lg flex items-center justify-center border text-xs font-black transition-colors mt-0.5 flex-shrink-0",
+                      "w-5 h-5 rounded-lg flex items-center justify-center border text-xs font-bold transition-colors mt-0.5 flex-shrink-0",
                       task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-800"
                     )}>
                       {task.completed && "✓"}
@@ -226,7 +226,7 @@ export default function ApplicationWorkspacePage() {
           <div className="bg-white dark:bg-surface-900 rounded-3xl p-6 sm:p-7 shadow-xs border border-surface-200/90 dark:border-surface-800 flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-black text-surface-950 dark:text-white tracking-tight">Notes &amp; Strategy Journal</h3>
+                <h3 className="text-base font-bold text-surface-950 dark:text-white tracking-tight">Notes &amp; Strategy Journal</h3>
                 <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">Brainstorm essay hooks, record interview insights, or log feedback.</p>
               </div>
             </div>

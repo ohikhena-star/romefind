@@ -76,11 +76,11 @@ export default function ComparePage() {
             <table className="w-full min-w-[800px] border-collapse bg-white dark:bg-surface-950 rounded-xl overflow-hidden shadow-card border border-surface-200 dark:border-surface-800">
               <thead>
                 <tr>
-                  <th className="p-6 border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/50 text-left w-52 align-bottom">
+                  <th className="p-6 border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 text-left w-52 align-bottom">
                     <span className="text-xs font-bold uppercase tracking-wider text-surface-500">Parameters</span>
                   </th>
                   {compareOpps.map((opp: Opportunity) => (
-                    <th key={opp.id} className="p-6 border-b border-surface-200 dark:border-surface-800 align-top min-w-[280px] w-[300px] bg-white dark:bg-surface-900 relative group">
+                    <th key={opp.id} className="p-6 border-b border-surface-200 dark:border-surface-800 align-top min-w-[280px] w-[300px] bg-surface-50 dark:bg-surface-900 relative group">
                       <div className="flex justify-between items-start gap-3 mb-2">
                         <div className="text-left">
                           <p className="text-xs font-semibold text-rome-600 dark:text-rome-400 mb-1">
@@ -91,8 +91,8 @@ export default function ComparePage() {
                           {/* Prominent Value Badge in Header */}
                           <div className="mt-2.5">
                             {opp.funding ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                                <DollarSign className="w-3.5 h-3.5" />
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-100 border border-surface-200 dark:border-surface-700">
+                                <DollarSign className="w-3.5 h-3.5 text-surface-400" />
                                 {opp.funding}
                               </span>
                             ) : (
@@ -117,15 +117,15 @@ export default function ComparePage() {
               </thead>
               <tbody className="divide-y divide-surface-100 dark:divide-surface-800/50 text-sm">
                 {/* Financial Value Row - Highlighted */}
-                <tr className="bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/30 transition-colors">
-                  <td className="p-4 pl-6 font-bold text-emerald-900 dark:text-emerald-300 bg-emerald-100/40 dark:bg-emerald-900/20">
+                <tr className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
+                  <td className="p-4 pl-6 font-bold text-surface-900 dark:text-surface-100">
                     Financial Value & Stipend
                   </td>
                   {compareOpps.map((opp: Opportunity) => (
                     <td key={opp.id} className="p-4">
                       {opp.funding ? (
                         <div className="space-y-1">
-                          <span className="text-base font-extrabold text-emerald-700 dark:text-emerald-400 block">
+                          <span className="text-base font-bold text-surface-900 dark:text-surface-100 block">
                             {opp.funding}
                           </span>
                           <span className="text-xs text-surface-500">Includes direct funding / stipend</span>
@@ -138,8 +138,8 @@ export default function ComparePage() {
                 </tr>
 
                 {/* Benefits & Support Package */}
-                <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 bg-surface-50/30 dark:bg-surface-900/10 align-top pt-4">
+                <tr className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
+                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400  align-top pt-4">
                     Benefits & Perks
                   </td>
                   {compareOpps.map((opp: Opportunity) => (
@@ -158,7 +158,7 @@ export default function ComparePage() {
                 </tr>
 
                 <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 bg-surface-50/30 dark:bg-surface-900/10">Type & Fields</td>
+                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Type & Fields</td>
                   {compareOpps.map((opp: Opportunity) => (
                     <td key={opp.id} className="p-4">
                       <div className="flex flex-wrap items-center gap-1.5">
@@ -174,7 +174,7 @@ export default function ComparePage() {
                 </tr>
 
                 <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 bg-surface-50/30 dark:bg-surface-900/10">Deadline</td>
+                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Deadline</td>
                   {compareOpps.map((opp: Opportunity) => (
                     <td key={opp.id} className="p-4">
                       {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'No deadline'}
@@ -183,7 +183,7 @@ export default function ComparePage() {
                 </tr>
 
                 <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 bg-surface-50/30 dark:bg-surface-900/10">Duration & Setup</td>
+                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Duration & Setup</td>
                   {compareOpps.map((opp: Opportunity) => (
                     <td key={opp.id} className="p-4">
                       <div className="font-medium text-surface-900 dark:text-surface-100">{opp.duration || 'Flexible'}</div>
@@ -193,7 +193,7 @@ export default function ComparePage() {
                 </tr>
 
                 <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 bg-surface-50/30 dark:bg-surface-900/10">Eligibility Level</td>
+                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Eligibility Level</td>
                   {compareOpps.map((opp: Opportunity) => (
                     <td key={opp.id} className="p-4">
                       <div className="text-xs font-medium text-surface-800 dark:text-surface-200">
@@ -207,7 +207,7 @@ export default function ComparePage() {
                 </tr>
 
                 <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 bg-surface-50/30 dark:bg-surface-900/10 align-top pt-5">Key Requirements</td>
+                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400  align-top pt-5">Key Requirements</td>
                   {compareOpps.map((opp: Opportunity) => (
                     <td key={opp.id} className="p-4 align-top">
                       <ul className="list-disc pl-4 space-y-1.5 text-xs text-surface-700 dark:text-surface-300">
@@ -252,9 +252,9 @@ export default function ComparePage() {
                 </div>
                 
                 <div className="space-y-4 flex-1 text-sm border-t border-surface-100 dark:border-surface-800 pt-4">
-                  <div className="bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800/60">
+                  <div className="bg-surface-50 dark:bg-surface-900/40 p-3 rounded-lg border border-surface-200 dark:border-surface-800/60">
                     <span className="text-surface-500 text-xs font-medium block mb-0.5">Value / Funding</span>
-                    <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{opp.funding || 'Unfunded / Not specified'}</span>
+                    <span className="text-sm font-bold text-surface-900 dark:text-surface-100">{opp.funding || 'Unfunded / Not specified'}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-surface-500 text-xs font-medium">Type</span>

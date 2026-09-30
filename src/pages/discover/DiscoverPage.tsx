@@ -96,9 +96,9 @@ export default function DiscoverPage() {
   return (
     <div className="flex flex-col gap-10 pb-20 animate-in fade-in duration-300 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
       {/* ─── Header & Matching Debug Mode Toggle ─── */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200/80 dark:border-surface-800/80 pb-6">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-surface-950 dark:text-surface-50">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-surface-950 dark:text-surface-50">
             {getGreeting()}, {user.profile?.name || 'Explorer'}
           </h1>
           <p className="text-sm text-surface-500 dark:text-surface-400 mt-1">
@@ -111,10 +111,10 @@ export default function DiscoverPage() {
           <button
             onClick={() => setDebugMode(!debugMode)}
             className={cn(
-              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer",
+              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer border border-transparent",
               debugMode 
-                ? "bg-rome-50 dark:bg-rome-950/40 text-rome-700 dark:text-rome-300 border-rome-300 dark:border-rome-700" 
-                : "bg-surface-50 dark:bg-surface-900 text-surface-500 dark:text-surface-400 border-surface-200 dark:border-surface-800 hover:text-surface-900 dark:hover:text-surface-200"
+                ? "text-surface-400 dark:text-surface-500" 
+                : "text-surface-300 dark:text-surface-600 hover:text-surface-500"
             )}
             title="Toggle matching signals breakdown on opportunity cards"
           >
@@ -125,12 +125,9 @@ export default function DiscoverPage() {
       </header>
 
       {/* ─── PRIMARY FIRST-ACTION HERO: WHAT ARE YOU LOOKING FOR? ─── */}
-      <section className="rounded-3xl border border-surface-200/90 dark:border-surface-800 bg-gradient-to-b from-white to-surface-50/70 dark:from-surface-900 dark:to-surface-950 p-6 sm:p-8 shadow-xs">
+      <section className="rounded-2xl border border-surface-200/90 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-8 shadow-xs">
         <div className="max-w-3xl">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-rome-100 dark:bg-rome-950/60 text-rome-700 dark:text-rome-300 mb-3 border border-rome-200 dark:border-rome-800">
-            <span className="w-1.5 h-1.5 rounded-full bg-rome-500" /> Start Here
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-surface-900 dark:text-white tracking-tight leading-snug mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-surface-900 dark:text-white tracking-tight leading-snug mb-2">
             What are you looking for?
           </h2>
           <p className="text-sm text-surface-600 dark:text-surface-400 mb-6">
@@ -172,7 +169,7 @@ export default function DiscoverPage() {
                 key={intent}
                 type="button"
                 onClick={() => handleQuickIntent(intent)}
-                className="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-rome-50 hover:text-rome-600 dark:hover:bg-rome-950/40 dark:hover:text-rome-300 border border-surface-200 dark:border-surface-700 transition-colors"
+                className="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-150 hover:text-surface-800 dark:hover:bg-surface-700 dark:hover:text-white border border-surface-200 dark:border-surface-700 transition-colors"
               >
                 {intent}
               </button>
@@ -185,7 +182,7 @@ export default function DiscoverPage() {
               to="/explore" 
               className="flex items-center gap-3 p-3 rounded-xl border border-surface-200/80 dark:border-surface-800 bg-white dark:bg-surface-900/60 hover:border-rome-300 dark:hover:border-rome-800 hover:shadow-2xs transition-all group"
             >
-              <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 flex items-center justify-center shrink-0">
                 <Briefcase className="w-4 h-4" />
               </div>
               <div>
@@ -198,7 +195,7 @@ export default function DiscoverPage() {
               to="/recommendations" 
               className="flex items-center gap-3 p-3 rounded-xl border border-surface-200/80 dark:border-surface-800 bg-white dark:bg-surface-900/60 hover:border-rome-300 dark:hover:border-rome-800 hover:shadow-2xs transition-all group"
             >
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 flex items-center justify-center shrink-0">
                 <DollarSign className="w-4 h-4" />
               </div>
               <div>
@@ -211,7 +208,7 @@ export default function DiscoverPage() {
               href="#for-you" 
               className="flex items-center gap-3 p-3 rounded-xl border border-surface-200/80 dark:border-surface-800 bg-white dark:bg-surface-900/60 hover:border-rome-300 dark:hover:border-rome-800 hover:shadow-2xs transition-all group"
             >
-              <div className="w-8 h-8 rounded-lg bg-rome-50 dark:bg-rome-950/40 text-rome-600 dark:text-rome-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 flex items-center justify-center shrink-0">
                 <Star className="w-4 h-4" />
               </div>
               <div>
@@ -227,8 +224,8 @@ export default function DiscoverPage() {
       <section id="for-you" className="space-y-4 scroll-mt-20">
         <div className="flex items-end justify-between">
           <div className="space-y-1">
-            <h2 className="text-xl font-black flex items-center gap-2 text-surface-900 dark:text-surface-100">
-              <Star className="w-4 h-4 text-rome-500 fill-rome-500" />
+            <h2 className="text-xl font-semibold flex items-center gap-2 text-surface-900 dark:text-surface-100">
+              <Star className="w-4 h-4 text-surface-400 dark:text-surface-500" />
               For you
             </h2>
             <p className="text-xs text-surface-500 dark:text-surface-400">
@@ -273,8 +270,8 @@ export default function DiscoverPage() {
       <section className="space-y-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-rome-500" />
-            <h2 className="text-xl font-black text-surface-900 dark:text-surface-100">You might be overlooking</h2>
+            <Sparkles className="w-4 h-4 text-surface-400 dark:text-surface-500" />
+            <h2 className="text-xl font-semibold text-surface-900 dark:text-surface-100">You might be overlooking</h2>
           </div>
           <p className="text-xs text-surface-500 dark:text-surface-400">
             Alternative paths that advance the same goals through fellowships, grants, or competitions.
@@ -287,14 +284,13 @@ export default function DiscoverPage() {
               <div 
                 key={idx}
                 onClick={() => navigate(`/explore?type=${encodeURIComponent(item.alternativeType)}`)}
-                className="cursor-pointer group relative overflow-hidden rounded-2xl border border-surface-200/90 dark:border-surface-800 bg-white dark:bg-surface-900 p-5 transition-all hover:shadow-card hover:border-rome-300 dark:hover:border-rome-700"
-                style={{ borderLeftWidth: '4px', borderLeftColor: '#0ea5e9' }}
+                className="cursor-pointer group relative overflow-hidden rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-5 transition-all hover:shadow-card hover:border-rome-300 dark:hover:border-rome-700"
               >
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 group-hover:text-rome-500 transition-colors">
                     {item.alternativeType}
                   </h3>
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-rome-50 dark:bg-rome-950/60 text-rome-700 dark:text-rome-300 border border-rome-200/60 dark:border-rome-800/60">
+                  <span className="text-xs text-surface-400">
                     {item.count} available
                   </span>
                 </div>
@@ -322,8 +318,8 @@ export default function DiscoverPage() {
         <section className="space-y-4">
           <div className="flex items-end justify-between">
             <div className="space-y-1">
-              <h2 className="text-xl font-black flex items-center gap-2 text-surface-900 dark:text-surface-100">
-                <Clock className="w-4 h-4 text-amber-500" />
+              <h2 className="text-xl font-semibold flex items-center gap-2 text-surface-900 dark:text-surface-100">
+                <Clock className="w-4 h-4 text-surface-400 dark:text-surface-500" />
                 Closing soon
               </h2>
               <p className="text-xs text-surface-500 dark:text-surface-400">

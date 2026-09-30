@@ -138,42 +138,41 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
       <div className="flex justify-between items-start mb-2.5 gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <Tag label={opportunity.type} size="sm" />
-          <span className="text-xs font-semibold text-surface-500 dark:text-surface-400 truncate max-w-[170px]" title={orgName}>
-            {orgName}
-          </span>
         </div>
         
         {/* Actions: Clean Icon Row */}
         <div className="flex items-center gap-1 shrink-0">
-          <button
-            onClick={handleShare}
-            className={cn(
-              "p-1.5 rounded-lg transition-colors z-10 cursor-pointer border text-xs",
-              copied
-                ? "text-emerald-600 bg-emerald-50 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800"
-                : "text-surface-400 bg-surface-50 dark:bg-surface-800/80 hover:text-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
-            )}
-            title={copied ? "Link Copied!" : "Share Opportunity"}
-            aria-label="Share opportunity"
-          >
-            {copied ? <Check className="h-3.5 w-3.5 text-emerald-500 stroke-[3]" /> : <Share2 className="h-3.5 w-3.5" />}
-          </button>
-
-          {showCompareButton && (
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
-              onClick={handleCompareToggle}
+              onClick={handleShare}
               className={cn(
-                "p-1.5 rounded-lg text-xs font-semibold flex items-center transition-all z-10 cursor-pointer border",
-                isComparing
-                  ? "bg-rome-500 text-white border-rome-600 dark:bg-rome-600 dark:border-rome-500 shadow-2xs"
-                  : "bg-surface-50 dark:bg-surface-800/80 text-surface-400 hover:text-rome-600 border-surface-200 dark:border-surface-700 dark:hover:bg-surface-700"
+                "p-1.5 rounded-lg transition-colors z-10 cursor-pointer border text-xs",
+                copied
+                  ? "text-emerald-600 bg-emerald-50 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800"
+                  : "text-surface-400 bg-surface-50 dark:bg-surface-800/80 hover:text-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
               )}
-              title={isComparing ? "Remove from Compare" : "Add to Compare"}
-              aria-label="Toggle comparison"
+              title={copied ? "Link Copied!" : "Share Opportunity"}
+              aria-label="Share opportunity"
             >
-              <Scale className={cn("h-3.5 w-3.5", isComparing ? "text-white" : "")} />
+              {copied ? <Check className="h-3.5 w-3.5 text-emerald-500 stroke-[3]" /> : <Share2 className="h-3.5 w-3.5" />}
             </button>
-          )}
+
+            {showCompareButton && (
+              <button
+                onClick={handleCompareToggle}
+                className={cn(
+                  "p-1.5 rounded-lg text-xs font-semibold flex items-center transition-all z-10 cursor-pointer border",
+                  isComparing
+                    ? "bg-rome-500 text-white border-rome-600 dark:bg-rome-600 dark:border-rome-500 shadow-2xs"
+                    : "bg-surface-50 dark:bg-surface-800/80 text-surface-400 hover:text-rome-600 border-surface-200 dark:border-surface-700 dark:hover:bg-surface-700"
+                )}
+                title={isComparing ? "Remove from Compare" : "Add to Compare"}
+                aria-label="Toggle comparison"
+              >
+                <Scale className={cn("h-3.5 w-3.5", isComparing ? "text-white" : "")} />
+              </button>
+            )}
+          </div>
 
           {showSaveButton && (
             <button
@@ -182,7 +181,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
                 "p-1.5 rounded-lg transition-colors z-10 cursor-pointer border",
                 isSaved 
                   ? "text-rose-500 bg-rose-50 border-rose-200 dark:bg-rose-950/30 dark:border-rose-900/60" 
-                  : "text-surface-400 bg-surface-50 dark:bg-surface-800/80 hover:text-rose-500 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
+                  : "text-surface-400 bg-surface-50 dark:bg-surface-800/80 hover:text-surface-600 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
               )}
               aria-label={isSaved ? "Unsave opportunity" : "Save opportunity"}
               title={isSaved ? "Saved" : "Save opportunity"}
@@ -195,11 +194,15 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
       {/* ─── Opportunity Title ─── */}
       <h3 className={cn(
-        "font-bold text-surface-900 dark:text-white mb-1.5 leading-snug group-hover:text-rome-600 dark:group-hover:text-rome-400 transition-colors line-clamp-2",
+        "font-semibold text-surface-900 dark:text-white mb-1.5 leading-snug group-hover:text-rome-500 transition-colors line-clamp-2",
         compact ? "text-sm" : "text-base"
       )}>
         {opportunity.title}
       </h3>
+      
+      <div className="text-xs text-surface-400 dark:text-surface-500 mb-2 truncate" title={orgName}>
+        {orgName}
+      </div>
       
       {/* ─── Short Description (Tight 2 lines) ─── */}
       <p className="text-xs text-surface-500 dark:text-surface-400 mb-3 line-clamp-2 leading-relaxed">
@@ -209,21 +212,11 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
       {/* ─── Compact Fit / Match Indicator Pill ─── */}
       {relevanceScore !== undefined && (
         <div className="mb-3">
-          <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-surface-50 dark:bg-surface-800/60 border border-surface-200/70 dark:border-surface-700/60">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className={cn(
-                "font-black px-1.5 py-0.5 rounded text-[11px] shrink-0",
-                relevanceScore >= 70 
-                  ? "bg-rome-100 dark:bg-rome-950/70 text-rome-700 dark:text-rome-300"
-                  : "bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300"
-              )}>
-                {relevanceScore}% Fit
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center min-w-0">
+              <span className="text-xs text-surface-400 truncate" title={relevanceReasons?.join(' · ')}>
+                {relevanceScore}% match{relevanceReasons && relevanceReasons.length > 0 ? ` · ${relevanceReasons[0]}` : ''}
               </span>
-              {relevanceReasons && relevanceReasons.length > 0 && (
-                <span className="text-xs text-surface-600 dark:text-surface-400 truncate" title={relevanceReasons.join(' · ')}>
-                  {relevanceReasons[0]}
-                </span>
-              )}
             </div>
 
             {/* Optional debug mode toggle */}
@@ -304,11 +297,10 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
         {opportunity.funding && (
           <span 
-            className="inline-flex items-center text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/60 px-2 py-0.5 rounded-full shrink-0 max-w-[140px] truncate"
+            className="inline-flex items-center text-xs text-surface-500 dark:text-surface-400 shrink-0 max-w-[140px] truncate"
             title={opportunity.funding}
           >
-            <DollarSign className="h-3 w-3 mr-0.5 shrink-0" />
-            <span className="truncate">{opportunity.funding}</span>
+            $<span className="truncate">{opportunity.funding}</span>
           </span>
         )}
       </div>

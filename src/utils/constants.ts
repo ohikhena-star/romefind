@@ -1,17 +1,17 @@
 import { OpportunityType } from '@/types/models';
 
 export const OPPORTUNITY_TYPE_COLORS: Record<OpportunityType, string> = {
-  [OpportunityType.Job]: 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-200 border border-surface-200/80 dark:border-surface-700/80',
-  [OpportunityType.Internship]: 'bg-sky-50 text-sky-800 dark:bg-sky-950/50 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60',
-  [OpportunityType.Fellowship]: 'bg-purple-50 text-purple-800 dark:bg-purple-950/50 dark:text-purple-300 border border-purple-200/60 dark:border-purple-800/60',
-  [OpportunityType.Scholarship]: 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-200 border border-surface-200/80 dark:border-surface-700/80',
-  [OpportunityType.Grant]: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60',
-  [OpportunityType.Programme]: 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-200 border border-surface-200/80 dark:border-surface-700/80',
-  [OpportunityType.Competition]: 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-200 border border-surface-200/80 dark:border-surface-700/80',
-  [OpportunityType.Conference]: 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-200 border border-surface-200/80 dark:border-surface-700/80',
-  [OpportunityType.Research]: 'bg-blue-50 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/60',
-  [OpportunityType.Volunteering]: 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-200 border border-surface-200/80 dark:border-surface-700/80',
-  [OpportunityType.Other]: 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-200 border border-surface-200/80 dark:border-surface-700/80',
+  [OpportunityType.Job]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Internship]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Fellowship]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Scholarship]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Grant]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Programme]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Competition]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Conference]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Research]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Volunteering]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
+  [OpportunityType.Other]: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60',
 };
 
 export const FIELDS = [

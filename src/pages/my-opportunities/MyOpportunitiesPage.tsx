@@ -136,9 +136,7 @@ export default function MyOpportunitiesPage() {
           return (
             <div 
               key={app.id} 
-              className={`bg-white dark:bg-surface-900 rounded-xl p-6 shadow-card hover:shadow-card-hover transition-all flex flex-col gap-4 border ${
-                isAccepted ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/20' : 'border-surface-200 dark:border-surface-800'
-              }`}
+              className={`bg-white dark:bg-surface-900 rounded-xl p-6 shadow-card hover:shadow-card-hover transition-all flex flex-col gap-4 border border-surface-200 dark:border-surface-800`}
             >
               <div className="flex justify-between items-start gap-2">
                 <div>
@@ -190,10 +188,10 @@ export default function MyOpportunitiesPage() {
                     onClick={() => setSelectedAppForOutcome({ id: app.id, opp })}
                     variant="outline"
                     size="sm"
-                    className="text-amber-700 dark:text-amber-300 border-amber-300 hover:bg-amber-50 shrink-0 text-xs font-bold"
+                    className="shrink-0 text-xs font-bold"
                     title="Report acceptance outcome"
                   >
-                    🎉 Got In!
+                    Got In!
                   </Button>
                 </div>
                 

@@ -171,6 +171,7 @@ export default function ExplorePage() {
                     selected={selectedTypes.includes(type)}
                     onClick={() => toggleType(type)}
                     size="sm"
+                    className={selectedTypes.includes(type) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 hover:bg-surface-800 dark:hover:bg-surface-100" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
                   />
                 ))}
               </div>
@@ -216,6 +217,7 @@ export default function ExplorePage() {
                     selected={selectedFields.includes(field)}
                     onClick={() => toggleField(field)}
                     size="sm"
+                    className={selectedFields.includes(field) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 hover:bg-surface-800 dark:hover:bg-surface-100" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
                   />
                 ))}
               </div>
@@ -234,6 +236,7 @@ export default function ExplorePage() {
                     selected={selectedLocations.includes(loc)}
                     onClick={() => toggleLocation(loc)}
                     size="sm"
+                    className={selectedLocations.includes(loc) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 hover:bg-surface-800 dark:hover:bg-surface-100" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
                   />
                 ))}
               </div>
@@ -270,19 +273,19 @@ export default function ExplorePage() {
             <div className="flex flex-wrap items-center gap-2 mb-6 p-3 bg-surface-50 dark:bg-surface-800/40 rounded-xl border border-surface-200 dark:border-surface-700/50">
               <span className="text-xs font-medium text-surface-500">Active:</span>
               {selectedTypes.map((t: OpportunityType) => (
-                <Chip key={t} label={t} selected onRemove={() => toggleType(t)} size="sm" />
+                <Chip key={t} label={t} selected onRemove={() => toggleType(t)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
               ))}
               {selectedFields.map((f: string) => (
-                <Chip key={f} label={f} selected onRemove={() => toggleField(f)} size="sm" />
+                <Chip key={f} label={f} selected onRemove={() => toggleField(f)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
               ))}
               {selectedLocations.map((loc: string) => (
-                <Chip key={loc} label={loc} selected onRemove={() => toggleLocation(loc)} size="sm" />
+                <Chip key={loc} label={loc} selected onRemove={() => toggleLocation(loc)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
               ))}
               {fundedOnly && (
-                <Chip label="Funded Only" selected onRemove={() => setFundedOnly(false)} size="sm" />
+                <Chip label="Funded Only" selected onRemove={() => setFundedOnly(false)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
               )}
               {remoteOnly && (
-                <Chip label="Remote Only" selected onRemove={() => setRemoteOnly(false)} size="sm" />
+                <Chip label="Remote Only" selected onRemove={() => setRemoteOnly(false)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
               )}
               <button 
                 onClick={clearAllFilters}

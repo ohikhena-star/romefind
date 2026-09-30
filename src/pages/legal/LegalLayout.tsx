@@ -53,8 +53,8 @@ export function LegalPage({ title, intro, lastUpdated, sections, children }: Leg
           </Link>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-rome-500 mb-2">Legal & Trust</p>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight">
+              <p className="text-xs font-bold uppercase tracking-widest text-rome-500 mb-2">Legal & Trust</p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight">
                 {title}
               </h1>
             </div>
@@ -99,7 +99,7 @@ export function LegalPage({ title, intro, lastUpdated, sections, children }: Leg
         {/* Sticky sidebar ToC — desktop */}
         <aside className="hidden lg:block w-56 flex-shrink-0">
           <div className="sticky top-8">
-            <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Contents</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">Contents</p>
             <nav className="space-y-1" aria-label="Table of contents">
               {sections.map(s => (
                 <a
@@ -119,7 +119,7 @@ export function LegalPage({ title, intro, lastUpdated, sections, children }: Leg
 
             {/* Legal cross-links */}
             <div className="mt-8 pt-6 border-t border-surface-100 dark:border-surface-800 space-y-1">
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-3">Also</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-3">Also</p>
               <Link to="/privacy" className="block text-sm text-surface-500 hover:text-rome-600 dark:hover:text-rome-400 transition-colors py-1">Privacy Policy</Link>
               <Link to="/terms" className="block text-sm text-surface-500 hover:text-rome-600 dark:hover:text-rome-400 transition-colors py-1">Terms & Conditions</Link>
               <Link to="/community-guidelines" className="block text-sm text-surface-500 hover:text-rome-600 dark:hover:text-rome-400 transition-colors py-1">Community Guidelines</Link>
@@ -143,7 +143,7 @@ export function LegalPage({ title, intro, lastUpdated, sections, children }: Leg
 export function LegalSection({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="mb-12 scroll-mt-8">
-      <h2 className="text-xl font-black text-surface-900 dark:text-white mb-4 pb-3 border-b border-surface-100 dark:border-surface-800">
+      <h2 className="text-xl font-bold text-surface-900 dark:text-white mb-4 pb-3 border-b border-surface-100 dark:border-surface-800">
         {title}
       </h2>
       <div className="space-y-4 text-surface-700 dark:text-surface-300 leading-relaxed text-[0.9375rem]">

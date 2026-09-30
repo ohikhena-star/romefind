@@ -9,7 +9,7 @@ import {
 // ── Small reusable primitives ────────────────────────────────────────────────
 
 const Pill = ({ children, light = false }: { children: React.ReactNode; light?: boolean }) => (
-  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 border ${light ? 'bg-white/10 text-white border-white/20' : 'bg-rome-100 dark:bg-rome-950/50 text-rome-700 dark:text-rome-300 border-rome-200 dark:border-rome-800'}`}>
+  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 border ${light ? 'bg-white/10 text-white border-white/20' : 'bg-rome-100 dark:bg-rome-950/50 text-rome-700 dark:text-rome-300 border-rome-200 dark:border-rome-800'}`}>
     <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />{children}
   </span>
 );
@@ -53,8 +53,8 @@ export default function AboutPage() {
           style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")' }} />
 
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 py-24 md:py-32">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-white/60 mb-5">About ROMEfind</p>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.04] tracking-tight mb-6 max-w-3xl">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/60 mb-5">About ROMEfind</p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.04] tracking-tight mb-6 max-w-3xl">
             Rome wasn't built<br />in a day.<br />
             <span className="text-white/70">Neither is your path.</span>
           </h1>
@@ -63,7 +63,7 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to="/signup"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white hover:bg-slate-50 text-surface-900 font-black rounded-xl text-base transition-all shadow-lg">
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white hover:bg-slate-50 text-surface-900 font-bold rounded-xl text-base transition-all shadow-lg">
               Explore opportunities <ArrowRight size={16} />
             </Link>
             <Link to="/discover"
@@ -86,7 +86,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl">
             <Pill>Why we exist</Pill>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-8">
               The right opportunity can change what comes next.
             </h2>
           </div>
@@ -102,7 +102,7 @@ export default function AboutPage() {
                 A person's search often becomes too narrow. Someone decides <em>"I need an internship"</em> — and searches only for internships. But the better question might be:
               </p>
               <blockquote className="border-l-4 border-rome-400 pl-5 py-1 my-6">
-                <p className="text-xl font-black text-surface-900 dark:text-white not-italic leading-snug">
+                <p className="text-xl font-bold text-surface-900 dark:text-white not-italic leading-snug">
                   "What opportunities could move me toward where I want to go?"
                 </p>
               </blockquote>
@@ -112,7 +112,7 @@ export default function AboutPage() {
             </div>
             <div className="space-y-3">
               {/* How people currently discover opportunities */}
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">How opportunities are currently found</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">How opportunities are currently found</p>
               {[
                 { label: 'Search engines', w: '78%' },
                 { label: 'Group chats & communities', w: '62%' },
@@ -141,7 +141,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="max-w-2xl mb-16">
             <Pill>Our philosophy</Pill>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
               Your search is only<br />the beginning.
             </h2>
             <p className="text-lg text-surface-500 dark:text-surface-400 leading-relaxed">
@@ -160,13 +160,13 @@ export default function AboutPage() {
                     : 'bg-surface-50 dark:bg-surface-800/40 border-surface-200/60 dark:border-surface-700/60'
                 )}>
                 <div className={cn(
-                  'w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-black',
+                  'w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold',
                   i < 5 ? 'bg-rome-500 text-white' : 'bg-surface-200 dark:bg-surface-700 text-surface-500 dark:text-surface-400'
                 )}>
                   {i + 1}
                 </div>
                 <div>
-                  <p className={cn('text-sm font-black mb-0.5', i < 5 ? 'text-surface-900 dark:text-white' : 'text-surface-600 dark:text-surface-400')}>
+                  <p className={cn('text-sm font-bold mb-0.5', i < 5 ? 'text-surface-900 dark:text-white' : 'text-surface-600 dark:text-surface-400')}>
                     {item.step}
                   </p>
                   <p className="text-xs text-surface-500 dark:text-surface-500 leading-relaxed">{item.q}</p>
@@ -187,7 +187,7 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <Pill>Alternative paths</Pill>
-              <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
+              <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
                 Sometimes the opportunity you need isn't the one you searched for.
               </h2>
               <p className="text-lg text-surface-500 dark:text-surface-400 leading-relaxed mb-6">
@@ -200,13 +200,13 @@ export default function AboutPage() {
 
             {/* Search demo visual */}
             <div className="rounded-3xl border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 shadow-card">
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-3">Search</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-3">Search</p>
               <div className="flex items-center gap-3 bg-white dark:bg-surface-950 border-2 border-rome-400 rounded-xl px-4 py-3 mb-5">
                 <Search size={14} className="text-rome-500 flex-shrink-0" />
                 <span className="text-sm font-bold text-surface-900 dark:text-white">UX internship</span>
               </div>
 
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-3">Results</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-3">Results</p>
               <div className="space-y-2 mb-5">
                 {[
                   { label: 'UX Design Internship', type: 'Internship', color: 'blue', primary: true },
@@ -250,7 +250,7 @@ export default function AboutPage() {
               <div className="flex items-start justify-between mb-5">
                 <div>
                   <Chip color="purple">Fellowship</Chip>
-                  <h4 className="text-base font-black text-surface-900 dark:text-white mt-2">Product Design Fellowship</h4>
+                  <h4 className="text-base font-bold text-surface-900 dark:text-white mt-2">Product Design Fellowship</h4>
                   <p className="text-xs text-surface-500 mt-0.5">Design Foundation · Global</p>
                 </div>
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">Funded</span>
@@ -264,7 +264,7 @@ export default function AboutPage() {
                   { label: 'Benefits', value: 'Stipend, mentorship, portfolio support' },
                 ].map(row => (
                   <div key={row.label} className="flex items-start gap-3 py-2.5 border-b border-surface-100 dark:border-surface-800 last:border-0">
-                    <span className="text-xs font-black uppercase tracking-wider text-surface-400 w-24 flex-shrink-0 mt-0.5">{row.label}</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-surface-400 w-24 flex-shrink-0 mt-0.5">{row.label}</span>
                     <span className="text-sm text-surface-700 dark:text-surface-300">{row.value}</span>
                   </div>
                 ))}
@@ -272,7 +272,7 @@ export default function AboutPage() {
 
               <div className="mt-4 pt-4 border-t border-surface-100 dark:border-surface-800">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-rome-600 dark:text-rome-400">Community experience</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400">Community experience</span>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-surface-100 dark:bg-surface-800 text-surface-500">Not official</span>
                 </div>
                 <p className="text-xs text-surface-500 italic">"Start your portfolio early — the case study takes longer than you think."</p>
@@ -281,7 +281,7 @@ export default function AboutPage() {
 
             <div>
               <Pill>Depth</Pill>
-              <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
+              <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-5">
                 An opportunity is more than a title and a deadline.
               </h2>
               <p className="text-lg text-surface-500 dark:text-surface-400 leading-relaxed mb-6">
@@ -310,7 +310,7 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <Pill light>Community</Pill>
-              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight mb-5">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight mb-5">
                 Someone has probably been through it before.
               </h2>
               <p className="text-lg text-surface-400 leading-relaxed mb-6">
@@ -347,7 +347,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl">
             <Pill>What we're building</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight mb-6">
               We're building for the whole journey.
             </h2>
             <p className="text-lg text-surface-500 dark:text-surface-400 leading-relaxed mb-5">
@@ -369,7 +369,7 @@ export default function AboutPage() {
                 future ? 'bg-surface-50 dark:bg-surface-900/40 border-dashed border-surface-300 dark:border-surface-700' : 'bg-white dark:bg-surface-900 border-surface-200 dark:border-surface-800'
               )}>
                 {future && <span className="text-xs font-bold text-surface-400 uppercase tracking-wider mb-2 block">Coming</span>}
-                <h3 className="text-sm font-black text-surface-900 dark:text-white mb-1.5">{title}</h3>
+                <h3 className="text-sm font-bold text-surface-900 dark:text-white mb-1.5">{title}</h3>
                 <p className="text-xs text-surface-500 dark:text-surface-400 leading-relaxed">{desc}</p>
               </div>
             ))}
@@ -382,7 +382,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="max-w-2xl mb-12">
             <Pill>Who it's for</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white tracking-tight leading-tight">
               ROMEfind starts with what you're looking for.
             </h2>
             <p className="mt-4 text-lg text-surface-500 dark:text-surface-400">And helps you discover where else that search could lead.</p>
@@ -390,7 +390,7 @@ export default function AboutPage() {
 
           <div className="grid md:grid-cols-2 gap-10">
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">Opportunity types</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">Opportunity types</p>
               <div className="flex flex-wrap gap-2">
                 {['Internships', 'Jobs', 'Fellowships', 'Scholarships', 'Grants', 'Competitions', 'Research roles', 'Programmes', 'Conferences', 'Volunteering'].map(t => (
                   <span key={t} className="px-3 py-1.5 text-sm font-semibold rounded-full bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300">
@@ -400,7 +400,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-surface-400 mb-4">People it can help</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-4">People it can help</p>
               <ul className="space-y-2">
                 {[
                   'Students and recent graduates',
@@ -426,11 +426,11 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl">
             <Pill>The name</Pill>
-            <h2 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white tracking-tight mb-8">
+            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white tracking-tight mb-8">
               Why <span className="text-rome-500">ROME</span>find?
             </h2>
             <blockquote className="border-l-4 border-rome-400 pl-6 mb-8">
-              <p className="text-2xl font-black text-surface-900 dark:text-white leading-snug">
+              <p className="text-2xl font-bold text-surface-900 dark:text-white leading-snug">
                 Rome wasn't built in a day.<br />Neither is your path.
               </p>
             </blockquote>
@@ -454,7 +454,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
           style={{ backgroundImage: 'radial-gradient(circle, #0ea5e9 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
         <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center relative">
-          <h2 className="text-4xl sm:text-5xl font-black text-surface-900 dark:text-white tracking-tight mb-6 leading-tight">
+          <h2 className="text-4xl sm:text-5xl font-bold text-surface-900 dark:text-white tracking-tight mb-6 leading-tight">
             Your path doesn't have<br />to be obvious.
           </h2>
           <p className="text-xl text-surface-500 dark:text-surface-400 mb-10">
@@ -462,7 +462,7 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link to="/signup"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-rome-500 hover:bg-rome-600 text-white font-black rounded-xl text-base transition-all shadow-lg">
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-rome-500 hover:bg-rome-600 text-white font-bold rounded-xl text-base transition-all shadow-lg">
               Explore opportunities <ArrowRight size={16} />
             </Link>
             <Link to="/discover"
@@ -479,7 +479,7 @@ export default function AboutPage() {
 // Pill variant for dark section
 function PillLight({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest bg-white/10 text-white/80 border border-white/20 mb-4">
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-white/10 text-white/80 border border-white/20 mb-4">
       <span className="w-1.5 h-1.5 rounded-full bg-white/60" />{children}
     </span>
   );
