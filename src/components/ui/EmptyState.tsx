@@ -1,45 +1,68 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { LucideIcon } from 'lucide-react';
 import { Button } from './Button';
+import { SolarIcon } from './SolarIcon';
 
 export interface EmptyStateProps {
-  icon?: LucideIcon;
+  icon?: any;
   title: string;
   description?: string;
+  hint?: string;
   actionLabel?: string;
   onAction?: () => void;
+  secondaryActionLabel?: string;
+  onSecondaryAction?: () => void;
   className?: string;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  icon: Icon,
+  icon,
   title,
   description,
+  hint,
   actionLabel,
   onAction,
+  secondaryActionLabel,
+  onSecondaryAction,
   className
 }) => {
   return (
     <div className={cn("flex flex-col items-center justify-center p-8 text-center rounded-lg border-2 border-dashed border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/50", className)}>
-      {Icon && (
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-surface-100 dark:bg-surface-800 mb-4">
-          <Icon className="h-6 w-6 text-surface-600 dark:text-surface-400" aria-hidden="true" />
+      {icon && (
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-surface-100 dark:bg-surface-800 mb-4">
+          {typeof icon === 'string' ? (
+            <SolarIcon name={icon} size={32} className="text-surface-300 dark:text-surface-600" aria-hidden="true" />
+          ) : (
+            React.createElement(icon, { className: "h-8 w-8 text-surface-300 dark:text-surface-600", "aria-hidden": "true" })
+          )}
         </div>
       )}
-      <h3 className="text-sm font-semibold text-surface-900 dark:text-white">{title}</h3>
+      <h3 className="text-lg font-semibold text-surface-800 dark:text-surface-100">{title}</h3>
       {description && (
-        <p className="mt-1 text-sm text-surface-500 dark:text-surface-400 max-w-sm">
+        <p className="mt-2 text-sm text-surface-500 dark:text-surface-400 max-w-xs mx-auto text-center">
           {description}
         </p>
       )}
-      {actionLabel && onAction && (
-        <div className="mt-6">
-          <Button onClick={onAction} variant="outline" size="sm">
+      {hint && (
+        <p className="mt-1 text-xs text-surface-400 dark:text-surface-500 max-w-xs mx-auto text-center italic">
+          {hint}
+        </p>
+      )}
+      <div className="mt-6 flex flex-col items-center gap-3">
+        {actionLabel && onAction && (
+          <Button onClick={onAction} className="bg-rome-500 hover:bg-rome-600 text-white" size="sm">
             {actionLabel}
           </Button>
-        </div>
-      )}
+        )}
+        {secondaryActionLabel && onSecondaryAction && (
+          <button 
+            onClick={onSecondaryAction} 
+            className="text-rome-600 dark:text-rome-400 hover:underline text-sm font-medium transition-colors"
+          >
+            {secondaryActionLabel}
+          </button>
+        )}
+      </div>
     </div>
   );
 };

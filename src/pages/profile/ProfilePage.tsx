@@ -244,7 +244,7 @@ export default function ProfilePage() {
                   </Button>
                 </>
               ) : (
-                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} aria-label="Edit Profile">Edit Profile</Button>
               )}
             </div>
           </div>
@@ -269,13 +269,17 @@ export default function ProfilePage() {
             <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">About Me</h2>
             {isEditing ? (
               <div className="flex flex-col gap-3">
-                <textarea
-                  className="w-full p-3 rounded-lg border border-surface-300 dark:border-surface-700 bg-transparent text-surface-900 dark:text-surface-50 text-sm focus:ring-2 focus:ring-rome-500 outline-none resize-none"
-                  rows={3}
-                  value={localProfile.bio}
-                  onChange={e => setLocalProfile(p => ({ ...p, bio: e.target.value }))}
-                  placeholder="Share a short bio about your trajectory, interests, and aspirations..."
-                />
+                <div>
+                  <label htmlFor="bio-input" className="sr-only">About Me Bio</label>
+                  <textarea
+                    id="bio-input"
+                    className="w-full p-3 rounded-lg border border-surface-300 dark:border-surface-700 bg-transparent text-surface-900 dark:text-surface-50 text-sm focus:ring-2 focus:ring-rome-500 outline-none resize-none"
+                    rows={3}
+                    value={localProfile.bio}
+                    onChange={e => setLocalProfile(p => ({ ...p, bio: e.target.value }))}
+                    placeholder="Share a short bio about your trajectory, interests, and aspirations..."
+                  />
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input label="Full Name" value={localProfile.name} onChange={e => setLocalProfile(p => ({ ...p, name: e.target.value }))} />
                   <div>
@@ -329,13 +333,17 @@ export default function ProfilePage() {
             <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">Skills & Strengths</h2>
             {isEditing && (
               <div className="flex gap-2 mb-4">
-                <Input
-                  placeholder="Add a skill (e.g. Python, Grant Writing, UX Research)…"
-                  value={newSkill}
-                  onChange={e => setNewSkill(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
-                />
-                <Button size="sm" variant="secondary" onClick={handleAddSkill}><Plus size={16} /></Button>
+                <div className="flex-1">
+                  <label htmlFor="new-skill-input" className="sr-only">Add a skill</label>
+                  <Input
+                    id="new-skill-input"
+                    placeholder="Add a skill (e.g. Python, Grant Writing, UX Research)…"
+                    value={newSkill}
+                    onChange={e => setNewSkill(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
+                  />
+                </div>
+                <Button size="sm" variant="secondary" onClick={handleAddSkill} aria-label="Add skill"><Plus size={16} /></Button>
               </div>
             )}
             <div className="flex flex-wrap gap-2">
@@ -349,6 +357,7 @@ export default function ProfilePage() {
                     <button
                       onClick={() => setLocalProfile(p => ({ ...p, skills: p.skills.filter(s => s !== skill) }))}
                       className="text-surface-400 hover:text-red-500 transition-colors"
+                      aria-label={`Remove ${skill}`}
                     >
                       <X size={12} />
                     </button>

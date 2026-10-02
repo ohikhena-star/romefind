@@ -17,6 +17,7 @@
     "prisma:push": "prisma db push --schema=server/prisma/schema.prisma"
   },
   "dependencies": {
+    "@iconify/react": "^6.0.2",
     "@prisma/client": "^6.4.1",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",

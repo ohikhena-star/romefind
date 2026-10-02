@@ -180,6 +180,7 @@ export default function OpportunityDetailPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
         <button 
           onClick={() => navigate(-1)}
+          aria-label="Back to opportunities"
           className="flex items-center gap-1.5 text-xs font-semibold text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
         >
           <ArrowLeft size={14} />
@@ -188,6 +189,7 @@ export default function OpportunityDetailPage() {
       </div>
 
       {/* Hero Section */}
+      <main>
       <div className="bg-surface-50 dark:bg-surface-900/50 border-b border-surface-200 dark:border-surface-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 flex flex-col lg:flex-row gap-12">
           <div className="flex-1 space-y-5">
@@ -206,7 +208,8 @@ export default function OpportunityDetailPage() {
                 <a 
                   href={orgWebsite} 
                   target="_blank" 
-                  rel="noreferrer" 
+                  rel="noopener noreferrer" 
+                  aria-label="Opens in new tab"
                   className="text-sm font-semibold text-rome-600 dark:text-rome-400 hover:underline inline-flex items-center gap-1"
                 >
                   {orgName} <ExternalLink className="w-3.5 h-3.5" />
@@ -280,8 +283,9 @@ export default function OpportunityDetailPage() {
                     variant="primary" 
                     fullWidth
                     size="lg"
-                    onClick={() => window.open(opportunity.applicationUrl, '_blank')}
+                    onClick={() => window.open(opportunity.applicationUrl, '_blank', 'noopener noreferrer')}
                     rightIcon={<ExternalLink size={16} />}
+                    aria-label={`Apply to ${opportunity.title}`}
                   >
                     Apply on Official Site
                   </Button>
@@ -300,6 +304,7 @@ export default function OpportunityDetailPage() {
                       variant="outline" 
                       className="flex-1 justify-center gap-1.5 text-xs px-2"
                       onClick={() => saved ? unsaveOpportunity(opportunity.id) : saveOpportunity(opportunity.id)}
+                      aria-label={saved ? 'Remove from saved' : 'Save opportunity'}
                     >
                       {saved ? <BookmarkCheck className="w-3.5 h-3.5 text-rome-500" /> : <Bookmark className="w-3.5 h-3.5" />}
                       {saved ? 'Saved' : 'Save'}
@@ -316,6 +321,7 @@ export default function OpportunityDetailPage() {
                       className="justify-center text-xs px-2.5"
                       onClick={() => setShowShareModal(true)}
                       title="Share Opportunity"
+                      aria-label="Share Opportunity"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                     </Button>
@@ -440,7 +446,8 @@ export default function OpportunityDetailPage() {
               <a 
                 href={opportunity.officialSource} 
                 target="_blank" 
-                rel="noreferrer" 
+                rel="noopener noreferrer" 
+                aria-label="Opens in new tab"
                 className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline ml-auto inline-flex items-center gap-1"
               >
                 Official Page <ExternalLink size={12} />
@@ -695,6 +702,7 @@ export default function OpportunityDetailPage() {
       )}
 
       {/* Related Opportunities */}
+      </main>
       {/* Delete Advice Modal — "Why are you removing this?" */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">

@@ -6,13 +6,13 @@ import { useAuthStore } from '@/store/authStore';
 import { getRecommendationsForOpportunity, getRecommendationsForProfile } from '@/services/learning.service';
 import { learningResources } from '@/data/learning-resources';
 import { api } from '@/api/client';
-import { Badge, Button, EmptyState } from '@/components/ui';
+import { Badge, Button, EmptyState, Skeleton } from '@/components/ui';
 import { BookOpen, ExternalLink, Sparkles, CheckCircle2, Clock } from 'lucide-react';
 import { Opportunity, LearningResource } from '@/types/models';
 
 export default function LearnPage() {
   const navigate = useNavigate();
-  const { opportunities } = useOpportunityStore();
+  const { opportunities, isLoading } = useOpportunityStore();
   const { savedOpportunities, trackedApplications } = useApplicationStore();
   const { user } = useAuthStore();
   
@@ -65,6 +65,8 @@ export default function LearnPage() {
   const profileRecommendations: LearningResource[] = user
     ? getRecommendationsForProfile(user.profile, learningResources)
     : learningResources.slice(0, 6);
+
+  if (isLoading) return <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-6">{Array.from({length:4}).map((_,i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}</div>;
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-12">

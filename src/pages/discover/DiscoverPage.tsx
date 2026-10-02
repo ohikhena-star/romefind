@@ -8,21 +8,7 @@ import { OpportunityCard } from '@/components/opportunity';
 import { EmptyState, DashboardSkeleton } from '@/components/ui';
 import { getGreeting, daysUntil } from '@/utils/format';
 import { cn } from '@/utils/cn';
-import { 
-  Search, 
-  ChevronRight, 
-  Clock, 
-  Star, 
-  Sparkles, 
-  Compass, 
-  ArrowRight, 
-  Briefcase, 
-  DollarSign, 
-  GraduationCap, 
-  Award, 
-  Bug,
-  Filter
-} from 'lucide-react';
+import { SolarIcon } from '@/components/ui/SolarIcon';
 import { Opportunity, AlternativeDiscovery, SearchResult } from '@/types/models';
 
 export default function DiscoverPage() {
@@ -83,7 +69,7 @@ export default function DiscoverPage() {
     return (
       <div className="flex h-full min-h-[60vh] items-center justify-center p-8">
         <EmptyState 
-          icon={Compass}
+          icon="compass-linear"
           title="Sign in to discover opportunities"
           description="Create a profile to get personalized opportunity recommendations and alternative path discovery."
           actionLabel="Sign In"
@@ -118,11 +104,24 @@ export default function DiscoverPage() {
             )}
             title="Toggle matching signals breakdown on opportunity cards"
           >
-            <Bug className="w-3.5 h-3.5" />
+            <SolarIcon name="bug-linear" size={14} className="w-3.5 h-3.5" />
             <span>Matching Inspector: {debugMode ? 'ON' : 'OFF'}</span>
           </button>
         </div>
       </header>
+
+      {/* Onboarding nudge: only shown if user hasn't set interests */}
+      {user && !user.profile?.interests?.length && (
+        <div className="rounded-xl bg-rome-50 dark:bg-rome-950/20 border border-rome-200/60 dark:border-rome-800/40 px-4 py-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-rome-900 dark:text-rome-100">Complete your profile for better matches</p>
+            <p className="text-xs text-rome-700 dark:text-rome-300 mt-0.5">Add your interests and goals to unlock personalised recommendations.</p>
+          </div>
+          <Link to="/profile" className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rome-500 hover:bg-rome-600 text-white text-xs font-semibold transition-colors whitespace-nowrap">
+            Update profile
+          </Link>
+        </div>
+      )}
 
       {/* ─── PRIMARY FIRST-ACTION HERO: WHAT ARE YOU LOOKING FOR? ─── */}
       <section className="rounded-2xl border border-surface-200/90 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-8 shadow-xs">
@@ -137,7 +136,7 @@ export default function DiscoverPage() {
           {/* Unified Search Input */}
           <form onSubmit={handleSearchSubmit} className="relative flex items-center gap-2 mb-4">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
+              <SolarIcon name="magnifer-linear" size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400" />
               <input
                 type="text"
                 value={searchQuery}
@@ -151,13 +150,13 @@ export default function DiscoverPage() {
               className="px-5 py-3 rounded-xl bg-rome-500 hover:bg-rome-600 text-white font-bold text-sm transition-colors shrink-0 shadow-xs flex items-center gap-1.5"
             >
               <span>Search</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <SolarIcon name="arrow-right-linear" size={14} className="w-3.5 h-3.5" />
             </button>
           </form>
 
           {/* Quick Intent Pills */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-surface-400 shrink-0">Popular:</span>
+            <span className="text-xs font-semibold text-surface-500 shrink-0">Popular:</span>
             {[
               'UX & Product Design',
               'Remote Software Jobs',
@@ -183,11 +182,11 @@ export default function DiscoverPage() {
               className="flex items-center gap-3 p-3 rounded-xl border border-surface-200/80 dark:border-surface-800 bg-white dark:bg-surface-900/60 hover:border-rome-300 dark:hover:border-rome-800 hover:shadow-2xs transition-all group"
             >
               <div className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 flex items-center justify-center shrink-0">
-                <Briefcase className="w-4 h-4" />
+                <SolarIcon name="case-linear" size={16} />
               </div>
               <div>
                 <p className="text-xs font-bold text-surface-900 dark:text-white group-hover:text-rome-500 transition-colors">Browse Catalog</p>
-                <p className="text-[11px] text-surface-400">Filter by type, field, funding</p>
+                <p className="text-xs text-surface-500">Filter by type, field, funding</p>
               </div>
             </Link>
 
@@ -196,11 +195,11 @@ export default function DiscoverPage() {
               className="flex items-center gap-3 p-3 rounded-xl border border-surface-200/80 dark:border-surface-800 bg-white dark:bg-surface-900/60 hover:border-rome-300 dark:hover:border-rome-800 hover:shadow-2xs transition-all group"
             >
               <div className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 flex items-center justify-center shrink-0">
-                <DollarSign className="w-4 h-4" />
+                <SolarIcon name="dollar-minimalistic-linear" size={16} />
               </div>
               <div>
                 <p className="text-xs font-bold text-surface-900 dark:text-white group-hover:text-rome-500 transition-colors">Explore by Goal</p>
-                <p className="text-[11px] text-surface-400">Funding, internships, jobs</p>
+                <p className="text-xs text-surface-500">Funding, internships, jobs</p>
               </div>
             </Link>
 
@@ -209,11 +208,11 @@ export default function DiscoverPage() {
               className="flex items-center gap-3 p-3 rounded-xl border border-surface-200/80 dark:border-surface-800 bg-white dark:bg-surface-900/60 hover:border-rome-300 dark:hover:border-rome-800 hover:shadow-2xs transition-all group"
             >
               <div className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 flex items-center justify-center shrink-0">
-                <Star className="w-4 h-4" />
+                <SolarIcon name="star-linear" size={16} />
               </div>
               <div>
                 <p className="text-xs font-bold text-surface-900 dark:text-white group-hover:text-rome-500 transition-colors">Your Matches</p>
-                <p className="text-[11px] text-surface-400">High-relevance recommendations</p>
+                <p className="text-xs text-surface-500">High-relevance recommendations</p>
               </div>
             </a>
           </div>
@@ -225,7 +224,7 @@ export default function DiscoverPage() {
         <div className="flex items-end justify-between">
           <div className="space-y-1">
             <h2 className="text-xl font-semibold flex items-center gap-2 text-surface-900 dark:text-surface-100">
-              <Star className="w-4 h-4 text-surface-400 dark:text-surface-500" />
+              <SolarIcon name="star-linear" size={16} className="text-surface-400 dark:text-surface-500" />
               For you
             </h2>
             <p className="text-xs text-surface-500 dark:text-surface-400">
@@ -233,7 +232,7 @@ export default function DiscoverPage() {
             </p>
           </div>
           <Link to="/recommendations" className="text-rome-600 dark:text-rome-400 hover:text-rome-700 font-semibold flex items-center gap-1 transition-colors text-xs">
-            See all matches <ChevronRight className="w-3.5 h-3.5" />
+            See all matches <SolarIcon name="alt-arrow-right-linear" size={14} className="w-3.5 h-3.5" />
           </Link>
         </div>
 
@@ -257,7 +256,7 @@ export default function DiscoverPage() {
           </div>
         ) : (
           <EmptyState 
-            icon={Compass}
+            icon="compass-linear"
             title="We're learning about your path"
             description="Complete your profile interests and target opportunity types to get high-accuracy recommendations."
             actionLabel="Update Profile"
@@ -270,7 +269,7 @@ export default function DiscoverPage() {
       <section className="space-y-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-surface-400 dark:text-surface-500" />
+            <SolarIcon name="magic-stick-linear" size={16} className="text-surface-400 dark:text-surface-500" />
             <h2 className="text-xl font-semibold text-surface-900 dark:text-surface-100">You might be overlooking</h2>
           </div>
           <p className="text-xs text-surface-500 dark:text-surface-400">
@@ -290,7 +289,7 @@ export default function DiscoverPage() {
                   <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 group-hover:text-rome-500 transition-colors">
                     {item.alternativeType}
                   </h3>
-                  <span className="text-xs text-surface-400">
+                  <span className="text-xs text-surface-500">
                     {item.count} available
                   </span>
                 </div>
@@ -299,7 +298,7 @@ export default function DiscoverPage() {
                 </p>
                 <div className="flex items-center gap-1 text-xs font-bold text-rome-600 dark:text-rome-400 group-hover:translate-x-0.5 transition-transform">
                   <span>Explore {item.alternativeType}s</span>
-                  <ChevronRight size={13} />
+                  <SolarIcon name="alt-arrow-right-linear" size={13} />
                 </div>
               </div>
             ))
@@ -319,7 +318,7 @@ export default function DiscoverPage() {
           <div className="flex items-end justify-between">
             <div className="space-y-1">
               <h2 className="text-xl font-semibold flex items-center gap-2 text-surface-900 dark:text-surface-100">
-                <Clock className="w-4 h-4 text-surface-400 dark:text-surface-500" />
+                <SolarIcon name="clock-circle-linear" size={16} className="text-surface-400 dark:text-surface-500" />
                 Closing soon
               </h2>
               <p className="text-xs text-surface-500 dark:text-surface-400">
@@ -327,7 +326,7 @@ export default function DiscoverPage() {
               </p>
             </div>
             <Link to="/explore?status=open" className="text-rome-600 dark:text-rome-400 hover:text-rome-700 font-semibold flex items-center gap-1 transition-colors text-xs">
-              View all deadlines <ChevronRight className="w-3.5 h-3.5" />
+              View all deadlines <SolarIcon name="alt-arrow-right-linear" size={14} className="w-3.5 h-3.5" />
             </Link>
           </div>
 

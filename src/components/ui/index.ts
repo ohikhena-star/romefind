@@ -22,3 +22,4 @@ export * from './Tooltip';
 export * from './Notification';
 export * from '../opportunity/OpportunityCard';
 export * from '../opportunity/OpportunityList';
+export * from './SolarIcon';

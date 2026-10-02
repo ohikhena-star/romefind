@@ -4,7 +4,7 @@ import { useOpportunityStore } from '@/store/opportunityStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { useAuthStore } from '@/store/authStore';
 import { searchOpportunities, sortByRelevance } from '@/services/search.service';
-import { SearchInput, Chip, OpportunityList, EmptyState, Button } from '@/components/ui';
+import { SearchInput, Chip, OpportunityList, EmptyState, Button, OpportunityGridSkeleton } from '@/components/ui';
 import { categories } from '@/data/categories';
 import { OpportunityType, RemoteStatus, Opportunity, SearchResult } from '@/types/models';
 import { Filter, ArrowDownWideNarrow, Briefcase, DollarSign, GraduationCap, Target, Layers, Users, Microscope, TrendingUp, Globe, Rocket, Compass } from 'lucide-react';
@@ -27,7 +27,7 @@ const GOAL_ICON_MAP: Record<string, React.ElementType> = {
 export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { opportunities } = useOpportunityStore();
+  const { opportunities, isLoading } = useOpportunityStore();
   const { isSaved, saveOpportunity, unsaveOpportunity } = useApplicationStore();
   const { user } = useAuthStore();
   
@@ -126,6 +126,10 @@ export default function ExplorePage() {
     return filtered;
   }, [query, opportunities, selectedTypes, selectedFields, selectedLocations, fundedOnly, remoteOnly, sortBy, user]);
 
+  if (isLoading && opportunities.length === 0) {
+    return <OpportunityGridSkeleton count={6} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" />;
+  }
+
   return (
     <div className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-full min-h-screen">
       {/* Search Header */}
@@ -163,7 +167,7 @@ export default function ExplorePage() {
               <label className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
                 Opportunity Type
               </label>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by opportunity type">
                 {Object.values(OpportunityType).map((type: OpportunityType) => (
                   <Chip
                     key={type}
@@ -322,73 +326,85 @@ export default function ExplorePage() {
 
           {/* Goal Exploration Cards when no query/filters */}
           {!query && activeFiltersCount === 0 ? (
-            <div className="space-y-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categories.goals.map((goal) => {
-                  const IconComp = GOAL_ICON_MAP[goal.icon] || Compass;
-                  return (
-                    <div 
-                      key={goal.id}
-                      onClick={() => {
-                        setSelectedTypes(goal.relatedTypes);
-                      }}
-                      className="group cursor-pointer rounded-xl bg-white dark:bg-surface-900 hover:bg-rome-50/50 dark:hover:bg-surface-800/80 p-6 transition-all border border-surface-200 dark:border-surface-800 hover:border-rome-300 dark:hover:border-rome-700 shadow-card hover:shadow-card-hover flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="w-10 h-10 rounded-lg bg-rome-100 dark:bg-rome-900/30 text-rome-600 dark:text-rome-400 flex items-center justify-center mb-3.5 group-hover:scale-105 transition-transform">
-                          <IconComp className="w-5 h-5" />
-                        </div>
-                        <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 mb-1.5 group-hover:text-rome-600 transition-colors">
-                          {goal.label}
-                        </h3>
-                        <p className="text-xs text-surface-600 dark:text-surface-400 leading-relaxed">
-                          {goal.description}
-                        </p>
-                      </div>
-                      <div className="mt-4 flex flex-wrap gap-1">
-                        {goal.relatedTypes.slice(0, 3).map((t: OpportunityType) => (
-                          <span key={t} className="text-[10px] bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 px-2 py-0.5 rounded-full font-medium">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="pt-4">
-                <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-4">
-                  All Active Opportunities ({opportunities.length})
-                </h3>
-                <OpportunityList 
-                  opportunities={opportunities} 
-                  loading={false} 
-                  showSaveButton
-                  isOpportunitySaved={(id: string) => isSaved(id)}
-                  onSaveOpportunity={(id: string) => saveOpportunity(id)}
-                  onUnsaveOpportunity={(id: string) => unsaveOpportunity(id)}
-                  onOpportunityClick={(id: string) => navigate(`/opportunity/${id}`)}
+            opportunities.length === 0 ? (
+              <div className="py-12 flex justify-center" aria-live="polite">
+                <EmptyState 
+                  icon="compass-linear"
+                  title="Nothing here yet"
+                  description="New opportunities are added regularly. Check back soon."
                 />
               </div>
-            </div>
+            ) : (
+              <div className="space-y-8" aria-live="polite" aria-label={`${opportunities.length} opportunities found`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {categories.goals.map((goal) => {
+                    const IconComp = GOAL_ICON_MAP[goal.icon] || Compass;
+                    return (
+                      <div 
+                        key={goal.id}
+                        onClick={() => {
+                          setSelectedTypes(goal.relatedTypes);
+                        }}
+                        className="group cursor-pointer rounded-xl bg-white dark:bg-surface-900 hover:bg-rome-50/50 dark:hover:bg-surface-800/80 p-6 transition-all border border-surface-200 dark:border-surface-800 hover:border-rome-300 dark:hover:border-rome-700 shadow-card hover:shadow-card-hover flex flex-col justify-between"
+                      >
+                        <div>
+                          <div className="w-10 h-10 rounded-lg bg-rome-100 dark:bg-rome-900/30 text-rome-600 dark:text-rome-400 flex items-center justify-center mb-3.5 group-hover:scale-105 transition-transform">
+                            <IconComp className="w-5 h-5" />
+                          </div>
+                          <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 mb-1.5 group-hover:text-rome-600 transition-colors">
+                            {goal.label}
+                          </h3>
+                          <p className="text-xs text-surface-600 dark:text-surface-400 leading-relaxed">
+                            {goal.description}
+                          </p>
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-1">
+                          {goal.relatedTypes.slice(0, 3).map((t: OpportunityType) => (
+                            <span key={t} className="text-xs bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 px-2 py-0.5 rounded-full font-medium">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="pt-4">
+                  <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-4">
+                    All Active Opportunities ({opportunities.length})
+                  </h3>
+                  <OpportunityList 
+                    opportunities={opportunities} 
+                    loading={false} 
+                    showSaveButton
+                    isOpportunitySaved={(id: string) => isSaved(id)}
+                    onSaveOpportunity={(id: string) => saveOpportunity(id)}
+                    onUnsaveOpportunity={(id: string) => unsaveOpportunity(id)}
+                    onOpportunityClick={(id: string) => navigate(`/opportunity/${id}`)}
+                  />
+                </div>
+              </div>
+            )
           ) : results.length > 0 ? (
-            <OpportunityList 
-              opportunities={results} 
-              loading={false} 
-              showSaveButton
-              isOpportunitySaved={(id: string) => isSaved(id)}
-              onSaveOpportunity={(id: string) => saveOpportunity(id)}
-              onUnsaveOpportunity={(id: string) => unsaveOpportunity(id)}
-              onOpportunityClick={(id: string) => navigate(`/opportunity/${id}`)}
-            />
+            <div aria-live="polite" aria-label={`${results.length} opportunities found`}>
+              <OpportunityList 
+                opportunities={results} 
+                loading={false} 
+                showSaveButton
+                isOpportunitySaved={(id: string) => isSaved(id)}
+                onSaveOpportunity={(id: string) => saveOpportunity(id)}
+                onUnsaveOpportunity={(id: string) => unsaveOpportunity(id)}
+                onOpportunityClick={(id: string) => navigate(`/opportunity/${id}`)}
+              />
+            </div>
           ) : (
-            <div className="py-12">
+            <div className="py-12 flex justify-center" aria-live="polite">
               <EmptyState 
-                icon={Compass}
-                title="No opportunities found"
-                description="We couldn't find any opportunities matching your current filters and keywords. Try loosening your search criteria."
-                actionLabel="Reset all filters"
+                icon="magnifer-linear"
+                title="No matches found"
+                description="Try removing a filter or broadening your search."
+                actionLabel="Clear filters"
                 onAction={clearAllFilters}
               />
             </div>

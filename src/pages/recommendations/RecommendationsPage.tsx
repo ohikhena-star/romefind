@@ -4,6 +4,7 @@ import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
+import { OpportunityGridSkeleton } from '@/components/ui';
 import { TrendingUp, CheckCircle2, Compass, Award, Globe, Activity, Filter, DollarSign, ArrowRight } from 'lucide-react';
 import { RemoteStatus, Opportunity } from '@/types/models';
 
@@ -125,6 +126,10 @@ export const RecommendationsPage: React.FC = () => {
       }).length
     };
   }, [scoredOpportunities, userFields]);
+
+  if (isLoading && opportunities.length === 0) {
+    return <OpportunityGridSkeleton count={6} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" />;
+  }
 
   return (
     <div className="space-y-8 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-in fade-in duration-300">

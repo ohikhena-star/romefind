@@ -70,12 +70,12 @@ export default function MyOpportunitiesPage() {
 
   if (trackedApplications.length === 0 && savedOpportunities.length === 0) {
     return (
-      <div className="p-8 max-w-4xl mx-auto">
+      <div className="p-8 max-w-4xl mx-auto flex items-center justify-center min-h-[50vh]">
         <EmptyState
-          icon={FolderCheck}
-          title="Nothing here yet"
-          description="Start exploring opportunities and save the ones you want to pursue to build your path."
-          actionLabel="Explore opportunities"
+          icon="folder-with-files-linear"
+          title="Nothing saved yet"
+          description="Find opportunities on Explore or Discover and save them here to review later."
+          actionLabel="Browse opportunities"
           onAction={() => navigate('/explore')}
         />
       </div>
@@ -229,12 +229,23 @@ export default function MyOpportunitiesPage() {
       
       {filteredApps.length === 0 && (
         <div className="py-12 flex justify-center">
-          <EmptyState
-            title={`No ${activeTab.toLowerCase()} opportunities`}
-            description="Change your active filter or explore more opportunities to add to your list."
-            actionLabel="Explore opportunities"
-            onAction={() => navigate('/explore')}
-          />
+          {activeTab === 'All' ? (
+            <EmptyState
+              icon="clipboard-list-linear"
+              title="No applications tracked"
+              description="Save an opportunity and start tracking your application from its detail page."
+              actionLabel="Explore opportunities"
+              onAction={() => navigate('/explore')}
+            />
+          ) : (
+            <EmptyState
+              icon="filter-linear"
+              title={`No ${activeTab.toLowerCase()} opportunities`}
+              description="Change your active filter or explore more opportunities to add to your list."
+              actionLabel="Explore opportunities"
+              onAction={() => navigate('/explore')}
+            />
+          )}
         </div>
       )}
 
