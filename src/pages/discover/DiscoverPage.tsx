@@ -5,7 +5,7 @@ import { useOpportunityStore } from '@/store/opportunityStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { getPersonalizedRecommendations, getOverlookingOpportunities } from '@/services/personalization.service';
 import { OpportunityCard } from '@/components/opportunity';
-import { EmptyState, DashboardSkeleton } from '@/components/ui';
+import { EmptyState, DashboardSkeleton, Button } from '@/components/ui';
 import { getGreeting, daysUntil } from '@/utils/format';
 import { cn } from '@/utils/cn';
 import { SolarIcon } from '@/components/ui/SolarIcon';
@@ -18,9 +18,19 @@ export default function DiscoverPage() {
   const { opportunities, isLoading } = useOpportunityStore();
   const { savedOpportunities, trackedApplications, saveOpportunity, unsaveOpportunity, isSaved } = useApplicationStore();
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [debugMode, setDebugMode] = useState(() => {
     return searchParams.get('debug') === '1' || searchParams.get('debug') === 'true';
   });
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/explore?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/explore');
+    }
+  };
 
   const activeItems = useMemo(() => {
     const saved = opportunities.filter((o: Opportunity) => savedOpportunities.includes(o.id));
@@ -116,7 +126,71 @@ export default function DiscoverPage() {
         </div>
       )}
 
+      {/* ─── Search Bar (Primary Entry Point) ─── */}
+      <section id="home-search" className="space-y-3">
+        <form onSubmit={handleSearchSubmit} className="relative flex items-center gap-2">
+          <div className="relative flex-1">
+            <SolarIcon name="magnifer-linear" size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search opportunities by title, field, skill, or organization..."
+              aria-label="Search opportunities"
+              className="w-full pl-10 pr-4 py-3 text-sm rounded-xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-rome-500/50 focus:border-rome-500 transition-all shadow-xs"
+            />
+          </div>
+          <Button
+            type="submit"
+            variant="default"
+            size="default"
+            className="h-11 min-h-[44px] px-5 rounded-xl bg-rome-500 hover:bg-rome-600 text-white font-semibold text-sm shrink-0 shadow-xs"
+          >
+            <span>Search</span>
+            <SolarIcon name="alt-arrow-right-linear" size={15} />
+          </Button>
+        </form>
 
+        {/* Quick Discovery Filters */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
+          <span className="text-surface-400 text-xs font-medium mr-1">Quick filters:</span>
+          <button
+            type="button"
+            onClick={() => navigate('/explore?remote=Remote')}
+            className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800/80 hover:bg-surface-200 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 transition-colors cursor-pointer border border-surface-200/60 dark:border-surface-700"
+          >
+            Remote Only
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/explore?funded=true')}
+            className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800/80 hover:bg-surface-200 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 transition-colors cursor-pointer border border-surface-200/60 dark:border-surface-700"
+          >
+            Fully Funded
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/explore?type=Fellowship')}
+            className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800/80 hover:bg-surface-200 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 transition-colors cursor-pointer border border-surface-200/60 dark:border-surface-700"
+          >
+            Fellowships
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/explore?type=Internship')}
+            className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800/80 hover:bg-surface-200 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 transition-colors cursor-pointer border border-surface-200/60 dark:border-surface-700"
+          >
+            Internships
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/explore?type=Grant')}
+            className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800/80 hover:bg-surface-200 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 transition-colors cursor-pointer border border-surface-200/60 dark:border-surface-700"
+          >
+            Grants
+          </button>
+        </div>
+      </section>
 
       {/* ─── 0. CONTINUE WHERE YOU LEFT OFF (Only if active saved/tracked) ─── */}
       {activeItems.length > 0 && (

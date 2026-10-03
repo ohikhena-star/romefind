@@ -126,4 +126,14 @@ export const useUIStore = create<UIState>()(
   )
 );
 
+// Subscribe to any theme changes and keep root DOM class in sync
+useUIStore.subscribe((state) => {
+  applyThemeClass(state.theme);
+});
+
+// Initial synchronous application
+if (typeof document !== 'undefined') {
+  applyThemeClass(useUIStore.getState().theme);
+}
+
 export const useUiStore = useUIStore;

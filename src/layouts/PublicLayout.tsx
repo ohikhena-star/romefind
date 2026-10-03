@@ -1,9 +1,12 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import { SolarIcon } from '@/components/ui/SolarIcon';
+import { useUiStore } from '@/store/uiStore';
 
 const PublicLayout = () => {
   const { pathname } = useLocation();
+  const { theme, toggleTheme } = useUiStore();
   // LandingPage has its own built-in Nav — avoid double header on '/'
   const isLanding = pathname === '/';
 
@@ -16,11 +19,18 @@ const PublicLayout = () => {
               <span className="text-xl font-black text-surface-900 dark:text-white tracking-tight">ROME</span>
               <span className="text-xl font-black text-rome-500 tracking-tight">find</span>
             </Link>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={18} /> : <SolarIcon name="moon-linear" size={18} />}
+              </button>
               <Link to="/about" className="text-sm font-medium text-surface-600 hover:text-surface-900 dark:text-surface-300 dark:hover:text-white hidden sm:block">
                 How it works
               </Link>
-              <div className="h-4 w-px bg-surface-300 dark:bg-surface-700 hidden sm:block mx-2"></div>
+              <div className="h-4 w-px bg-surface-300 dark:bg-surface-700 hidden sm:block mx-1"></div>
               <Link to="/login" className="text-sm font-medium text-surface-600 hover:text-surface-900 dark:text-surface-300 dark:hover:text-white">
                 Log in
               </Link>

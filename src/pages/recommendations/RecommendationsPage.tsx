@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
@@ -10,12 +10,14 @@ import { SolarIcon } from '@/components/ui/SolarIcon';
 import { daysUntil } from '@/utils/format';
 import { Opportunity, AlternativeDiscovery, SearchResult } from '@/types/models';
 import { getPersonalizedRecommendations, getOverlookingOpportunities } from '@/services/personalization.service';
+import { cn } from '@/utils/cn';
 
 export const RecommendationsPage: React.FC = () => {
   const navigate = useNavigate();
   const { opportunities, isLoading } = useOpportunityStore();
   const { user, isAuthenticated } = useAuthStore();
   const { savedOpportunities, trackedApplications } = useApplicationStore();
+  const [debugMode, setDebugMode] = useState(false);
 
   const userInterests = useMemo(() => {
     return user?.preferences?.fields || user?.profile?.interests || [];
@@ -92,16 +94,33 @@ export const RecommendationsPage: React.FC = () => {
           </p>
         </div>
 
-        {/* User Focus Summary Pills */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          {userInterests.slice(0, 3).map((interest: string) => (
-            <span key={interest} className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 text-xs font-medium border border-surface-200/60 dark:border-surface-700">
-              {interest}
-            </span>
-          ))}
-          <Link to="/profile" className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline px-1.5 py-1">
-            Edit preferences →
-          </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          {/* Matching Inspector Toggle */}
+          <button
+            onClick={() => setDebugMode(!debugMode)}
+            className={cn(
+              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer border",
+              debugMode 
+                ? "bg-rome-50 dark:bg-rome-950/40 text-rome-700 dark:text-rome-300 border-rome-300 dark:border-rome-700 shadow-2xs" 
+                : "bg-surface-50 dark:bg-surface-900 text-surface-500 dark:text-surface-400 border-surface-200 dark:border-surface-800 hover:text-surface-900 dark:hover:text-surface-200"
+            )}
+            title="Toggle matching signals breakdown on opportunity cards"
+          >
+            <SolarIcon name="bug-linear" size={14} className="w-3.5 h-3.5" />
+            <span>Matching Inspector: {debugMode ? 'ON' : 'OFF'}</span>
+          </button>
+
+          {/* User Focus Summary Pills */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {userInterests.slice(0, 3).map((interest: string) => (
+              <span key={interest} className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 text-xs font-medium border border-surface-200/60 dark:border-surface-700">
+                {interest}
+              </span>
+            ))}
+            <Link to="/profile" className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline px-1.5 py-1">
+              Edit preferences →
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -126,6 +145,7 @@ export const RecommendationsPage: React.FC = () => {
                 key={opp.id}
                 opportunity={opp}
                 compact
+                showDebugSignals={debugMode}
               />
             ))}
           </div>
@@ -165,6 +185,7 @@ export const RecommendationsPage: React.FC = () => {
                 relevanceScore={relevanceScore}
                 relevanceReasons={relevanceReasons}
                 matchSignals={matchSignals}
+                showDebugSignals={debugMode}
               />
             ))}
           </div>

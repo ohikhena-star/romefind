@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
 import { Button } from '@/components/ui/Button';
 import { SolarIcon } from '@/components/ui/SolarIcon';
 import { cn } from '@/utils/cn';
@@ -8,6 +9,7 @@ import { cn } from '@/utils/cn';
 export default function LandingPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
+  const { theme, toggleTheme } = useUiStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -164,6 +166,13 @@ export default function LandingPage() {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={18} /> : <SolarIcon name="moon-linear" size={18} />}
+            </button>
             <Link 
               to="/login"
               className="text-sm font-semibold text-surface-700 dark:text-surface-200 hover:text-surface-950 dark:hover:text-white px-3 py-2 transition-colors"
@@ -182,13 +191,22 @@ export default function LandingPage() {
           </div>
 
           {/* Mobile Menu Trigger */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2.5 rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
-            aria-label="Toggle navigation menu"
-          >
-            <SolarIcon name={mobileMenuOpen ? "close-circle-linear" : "hamburger-menu-linear"} size={24} />
-          </button>
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-xl transition-colors cursor-pointer"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={20} /> : <SolarIcon name="moon-linear" size={20} />}
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2.5 rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+              aria-label="Toggle navigation menu"
+            >
+              <SolarIcon name={mobileMenuOpen ? "close-circle-linear" : "hamburger-menu-linear"} size={24} />
+            </button>
+          </div>
         </div>
 
         {/* Mobile Dropdown Drawer */}
@@ -218,7 +236,7 @@ export default function LandingPage() {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-center py-3 text-sm font-semibold border border-surface-200 dark:border-surface-700 rounded-xl"
+                className="block w-full text-center py-3 text-sm font-semibold border border-surface-200 dark:border-surface-700 rounded-xl text-surface-900 dark:text-surface-100"
               >
                 Sign in
               </Link>
