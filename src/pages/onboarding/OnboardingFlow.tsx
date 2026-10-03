@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useProfileStore } from '@/store/profileStore';
-import { Button, Input, Chip } from '@/components/ui';
+import { Button, Input, Chip, CountrySelector } from '@/components/ui';
 import { cn } from '@/utils/cn';
 
 const INTEREST_FIELDS = [
@@ -54,7 +54,7 @@ const OnboardingFlow: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   
   const [name, setName] = useState(user?.profile?.name || '');
-  const [location, setLocation] = useState(user?.profile?.location || '');
+  const [location, setLocation] = useState(user?.profile?.country || user?.profile?.location || '');
   const [destinations, setDestinations] = useState<string[]>(user?.preferences?.locationPreference || []);
   const [goals, setGoals] = useState<string[]>(user?.preferences?.goals || []);
   const [interests, setInterests] = useState<string[]>(user?.preferences?.fields || []);
@@ -156,13 +156,11 @@ const OnboardingFlow: React.FC = () => {
             <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
               Where are you based right now?
             </h2>
-            <Input 
-              value={location} 
-              onChange={e => setLocation(e.target.value)} 
-              placeholder="Country, region, or city" 
-              className="text-lg py-6"
+            <CountrySelector
+              value={location}
+              onChange={(countryName) => setLocation(countryName)}
+              placeholder="Select your country..."
               autoFocus
-              onKeyDown={e => e.key === 'Enter' && location.trim() && next()}
             />
             <div className="mt-8 flex gap-3">
               <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>

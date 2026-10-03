@@ -35,4 +35,5 @@ export * from './table';
 export * from '../opportunity/OpportunityCard';
 export * from '../opportunity/OpportunityList';
 export * from './SolarIcon';
+export * from './CountrySelector';
 

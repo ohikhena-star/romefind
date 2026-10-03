@@ -8,6 +8,7 @@ import { ProfileSkeleton } from '@/components/ui/composite-skeletons';
 import { calculateProfileCompleteness } from '@/utils/format';
 import { FIELDS, GOALS, LOCATIONS } from '@/utils/constants';
 import { cn } from '@/utils/cn';
+import { formatCountryDisplay } from '@/data/countries';
 import { OpportunityType, RemoteStatus } from '@/types/models';
 import {
   Moon, Sun, Plus, X, Compass, Camera, Check, CheckCircle,
@@ -333,7 +334,7 @@ export default function ProfilePage() {
                   {localProfile.country && (
                     <div className="text-xs">
                       <span className="text-surface-400">Country · </span>
-                      <span className="font-medium text-surface-700 dark:text-surface-300">{localProfile.country}</span>
+                      <span className="font-medium text-surface-700 dark:text-surface-300">{formatCountryDisplay(localProfile.country)}</span>
                     </div>
                   )}
                 </div>
