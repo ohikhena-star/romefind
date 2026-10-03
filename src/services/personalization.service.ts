@@ -10,15 +10,21 @@ import {
   EducationLevel 
 } from '@/types/models';
 
-// Domain knowledge clusters for semantic field and skill normalization
+// Domain knowledge clusters for universal career and skill normalization
 const DOMAIN_CLUSTERS: Record<string, string[]> = {
-  ux_design: ['ux', 'ui', 'product design', 'user research', 'user experience', 'interaction design', 'figma', 'design systems', 'wireframing', 'prototyping', 'usability', 'hci', 'human-centered design'],
-  software_engineering: ['software engineering', 'computer science', 'frontend', 'backend', 'full stack', 'fullstack', 'web development', 'javascript', 'typescript', 'python', 'react', 'node.js', 'c++', 'go', 'git', 'open source', 'cloud'],
-  data_ai: ['artificial intelligence', 'machine learning', 'data science', 'deep learning', 'nlp', 'computer vision', 'data analytics', 'statistics', 'pytorch', 'tensorflow', 'biostatistics'],
-  public_health: ['public health', 'global health', 'epidemiology', 'health policy', 'biomedical', 'health data', 'infectious disease', 'community health', 'health equity', 'healthcare'],
-  climate_sustainability: ['climate', 'climate change', 'sustainability', 'environment', 'environmental policy', 'clean energy', 'renewable energy', 'conservation', 'ecology'],
-  policy_impact: ['social impact', 'policy', 'governance', 'diplomacy', 'human rights', 'development economics', 'international development', 'civic tech'],
-  research_academic: ['research', 'scientific research', 'academic', 'laboratory', 'clinical research', 'grant writing', 'field research', 'publications']
+  business_operations: ['project management', 'operations', 'business analysis', 'virtual assistant', 'administrative', 'executive assistant', 'supply chain', 'procurement', 'human resources', 'recruitment', 'customer experience', 'customer success', 'account management', 'consulting', 'strategy', 'business development', 'sales'],
+  finance_accounting: ['accounting', 'financial analysis', 'investment', 'banking', 'fintech', 'audit', 'tax', 'risk management', 'economics', 'financial planning', 'treasury', 'bookkeeping', 'finance'],
+  ux_design: ['ux', 'ui', 'product design', 'user research', 'user experience', 'interaction design', 'figma', 'design systems', 'wireframing', 'prototyping', 'usability', 'hci', 'human-centered design', 'graphic design', 'brand design', 'motion design', 'industrial design'],
+  software_engineering: ['software engineering', 'computer science', 'frontend', 'backend', 'full stack', 'fullstack', 'web development', 'javascript', 'typescript', 'python', 'react', 'node.js', 'c++', 'go', 'git', 'open source', 'cloud', 'devops', 'cybersecurity', 'mobile development', 'qa', 'testing', 'it support'],
+  data_ai: ['artificial intelligence', 'machine learning', 'data science', 'deep learning', 'nlp', 'computer vision', 'data analytics', 'statistics', 'pytorch', 'tensorflow', 'biostatistics', 'data engineering'],
+  marketing_comms: ['digital marketing', 'content marketing', 'social media', 'seo', 'communications', 'public relations', 'copywriting', 'content creation', 'community management', 'growth marketing', 'advertising', 'branding'],
+  creative_arts: ['writing', 'journalism', 'photography', 'film', 'animation', 'illustration', 'music', 'fashion', 'architecture', 'creative direction', 'publishing', 'arts', 'media'],
+  science_engineering: ['engineering', 'biotechnology', 'chemistry', 'physics', 'mathematics', 'environmental science', 'agriculture', 'climate', 'clean energy', 'life sciences', 'materials science', 'robotics'],
+  health_medicine: ['medicine', 'nursing', 'public health', 'global health', 'mental health', 'healthcare administration', 'health technology', 'nutrition', 'biomedical sciences', 'epidemiology', 'clinical research'],
+  education_teaching: ['teaching', 'educational technology', 'edtech', 'curriculum design', 'academic research', 'education administration', 'higher education', 'tutoring'],
+  policy_law_society: ['law', 'human rights', 'public policy', 'governance', 'international relations', 'social impact', 'ngo', 'nonprofit', 'public administration', 'development economics', 'diplomacy', 'civic tech'],
+  entrepreneurship_startups: ['startups', 'accelerators', 'incubators', 'venture capital', 'entrepreneurship', 'founder', 'pitch', 'innovation', 'angel investing'],
+  research_academic: ['research', 'scientific research', 'academic', 'laboratory', 'clinical research', 'grant writing', 'field research', 'publications', 'scholarships', 'phd']
 };
 
 // Check if an item matches a specific domain cluster
@@ -85,12 +91,18 @@ export const calculateRelevanceScore = (
     fieldMatchScore = Math.max(fieldMatchScore, 25);
     if (!reasons.some(r => r.includes('alignment with your interest'))) {
       const clusterNames: Record<string, string> = {
-        ux_design: 'UX & Product Design',
-        software_engineering: 'Software Engineering',
+        business_operations: 'Business & Operations',
+        finance_accounting: 'Finance & Accounting',
+        ux_design: 'Product & Design',
+        software_engineering: 'Software Engineering & Technology',
         data_ai: 'Artificial Intelligence & Data Science',
-        public_health: 'Public & Global Health',
-        climate_sustainability: 'Climate & Sustainability',
-        policy_impact: 'Social Impact & Policy',
+        marketing_comms: 'Marketing & Communications',
+        creative_arts: 'Creative & Arts',
+        science_engineering: 'Science & Engineering',
+        health_medicine: 'Health & Medicine',
+        education_teaching: 'Education & Teaching',
+        policy_law_society: 'Law, Policy & Social Impact',
+        entrepreneurship_startups: 'Startups & Entrepreneurship',
         research_academic: 'Research & Academia'
       };
       const name = clusterNames[commonClusters[0]] || 'your domain';

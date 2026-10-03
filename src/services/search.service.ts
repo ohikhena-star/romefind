@@ -1,15 +1,77 @@
 import { Opportunity, SearchFilters, SearchResult, UserProfile, UserPreferences, EducationLevel, ExperienceLevel } from '@/types/models';
 import { calculateRelevanceScore } from './personalization.service';
 
+// Human-centered intent mapping table for broad search interpretation
+const INTENT_MAPPINGS: Record<string, string[]> = {
+  'behind the scenes': ['operations', 'project management', 'virtual assistance', 'administration', 'executive assistance', 'logistics', 'procurement', 'supply chain'],
+  'working with people': ['customer experience', 'customer success', 'sales', 'community management', 'human resources', 'recruitment', 'account management'],
+  'people': ['customer experience', 'customer success', 'sales', 'community management', 'human resources', 'social impact'],
+  'money and numbers': ['finance', 'accounting', 'investment', 'banking', 'economics', 'financial analysis', 'fintech', 'audit', 'tax'],
+  'numbers': ['finance', 'accounting', 'data science', 'analytics', 'statistics', 'investment'],
+  'money': ['finance', 'investment', 'banking', 'grants', 'funding', 'scholarships'],
+  'create things': ['design', 'writing', 'photography', 'film', 'animation', 'marketing', 'creative technology', 'architecture', 'ux/ui'],
+  'creating': ['product design', 'ux/ui', 'writing', 'media', 'creative', 'graphic design', 'content creation'],
+  'solving technical problems': ['software engineering', 'data science', 'ai', 'cybersecurity', 'cloud', 'engineering', 'devops'],
+  'technical': ['software engineering', 'ai', 'data science', 'cloud', 'cybersecurity', 'engineering'],
+  'help people': ['healthcare', 'education', 'social impact', 'development', 'public health', 'ngo', 'policy', 'human rights'],
+  'helping': ['social impact', 'healthcare', 'education', 'ngo', 'community', 'volunteering'],
+  'project manager': ['project management', 'operations', 'program management', 'scrum', 'agile'],
+  'customer experience': ['customer success', 'customer service', 'support', 'account management', 'cx'],
+  'virtual assistant': ['administration', 'executive assistance', 'virtual assistant', 'remote assistance'],
+  'accountant': ['accounting', 'audit', 'tax', 'bookkeeping', 'finance'],
+  'marketer': ['digital marketing', 'content marketing', 'seo', 'social media', 'growth marketing'],
+};
+
+// Sourcing Gap In-Memory / Local Storage Tracker
+export interface SourcingGap {
+  query: string;
+  count: number;
+  timestamp: string;
+  categorySuggestion?: string;
+}
+
+export const trackSourcingGap = (query: string, resultsCount: number): void => {
+  if (!query || resultsCount > 1) return;
+  try {
+    const raw = localStorage.getItem('romefind_sourcing_gaps');
+    const gaps: SourcingGap[] = raw ? JSON.parse(raw) : [];
+    const existing = gaps.find(g => g.query.toLowerCase() === query.trim().toLowerCase());
+    if (existing) {
+      existing.count += 1;
+      existing.timestamp = new Date().toISOString();
+    } else {
+      gaps.push({
+        query: query.trim(),
+        count: 1,
+        timestamp: new Date().toISOString()
+      });
+    }
+    localStorage.setItem('romefind_sourcing_gaps', JSON.stringify(gaps.slice(0, 100)));
+  } catch (e) {
+    // Ignore storage issues in non-browser environments
+  }
+};
+
+export const getSourcingGaps = (): SourcingGap[] => {
+  try {
+    const raw = localStorage.getItem('romefind_sourcing_gaps');
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+};
+
 export const searchOpportunities = (
   query: string,
   opportunities: Opportunity[],
   filters: Partial<SearchFilters> = {}
 ): Opportunity[] => {
-  return opportunities.filter((opp: Opportunity) => {
-    // 1. Text Query Search
+  const filtered = opportunities.filter((opp: Opportunity) => {
+    // 1. Text & Semantic Query Search
     if (query && query.trim()) {
       const q = query.trim().toLowerCase();
+      
+      // Exact term matches
       const matchTitle = opp.title?.toLowerCase().includes(q);
       const matchDesc = (opp.shortDescription || opp.description || '').toLowerCase().includes(q);
       
@@ -24,7 +86,24 @@ export const searchOpportunities = (
       const matchLocation = opp.location?.toLowerCase().includes(q);
       const matchType = opp.type?.toLowerCase().includes(q);
 
-      if (!matchTitle && !matchDesc && !matchOrg && !matchTags && !matchField && !matchSubfields && !matchLocation && !matchType) {
+      // Semantic Intent expansion matches
+      let matchIntent = false;
+      for (const [intentPhrase, mappedTerms] of Object.entries(INTENT_MAPPINGS)) {
+        if (q.includes(intentPhrase) || intentPhrase.includes(q)) {
+          const hasFieldOrTagMatch = mappedTerms.some(term => 
+            (opp.field || []).some((f: string) => f.toLowerCase().includes(term)) ||
+            (opp.subfields || []).some((s: string) => s.toLowerCase().includes(term)) ||
+            (opp.tags || []).some((t: string) => t.toLowerCase().includes(term)) ||
+            opp.title.toLowerCase().includes(term)
+          );
+          if (hasFieldOrTagMatch) {
+            matchIntent = true;
+            break;
+          }
+        }
+      }
+
+      if (!matchTitle && !matchDesc && !matchOrg && !matchTags && !matchField && !matchSubfields && !matchLocation && !matchType && !matchIntent) {
         return false;
       }
     }
@@ -66,6 +145,13 @@ export const searchOpportunities = (
 
     return true;
   });
+
+  // Track demand vs supply gaps
+  if (query && query.trim().length > 2) {
+    trackSourcingGap(query, filtered.length);
+  }
+
+  return filtered;
 };
 
 export const sortByRelevance = (

@@ -2,6 +2,903 @@ import { Opportunity, OpportunityType, RemoteStatus, VerificationStatus, Experie
 
 export const opportunities: Opportunity[] = [
   {
+    "id": "opp-pm-01",
+    "title": "Google Project Management Apprenticeship",
+    "organization": {
+      "id": "org-google-pm",
+      "name": "Google",
+      "website": "https://buildyourfuture.withgoogle.com",
+      "description": "Global technology leader",
+      "type": "Company"
+    },
+    "type": "Programme",
+    "description": "Work alongside experienced Google project and program managers on technical cross-functional projects, resource planning, and sprint delivery.",
+    "shortDescription": "Paid 20-month project management apprenticeship with structured PMI certification training.",
+    "field": [
+      "Project Management",
+      "Operations",
+      "Business"
+    ],
+    "subfields": [
+      "Agile",
+      "Scrum",
+      "Program Management"
+    ],
+    "location": "London, UK / New York, USA / Lagos, Nigeria",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Prior project coordination or administrative experience",
+      "Strong organizational and stakeholder communication skills"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Annual Apprenticeship Salary)",
+    "benefits": [
+      "Full competitive salary",
+      "Funded Google Project Management Certificate & CAPM training",
+      "Healthcare and mentorship"
+    ],
+    "duration": "20 months",
+    "deadline": "2026-12-10",
+    "applicationUrl": "https://buildyourfuture.withgoogle.com/apprenticeships",
+    "officialSource": "https://buildyourfuture.withgoogle.com/apprenticeships",
+    "sourceName": "Google Apprenticeships",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Project Management",
+      "Operations",
+      "Agile",
+      "Google",
+      "CAPM"
+    ],
+    "requirements": [
+      "CV",
+      "Statement of purpose",
+      "Behavioral scenario interview"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Written scenario assessment",
+      "Google panel interviews"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-pm-02",
+    "title": "PMI Global Research & Project Management Grant",
+    "organization": {
+      "id": "org-pmi",
+      "name": "Project Management Institute (PMI)",
+      "website": "https://www.pmi.org",
+      "description": "World leading professional association for project management",
+      "type": "Professional Association"
+    },
+    "type": "Grant",
+    "description": "Direct research and project execution funding of up to $50,000 for project managers, researchers, and operations specialists studying agile delivery and governance.",
+    "shortDescription": "Up to $50,000 project management research and field execution grant.",
+    "field": [
+      "Project Management",
+      "Research",
+      "Operations"
+    ],
+    "subfields": [
+      "Organizational Governance",
+      "Agile Methodologies",
+      "Strategic PMO"
+    ],
+    "location": "Worldwide / Remote",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Project managers or academic researchers with demonstrated track record in project management"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Grant ($10,000 - $50,000 USD)",
+    "benefits": [
+      "Direct research and project funding",
+      "Presentation at PMI Global Summit",
+      "Publication in Project Management Journal"
+    ],
+    "duration": "1-2 years",
+    "deadline": "2027-02-15",
+    "applicationUrl": "https://www.pmi.org/learning/academic-research/sponsored-research-program",
+    "officialSource": "https://www.pmi.org/learning/academic-research/sponsored-research-program",
+    "sourceName": "PMI Academic Grants",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Project Management",
+      "Grant",
+      "Remote",
+      "PMI",
+      "Leadership"
+    ],
+    "requirements": [
+      "Project proposal",
+      "Budget justification",
+      "CV and credentials"
+    ],
+    "applicationSteps": [
+      "Initial proposal submission",
+      "Peer review by PMI Academic Council",
+      "Grant award disbursement"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-cx-01",
+    "title": "Automattic Happiness Engineer (Customer Success & CX)",
+    "organization": {
+      "id": "org-automattic",
+      "name": "Automattic (WordPress.com / WooCommerce)",
+      "website": "https://automattic.com",
+      "description": "Fully distributed web technology company",
+      "type": "Company"
+    },
+    "type": "Job",
+    "description": "Help millions of WordPress.com and WooCommerce site owners solve technical setup questions, design workflows, and customer onboarding 100% remotely.",
+    "shortDescription": "100% remote customer experience and technical support role at Automattic.",
+    "field": [
+      "Customer Experience",
+      "Customer Success",
+      "Technology"
+    ],
+    "subfields": [
+      "Client Support",
+      "Troubleshooting",
+      "Account Success"
+    ],
+    "location": "100% Remote (Worldwide - All Time Zones)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Passionate about working with people and solving problems",
+      "Strong written English communication",
+      "Familiarity with web technology or WordPress is a plus"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid ($65,000 - $90,000 USD + Equity)",
+    "benefits": [
+      "100% work from anywhere",
+      "Home office setup budget ($2,000)",
+      "Annual company worldwide retreats",
+      "Open vacation policy"
+    ],
+    "duration": "Full-time",
+    "deadline": "2026-12-31",
+    "applicationUrl": "https://automattic.com/work-with-us/happiness-engineer/",
+    "officialSource": "https://automattic.com/work-with-us/happiness-engineer/",
+    "sourceName": "Automattic Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Customer Experience",
+      "Remote",
+      "Customer Success",
+      "WordPress",
+      "Global"
+    ],
+    "requirements": [
+      "Written application questionnaire",
+      "Paid trial rotation"
+    ],
+    "applicationSteps": [
+      "Written application review",
+      "Slack text-based interview",
+      "Paid 4-week trial period",
+      "Full-time offer"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-cx-02",
+    "title": "Shopify Merchant Success & CX Specialist",
+    "organization": {
+      "id": "org-shopify-cx",
+      "name": "Shopify",
+      "website": "https://www.shopify.com",
+      "description": "Global commerce enablement platform",
+      "type": "Company"
+    },
+    "type": "Job",
+    "description": "Advise and support direct-to-consumer e-commerce entrepreneurs and scaling merchants to optimize their digital storefronts, payment gateways, and checkout conversions.",
+    "shortDescription": "Full-time remote Merchant Success role empowering global digital entrepreneurs.",
+    "field": [
+      "Customer Success",
+      "Customer Experience",
+      "Business"
+    ],
+    "subfields": [
+      "E-Commerce",
+      "Account Management",
+      "Merchant Advisory"
+    ],
+    "location": "Remote (Worldwide / EMEA / Americas)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Customer-first mindset and proactive problem solver",
+      "Interest in digital commerce, retail tech, or marketing"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Competitive Salary + Stock Options)",
+    "benefits": [
+      "Digital-first remote work environment",
+      "Internet and home office monthly stipend",
+      "Flexible wellness spending account"
+    ],
+    "duration": "Full-time",
+    "deadline": "2026-11-30",
+    "applicationUrl": "https://www.shopify.com/careers/specialties/merchant-success",
+    "officialSource": "https://www.shopify.com/careers/specialties/merchant-success",
+    "sourceName": "Shopify Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Customer Success",
+      "CX",
+      "E-Commerce",
+      "Remote",
+      "Shopify"
+    ],
+    "requirements": [
+      "CV",
+      "Customer empathy scenario response"
+    ],
+    "applicationSteps": [
+      "Life story interview",
+      "Practical customer scenario simulation",
+      "Offer"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-va-01",
+    "title": "Boldly Remote Executive Assistant & Operations Associate",
+    "organization": {
+      "id": "org-boldly",
+      "name": "Boldly",
+      "website": "https://boldly.com",
+      "description": "Premium subscription staffing and executive assistance agency",
+      "type": "Company"
+    },
+    "type": "Job",
+    "description": "Provide high-touch calendar management, executive correspondence, travel coordination, and workflow optimization for founders and corporate leaders worldwide.",
+    "shortDescription": "Flexible, premium remote executive assistant role supporting global founders and executives.",
+    "field": [
+      "Virtual Assistance",
+      "Administration",
+      "Operations"
+    ],
+    "subfields": [
+      "Executive Support",
+      "Workflow Coordination",
+      "Project Administration"
+    ],
+    "location": "Remote (Worldwide - US, UK, Europe, Africa, LatAm)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "3+ years in an executive assistant, virtual assistant, or operations coordination role",
+      "Impeccable written communication and discreet professionalism"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Paid ($24 - $36/hr USD + Paid Time Off)",
+    "benefits": [
+      "Full remote flexibility",
+      "Guaranteed hourly contracts",
+      "Paid vacation and public holidays",
+      "Long-term client relationships"
+    ],
+    "duration": "Full-time or Part-time (20-40 hrs/wk)",
+    "deadline": "2026-12-15",
+    "applicationUrl": "https://boldly.com/jobs/",
+    "officialSource": "https://boldly.com/jobs/",
+    "sourceName": "Boldly Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Virtual Assistant",
+      "Remote",
+      "Administration",
+      "Executive Assistant",
+      "Operations"
+    ],
+    "requirements": [
+      "CV",
+      "Skills testing (communication, software, prioritization)"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Skills assessment test",
+      "Video interviews",
+      "Client matching"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-fin-01",
+    "title": "PwC Graduate Associate Scheme (Audit, Tax & Advisory)",
+    "organization": {
+      "id": "org-pwc",
+      "name": "PwC (PricewaterhouseCoopers)",
+      "website": "https://www.pwc.com",
+      "description": "Global professional services network",
+      "type": "Company"
+    },
+    "type": "Job",
+    "description": "Join PwC’s structured graduate programme in Accounting, Assurance, Corporate Tax, or Financial Risk, leading directly to chartered accounting qualifications (ACA/ACCA/CPA).",
+    "shortDescription": "Full-time graduate entry program in accounting and financial audit with fully funded ACCA/ACA sponsorship.",
+    "field": [
+      "Accounting",
+      "Audit",
+      "Finance"
+    ],
+    "subfields": [
+      "Financial Audit",
+      "Tax Advisory",
+      "Risk Assurance"
+    ],
+    "location": "Global (Lagos, London, Johannesburg, Dublin, New York)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Graduating student or recent graduate in any discipline (Business, Accounting, Economics, STEM, Humanities)",
+      "Strong numerical and logical reasoning"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Competitive Salary + Full ACCA/ACA Sponsorship)",
+    "benefits": [
+      "Fully funded ACA/ACCA/CPA exam fees and paid study leave",
+      "Competitive graduate starting salary",
+      "Fast-track promotion pathway to Senior Associate"
+    ],
+    "duration": "3-year programme",
+    "deadline": "2026-11-25",
+    "applicationUrl": "https://www.pwc.com/gx/en/careers.html",
+    "officialSource": "https://www.pwc.com/gx/en/careers.html",
+    "sourceName": "PwC Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Accounting",
+      "Audit",
+      "Finance",
+      "ACCA",
+      "ACA",
+      "PwC"
+    ],
+    "requirements": [
+      "Academic degree certificate",
+      "Online behavioral and numerical tests"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Game-based psychometric assessment",
+      "Video interview",
+      "Virtual Assessment Day"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-fin-02",
+    "title": "Goldman Sachs Global Summer Analyst Programme",
+    "organization": {
+      "id": "org-gs",
+      "name": "Goldman Sachs",
+      "website": "https://www.goldmansachs.com",
+      "description": "Global investment banking and securities firm",
+      "type": "Company"
+    },
+    "type": "Internship",
+    "description": "A 10-week summer internship for undergraduate and graduate students in Investment Banking, Global Markets, Asset Management, or Engineering.",
+    "shortDescription": "10-week summer investment banking and financial markets analyst internship.",
+    "field": [
+      "Finance",
+      "Investment",
+      "Strategy"
+    ],
+    "subfields": [
+      "Investment Banking",
+      "Asset Management",
+      "Financial Modeling"
+    ],
+    "location": "London, UK / New York, USA / Singapore / Hong Kong",
+    "remoteStatus": "In-person",
+    "eligibility": [
+      "Undergraduate student in penultimate year of study",
+      "Strong analytical, quantitative, and interpersonal communication skills"
+    ],
+    "educationRequirements": [
+      "Undergraduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Prorated Full Analyst Salary)",
+    "benefits": [
+      "Competitive Wall Street / City of London compensation",
+      "Direct pipeline to full-time graduate offer",
+      "Executive speaker series"
+    ],
+    "duration": "10 weeks",
+    "deadline": "2026-11-20",
+    "applicationUrl": "https://www.goldmansachs.com/careers/students/programs/",
+    "officialSource": "https://www.goldmansachs.com/careers/students/programs/",
+    "sourceName": "Goldman Sachs Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Finance",
+      "Investment Banking",
+      "Wall Street",
+      "London",
+      "Markets"
+    ],
+    "requirements": [
+      "CV",
+      "Cover letter",
+      "Online numerical reasoning assessment"
+    ],
+    "applicationSteps": [
+      "HireVue video interview",
+      "Superday panel interviews",
+      "Offer"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-mkt-01",
+    "title": "HubSpot Product Marketing & Growth Fellowship",
+    "organization": {
+      "id": "org-hubspot",
+      "name": "HubSpot",
+      "website": "https://www.hubspot.com",
+      "description": "CRM and inbound marketing software leader",
+      "type": "Company"
+    },
+    "type": "Fellowship",
+    "description": "Hands-on marketing fellowship learning product positioning, go-to-market execution, content strategy, and lifecycle retention alongside HubSpot senior product marketing managers.",
+    "shortDescription": "Paid 6-month product marketing and growth marketing fellowship.",
+    "field": [
+      "Digital Marketing",
+      "Content Marketing",
+      "Communications"
+    ],
+    "subfields": [
+      "Product Marketing",
+      "Growth",
+      "Brand Strategy"
+    ],
+    "location": "Dublin, Ireland / Boston, USA / Remote",
+    "remoteStatus": "Flexible",
+    "eligibility": [
+      "Aspiring marketers, writers, or growth enthusiasts",
+      "Strong storytelling and data interpretation skills"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Competitive Fellowship Stipend)",
+    "benefits": [
+      "Full monthly fellowship salary",
+      "HubSpot Academy certifications",
+      "Direct mentorship from Director of Product Marketing"
+    ],
+    "duration": "6 months",
+    "deadline": "2026-12-01",
+    "applicationUrl": "https://www.hubspot.com/careers",
+    "officialSource": "https://www.hubspot.com/careers",
+    "sourceName": "HubSpot Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Marketing",
+      "Product Marketing",
+      "Growth",
+      "HubSpot",
+      "Remote"
+    ],
+    "requirements": [
+      "Marketing case study response",
+      "CV and writing portfolio"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Written marketing brief challenge",
+      "Panel interview"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-wri-01",
+    "title": "Thomson Reuters Journalism Trainee Programme",
+    "organization": {
+      "id": "org-reuters",
+      "name": "Reuters News Agency",
+      "website": "https://www.reuters.com",
+      "description": "World’s largest multimedia news provider",
+      "type": "Company"
+    },
+    "type": "Programme",
+    "description": "A 9-month paid fast-track training program for aspiring multimedia journalists, financial reporters, and investigative writers with rotations in international bureaus.",
+    "shortDescription": "Prestigious 9-month paid international multimedia journalism training scheme.",
+    "field": [
+      "Journalism",
+      "Writing",
+      "Media"
+    ],
+    "subfields": [
+      "Financial Journalism",
+      "Investigative Reporting",
+      "Multimedia"
+    ],
+    "location": "London, UK / Singapore / New York, USA",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Graduates or early-career writers with passion for global news and financial reporting",
+      "Strong writing and critical analysis skills in English"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Full Reporting Salary + Travel Allowance)",
+    "benefits": [
+      "Full staff journalist salary",
+      "Comprehensive training by senior editors",
+      "International bureau rotation opportunities"
+    ],
+    "duration": "9 months (with permanent contract track)",
+    "deadline": "2026-11-15",
+    "applicationUrl": "https://www.thomsonreuters.com/en/careers/journalism-trainee-program.html",
+    "officialSource": "https://www.thomsonreuters.com/en/careers/journalism-trainee-program.html",
+    "sourceName": "Reuters Journalism",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Journalism",
+      "Writing",
+      "Media",
+      "Reuters",
+      "Reporting"
+    ],
+    "requirements": [
+      "3 published writing clips or articles",
+      "CV",
+      "Timed news-writing test"
+    ],
+    "applicationSteps": [
+      "Online application & clips",
+      "Timed breaking news writing test",
+      "Assessment Centre in London/Singapore"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-edu-01",
+    "title": "Teach For All Global Education Fellowship",
+    "organization": {
+      "id": "org-teachforall",
+      "name": "Teach For All",
+      "website": "https://teachforall.org",
+      "description": "Global network expanding educational opportunity",
+      "type": "Non-Profit"
+    },
+    "type": "Fellowship",
+    "description": "A 2-year leadership and teaching fellowship placing exceptional graduates and career switchers in high-need schools across 60+ countries to expand educational equity.",
+    "shortDescription": "2-year fully funded teaching and educational leadership fellowship.",
+    "field": [
+      "Teaching",
+      "Social Impact",
+      "Education Administration"
+    ],
+    "subfields": [
+      "Curriculum Delivery",
+      "Educational Equity",
+      "Youth Leadership"
+    ],
+    "location": "Global (Nigeria, Ghana, Kenya, India, UK, USA, Peru, South Africa)",
+    "remoteStatus": "In-person",
+    "eligibility": [
+      "Bachelor’s degree in any field",
+      "Demonstrated leadership capacity and resilience",
+      "Passion for expanding educational opportunity for children"
+    ],
+    "educationRequirements": [
+      "Undergraduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Fully Funded (Full Teaching Salary + Training)",
+    "benefits": [
+      "Full monthly teacher salary and regional benefits",
+      "Teaching certification and pedagogy training",
+      "Alumni access to global policy and social impact networks"
+    ],
+    "duration": "2 years",
+    "deadline": "2027-01-31",
+    "applicationUrl": "https://teachforall.org/join",
+    "officialSource": "https://teachforall.org/join",
+    "sourceName": "Teach For All Network",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Education",
+      "Teaching",
+      "Social Impact",
+      "Leadership",
+      "Fellowship"
+    ],
+    "requirements": [
+      "University transcripts",
+      "Personal statement",
+      "Leadership resume"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Competency interview",
+      "Sample teaching lesson evaluation"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-arch-01",
+    "title": "Norman Foster Foundation Architecture Fellowship",
+    "organization": {
+      "id": "org-foster",
+      "name": "Norman Foster Foundation",
+      "website": "https://www.normanfosterfoundation.org",
+      "description": "Foundation promoting multidisciplinary architecture and urban research",
+      "type": "Foundation"
+    },
+    "type": "Fellowship",
+    "description": "Fully funded research fellowship in Madrid for young architects and urbanists to develop innovative sustainability, materials, and infrastructure prototypes.",
+    "shortDescription": "Fully funded architecture and urban design research fellowship in Madrid, Spain.",
+    "field": [
+      "Architecture",
+      "Creative",
+      "Sustainability"
+    ],
+    "subfields": [
+      "Urban Planning",
+      "Sustainable Design",
+      "Spatial Prototyping"
+    ],
+    "location": "Madrid, Spain",
+    "remoteStatus": "In-person",
+    "eligibility": [
+      "Graduates in Architecture, Urban Design, or Structural Engineering",
+      "Outstanding design portfolio"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Fully funded (€18,000 Stipend + Travel)",
+    "benefits": [
+      "Full research stipend (€18,000)",
+      "Accommodation and studio space in Madrid",
+      "Mentorship by Lord Norman Foster and international juries"
+    ],
+    "duration": "6 months",
+    "deadline": "2027-02-28",
+    "applicationUrl": "https://www.normanfosterfoundation.org/fellowships/",
+    "officialSource": "https://www.normanfosterfoundation.org/fellowships/",
+    "sourceName": "Norman Foster Foundation",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Architecture",
+      "Design",
+      "Sustainability",
+      "Madrid",
+      "Fellowship"
+    ],
+    "requirements": [
+      "Curated architecture portfolio (PDF)",
+      "Research topic proposal",
+      "Two academic references"
+    ],
+    "applicationSteps": [
+      "Digital portfolio submission",
+      "Scientific council review",
+      "Interview"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-photo-01",
+    "title": "National Geographic Early Career Storytelling Grant",
+    "organization": {
+      "id": "org-natgeo",
+      "name": "National Geographic Society",
+      "website": "https://www.nationalgeographic.org",
+      "description": "Global non-profit exploring and illuminating the wonder of the world",
+      "type": "Foundation"
+    },
+    "type": "Grant",
+    "description": "Provides seed grants of up to $20,000 for early-career photographers, documentary filmmakers, and visual storytellers capturing conservation, climate, and community cultures.",
+    "shortDescription": "Grants up to $20,000 for early-career documentary photographers and visual creators.",
+    "field": [
+      "Photography",
+      "Film",
+      "Creative",
+      "Environmental Science"
+    ],
+    "subfields": [
+      "Documentary Photography",
+      "Visual Storytelling",
+      "Cinematography"
+    ],
+    "location": "Worldwide (Project in your local region)",
+    "remoteStatus": "Flexible",
+    "eligibility": [
+      "Early-career photographers, filmmakers, or journalists",
+      "18+ years old",
+      "Clear project field proposal"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Grant ($10,000 - $20,000 USD)",
+    "benefits": [
+      "Direct project grant funding",
+      "Affiliation as a National Geographic Explorer",
+      "Access to NatGeo media channels and global Explorer Network"
+    ],
+    "duration": "1 year project period",
+    "deadline": "2027-04-15",
+    "applicationUrl": "https://www.nationalgeographic.org/society/grants-and-investments/",
+    "officialSource": "https://www.nationalgeographic.org/society/grants-and-investments/",
+    "sourceName": "National Geographic Society",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Photography",
+      "Film",
+      "Storytelling",
+      "Grant",
+      "National Geographic"
+    ],
+    "requirements": [
+      "Project narrative (1,000 words)",
+      "Visual portfolio sample link",
+      "Itemized budget"
+    ],
+    "applicationSteps": [
+      "Online grant portal submission",
+      "Peer review by NatGeo storytelling committee",
+      "Grant disbursement"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-hr-01",
+    "title": "L’Oréal Management Trainee Program (People & HR Track)",
+    "organization": {
+      "id": "org-loreal",
+      "name": "L’Oréal Group",
+      "website": "https://careers.loreal.com",
+      "description": "Global beauty and consumer goods leader",
+      "type": "Company"
+    },
+    "type": "Programme",
+    "description": "An accelerated 18-month rotational management program across Talent Acquisition, Learning & Development, HR Business Partnering, and Employee Relations.",
+    "shortDescription": "Accelerated 18-month management trainee program in Human Resources and People Operations.",
+    "field": [
+      "Human Resources",
+      "Operations",
+      "Business"
+    ],
+    "subfields": [
+      "Talent Acquisition",
+      "Learning & Development",
+      "People Analytics"
+    ],
+    "location": "Paris, France / London, UK / Lagos, Nigeria / Johannesburg",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Graduating students or recent graduates in HR, Psychology, Business, or Humanities",
+      "Strong interpersonal empathy and project management aptitude"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Full Competitive Trainee Salary)",
+    "benefits": [
+      "Competitive starting salary with annual review",
+      "3 cross-departmental HR rotations",
+      "Dedicated HR Director mentor"
+    ],
+    "duration": "18 months",
+    "deadline": "2026-12-05",
+    "applicationUrl": "https://careers.loreal.com/en_US/jobs/students-graduates",
+    "officialSource": "https://careers.loreal.com/en_US/jobs/students-graduates",
+    "sourceName": "L’Oréal Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Human Resources",
+      "HR",
+      "Talent",
+      "Management Trainee",
+      "Operations"
+    ],
+    "requirements": [
+      "CV",
+      "Short motivational video or answers"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Gamified cognitive assessment",
+      "Assessment Day case simulation"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
     "id": "opp-tech-01",
     "title": "Software Engineering Intern, Summer 2027",
     "organization": {
@@ -15,13 +912,14 @@ export const opportunities: Opportunity[] = [
     "description": "Join Google as a Software Engineering Intern and work on core scalable infrastructure, cloud systems, and user-facing applications impacting billions of users.",
     "shortDescription": "12-week summer software engineering internship for undergraduate and graduate students.",
     "field": [
+      "Software Engineering",
       "Technology",
-      "Software Engineering"
+      "Cloud"
     ],
     "subfields": [
-      "Cloud",
       "Systems",
-      "Full-Stack"
+      "Full-Stack",
+      "APIs"
     ],
     "location": "Global (US, UK, Nigeria, Switzerland, Singapore)",
     "remoteStatus": "Hybrid",
@@ -84,9 +982,9 @@ export const opportunities: Opportunity[] = [
     "description": "Design intuitive, world-class listening and creator experiences across Spotify mobile, desktop, and automotive interfaces with senior design mentors.",
     "shortDescription": "Product design internship focused on UX/UI, user research, and design systems.",
     "field": [
-      "Technology",
       "Product Design",
-      "UX/UI"
+      "UX/UI",
+      "Technology"
     ],
     "subfields": [
       "User Experience",
@@ -153,9 +1051,10 @@ export const opportunities: Opportunity[] = [
     "description": "A prestigious one-year research training program pairing emerging AI researchers with FAIR scientists to publish cutting-edge machine learning papers.",
     "shortDescription": "1-year AI research training fellowship with top FAIR scientists.",
     "field": [
-      "Technology",
-      "AI / Machine Learning",
-      "Research"
+      "AI",
+      "Machine Learning",
+      "Research",
+      "Technology"
     ],
     "subfields": [
       "Deep Learning",
@@ -212,75 +1111,6 @@ export const opportunities: Opportunity[] = [
     "isFeatured": false
   },
   {
-    "id": "opp-tech-04",
-    "title": "GitHub Campus Experts Program",
-    "organization": {
-      "id": "org-github",
-      "name": "GitHub",
-      "website": "https://github.com",
-      "description": "Software collaboration and developer platform",
-      "type": "Company"
-    },
-    "type": "Programme",
-    "description": "Global leadership and developer advocacy program empowering student leaders to build inclusive tech communities, organize hackathons, and learn public speaking.",
-    "shortDescription": "Leadership program and funding for technical student community builders.",
-    "field": [
-      "Technology",
-      "Software Engineering",
-      "Education"
-    ],
-    "subfields": [
-      "Open Source",
-      "Community Building",
-      "DevRel"
-    ],
-    "location": "Worldwide / Remote",
-    "remoteStatus": "Remote",
-    "eligibility": [
-      "18+ years old",
-      "Enrolled in higher education institution",
-      "Active member of a student tech community"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Fully Funded (Training & Event Grants)",
-    "benefits": [
-      "GitHub Swag & Event Sponsorship funding",
-      "Exclusive mentorship from GitHub engineers",
-      "Travel grants to major GitHub conferences"
-    ],
-    "duration": "6-12 months",
-    "deadline": "2027-02-28",
-    "applicationUrl": "https://githubcampus.expert/",
-    "officialSource": "https://githubcampus.expert/",
-    "sourceName": "GitHub Education",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Community",
-      "Open Source",
-      "Git",
-      "Leadership",
-      "Public Speaking"
-    ],
-    "requirements": [
-      "Community leadership essay",
-      "Video submission"
-    ],
-    "applicationSteps": [
-      "Application submission",
-      "Community training module",
-      "Graduation presentation"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
     "id": "opp-tech-05",
     "title": "Stripe Early Career Software Engineer (EMEA / Remote)",
     "organization": {
@@ -294,9 +1124,9 @@ export const opportunities: Opportunity[] = [
     "description": "Build economic infrastructure for the internet. Work on payment rails, fraud detection, billing APIs, and developer-first financial tools.",
     "shortDescription": "Full-time software engineering role for early career engineers in EMEA and remote.",
     "field": [
-      "Technology",
       "Software Engineering",
-      "Finance"
+      "Technology",
+      "Fintech"
     ],
     "subfields": [
       "Backend",
@@ -351,411 +1181,142 @@ export const opportunities: Opportunity[] = [
     "isFeatured": false
   },
   {
-    "id": "opp-tech-06",
-    "title": "Apple Design Fellowship & Internship",
+    "id": "opp-law-01",
+    "title": "World Bank Legal Vice Presidency Internship Program",
     "organization": {
-      "id": "org-apple",
-      "name": "Apple",
-      "website": "https://www.apple.com",
-      "description": "Consumer electronics and software company",
-      "type": "Company"
+      "id": "org-worldbank",
+      "name": "The World Bank Group",
+      "website": "https://www.worldbank.org",
+      "description": "International financial institution providing development loans",
+      "type": "International Organization"
     },
     "type": "Internship",
-    "description": "Collaborate with Apple Human Interface and Industrial Design teams in Cupertino on next-generation iOS, macOS, watchOS and visionOS human experiences.",
-    "shortDescription": "UI/UX and interactive design internship at Apple Design Studio in Cupertino.",
+    "description": "Offers law students and recent law graduates exposure to international financial law, sovereign development financing agreements, procurement integrity, and environmental law compliance.",
+    "shortDescription": "Paid legal internship at World Bank headquarters in Washington DC.",
     "field": [
-      "Technology",
-      "Product Design",
-      "UX/UI"
+      "Law",
+      "Public Policy",
+      "Finance"
     ],
     "subfields": [
-      "Human Interface",
-      "Interaction Design",
-      "3D Prototyping"
+      "International Law",
+      "Development Finance",
+      "Corporate Governance"
     ],
-    "location": "Cupertino, CA, USA",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Enrolled in undergraduate or graduate design program",
-      "Exceptional portfolio of digital interface and interaction design"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Paid ($50+/hr + Housing)",
-    "benefits": [
-      "Top compensation",
-      "Corporate housing in Silicon Valley",
-      "Relocation travel",
-      "Employee hardware discounts"
-    ],
-    "duration": "12-16 weeks",
-    "deadline": "2026-12-15",
-    "applicationUrl": "https://jobs.apple.com/en-us/search?team=internships",
-    "officialSource": "https://jobs.apple.com/en-us/search?team=internships",
-    "sourceName": "Apple Jobs",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Apple",
-      "UX/UI",
-      "Product Design",
-      "Human Interface",
-      "Cupertino"
-    ],
-    "requirements": [
-      "Interactive design portfolio",
-      "CV",
-      "Design case study"
-    ],
-    "applicationSteps": [
-      "Portfolio screening",
-      "Design team interview",
-      "Executive design review presentation"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": true
-  },
-  {
-    "id": "opp-tech-07",
-    "title": "OpenAI Residency Program",
-    "organization": {
-      "id": "org-openai",
-      "name": "OpenAI",
-      "website": "https://openai.com",
-      "description": "AI research and deployment company",
-      "type": "Research Institute"
-    },
-    "type": "Fellowship",
-    "description": "A 6-month full-time paid pathway for exceptional researchers and engineers from non-traditional AI backgrounds to transition into frontier AI alignment and capability research.",
-    "shortDescription": "6-month full-time research residency at OpenAI in San Francisco.",
-    "field": [
-      "Technology",
-      "AI / Machine Learning",
-      "Research"
-    ],
-    "subfields": [
-      "LLMs",
-      "Reinforcement Learning",
-      "AI Safety"
-    ],
-    "location": "San Francisco, CA, USA",
+    "location": "Washington, DC, USA",
     "remoteStatus": "Hybrid",
     "eligibility": [
-      "Strong foundation in mathematics, physics, or software engineering",
-      "Desire to specialize in frontier deep learning"
+      "Currently enrolled in an accredited law degree (LLB, JD, LLM, or SJD/PhD)",
+      "Excellent command of English; knowledge of French or Spanish an asset"
     ],
     "educationRequirements": [
       "Undergraduate",
       "Graduate",
-      "PhD",
-      "Any"
-    ],
-    "experienceRequirements": "Intermediate",
-    "funding": "Paid ($210,000/yr annualized + Benefits)",
-    "benefits": [
-      "Full annual salary rate of $210,000 prorated",
-      "Health insurance",
-      "Compute cluster access",
-      "Conversion opportunity to Full-Time Member of Technical Staff"
-    ],
-    "duration": "6 months",
-    "deadline": "2027-01-15",
-    "applicationUrl": "https://openai.com/careers/residency",
-    "officialSource": "https://openai.com/careers/residency",
-    "sourceName": "OpenAI Careers",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "AI",
-      "OpenAI",
-      "Deep Learning",
-      "San Francisco",
-      "Machine Learning"
-    ],
-    "requirements": [
-      "Technical assessment",
-      "Code repository",
-      "Research statement"
-    ],
-    "applicationSteps": [
-      "Application submission",
-      "Take-home coding exam",
-      "Technical interviews with research scientists"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": true
-  },
-  {
-    "id": "opp-biz-01",
-    "title": "Y Combinator Startup Accelerator (Batch S27)",
-    "organization": {
-      "id": "org-yc",
-      "name": "Y Combinator",
-      "website": "https://www.ycombinator.com",
-      "description": "Leading technology startup accelerator",
-      "type": "Accelerator"
-    },
-    "type": "Programme",
-    "description": "Twice a year Y Combinator invests $500,000 in early-stage startups across AI, software, climate, biotech, fintech, and hard tech, working intensively with founders to achieve product-market fit.",
-    "shortDescription": "Premier 3-month startup accelerator investing $500k in early-stage founders.",
-    "field": [
-      "Business",
-      "Entrepreneurship",
-      "Technology"
-    ],
-    "subfields": [
-      "Venture Capital",
-      "Startups",
-      "Product Management"
-    ],
-    "location": "San Francisco, CA, USA",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Founding teams with a working prototype or validated concept",
-      "Founders willing to spend 3 months in SF"
-    ],
-    "educationRequirements": [
-      "Any"
+      "PhD"
     ],
     "experienceRequirements": "Beginner",
-    "funding": "$500,000 Investment ($125k for 7% + $375k MFN SAFE)",
+    "funding": "Paid (Hourly Rate + Travel Support)",
     "benefits": [
-      "Direct mentorship from Garry Tan and group partners",
-      "Access to Bookface alumni network of 9,000+ founders",
-      "Demo Day presentation to global top VCs"
+      "Competitive hourly compensation",
+      "Direct mentorship from World Bank senior legal counsel",
+      "G-4 visa sponsorship support"
     ],
-    "duration": "3 months",
-    "deadline": "2027-02-15",
-    "applicationUrl": "https://www.ycombinator.com/apply",
-    "officialSource": "https://www.ycombinator.com/apply",
-    "sourceName": "Y Combinator",
+    "duration": "10-12 weeks",
+    "deadline": "2026-12-15",
+    "applicationUrl": "https://www.worldbank.org/en/about/careers/programs-and-internships/legal-internship-program",
+    "officialSource": "https://www.worldbank.org/en/about/careers/programs-and-internships/legal-internship-program",
+    "sourceName": "World Bank Careers",
     "lastVerified": "2026-10-01T00:00:00.000Z",
     "verificationStatus": "Verified",
     "tags": [
-      "Startups",
-      "Venture Capital",
-      "Entrepreneurship",
-      "Product"
-    ],
-    "requirements": [
-      "Written application",
-      "1-minute founder intro video"
-    ],
-    "applicationSteps": [
-      "Written application",
-      "10-minute partner interview",
-      "Same-day investment decision"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": true
-  },
-  {
-    "id": "opp-biz-02",
-    "title": "McKinsey & Company Business Analyst",
-    "organization": {
-      "id": "org-mckinsey",
-      "name": "McKinsey & Company",
-      "website": "https://www.mckinsey.com",
-      "description": "Global management consulting firm",
-      "type": "Company"
-    },
-    "type": "Job",
-    "description": "Work alongside leadership teams of Fortune 500 corporations, governments, and non-profits on strategic transformations, operational restructuring, and market entry.",
-    "shortDescription": "Full-time management consulting analyst role for graduating students and early career talent.",
-    "field": [
-      "Business",
+      "Law",
+      "International Law",
       "Finance",
-      "Strategy"
-    ],
-    "subfields": [
-      "Management Consulting",
-      "Operations",
-      "Corporate Finance"
-    ],
-    "location": "Global (Lagos, London, New York, Johannesburg, Nairobi, Dubai)",
-    "remoteStatus": "Hybrid",
-    "eligibility": [
-      "Bachelor’s or Master’s degree in any discipline",
-      "Demonstrated problem-solving and leadership skills"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Paid (Competitive Consulting Salary)",
-    "benefits": [
-      "Top management consulting compensation",
-      "Global office rotation opportunities",
-      "Full MBA sponsorship support"
-    ],
-    "duration": "Full-time",
-    "deadline": "2026-10-30",
-    "applicationUrl": "https://www.mckinsey.com/careers/students",
-    "officialSource": "https://www.mckinsey.com/careers/students",
-    "sourceName": "McKinsey Careers",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Consulting",
-      "Strategy",
-      "Analytics",
-      "Finance",
-      "Leadership"
-    ],
-    "requirements": [
-      "Academic transcript",
-      "CV with leadership credentials"
-    ],
-    "applicationSteps": [
-      "Solve digital assessment (Solve game)",
-      "First round case interview",
-      "Final partner case & fit interviews"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
-    "id": "opp-biz-03",
-    "title": "Endeavor Global Entrepreneur Fellowship",
-    "organization": {
-      "id": "org-endeavor",
-      "name": "Endeavor",
-      "website": "https://endeavor.org",
-      "description": "Global community of high-impact entrepreneurs",
-      "type": "Non-Profit"
-    },
-    "type": "Fellowship",
-    "description": "Supports high-impact founders in emerging and underserved markets (Africa, Latin America, Southeast Asia, Middle East) to scale rapidly with access to global capital and mentor networks.",
-    "shortDescription": "High-impact entrepreneurship fellowship supporting scale-up founders across emerging markets.",
-    "field": [
-      "Business",
-      "Entrepreneurship",
-      "Social Impact"
-    ],
-    "subfields": [
-      "Scaleups",
-      "Venture Capital",
-      "Emerging Markets"
-    ],
-    "location": "Global (Nigeria, Kenya, South Africa, Brazil, Mexico, Indonesia)",
-    "remoteStatus": "Hybrid",
-    "eligibility": [
-      "Founder of a high-growth tech or tech-enabled business",
-      "Demonstrated market traction ($500k+ ARR or major scale)"
-    ],
-    "educationRequirements": [
-      "Any"
-    ],
-    "experienceRequirements": "Experienced professional",
-    "funding": "Funded (Capital Access & Advisory)",
-    "benefits": [
-      "Direct access to Endeavor Catalyst fund co-investments",
-      "Mentorship from global unicorn founders",
-      "Executive education programs at Harvard & Stanford"
-    ],
-    "duration": "Ongoing / Lifetime network",
-    "deadline": "2027-03-31",
-    "applicationUrl": "https://endeavor.org/apply/",
-    "officialSource": "https://endeavor.org/apply/",
-    "sourceName": "Endeavor Global",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Startups",
-      "Venture Capital",
-      "Africa",
-      "LatAm",
-      "High Impact"
-    ],
-    "requirements": [
-      "Financial statements",
-      "Pitch deck",
-      "Founder background profile"
-    ],
-    "applicationSteps": [
-      "Local selection panel",
-      "International selection panel (ISP)",
-      "Onboarding into global network"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
-    "id": "opp-biz-04",
-    "title": "Goldman Sachs Global Summer Analyst Programme",
-    "organization": {
-      "id": "org-gs",
-      "name": "Goldman Sachs",
-      "website": "https://www.goldmansachs.com",
-      "description": "Global investment banking and securities firm",
-      "type": "Company"
-    },
-    "type": "Internship",
-    "description": "A 10-week summer internship for undergraduate and graduate students in Investment Banking, Global Markets, Asset Management, or Engineering.",
-    "shortDescription": "10-week summer investment banking and financial markets analyst internship.",
-    "field": [
-      "Business",
-      "Finance",
-      "Strategy"
-    ],
-    "subfields": [
-      "Investment Banking",
-      "Asset Management",
-      "Financial Modeling"
-    ],
-    "location": "London, UK / New York, USA / Singapore / Hong Kong",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Undergraduate student in penultimate year of study",
-      "Strong analytical, quantitative, and interpersonal communication skills"
-    ],
-    "educationRequirements": [
-      "Undergraduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Paid (Prorated Full Analyst Salary)",
-    "benefits": [
-      "Competitive Wall Street / City of London compensation",
-      "Direct pipeline to full-time graduate offer",
-      "Executive speaker series"
-    ],
-    "duration": "10 weeks",
-    "deadline": "2026-11-20",
-    "applicationUrl": "https://www.goldmansachs.com/careers/students/programs/",
-    "officialSource": "https://www.goldmansachs.com/careers/students/programs/",
-    "sourceName": "Goldman Sachs Careers",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Finance",
-      "Investment Banking",
-      "Wall Street",
-      "London",
-      "Markets"
+      "Policy",
+      "Washington DC"
     ],
     "requirements": [
       "CV",
-      "Cover letter",
-      "Online numerical reasoning assessment"
+      "Statement of interest",
+      "Legal writing sample",
+      "Official law school transcript"
     ],
     "applicationSteps": [
-      "HireVue video interview",
-      "Superday panel interviews",
-      "Offer"
+      "Online application",
+      "Legal department shortlisting",
+      "Interview with Lead Counsel"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-law-02",
+    "title": "Chatham House Mo Ibrahim Leadership Fellowship",
+    "organization": {
+      "id": "org-chatham-house",
+      "name": "Chatham House (Royal Institute of International Affairs)",
+      "website": "https://www.chathamhouse.org",
+      "description": "World-leading policy institute based in London",
+      "type": "Research Institute"
+    },
+    "type": "Fellowship",
+    "description": "Fellowship for African nationals to conduct research at the Queen Elizabeth II Academy for Leadership in International Affairs on governance, security, or economic policy in London.",
+    "shortDescription": "Fully funded 10-month public policy research fellowship in London for African policy professionals.",
+    "field": [
+      "Public Policy",
+      "Governance",
+      "Law",
+      "Research"
+    ],
+    "subfields": [
+      "Security",
+      "African Political Economy",
+      "Diplomacy"
+    ],
+    "location": "London, United Kingdom",
+    "remoteStatus": "In-person",
+    "eligibility": [
+      "Citizen of an African country",
+      "Hold a Master’s degree or equivalent in political science, law, economics, or international relations",
+      "Early to mid-career professional"
+    ],
+    "educationRequirements": [
+      "Graduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Fully funded (£2,360 monthly stipend)",
+    "benefits": [
+      "Monthly living stipend of £2,360 (tax-free)",
+      "Travel costs to and from London",
+      "Relocation and fieldwork research grant",
+      "Dedicated office at Chatham House London"
+    ],
+    "duration": "10 months",
+    "deadline": "2027-03-15",
+    "applicationUrl": "https://www.chathamhouse.org/about-us/our-academy/fellowships/mo-ibrahim-foundation-fellowship",
+    "officialSource": "https://www.chathamhouse.org/about-us/our-academy/fellowships/mo-ibrahim-foundation-fellowship",
+    "sourceName": "Chatham House Academy",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Policy",
+      "London",
+      "Fellowship",
+      "Governance",
+      "Africa"
+    ],
+    "requirements": [
+      "Research project proposal (1,500 words)",
+      "Curriculum vitae",
+      "Two professional references"
+    ],
+    "applicationSteps": [
+      "Written research submission",
+      "Academic panel review",
+      "In-person / video interview in London"
     ],
     "status": "open",
     "createdAt": "2026-09-01T00:00:00.000Z",
@@ -777,16 +1338,13 @@ export const opportunities: Opportunity[] = [
     "shortDescription": "Prestigious, fully funded UK master’s scholarship covering tuition, flights, and monthly living stipend.",
     "field": [
       "Research",
-      "Policy",
+      "Public Policy",
       "Law",
       "Business",
       "Social Impact"
     ],
     "subfields": [
-      "Public Policy",
-      "International Development",
-      "Economics",
-      "All Disciplines"
+      "All Postgraduate Disciplines"
     ],
     "location": "United Kingdom (Any UK University)",
     "remoteStatus": "In-person",
@@ -837,80 +1395,6 @@ export const opportunities: Opportunity[] = [
     "isFeatured": true
   },
   {
-    "id": "opp-sch-02",
-    "title": "Schwarzman Scholars at Tsinghua University",
-    "organization": {
-      "id": "org-schwarzman",
-      "name": "Schwarzman College",
-      "website": "https://www.schwarzmanscholars.org",
-      "description": "Global leadership master’s program in Beijing",
-      "type": "University"
-    },
-    "type": "Scholarship",
-    "description": "A fully funded one-year Master of Global Affairs at Tsinghua University in Beijing designed to build understanding between China and the rest of the world.",
-    "shortDescription": "Fully funded 1-year master’s in Global Affairs at Tsinghua University in Beijing.",
-    "field": [
-      "Policy",
-      "Business",
-      "Research",
-      "International Relations"
-    ],
-    "subfields": [
-      "Geopolitics",
-      "Global Economics",
-      "Public Leadership"
-    ],
-    "location": "Beijing, China",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Completed undergraduate degree by matriculation",
-      "Age 18–28 at start of program",
-      "Demonstrated exceptional leadership and academic excellence"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Fully funded",
-    "benefits": [
-      "Full tuition and mandatory fees",
-      "Room and board on Tsinghua campus",
-      "Round-trip travel to Beijing",
-      "In-country study tours",
-      "Health insurance and laptop stipend"
-    ],
-    "duration": "1 year",
-    "deadline": "2026-09-15",
-    "applicationUrl": "https://www.schwarzmanscholars.org/admissions/",
-    "officialSource": "https://www.schwarzmanscholars.org/admissions/",
-    "sourceName": "Schwarzman College",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "China",
-      "Global Affairs",
-      "Scholarship",
-      "Fully Funded",
-      "Leadership"
-    ],
-    "requirements": [
-      "Leadership essay",
-      "Statement of purpose",
-      "3 letters of recommendation",
-      "Video intro"
-    ],
-    "applicationSteps": [
-      "Online portal submission",
-      "Global panel interview (London/Singapore/New York)",
-      "Cohort selection"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
     "id": "opp-sch-03",
     "title": "Rhodes Scholarship at Oxford University",
     "organization": {
@@ -925,9 +1409,9 @@ export const opportunities: Opportunity[] = [
     "shortDescription": "The world’s oldest and most prestigious graduate scholarship to study at Oxford University.",
     "field": [
       "Research",
-      "Science",
+      "Engineering",
       "Law",
-      "Policy",
+      "Public Policy",
       "Creative"
     ],
     "subfields": [
@@ -982,358 +1466,6 @@ export const opportunities: Opportunity[] = [
     "isFeatured": false
   },
   {
-    "id": "opp-sch-04",
-    "title": "Fulbright Foreign Student Program (United States)",
-    "organization": {
-      "id": "org-fulbright",
-      "name": "US Department of State (ECA)",
-      "website": "https://foreign.fulbrightonline.org",
-      "description": "US Flagship International Educational Exchange Program",
-      "type": "Government"
-    },
-    "type": "Scholarship",
-    "description": "Enables graduate students, young professionals and artists from abroad to conduct master’s degree study or PhD research at accredited universities across the United States.",
-    "shortDescription": "Flagship US government scholarship for international graduate study and research.",
-    "field": [
-      "Research",
-      "Science",
-      "Engineering",
-      "Creative",
-      "Social Impact"
-    ],
-    "subfields": [
-      "STEM",
-      "Humanities",
-      "Public Policy",
-      "Arts"
-    ],
-    "location": "United States (All US Universities)",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Non-US citizen residing in home country during application",
-      "Completed undergraduate degree with strong academic record",
-      "English language proficiency (TOEFL/GRE supported)"
-    ],
-    "educationRequirements": [
-      "Undergraduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Fully funded",
-    "benefits": [
-      "Full tuition and institutional fees",
-      "Monthly living stipend",
-      "J-1 Visa sponsorship & health benefit plan",
-      "Roundtrip airfare to USA"
-    ],
-    "duration": "1-2 years",
-    "deadline": "2027-04-30",
-    "applicationUrl": "https://foreign.fulbrightonline.org/",
-    "officialSource": "https://foreign.fulbrightonline.org/",
-    "sourceName": "Fulbright US State Dept",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "USA",
-      "Master’s",
-      "Fulbright",
-      "Fully Funded",
-      "Research"
-    ],
-    "requirements": [
-      "Study/research objective essay",
-      "Personal statement",
-      "3 references"
-    ],
-    "applicationSteps": [
-      "Embassy / Commission submission",
-      "Interview by binational selection panel",
-      "US university placement matching"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
-    "id": "opp-sch-05",
-    "title": "Gates Cambridge Scholarship",
-    "organization": {
-      "id": "org-gates-cambridge",
-      "name": "Bill & Melinda Gates Foundation / University of Cambridge",
-      "website": "https://www.gatescambridge.org",
-      "description": "Global postgraduate scholarship at Cambridge",
-      "type": "University"
-    },
-    "type": "Scholarship",
-    "description": "Fully funded postgraduate scholarships for outstanding applicants from countries outside the UK to pursue a full-time PhD or Master’s in any subject at Cambridge University.",
-    "shortDescription": "Prestigious full-cost postgraduate scholarship at the University of Cambridge.",
-    "field": [
-      "Research",
-      "Science",
-      "Engineering",
-      "Social Impact",
-      "Policy"
-    ],
-    "subfields": [
-      "All Cambridge Graduate Courses"
-    ],
-    "location": "Cambridge, United Kingdom",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Citizen of any country outside the United Kingdom",
-      "Applying to pursue a full-time Master’s or PhD at Cambridge",
-      "Outstanding intellectual ability & commitment to improving the lives of others"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Fully funded (£45,000+/year)",
-    "benefits": [
-      "Full Cambridge University composition fee",
-      "Maintenance allowance of £20,000 per annum",
-      "Roundtrip airfare",
-      "Inbound visa & health surcharge costs",
-      "Academic development funding up to £2,000"
-    ],
-    "duration": "1-4 years",
-    "deadline": "2026-12-05",
-    "applicationUrl": "https://www.gatescambridge.org/apply/",
-    "officialSource": "https://www.gatescambridge.org/apply/",
-    "sourceName": "Gates Cambridge Trust",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Cambridge",
-      "Scholarship",
-      "Fully Funded",
-      "PhD",
-      "Master’s"
-    ],
-    "requirements": [
-      "Gates Cambridge statement (500 words)",
-      "Research proposal",
-      "Reference letters"
-    ],
-    "applicationSteps": [
-      "Cambridge graduate application with Gates section",
-      "Departmental ranking",
-      "Trust selection interview"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": true
-  },
-  {
-    "id": "opp-crt-01",
-    "title": "Adobe Creative Residency Community Fund",
-    "organization": {
-      "id": "org-adobe",
-      "name": "Adobe",
-      "website": "https://www.adobe.com",
-      "description": "Digital media and creative software company",
-      "type": "Company"
-    },
-    "type": "Grant",
-    "description": "Direct micro-grants and creative project funding for independent visual artists, UI/UX designers, illustrators, motion artists, and photographers worldwide to fund personal passion projects.",
-    "shortDescription": "Grants of $5,000–$10,000 and Adobe CC licenses for independent visual and digital creators.",
-    "field": [
-      "Creative",
-      "Product Design",
-      "Media"
-    ],
-    "subfields": [
-      "Digital Illustration",
-      "UI/UX Design",
-      "Animation",
-      "Photography"
-    ],
-    "location": "Worldwide (100% Remote)",
-    "remoteStatus": "Remote",
-    "eligibility": [
-      "18+ visual creators and designers",
-      "Portfolio showcasing original digital work",
-      "Creative proposal for a self-initiated project"
-    ],
-    "educationRequirements": [
-      "Any"
-    ],
-    "experienceRequirements": "Intermediate",
-    "funding": "Grant ($5,000 - $10,000 USD)",
-    "benefits": [
-      "Direct cash grant funding ($5k–$10k)",
-      "Full 1-year Adobe Creative Cloud All Apps membership",
-      "Global feature on Adobe Creative channels"
-    ],
-    "duration": "Project-based (3-6 months)",
-    "deadline": "2026-12-31",
-    "applicationUrl": "https://www.adobe.com/about-adobe/creative-residency.html",
-    "officialSource": "https://www.adobe.com/about-adobe/creative-residency.html",
-    "sourceName": "Adobe Creative Community",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Creative",
-      "Design",
-      "Grants",
-      "Remote",
-      "Visual Arts"
-    ],
-    "requirements": [
-      "Project pitch document",
-      "Online portfolio link",
-      "Budget breakdown"
-    ],
-    "applicationSteps": [
-      "Online application form",
-      "Review by Adobe Design Curators",
-      "Direct grant disbursement"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": true
-  },
-  {
-    "id": "opp-crt-02",
-    "title": "Pentagram Design Fellowship",
-    "organization": {
-      "id": "org-pentagram",
-      "name": "Pentagram",
-      "website": "https://www.pentagram.com",
-      "description": "World’s largest independently owned design studio",
-      "type": "Company"
-    },
-    "type": "Fellowship",
-    "description": "Intensive 6-month fellowship working directly in a partner-led team on brand identities, editorial design, environmental graphics, and digital design systems.",
-    "shortDescription": "6-month paid design fellowship at world-renowned design consultancy Pentagram.",
-    "field": [
-      "Creative",
-      "Product Design",
-      "Media"
-    ],
-    "subfields": [
-      "Brand Identity",
-      "Typography",
-      "Graphic Design"
-    ],
-    "location": "London, UK / New York, USA / Austin, TX",
-    "remoteStatus": "Hybrid",
-    "eligibility": [
-      "Recent design graduates or early-career designers with strong typography and visual craft"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate",
-      "Any"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Paid (Full Junior Designer Salary)",
-    "benefits": [
-      "Competitive living salary",
-      "Direct mentorship from Pentagram partners",
-      "High-profile client portfolio pieces"
-    ],
-    "duration": "6 months",
-    "deadline": "2026-11-30",
-    "applicationUrl": "https://www.pentagram.com/about/careers",
-    "officialSource": "https://www.pentagram.com/about/careers",
-    "sourceName": "Pentagram Design",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Branding",
-      "Typography",
-      "Graphic Design",
-      "London",
-      "New York"
-    ],
-    "requirements": [
-      "Curated PDF portfolio",
-      "Cover letter explaining design philosophy"
-    ],
-    "applicationSteps": [
-      "Portfolio review by partner team",
-      "Video design walkthrough interview",
-      "Offer"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
-    "id": "opp-crt-03",
-    "title": "D&AD New Blood Awards & Academy",
-    "organization": {
-      "id": "org-dand",
-      "name": "D&AD (Design and Art Direction)",
-      "website": "https://www.dandad.org",
-      "description": "Global design and advertising non-profit association",
-      "type": "Non-Profit"
-    },
-    "type": "Competition",
-    "description": "Global creative competition offering aspiring designers, copywriters, and art directors real-world briefs from brands like BBC, Google, and Duolingo with entry into the D&AD New Blood Academy.",
-    "shortDescription": "World-leading creative awards competition and academy for emerging design talent.",
-    "field": [
-      "Creative",
-      "Product Design",
-      "Media",
-      "Marketing"
-    ],
-    "subfields": [
-      "Art Direction",
-      "Copywriting",
-      "Brand Strategy",
-      "Motion Design"
-    ],
-    "location": "Worldwide / London In-Person Academy",
-    "remoteStatus": "Hybrid",
-    "eligibility": [
-      "Students or recent graduates within 2 years of study",
-      "Non-professionals aged 18+"
-    ],
-    "educationRequirements": [
-      "Any"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Prizes & Academy Sponsorship",
-    "benefits": [
-      "D&AD Wooden/Yellow/Black Pencil trophy recognition",
-      "Free spot at D&AD New Blood Academy creative bootcamp",
-      "Direct recruitment showcases with global agency heads"
-    ],
-    "duration": "Competition (3 months) + 2-week Academy",
-    "deadline": "2027-03-20",
-    "applicationUrl": "https://www.dandad.org/en/d-ad-new-blood-awards/",
-    "officialSource": "https://www.dandad.org/en/d-ad-new-blood-awards/",
-    "sourceName": "D&AD Awards",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Creative",
-      "Advertising",
-      "Design",
-      "Pencil",
-      "London"
-    ],
-    "requirements": [
-      "Campaign submission per official brand brief PDF",
-      "Presentation board and video"
-    ],
-    "applicationSteps": [
-      "Brief selection and creation",
-      "Digital board submission",
-      "Global creative jury review"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
     "id": "opp-sci-01",
     "title": "CERN Summer Student Programme",
     "organization": {
@@ -1348,7 +1480,7 @@ export const opportunities: Opportunity[] = [
     "shortDescription": "Summer physics and engineering research internship at CERN Large Hadron Collider in Geneva.",
     "field": [
       "Engineering",
-      "Science",
+      "Physics",
       "Technology"
     ],
     "subfields": [
@@ -1420,7 +1552,7 @@ export const opportunities: Opportunity[] = [
       "Engineering",
       "Entrepreneurship",
       "Agriculture",
-      "Energy"
+      "Clean Energy"
     ],
     "subfields": [
       "Clean Energy",
@@ -1475,430 +1607,70 @@ export const opportunities: Opportunity[] = [
     "isFeatured": false
   },
   {
-    "id": "opp-sci-03",
-    "title": "European Space Agency (ESA) Student Traineeship",
+    "id": "opp-biz-01",
+    "title": "Y Combinator Startup Accelerator (Batch S27)",
     "organization": {
-      "id": "org-esa",
-      "name": "European Space Agency",
-      "website": "https://www.esa.int",
-      "description": "Europe’s gateway to space exploration",
-      "type": "International Organization"
+      "id": "org-yc",
+      "name": "Y Combinator",
+      "website": "https://www.ycombinator.com",
+      "description": "Leading technology startup accelerator",
+      "type": "Accelerator"
     },
-    "type": "Internship",
-    "description": "Student internships at ESA establishments (ESTEC, ESOC, EAC) working on satellite telecommunications, Earth observation data, rocket propulsion, or planetary science.",
-    "shortDescription": "Paid 3 to 6-month aerospace and engineering traineeship at ESA centres across Europe.",
+    "type": "Programme",
+    "description": "Twice a year Y Combinator invests $500,000 in early-stage startups across AI, software, climate, biotech, fintech, and hard tech, working intensively with founders to achieve product-market fit.",
+    "shortDescription": "Premier 3-month startup accelerator investing $500k in early-stage founders.",
     "field": [
-      "Engineering",
-      "Science",
+      "Startups",
+      "Entrepreneurship",
       "Technology"
     ],
     "subfields": [
-      "Aerospace",
-      "Satellite Systems",
-      "Astrophysics"
+      "Venture Capital",
+      "Product Management",
+      "Go-to-Market"
     ],
-    "location": "Noordwijk, Netherlands / Darmstadt, Germany / Paris, France",
+    "location": "San Francisco, CA, USA",
     "remoteStatus": "In-person",
     "eligibility": [
-      "Citizen of an ESA Member State or Cooperating State",
-      "Enrolled in final two years of a Master’s degree in STEM"
+      "Founding teams with a working prototype or validated concept",
+      "Founders willing to spend 3 months in SF"
     ],
     "educationRequirements": [
-      "Graduate"
+      "Any"
     ],
     "experienceRequirements": "Beginner",
-    "funding": "Paid (€800–€1,200/mo allowance)",
+    "funding": "$500,000 Investment ($125k for 7% + $375k MFN SAFE)",
     "benefits": [
-      "Monthly living allowance",
-      "Relocation travel costs coverage",
-      "Access to European space testing facilities"
+      "Direct mentorship from Garry Tan and group partners",
+      "Access to Bookface alumni network of 9,000+ founders",
+      "Demo Day presentation to global top VCs"
     ],
-    "duration": "3-6 months",
-    "deadline": "2026-11-30",
-    "applicationUrl": "https://www.esa.int/About_Us/Careers_at_ESA/Student_Internships",
-    "officialSource": "https://www.esa.int/About_Us/Careers_at_ESA/Student_Internships",
-    "sourceName": "ESA Careers",
+    "duration": "3 months",
+    "deadline": "2027-02-15",
+    "applicationUrl": "https://www.ycombinator.com/apply",
+    "officialSource": "https://www.ycombinator.com/apply",
+    "sourceName": "Y Combinator",
     "lastVerified": "2026-10-01T00:00:00.000Z",
     "verificationStatus": "Verified",
     "tags": [
-      "Space",
-      "Aerospace",
-      "Engineering",
-      "Europe",
-      "Satellite"
+      "Startups",
+      "Venture Capital",
+      "Entrepreneurship",
+      "Product"
     ],
     "requirements": [
-      "CV in Europass format",
-      "Cover letter detailing scientific interest",
-      "Transcript of university grades"
+      "Written application",
+      "1-minute founder intro video"
     ],
     "applicationSteps": [
-      "Online application",
-      "Technical interview with lead flight/space systems engineer"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
-    "id": "opp-soc-01",
-    "title": "UN Young Professionals Programme (YPP)",
-    "organization": {
-      "id": "org-un",
-      "name": "United Nations Secretariat",
-      "website": "https://careers.un.org",
-      "description": "International intergovernmental organization",
-      "type": "International Organization"
-    },
-    "type": "Job",
-    "description": "Premier recruitment pathway for talented, highly qualified early-career professionals to start an international diplomatic civil service career with the United Nations Secretariat.",
-    "shortDescription": "Official entry examination for early-career diplomatic and professional civil service roles at the UN.",
-    "field": [
-      "Social Impact",
-      "Policy",
-      "International Relations"
-    ],
-    "subfields": [
-      "Multilateral Diplomacy",
-      "Human Rights",
-      "Global Governance"
-    ],
-    "location": "Global (New York, Geneva, Nairobi, Vienna, Addis Ababa, Bangkok)",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Nationality of a participating UN Member State for the exam year",
-      "Hold at least a Bachelor’s degree in relevant subject area",
-      "Age 32 or younger in the year of examination",
-      "Fluency in English or French"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Paid (UN P-1/P-2 International Salary & Expatriate Benefits)",
-    "benefits": [
-      "International civil servant salary (P-1/P-2 grade, tax-exempt)",
-      "Post adjustment allowance",
-      "Relocation and dependency grants",
-      "Diplomatic mobility"
-    ],
-    "duration": "Full-time / Permanent career track",
-    "deadline": "2027-02-28",
-    "applicationUrl": "https://careers.un.org/ypp",
-    "officialSource": "https://careers.un.org/ypp",
-    "sourceName": "United Nations Careers",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "United Nations",
-      "Diplomacy",
-      "International Relations",
-      "Civil Service"
-    ],
-    "requirements": [
-      "Passport verification",
-      "Degree certificate",
-      "Language proficiency"
-    ],
-    "applicationSteps": [
-      "Inspira online application",
-      "Online proctored substantive exam",
-      "Structured competency-based interview",
-      "Placement on UN Roster"
+      "Written application",
+      "10-minute partner interview",
+      "Same-day investment decision"
     ],
     "status": "open",
     "createdAt": "2026-09-01T00:00:00.000Z",
     "updatedAt": "2026-10-01T00:00:00.000Z",
     "isFeatured": true
-  },
-  {
-    "id": "opp-soc-02",
-    "title": "Atlas Corps Fellowship for Global Leaders",
-    "organization": {
-      "id": "org-atlas-corps",
-      "name": "Atlas Corps",
-      "website": "https://atlascorps.org",
-      "description": "Global leadership development organization",
-      "type": "Non-Profit"
-    },
-    "type": "Fellowship",
-    "description": "12-month professional fellowship placing emerging social change leaders from around the world at top US non-profits, foundations, and social enterprises in Washington DC and New York.",
-    "shortDescription": "12-month fully funded professional fellowship in the US for global social impact leaders.",
-    "field": [
-      "Social Impact",
-      "Policy",
-      "Education"
-    ],
-    "subfields": [
-      "Non-Profit Management",
-      "Youth Empowerment",
-      "Community Development"
-    ],
-    "location": "Washington, DC / New York, USA / Remote",
-    "remoteStatus": "Flexible",
-    "eligibility": [
-      "2-10 years of professional social sector experience",
-      "Bachelor’s degree or equivalent",
-      "English proficiency",
-      "Age 22–35"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Intermediate",
-    "funding": "Fully funded",
-    "benefits": [
-      "Monthly living stipend covering food and housing",
-      "J-1 Visa sponsorship and US flight costs",
-      "Comprehensive health insurance",
-      "Global Leadership Lab training certificate"
-    ],
-    "duration": "12 months",
-    "deadline": "2026-11-30",
-    "applicationUrl": "https://atlascorps.org/apply/",
-    "officialSource": "https://atlascorps.org/apply/",
-    "sourceName": "Atlas Corps",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Social Impact",
-      "Fellowship",
-      "USA",
-      "Fully Funded",
-      "Leadership"
-    ],
-    "requirements": [
-      "CV",
-      "Two recommendation letters",
-      "English test scores or transcript"
-    ],
-    "applicationSteps": [
-      "Short application",
-      "Long-form application & essays",
-      "Semi-finalist interview",
-      "Host organization matching interview"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
-    "id": "opp-soc-03",
-    "title": "African Development Bank Young Professionals Program",
-    "organization": {
-      "id": "org-afdb",
-      "name": "African Development Bank (AfDB)",
-      "website": "https://www.afdb.org",
-      "description": "Premier regional multilateral development finance institution in Africa",
-      "type": "International Organization"
-    },
-    "type": "Programme",
-    "description": "3-year leadership development track providing young African professionals with operational assignments in sovereign infrastructure finance, energy transition, climate, and macroeconomic policy.",
-    "shortDescription": "3-year early career multilateral development leadership program based in Abidjan.",
-    "field": [
-      "Social Impact",
-      "Finance",
-      "Policy",
-      "Energy"
-    ],
-    "subfields": [
-      "Development Economics",
-      "Sovereign Debt",
-      "Infrastructure Financing"
-    ],
-    "location": "Abidjan, Côte d’Ivoire & Regional Country Hubs",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Citizen of an AfDB member country",
-      "32 years of age or younger",
-      "Master’s degree or equivalent in Economics, Finance, Engineering, or Social Sciences",
-      "Minimum 3 years relevant experience"
-    ],
-    "educationRequirements": [
-      "Graduate"
-    ],
-    "experienceRequirements": "Intermediate",
-    "funding": "Paid (International Grade PL-6 Expatriate Salary)",
-    "benefits": [
-      "Tax-free international salary",
-      "Full diplomatic health and retirement pension",
-      "Housing and education allowance support",
-      "Annual home country leave flight"
-    ],
-    "duration": "3 years (leads to permanent staff appointment)",
-    "deadline": "2027-01-20",
-    "applicationUrl": "https://www.afdb.org/en/about-us/careers/young-professionals-program-ypp",
-    "officialSource": "https://www.afdb.org/en/about-us/careers/young-professionals-program-ypp",
-    "sourceName": "AfDB Careers",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Africa",
-      "Development Finance",
-      "AfDB",
-      "Economics",
-      "Abidjan"
-    ],
-    "requirements": [
-      "Master’s diploma",
-      "CV in English or French",
-      "Statement of purpose"
-    ],
-    "applicationSteps": [
-      "Online application",
-      "Comprehensive psychometric and technical assessment",
-      "Assessment centre in Abidjan"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": true
-  },
-  {
-    "id": "opp-law-01",
-    "title": "World Bank Legal Vice Presidency Internship Program",
-    "organization": {
-      "id": "org-worldbank",
-      "name": "The World Bank Group",
-      "website": "https://www.worldbank.org",
-      "description": "International financial institution providing development loans",
-      "type": "International Organization"
-    },
-    "type": "Internship",
-    "description": "Offers law students and recent law graduates exposure to international financial law, sovereign development financing agreements, procurement integrity, and environmental law compliance.",
-    "shortDescription": "Paid legal internship at World Bank headquarters in Washington DC.",
-    "field": [
-      "Law",
-      "Policy",
-      "Finance"
-    ],
-    "subfields": [
-      "International Law",
-      "Development Finance",
-      "Corporate Governance"
-    ],
-    "location": "Washington, DC, USA",
-    "remoteStatus": "Hybrid",
-    "eligibility": [
-      "Currently enrolled in an accredited law degree (LLB, JD, LLM, or SJD/PhD)",
-      "Excellent command of English; knowledge of French or Spanish an asset"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate",
-      "PhD"
-    ],
-    "experienceRequirements": "Beginner",
-    "funding": "Paid (Hourly Rate + Travel Support)",
-    "benefits": [
-      "Competitive hourly compensation",
-      "Direct mentorship from World Bank senior legal counsel",
-      "G-4 visa sponsorship support"
-    ],
-    "duration": "10-12 weeks",
-    "deadline": "2026-12-15",
-    "applicationUrl": "https://www.worldbank.org/en/about/careers/programs-and-internships/legal-internship-program",
-    "officialSource": "https://www.worldbank.org/en/about/careers/programs-and-internships/legal-internship-program",
-    "sourceName": "World Bank Careers",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Law",
-      "International Law",
-      "Finance",
-      "Policy",
-      "Washington DC"
-    ],
-    "requirements": [
-      "CV",
-      "Statement of interest",
-      "Legal writing sample",
-      "Official law school transcript"
-    ],
-    "applicationSteps": [
-      "Online application",
-      "Legal department shortlisting",
-      "Interview with Lead Counsel"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": true
-  },
-  {
-    "id": "opp-law-02",
-    "title": "Chatham House Mo Ibrahim Leadership Fellowship",
-    "organization": {
-      "id": "org-chatham-house",
-      "name": "Chatham House (Royal Institute of International Affairs)",
-      "website": "https://www.chathamhouse.org",
-      "description": "World-leading policy institute based in London",
-      "type": "Research Institute"
-    },
-    "type": "Fellowship",
-    "description": "Fellowship for African nationals to conduct research at the Queen Elizabeth II Academy for Leadership in International Affairs on governance, security, or economic policy in London.",
-    "shortDescription": "Fully funded 10-month public policy research fellowship in London for African policy professionals.",
-    "field": [
-      "Policy",
-      "Research",
-      "Law"
-    ],
-    "subfields": [
-      "Governance",
-      "Security",
-      "African Political Economy"
-    ],
-    "location": "London, United Kingdom",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "Citizen of an African country",
-      "Hold a Master’s degree or equivalent in political science, law, economics, or international relations",
-      "Early to mid-career professional"
-    ],
-    "educationRequirements": [
-      "Graduate",
-      "PhD"
-    ],
-    "experienceRequirements": "Intermediate",
-    "funding": "Fully funded (£2,360 monthly stipend)",
-    "benefits": [
-      "Monthly living stipend of £2,360 (tax-free)",
-      "Travel costs to and from London",
-      "Relocation and fieldwork research grant",
-      "Dedicated office at Chatham House London"
-    ],
-    "duration": "10 months",
-    "deadline": "2027-03-15",
-    "applicationUrl": "https://www.chathamhouse.org/about-us/our-academy/fellowships/mo-ibrahim-foundation-fellowship",
-    "officialSource": "https://www.chathamhouse.org/about-us/our-academy/fellowships/mo-ibrahim-foundation-fellowship",
-    "sourceName": "Chatham House Academy",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Policy",
-      "London",
-      "Fellowship",
-      "Governance",
-      "Africa"
-    ],
-    "requirements": [
-      "Research project proposal (1,500 words)",
-      "Curriculum vitae",
-      "Two professional references"
-    ],
-    "applicationSteps": [
-      "Written research submission",
-      "Academic panel review",
-      "In-person / video interview in London"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
   },
   {
     "id": "opp-hlth-01",
@@ -1914,9 +1686,9 @@ export const opportunities: Opportunity[] = [
     "description": "Provides opportunities for graduate students and recent graduates in public health, global health policy, medicine, or health data science to gain practical insight into global health programmes.",
     "shortDescription": "6-month international internship at WHO headquarters and regional offices.",
     "field": [
-      "Healthcare",
-      "Research",
-      "Policy"
+      "Public Health",
+      "Healthcare Administration",
+      "Research"
     ],
     "subfields": [
       "Epidemiology",
@@ -1964,78 +1736,6 @@ export const opportunities: Opportunity[] = [
       "Stellis online application",
       "Technical screening by department leads",
       "Interview"
-    ],
-    "status": "open",
-    "createdAt": "2026-09-01T00:00:00.000Z",
-    "updatedAt": "2026-10-01T00:00:00.000Z",
-    "isFeatured": false
-  },
-  {
-    "id": "opp-hlth-02",
-    "title": "Wellcome Trust Master’s Fellowships in Tropical Medicine",
-    "organization": {
-      "id": "org-wellcome",
-      "name": "Wellcome Trust",
-      "website": "https://wellcome.org",
-      "description": "Global charitable foundation supporting scientific discovery",
-      "type": "Foundation"
-    },
-    "type": "Fellowship",
-    "description": "Supports researchers from low- and middle-income countries to gain an MSc at an internationally recognised centre of excellence and carry out a research project in clinical or public health.",
-    "shortDescription": "Fully funded master’s degree and research project funding in tropical medicine and health sciences.",
-    "field": [
-      "Healthcare",
-      "Research",
-      "Science"
-    ],
-    "subfields": [
-      "Infectious Disease",
-      "Biomedical Research",
-      "Clinical Science"
-    ],
-    "location": "United Kingdom & Low/Middle-Income Countries",
-    "remoteStatus": "In-person",
-    "eligibility": [
-      "National of a low- or middle-income country",
-      "Clinical or non-clinical degree in health/biological sciences",
-      "Sponsorship from an eligible host institution"
-    ],
-    "educationRequirements": [
-      "Undergraduate",
-      "Graduate"
-    ],
-    "experienceRequirements": "Intermediate",
-    "funding": "Fully funded (£120,000 Total Award)",
-    "benefits": [
-      "Full MSc course tuition fees",
-      "Monthly living stipend for 30 months",
-      "Research project expenses (£30,000+)",
-      "Travel and conference allowances"
-    ],
-    "duration": "30 months",
-    "deadline": "2027-04-10",
-    "applicationUrl": "https://wellcome.org/grant-funding/schemes/masters-fellowships-public-health-and-tropical-medicine",
-    "officialSource": "https://wellcome.org/grant-funding/schemes/masters-fellowships-public-health-and-tropical-medicine",
-    "sourceName": "Wellcome Trust Grants",
-    "lastVerified": "2026-10-01T00:00:00.000Z",
-    "verificationStatus": "Verified",
-    "tags": [
-      "Health",
-      "Research",
-      "Fellowship",
-      "Fully Funded",
-      "Science"
-    ],
-    "requirements": [
-      "Research proposal",
-      "Host institution endorsement",
-      "Supervisor references"
-    ],
-    "applicationSteps": [
-      "Preliminary proposal",
-      "Full grant application submission",
-      "External scientific peer review",
-      "Wellcome interview panel"
     ],
     "status": "open",
     "createdAt": "2026-09-01T00:00:00.000Z",

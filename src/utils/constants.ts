@@ -15,19 +15,59 @@ export const OPPORTUNITY_TYPE_COLORS: Record<OpportunityType, string> = {
 };
 
 export const FIELDS = [
-  'Public Health', 'Global Health', 'Health & Medicine', 'Biotechnology', 'Life Sciences',
-  'Technology', 'AI & Machine Learning', 'Data Science', 'Engineering', 'Design & UX',
-  'Climate & Sustainability', 'Clean Energy', 'Science', 'Research',
-  'Business & Startups', 'Finance & VC', 'Policy & Governance', 'International Relations',
-  'Social Impact', 'Education & Teaching', 'Creative & Media', 'Journalism', 'Law & Human Rights',
+  // Business & Operations
+  'Project Management', 'Operations', 'Business Development', 'Strategy', 'Consulting',
+  'Customer Success', 'Customer Experience', 'Sales', 'Account Management', 'Procurement',
+  'Administration', 'Virtual Assistance', 'Executive Assistance', 'Human Resources', 'Recruitment',
+  'Business Analysis', 'Supply Chain', 'Logistics',
+  // Finance & Accounting
+  'Accounting', 'Financial Analysis', 'Investment', 'Banking', 'Fintech', 'Audit', 'Tax',
+  'Risk Management', 'Economics', 'Financial Planning', 'Treasury',
+  // Technology & Computing
+  'Software Engineering', 'Frontend Development', 'Backend Development', 'Full Stack',
+  'Mobile Development', 'Cloud', 'DevOps', 'Cybersecurity', 'AI', 'Machine Learning',
+  'Data Science', 'Data Analytics', 'QA / Testing', 'IT Support', 'Technical Writing',
+  // Product & Design
+  'Product Design', 'UX/UI', 'UX Research', 'Product Management', 'Design Systems',
+  'Interaction Design', 'Graphic Design', 'Brand Design', 'Motion Design', 'Visual Design', 'Industrial Design',
+  // Marketing & Communications
+  'Digital Marketing', 'Content Marketing', 'Social Media', 'SEO', 'Communications',
+  'Public Relations', 'Copywriting', 'Content Creation', 'Community Management', 'Growth Marketing',
+  // Creative & Arts
+  'Writing', 'Journalism', 'Photography', 'Film', 'Animation', 'Illustration', 'Music',
+  'Fashion', 'Architecture', 'Creative Direction', 'Publishing', 'Arts',
+  // Science & Engineering
+  'Engineering', 'Biotechnology', 'Chemistry', 'Physics', 'Mathematics', 'Environmental Science',
+  'Agriculture', 'Climate & Sustainability', 'Clean Energy', 'Life Sciences', 'Materials Science',
+  // Health & Medicine
+  'Medicine', 'Nursing', 'Public Health', 'Mental Health', 'Healthcare Administration',
+  'Health Technology', 'Nutrition', 'Biomedical Sciences',
+  // Education & Teaching
+  'Teaching', 'Educational Technology', 'Curriculum Design', 'Academic Research', 'Education Administration',
+  // Law, Policy & Governance
+  'Law', 'Human Rights', 'Public Policy', 'Governance', 'International Relations',
+  'Social Impact', 'NGO / Nonprofit', 'Public Administration',
+  // Entrepreneurship
+  'Entrepreneurship', 'Startups', 'Venture Capital', 'Innovation',
   'Other',
 ] as const;
 
+export const INTENT_PATHWAYS = [
+  { id: 'find-work', label: 'Find work', icon: 'case-linear', description: 'Jobs, internships, contract and remote positions' },
+  { id: 'build-experience', label: 'Build experience', icon: 'cup-star-linear', description: 'Fellowships, apprenticeships, and hands-on programmes' },
+  { id: 'get-funded', label: 'Get funded', icon: 'dollar-minimalistic-linear', description: 'Grants, equity-free funding, and scholarships' },
+  { id: 'study', label: 'Study somewhere new', icon: 'graduation-cap-linear', description: 'Master’s degrees, university exchange, and academic programmes' },
+  { id: 'build-portfolio', label: 'Build my portfolio', icon: 'layers-minimalistic-linear', description: 'Competitions, open-source, and project residencies' },
+  { id: 'research', label: 'Get into research', icon: 'test-tube-linear', description: 'Scientific, academic, policy and market research' },
+  { id: 'start-something', label: 'Start something', icon: 'rocket-linear', description: 'Accelerators, incubators, founder grants, and pitch competitions' },
+  { id: 'explore-new-field', label: 'Explore a new field', icon: 'compass-linear', description: 'Career transition programmes and entry-level pathways' },
+  { id: 'not-sure', label: 'I\'m still figuring it out', icon: 'magic-stick-linear', description: 'Curated multidisciplinary possibilities' },
+] as const;
+
 export const GOALS = [
-  'Build practical experience', 'Find funding & grants', 'Study abroad / Scholarships',
-  'Transition into a new field', 'Find a remote job', 'Publish research',
-  'Build my portfolio', 'Expand global network', 'Launch a startup / venture',
-  'Grow specialized skills', 'Explore opportunities',
+  'Find work', 'Build my experience', 'Get funded', 'Study somewhere new',
+  'Build my portfolio', 'Get into research', 'Start something',
+  'Explore a new field', 'Expand global network', 'I\'m still figuring it out',
 ] as const;
 
 export const WORK_MODALITIES = [
