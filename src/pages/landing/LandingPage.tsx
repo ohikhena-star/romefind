@@ -372,18 +372,18 @@ export default function LandingPage() {
                   Full tuition, stipend, and leadership development across all graduate degree disciplines at Stanford.
                 </p>
 
-                {/* Metadata Box */}
-                <div className="grid grid-cols-2 gap-2 text-xs py-3 border-y border-surface-100 dark:border-surface-800 mb-5 bg-surface-50/50 dark:bg-surface-850/50 rounded-xl px-3.5">
+                {/* Structured Metadata (Direct on Card Surface) */}
+                <div className="grid grid-cols-2 gap-2.5 text-xs py-3 border-y border-surface-100 dark:border-surface-800/80 mb-5">
                   <div>
-                    <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block">Location</span>
+                    <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Location</span>
                     <span className="font-semibold text-surface-800 dark:text-surface-200">Stanford, CA, USA</span>
                   </div>
                   <div>
-                    <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block">Deadline</span>
+                    <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Deadline</span>
                     <span className="font-semibold text-amber-600 dark:text-amber-400">Oct 07, 2026</span>
                   </div>
-                  <div className="col-span-2 pt-1.5 border-t border-surface-100 dark:border-surface-800 flex justify-between">
-                    <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold">Funding</span>
+                  <div className="col-span-2 pt-2 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
+                    <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold">Funding</span>
                     <span className="font-semibold text-surface-900 dark:text-surface-100">100% Tuition + Living Stipend</span>
                   </div>
                 </div>

@@ -191,17 +191,17 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         {opportunity.shortDescription || opportunity.description}
       </p>
 
-      {/* ─── 4. Structured Metadata: Location, Deadline, Funding ─── */}
-      <div className="grid grid-cols-2 gap-2.5 text-xs text-surface-600 dark:text-surface-400 py-3 border-y border-surface-100 dark:border-surface-800 mb-4 bg-surface-50/50 dark:bg-surface-850/50 rounded-xl px-3.5">
+      {/* ─── 4. Structured Metadata: Location, Deadline, Funding (Direct on Card Surface) ─── */}
+      <div className="grid grid-cols-2 gap-3 text-xs py-3 border-y border-surface-100 dark:border-surface-800/80 mb-4">
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Location</span>
+          <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Location</span>
           <span className="font-semibold text-surface-800 dark:text-surface-200 truncate block text-xs sm:text-sm" title={opportunity.location}>
             {opportunity.location || 'Remote · Worldwide'}
           </span>
         </div>
 
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Deadline</span>
+          <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Deadline</span>
           {opportunity.deadline ? (
             <DeadlineIndicator deadline={opportunity.deadline} />
           ) : (
@@ -210,9 +210,9 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         </div>
 
         {opportunity.funding && (
-          <div className="col-span-2 pt-2 border-t border-surface-100/80 dark:border-surface-800/80 flex items-center justify-between">
-            <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold">Funding</span>
-            <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[220px] text-xs sm:text-sm" title={opportunity.funding}>
+          <div className="col-span-2 pt-2 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
+            <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold">Funding</span>
+            <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[240px] text-xs sm:text-sm" title={opportunity.funding}>
               {opportunity.funding}
             </span>
           </div>
@@ -227,15 +227,15 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
               e.stopPropagation();
               setInspectorOpen(!inspectorOpen);
             }}
-            className="flex items-center justify-between gap-2 text-xs sm:text-sm text-surface-600 dark:text-surface-400 bg-surface-50/80 dark:bg-surface-800/50 p-2.5 rounded-xl border border-surface-100 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700 transition-colors cursor-pointer"
+            className="flex items-center justify-between gap-2 text-xs sm:text-sm text-surface-600 dark:text-surface-400 bg-surface-50/70 dark:bg-surface-800/40 p-2.5 rounded-xl border border-surface-200/60 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700 transition-colors cursor-pointer"
             title="Click to toggle Matching Inspector breakdown"
           >
             <div className="flex items-center gap-2 min-w-0">
               <span className={cn(
                 "px-2 py-0.5 rounded-md text-xs font-bold shrink-0",
                 relevanceScore >= 75
-                  ? "bg-rome-100 dark:bg-rome-950 text-rome-700 dark:text-rome-300"
-                  : "bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300"
+                  ? "bg-rome-100 dark:bg-surface-800 text-rome-700 dark:text-rome-300 border border-transparent dark:border-surface-700"
+                  : "bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300"
               )}>
                 {relevanceScore}% Fit
               </span>
