@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { TrackedApplication, ApplicationStatus, ApplicationTask, ApplicationNote } from '@/types/models';
+import { TrackedApplication, ApplicationStatus, ApplicationTask, ApplicationNote, Opportunity } from '@/types/models';
 import { nanoid } from 'nanoid';
-import { DEFAULT_APPLICATION_TASKS } from '@/utils/constants';
+import { generateOpportunityTasks } from '@/utils/opportunityTasks';
+import { useOpportunityStore } from '@/store/opportunityStore';
 import { api } from '@/api/client';
 
 interface ApplicationState {
@@ -15,7 +16,7 @@ interface ApplicationState {
   isSaved: (id: string) => boolean;
   
   fetchApplications: () => Promise<void>;
-  createApplication: (opportunityId: string) => Promise<void>;
+  createApplication: (opportunityId: string, opp?: Opportunity) => Promise<void>;
   removeTrackedApplication: (id: string) => Promise<void>;
   removeApplication: (id: string) => Promise<void>;
   updateApplicationStatus: (id: string, status: ApplicationStatus) => Promise<void>;
@@ -42,6 +43,12 @@ export const useApplicationStore = create<ApplicationState>()(
           if (state.savedOpportunities.includes(id)) return state;
           return { savedOpportunities: [...state.savedOpportunities, id] };
         });
+
+        // Also ensure an application entry with opportunity-specific checklist exists
+        const existing = get().trackedApplications.find(a => a.opportunityId === id);
+        if (!existing) {
+          get().createApplication(id);
+        }
 
         try {
           await api.saveOpportunity(id);
@@ -98,7 +105,15 @@ export const useApplicationStore = create<ApplicationState>()(
         }
       },
 
-      createApplication: async (opportunityId) => {
+      createApplication: async (opportunityId, explicitOpp) => {
+        const opp = explicitOpp || useOpportunityStore.getState().opportunities.find(o => o.id === opportunityId);
+        const taskLabels = opp ? generateOpportunityTasks(opp) : [
+          'Review eligibility requirements',
+          'Prepare CV / Resume',
+          'Prepare application materials',
+          'Submit official application'
+        ];
+
         set((state) => {
           if (state.trackedApplications.some(app => app.opportunityId === opportunityId)) {
             return state;
@@ -110,7 +125,7 @@ export const useApplicationStore = create<ApplicationState>()(
             status: ApplicationStatus.Saved,
             startedAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            tasks: DEFAULT_APPLICATION_TASKS.map((task: string, index: number) => ({
+            tasks: taskLabels.map((task: string, index: number) => ({
               id: nanoid(),
               label: task,
               completed: false,

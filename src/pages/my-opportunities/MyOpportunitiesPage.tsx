@@ -16,10 +16,10 @@ export default function MyOpportunitiesPage() {
   useEffect(() => {
     savedOpportunities.forEach((oppId: string) => {
       if (!trackedApplications.some((app: TrackedApplication) => app.opportunityId === oppId)) {
-        createApplication(oppId);
+        createApplication(oppId, getOpportunity(oppId));
       }
     });
-  }, [savedOpportunities, trackedApplications, createApplication]);
+  }, [savedOpportunities, trackedApplications, createApplication, opportunities]);
 
   const [activeTab, setActiveTab] = useState<string>('All');
   const [sortBy, setSortBy] = useState<string>('deadline');
@@ -158,16 +158,20 @@ export default function MyOpportunitiesPage() {
                 )}
               </div>
 
-              {isPreparingOrLater && totalTasks > 0 && !isAccepted && (
-                <div className="space-y-1.5 mt-1 bg-surface-50 dark:bg-surface-800/40 p-3 rounded-lg border border-surface-100 dark:border-surface-700/50">
+              {totalTasks > 0 && !isAccepted && (
+                <div className="space-y-1.5 mt-1 bg-surface-50 dark:bg-surface-800/40 p-3 rounded-xl border border-surface-100 dark:border-surface-700/50">
                   <div className="flex justify-between text-xs text-surface-600 dark:text-surface-400 font-medium">
                     <span>Preparation Progress</span>
-                    <span>{completedTasks}/{totalTasks} tasks</span>
+                    <span className="font-semibold text-surface-900 dark:text-surface-100">{completedTasks}/{totalTasks} tasks</span>
                   </div>
                   <ProgressBar value={progress} size="sm" />
-                  {firstUncompletedTask && (
-                    <p className="text-xs text-rome-600 dark:text-rome-400 font-medium truncate pt-1">
+                  {firstUncompletedTask ? (
+                    <p className="text-xs text-rome-600 dark:text-rome-400 font-medium truncate pt-0.5">
                       Next: {firstUncompletedTask.label}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium truncate pt-0.5">
+                      ✓ All checklist tasks completed!
                     </p>
                   )}
                 </div>

@@ -11,6 +11,8 @@ import { OpportunityCard } from '@/components/opportunity';
 import { OPPORTUNITY_TYPE_COLORS } from '@/utils/constants';
 import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck, Share2, Trash2 } from 'lucide-react';
 import { Opportunity } from '@/types/models';
+import { generateOpportunityTasks } from '@/utils/opportunityTasks';
+import { SolarIcon } from '@/components/ui/SolarIcon';
 import { cn } from '@/utils/cn';
 
 export default function OpportunityDetailPage() {
@@ -18,7 +20,7 @@ export default function OpportunityDetailPage() {
   const navigate = useNavigate();
   const { getOpportunityById, opportunities, isLoading } = useOpportunityStore();
   const { user, isAuthenticated } = useAuthStore();
-  const { isSaved, saveOpportunity, unsaveOpportunity, addToCompare, removeFromCompare, comparisons, createApplication } = useApplicationStore();
+  const { isSaved, saveOpportunity, unsaveOpportunity, addToCompare, removeFromCompare, comparisons, createApplication, trackedApplications, toggleTask } = useApplicationStore();
 
   const [showShareModal, setShowShareModal] = useState(false);
   const [copyToast, setCopyToast] = useState(false);
@@ -170,8 +172,47 @@ export default function OpportunityDetailPage() {
   const orgName = typeof opportunity.organization === 'object' ? opportunity.organization.name : opportunity.organization;
   const orgWebsite = typeof opportunity.organization === 'object' ? opportunity.organization.website : opportunity.officialSource;
 
+  const app = trackedApplications.find(a => a.opportunityId === opportunity.id);
+  const tasks = useMemo(() => {
+    if (app && app.tasks && app.tasks.length > 0) {
+      return app.tasks;
+    }
+    return generateOpportunityTasks(opportunity).map((label, index) => ({
+      id: `task-${index}`,
+      label,
+      completed: false,
+      order: index
+    }));
+  }, [app, opportunity]);
+
+  const completedCount = tasks.filter(t => t.completed).length;
+  const totalCount = tasks.length;
+  const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
+  const handleToggleTask = (taskId: string) => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    if (!app) {
+      createApplication(opportunity.id, opportunity);
+      setTimeout(() => {
+        const created = useApplicationStore.getState().trackedApplications.find(a => a.opportunityId === opportunity.id);
+        if (created) {
+          const target = created.tasks.find(t => t.id === taskId) || created.tasks[0];
+          if (target) toggleTask(created.id, target.id);
+        }
+      }, 50);
+    } else {
+      toggleTask(app.id, taskId);
+    }
+  };
+
   const handleStartApplication = () => {
-    createApplication(opportunity.id);
+    if (!app) {
+      createApplication(opportunity.id, opportunity);
+    }
     navigate(`/my-opportunities/${opportunity.id}/workspace`);
   };
 
@@ -355,6 +396,79 @@ export default function OpportunityDetailPage() {
                 Why this is relevant to you
               </h2>
               <MatchIndicator score={relevance.score} reasons={relevance.reasons} />
+            </section>
+          )}
+
+          {/* Preparation & Application Checklist */}
+          {isAuthenticated && (
+            <section className="bg-white dark:bg-surface-900 rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-surface-200 dark:border-surface-800 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <SolarIcon name="checklist-minimalistic-linear" size={18} className="text-rome-500" />
+                    <h2 className="text-xl font-bold text-surface-950 dark:text-surface-50">
+                      Preparation & Application Checklist
+                    </h2>
+                  </div>
+                  <p className="text-xs text-surface-500 dark:text-surface-400 mt-1">
+                    Requirements and materials tailored directly to this {opportunity.type.toLowerCase()}.
+                  </p>
+                </div>
+                
+                <span className="text-xs font-bold text-surface-700 dark:text-surface-300 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full border border-surface-200 dark:border-surface-700 self-start sm:self-auto">
+                  {completedCount} of {totalCount} ready
+                </span>
+              </div>
+
+              <div className="w-full bg-surface-100 dark:bg-surface-800 h-2 rounded-full overflow-hidden">
+                <div 
+                  className="bg-rome-500 h-full rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2 pt-1">
+                {tasks.map((task) => (
+                  <div 
+                    key={task.id}
+                    onClick={() => handleToggleTask(task.id)}
+                    className={cn(
+                      "flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer min-h-[44px]",
+                      task.completed
+                        ? "bg-surface-50/80 dark:bg-surface-800/40 border-surface-200 dark:border-surface-800/80 opacity-80"
+                        : "bg-white dark:bg-surface-900 border-surface-200 dark:border-surface-700 hover:border-rome-400 shadow-2xs"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-5 h-5 rounded-lg flex items-center justify-center border text-xs font-bold transition-colors mt-0.5 shrink-0",
+                      task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-800"
+                    )}>
+                      {task.completed && "✓"}
+                    </div>
+                    <span className={cn(
+                      "text-sm leading-relaxed font-medium",
+                      task.completed 
+                        ? "line-through text-surface-400 dark:text-surface-500" 
+                        : "text-surface-900 dark:text-surface-100"
+                    )}>
+                      {task.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-surface-100 dark:border-surface-800 text-xs text-surface-500">
+                <span>Progress automatically persists in your workspace.</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleStartApplication}
+                  className="text-xs font-semibold h-9 px-3.5"
+                >
+                  <span>Open Workspace</span>
+                  <SolarIcon name="alt-arrow-right-linear" size={13} />
+                </Button>
+              </div>
             </section>
           )}
 

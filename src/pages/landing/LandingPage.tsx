@@ -448,12 +448,11 @@ export default function LandingPage() {
             {pathways.map((path, idx) => (
               <div 
                 key={idx}
-                onClick={handleCtaClick}
-                className="group cursor-pointer rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 hover:border-rome-300 dark:hover:border-rome-700 hover:shadow-card-hover transition-all text-left flex flex-col justify-between"
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:shadow-card-hover md:hover:border-surface-300 dark:md:hover:border-surface-700 text-left flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-200 flex items-center justify-center">
                       <SolarIcon name={path.icon} size={20} />
                     </div>
                     <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400">
@@ -461,18 +460,13 @@ export default function LandingPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-surface-950 dark:text-white mb-2 group-hover:text-rome-600 dark:group-hover:text-rome-400 transition-colors">
+                  <h3 className="text-lg font-bold text-surface-950 dark:text-white mb-2">
                     {path.title}
                   </h3>
 
-                  <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed mb-4">
+                  <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">
                     {path.description}
                   </p>
-                </div>
-
-                <div className="pt-2 flex items-center gap-1 text-xs font-bold text-rome-600 dark:text-rome-400 group-hover:translate-x-1 transition-transform">
-                  <span>Explore opportunities</span>
-                  <SolarIcon name="alt-arrow-right-linear" size={14} />
                 </div>
               </div>
             ))}

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
 import { ProgressBar, Chip, Button, Input } from '@/components/ui';
@@ -11,7 +12,7 @@ import { OpportunityType, RemoteStatus } from '@/types/models';
 import {
   Moon, Sun, Plus, X, Compass, Camera, Check, CheckCircle,
   Briefcase, GraduationCap, Award, Globe, Lightbulb, Heart,
-  Rocket, Users, Laptop, DollarSign, MapPin, Sparkles, AlertCircle
+  Rocket, Users, Laptop, DollarSign, MapPin, Sparkles, AlertCircle, LogOut
 } from 'lucide-react';
 
 // Same opportunity types list as onboarding
@@ -46,7 +47,8 @@ const EXPERIENCE_LEVELS = [
 ];
 
 export default function ProfilePage() {
-  const { user, updateUser } = useAuthStore();
+  const navigate = useNavigate();
+  const { user, updateUser, logout } = useAuthStore();
   const { theme, toggleTheme } = useUIStore();
   const photoInputRef = useRef<HTMLInputElement>(null);
 
@@ -581,11 +583,23 @@ export default function ProfilePage() {
               </Button>
             </div>
 
-            <div>
+            <div className="pt-2">
               <span className="text-xs font-semibold text-surface-500 uppercase tracking-wider block mb-1.5">Account</span>
-              <p className="text-xs text-surface-600 dark:text-surface-400">
+              <p className="text-xs text-surface-600 dark:text-surface-400 mb-3">
                 Email: <span className="font-medium text-surface-900 dark:text-surface-100">{user.profile.email}</span>
               </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  logout();
+                  navigate('/');
+                }}
+                className="w-full text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 border-red-200 dark:border-red-900/50 h-10 min-h-[40px] flex items-center justify-center gap-2"
+              >
+                <LogOut size={14} />
+                <span>Log out</span>
+              </Button>
             </div>
           </section>
         </div>

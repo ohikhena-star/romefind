@@ -4,9 +4,9 @@ import { useApplicationStore } from '@/store/applicationStore';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
 import { getAlternativeDiscoveries } from '@/services/personalization.service';
-import { Button, Tag, DeadlineIndicator, Badge } from '@/components/ui';
+import { Button, Tag, DeadlineIndicator, Badge, SolarIcon } from '@/components/ui';
 import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
-import { X, ArrowRight, Lightbulb, Scale, Plus, Sparkles, DollarSign } from 'lucide-react';
+import { X, ArrowRight, Lightbulb, Plus, Sparkles, DollarSign } from 'lucide-react';
 import { Opportunity, AlternativeDiscovery } from '@/types/models';
 
 export default function ComparePage() {
@@ -44,7 +44,7 @@ export default function ComparePage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="p-1.5 rounded-lg bg-rome-100 dark:bg-rome-900/40 text-rome-600 dark:text-rome-400">
-              <Scale className="w-5 h-5" />
+              <SolarIcon name="transfer-horizontal-linear" size={20} />
             </span>
             <h1 className="text-2xl md:text-3xl font-bold text-surface-950 dark:text-surface-50">
               Path & Opportunity Comparison
@@ -289,7 +289,7 @@ export default function ComparePage() {
         <div className="bg-surface-50 dark:bg-surface-900/50 border border-surface-200 dark:border-surface-800 rounded-2xl p-6 sm:p-8 mb-10 text-center">
           <div className="max-w-md mx-auto space-y-3">
             <span className="inline-flex p-3 rounded-2xl bg-rome-100 dark:bg-rome-900/40 text-rome-600 dark:text-rome-400">
-              <Scale className="w-8 h-8" />
+              <SolarIcon name="transfer-horizontal-linear" size={32} />
             </span>
             <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50">
               {compareOpps.length === 1 ? 'Select 1 more opportunity to compare' : 'Select opportunities to compare side-by-side'}

@@ -124,39 +124,11 @@ export const RecommendationsPage: React.FC = () => {
         </div>
       </header>
 
-      {/* ─── 2. Continue Where You Left Off (Only if user has activity) ─── */}
-      {activeItems.length > 0 && (
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-surface-900 dark:text-white">
-                Continue where you left off
-              </h2>
-              <p className="text-xs text-surface-500">Opportunities you recently saved or began tracking.</p>
-            </div>
-            <Link to="/my-opportunities" className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline">
-              View all saved ({savedOpportunities.length}) →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {activeItems.map((opp) => (
-              <OpportunityCard 
-                key={opp.id}
-                opportunity={opp}
-                compact
-                showDebugSignals={debugMode}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ─── 3. Recommended For You (Primary Curated Feed) ─── */}
+      {/* ─── 2. Recommended For You (Primary Curated Feed) ─── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-surface-900 dark:text-white">
+            <h2 className="text-xl font-bold text-surface-950 dark:text-surface-50">
               Recommended for you
             </h2>
             <p className="text-xs text-surface-500">
@@ -180,7 +152,7 @@ export const RecommendationsPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendations.map(({ opportunity, relevanceScore, relevanceReasons, matchSignals }) => (
               <OpportunityCard 
-                key={opportunity.id}
+                key={opportunity.id} 
                 opportunity={opportunity}
                 relevanceScore={relevanceScore}
                 relevanceReasons={relevanceReasons}
@@ -191,6 +163,34 @@ export const RecommendationsPage: React.FC = () => {
           </div>
         )}
       </section>
+
+      {/* ─── 3. Continue Where You Left Off (Only if user has activity) ─── */}
+      {activeItems.length > 0 && (
+        <section className="space-y-4 pt-4 border-t border-surface-200 dark:border-surface-800">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-surface-950 dark:text-surface-50">
+                Continue where you left off
+              </h2>
+              <p className="text-xs text-surface-500">Opportunities you recently saved or began tracking.</p>
+            </div>
+            <Link to="/my-opportunities" className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline">
+              View all saved ({savedOpportunities.length}) →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {activeItems.map((opp) => (
+              <OpportunityCard 
+                key={opp.id} 
+                opportunity={opp}
+                compact
+                showDebugSignals={debugMode}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ─── 4. You Might Be Overlooking (Adjacent Possibilities) ─── */}
       {overlooked.length > 0 && (

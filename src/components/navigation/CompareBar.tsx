@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useApplicationStore } from '@/store/applicationStore';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { Button } from '@/components/ui/Button';
-import { Scale, X, ArrowRight, DollarSign } from 'lucide-react';
+import { SolarIcon } from '@/components/ui/SolarIcon';
+import { X, DollarSign } from 'lucide-react';
 import { Opportunity } from '@/types/models';
 
 export const CompareBar: React.FC = () => {
@@ -27,7 +28,7 @@ export const CompareBar: React.FC = () => {
         
         <div className="flex items-center gap-2.5 overflow-x-auto py-1">
           <div className="flex items-center gap-1.5 text-xs font-bold text-rome-400 shrink-0">
-            <Scale className="w-4 h-4 text-rome-400" />
+            <SolarIcon name="transfer-horizontal-linear" size={16} className="text-rome-400" />
             <span className="hidden sm:inline">Compare</span>
             <span className="bg-rome-500/20 text-rome-300 px-1.5 py-0.5 rounded text-[11px]">
               {comparisons.length}/4
@@ -66,10 +67,10 @@ export const CompareBar: React.FC = () => {
             size="sm"
             variant="primary"
             onClick={() => navigate('/compare')}
-            className="text-xs font-bold shadow-md whitespace-nowrap"
-            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            className="text-xs font-bold shadow-md whitespace-nowrap flex items-center gap-1.5"
           >
-            {comparisons.length >= 2 ? 'Compare Matrix' : 'Compare'}
+            <span>{comparisons.length >= 2 ? 'Compare Matrix' : 'Compare'}</span>
+            <SolarIcon name="alt-arrow-right-linear" size={14} />
           </Button>
         </div>
       </div>

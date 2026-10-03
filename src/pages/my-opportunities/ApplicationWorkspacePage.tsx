@@ -21,7 +21,7 @@ export default function ApplicationWorkspacePage() {
   // If application doesn't exist yet for this opportunity, create it
   React.useEffect(() => {
     if (!app && opp) {
-      createApplication(opp.id);
+      createApplication(opp.id, opp);
     }
   }, [app, opp, createApplication]);
 
