@@ -68,7 +68,7 @@ export default function SearchesPage() {
   };
 
   const handleSelectField = (field: string) => {
-    if (activeFieldOverride === field) {
+    if (activeFieldOverride !== null && activeFieldOverride.toLowerCase() === field.toLowerCase()) {
       setActiveFieldOverride(null);
       const newParams = new URLSearchParams(searchParams);
       newParams.delete('field');
@@ -296,7 +296,7 @@ export default function SearchesPage() {
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             <span className="text-xs font-semibold text-surface-400 mr-1">Switch field:</span>
             {POPULAR_FIELDS.map((field) => {
-              const isSelected = resolvedContext.fieldContext.toLowerCase() === field.toLowerCase();
+              const isSelected = activeFieldOverride !== null && activeFieldOverride.toLowerCase() === field.toLowerCase();
               return (
                 <button
                   key={field}
@@ -364,7 +364,7 @@ export default function SearchesPage() {
               onClick={() => handleSelectField(f)}
               className={cn(
                 "px-3 py-1.5 rounded-xl text-xs font-medium transition-colors cursor-pointer",
-                resolvedContext.fieldContext.toLowerCase() === f.toLowerCase()
+                activeFieldOverride !== null && activeFieldOverride.toLowerCase() === f.toLowerCase()
                   ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 font-semibold"
                   : "bg-surface-50 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-150 dark:hover:bg-surface-700"
               )}

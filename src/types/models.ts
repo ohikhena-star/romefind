@@ -184,6 +184,7 @@ export interface User {
   id: string;
   profile: UserProfile;
   preferences: UserPreferences;
+  profileImage?: string;
   onboardingCompleted: boolean;
   onboardingStep?: number;
   createdAt: string;

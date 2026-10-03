@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { prisma } from '../../config/prisma.js';
 import { hashPassword, verifyPassword, generateToken, parseJsonField, calculateProfileCompleteness } from '../../utils/helpers.js';
 import { AuthRequest } from '../../middleware/auth.middleware.js';
@@ -175,6 +175,7 @@ export async function login(req: Request, res: Response): Promise<void> {
       email: user.email,
       name: displayName,
       role: user.role,
+      profileImage: user.profileImage || '',
       onboardingCompleted: user.onboardingCompleted,
       profile: {
         name: displayName,

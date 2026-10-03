@@ -104,6 +104,7 @@ export const useAuthStore = create<AuthState>()(
         const updatedUser = {
           ...user,
           ...updates,
+          profileImage: updates.profileImage !== undefined ? updates.profileImage : user.profileImage,
           profile: {
             ...user.profile,
             ...(updates.profile || {})
@@ -118,6 +119,7 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           await api.updateProfile({
+            profileImage: updatedUser.profileImage,
             profile: updatedUser.profile,
             preferences: updatedUser.preferences,
             onboardingCompleted: updatedUser.onboardingCompleted,
@@ -139,6 +141,7 @@ export const useAuthStore = create<AuthState>()(
                   ...user,
                   onboardingCompleted: res.onboardingCompleted !== undefined ? res.onboardingCompleted : user.onboardingCompleted,
                   onboardingStep: res.profile?.onboardingStep || user.onboardingStep,
+                  profileImage: res.profileImage !== undefined ? res.profileImage : user.profileImage,
                   profile: res.profile,
                   preferences: res.preferences || user.preferences
                 }

@@ -24,6 +24,7 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
         id: user.id,
         email: user.email,
         name: displayName,
+        profileImage: user.profileImage || '',
         profile: {
           name: displayName,
           email: user.email,
@@ -60,7 +61,7 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
 export async function updateProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
     const userId = req.user!.id;
-    const { profile, preferences, onboardingCompleted, onboardingStep, bio, skills, interests, goals, education, experience, currentStatus, location, country } = req.body;
+    const { profile, preferences, onboardingCompleted, onboardingStep, bio, skills, interests, goals, education, experience, currentStatus, location, country, profileImage } = req.body;
 
     // Length limit checks on user-provided text
     const rawBio = bio !== undefined ? bio : profile?.bio;
@@ -107,6 +108,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
 
     const updatedLocation = location !== undefined ? location : (profile?.location !== undefined ? profile.location : currentUser.location);
     const updatedCountry = country !== undefined ? country : (profile?.country !== undefined ? profile.country : currentUser.country);
+    const updatedProfileImage = profileImage !== undefined ? profileImage : (profile?.profileImage !== undefined ? profile.profileImage : currentUser.profileImage);
 
     const updatedBio = bio !== undefined ? bio : (profile?.bio !== undefined ? profile.bio : currentUser.profile?.bio);
     const updatedStatus = currentStatus !== undefined ? currentStatus : (profile?.currentStatus !== undefined ? profile.currentStatus : currentUser.profile?.currentStatus);
@@ -150,6 +152,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
         lastName,
         location: updatedLocation,
         country: updatedCountry,
+        profileImage: updatedProfileImage,
         onboardingCompleted: onboardingCompleted !== undefined ? Boolean(onboardingCompleted) : currentUser.onboardingCompleted,
         onboardingStep: updatedStep,
         profile: {
@@ -199,6 +202,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
         id: updated.id,
         email: updated.email,
         name: displayName,
+        profileImage: updated.profileImage || '',
         onboardingCompleted: updated.onboardingCompleted,
         profile: {
           name: displayName,

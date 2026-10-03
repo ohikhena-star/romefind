@@ -69,7 +69,7 @@ export default function ProfilePage() {
     skills: user?.profile?.skills || [],
     interests: user?.profile?.interests || [],
     goals: user?.profile?.goals || [],
-    photo: (user?.profile as any)?.photo || '',
+    photo: user?.profileImage || '',
   }));
 
   // Preferences fields (from onboarding steps 1-4)
@@ -93,7 +93,7 @@ export default function ProfilePage() {
         skills: user.profile.skills || [],
         interests: user.profile.interests || [],
         goals: user.profile.goals || [],
-        photo: (user.profile as any)?.photo || '',
+        photo: user.profileImage || '',
       });
     }
     if (user?.preferences) {
@@ -110,13 +110,18 @@ export default function ProfilePage() {
 
   const completeness = calculateProfileCompleteness(localProfile as any);
 
-  // ── Photo upload ─────────────────────────────────────────────────────
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      setLocalProfile(prev => ({ ...prev, photo: reader.result as string }));
+      const dataUrl = reader.result as string;
+      // Guard: reject images over ~600KB (base64 encoding adds ~33%)
+      if (dataUrl.length > 800000) {
+        alert('Image is too large. Please choose a photo under 600KB.');
+        return;
+      }
+      setLocalProfile(prev => ({ ...prev, photo: dataUrl }));
     };
     reader.readAsDataURL(file);
   };
@@ -127,6 +132,7 @@ export default function ProfilePage() {
     setSaveStatus('idle');
     try {
       await updateUser({
+        profileImage: localProfile.photo,
         profile: {
           ...user.profile,
           ...localProfile,
@@ -168,7 +174,7 @@ export default function ProfilePage() {
         skills: user.profile.skills || [],
         interests: user.profile.interests || [],
         goals: user.profile.goals || [],
-        photo: (user.profile as any)?.photo || '',
+        photo: user.profileImage || '',
       });
     }
     if (user?.preferences) {
