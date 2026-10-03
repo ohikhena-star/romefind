@@ -547,7 +547,7 @@ export default function ProfilePage() {
 
           {/* Settings */}
           <section className="bg-white dark:bg-surface-900 rounded-xl p-5 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">Settings</h2>
+            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">Settings & Guidance</h2>
 
             <div className="flex items-center justify-between py-2.5 border-b border-surface-100 dark:border-surface-800 mb-3">
               <div>
@@ -557,9 +557,28 @@ export default function ProfilePage() {
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-200 hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
+                aria-label="Toggle theme"
               >
                 {theme === 'dark' ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
               </button>
+            </div>
+
+            <div className="flex items-center justify-between py-2.5 border-b border-surface-100 dark:border-surface-800 mb-3">
+              <div>
+                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">Product Tour</span>
+                <span className="text-xs text-surface-400">Review how ROMEfind works</span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const { resetTour } = useUIStore.getState();
+                  resetTour();
+                }}
+                className="text-xs font-semibold h-9 px-3"
+              >
+                Take tour again
+              </Button>
             </div>
 
             <div>

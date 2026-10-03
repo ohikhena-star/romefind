@@ -82,7 +82,7 @@ export default function LearnPage() {
       {savedOpps.length === 0 ? (
         <div className="bg-surface-50 dark:bg-surface-900 rounded-xl p-8 border border-surface-200 dark:border-surface-800">
           <EmptyState
-            icon={BookOpen}
+            icon="book-2-linear"
             title="Save opportunities to get tailored learning recommendations"
             description="When you save opportunities you want to pursue, ROMEfind analyzes the required skills and recommends high-impact resources."
             actionLabel="Explore opportunities"

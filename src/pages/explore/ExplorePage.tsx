@@ -5,9 +5,10 @@ import { useApplicationStore } from '@/store/applicationStore';
 import { useAuthStore } from '@/store/authStore';
 import { searchOpportunities, sortByRelevance } from '@/services/search.service';
 import { SearchInput, Chip, OpportunityList, EmptyState, Button, OpportunityGridSkeleton } from '@/components/ui';
+import { SolarIcon } from '@/components/ui/SolarIcon';
 import { categories } from '@/data/categories';
 import { OpportunityType, RemoteStatus, Opportunity, SearchResult } from '@/types/models';
-import { Filter, ArrowDownWideNarrow, Briefcase, DollarSign, GraduationCap, Target, Layers, Users, Microscope, TrendingUp, Globe, Rocket, Compass, X } from 'lucide-react';
+import { Briefcase, DollarSign, GraduationCap, Target, Layers, Users, Microscope, TrendingUp, Globe, Rocket, Compass, X } from 'lucide-react';
 import { FIELDS, LOCATIONS } from '@/utils/constants';
 import { cn } from '@/utils/cn';
 
@@ -68,16 +69,22 @@ export default function ExplorePage() {
     const typeParam = searchParams.get('type');
     if (typeParam) {
       setSelectedTypes([typeParam as OpportunityType]);
+    } else {
+      setSelectedTypes([]);
     }
 
     const fieldParam = searchParams.get('field');
     if (fieldParam) {
       setSelectedFields([fieldParam]);
+    } else {
+      setSelectedFields([]);
     }
 
     const locParam = searchParams.get('location');
     if (locParam) {
       setSelectedLocations([locParam]);
+    } else {
+      setSelectedLocations([]);
     }
 
     const fundedParam = searchParams.get('funded');
@@ -204,23 +211,30 @@ export default function ExplorePage() {
   }
 
   return (
-    <div className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-full min-h-screen">
-      {/* Search Header */}
-      <div className="mb-8 w-full">
-        <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50 mb-4">
+    <div className="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 w-full min-h-screen">
+      {/* ─── 1. Header & Search ─── */}
+      <header className="mb-6 md:mb-8 w-full">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-surface-950 dark:text-surface-50 mb-2">
           Explore Possibilities
         </h1>
-        <SearchInput 
-          value={query}
-          onChange={(e: any) => handleSearch(typeof e === 'string' ? e : (e?.target?.value ?? ''))}
-          onClear={() => handleSearch('')}
-          placeholder="Search by keywords, organization, skills (e.g. Design, Fellowship, Stanford, AI)..." 
-          className="w-full text-base shadow-sm"
-        />
-      </div>
+        <p className="text-sm sm:text-base text-surface-600 dark:text-surface-400 mb-5 max-w-2xl leading-relaxed">
+          Find and evaluate opportunities across different fields, formats, and pathways.
+        </p>
 
-      <div className="flex flex-col md:flex-row gap-8 flex-1">
-        {/* Mobile Backdrop & Drawer Wrapper */}
+        <div className="w-full">
+          <SearchInput 
+            value={query}
+            onChange={(e: any) => handleSearch(typeof e === 'string' ? e : (e?.target?.value ?? ''))}
+            onClear={() => handleSearch('')}
+            placeholder="Search by title, organization, field, or keywords..." 
+            className="w-full text-sm sm:text-base h-12 min-h-[48px] rounded-xl shadow-xs"
+          />
+        </div>
+      </header>
+
+      {/* ─── 2. Main Layout (Sidebar Desktop / Slide-over Mobile) ─── */}
+      <div className="flex flex-col md:flex-row gap-8 flex-1 w-full">
+        {/* Mobile Backdrop */}
         {showMobileFilters && (
           <div 
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs md:hidden"
@@ -229,41 +243,45 @@ export default function ExplorePage() {
           />
         )}
 
-        {/* Sidebar Filters (Desktop Sticky / Mobile Drawer) */}
-        <div className={cn(
-          "w-full md:w-64 space-y-6 flex-shrink-0",
-          showMobileFilters 
-            ? "fixed inset-y-0 right-0 z-50 w-80 max-w-[85vw] bg-white dark:bg-surface-900 p-6 overflow-y-auto shadow-2xl border-l border-surface-200 dark:border-surface-800 animate-in slide-in-from-right duration-200 md:relative md:inset-auto md:w-64 md:p-0 md:shadow-none md:border-none md:overflow-visible" 
-            : "hidden md:block"
-        )}>
-          <div className="flex items-center justify-between pb-3 border-b border-surface-200 dark:border-surface-800">
-            <h3 className="font-bold text-base text-surface-900 dark:text-surface-50">Filters</h3>
-            <div className="flex items-center gap-2">
-              {activeFiltersCount > 0 && (
-                <button 
-                  onClick={clearAllFilters}
-                  className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:text-rome-700"
-                >
-                  Clear all ({activeFiltersCount})
-                </button>
-              )}
-              {/* Mobile Close Button */}
-              <button
-                onClick={() => setShowMobileFilters(false)}
-                className="md:hidden p-1.5 rounded-lg text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
-                aria-label="Close filters"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-          
+        {/* Filters Panel (Desktop Sticky Sidebar / Mobile Slide-over Drawer) */}
+        <aside 
+          aria-label="Filters"
+          className={cn(
+            "w-full md:w-64 flex-shrink-0",
+            showMobileFilters 
+              ? "fixed inset-y-0 right-0 z-50 w-full max-w-xs sm:max-w-sm bg-white dark:bg-surface-900 p-6 overflow-y-auto shadow-2xl border-l border-surface-200 dark:border-surface-800 animate-in slide-in-from-right duration-200 flex flex-col justify-between" 
+              : "hidden md:block"
+          )}
+        >
           <div className="space-y-6">
+            {/* Filter Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-surface-200 dark:border-surface-800">
+              <h2 className="font-bold text-base text-surface-900 dark:text-surface-50">Filters</h2>
+              <div className="flex items-center gap-2">
+                {activeFiltersCount > 0 && (
+                  <button 
+                    onClick={clearAllFilters}
+                    className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline cursor-pointer"
+                  >
+                    Reset all ({activeFiltersCount})
+                  </button>
+                )}
+                {/* Mobile Close Button */}
+                <button
+                  onClick={() => setShowMobileFilters(false)}
+                  className="md:hidden p-2 rounded-xl text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                  aria-label="Close filters"
+                >
+                  <SolarIcon name="close-circle-linear" size={22} />
+                </button>
+              </div>
+            </div>
+
             {/* Type Filter */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
                 Opportunity Type
-              </label>
+              </span>
               <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by opportunity type">
                 {Object.values(OpportunityType).map((type: OpportunityType) => (
                   <Chip
@@ -272,44 +290,50 @@ export default function ExplorePage() {
                     selected={selectedTypes.includes(type)}
                     onClick={() => toggleType(type)}
                     size="sm"
-                    className={selectedTypes.includes(type) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 hover:bg-surface-800 dark:hover:bg-surface-100" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
+                    className={selectedTypes.includes(type) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Quick Filters */}
+            {/* Conditions (Funded, Remote) */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
-                Conditions
-              </label>
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+                Conditions & Funding
+              </span>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2.5 text-sm text-surface-700 dark:text-surface-300 cursor-pointer">
+                <label className="flex items-center gap-3 text-sm text-surface-700 dark:text-surface-300 cursor-pointer min-h-[40px] p-2 rounded-xl hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors">
                   <input 
                     type="checkbox"
                     checked={fundedOnly}
-                    onChange={(e) => setFundedOnly(e.target.checked)}
-                    className="rounded border-surface-300 text-rome-500 focus:ring-rome-500"
+                    onChange={(e) => {
+                      setFundedOnly(e.target.checked);
+                      updateUrlParams({ funded: e.target.checked });
+                    }}
+                    className="w-4 h-4 rounded border-surface-300 text-rome-500 focus:ring-rome-500 cursor-pointer"
                   />
-                  <span>Funded / Paid Only</span>
+                  <span className="font-medium">Funded / Paid Only</span>
                 </label>
-                <label className="flex items-center gap-2.5 text-sm text-surface-700 dark:text-surface-300 cursor-pointer">
+                <label className="flex items-center gap-3 text-sm text-surface-700 dark:text-surface-300 cursor-pointer min-h-[40px] p-2 rounded-xl hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors">
                   <input 
                     type="checkbox"
                     checked={remoteOnly}
-                    onChange={(e) => setRemoteOnly(e.target.checked)}
-                    className="rounded border-surface-300 text-rome-500 focus:ring-rome-500"
+                    onChange={(e) => {
+                      setRemoteOnly(e.target.checked);
+                      updateUrlParams({ remote: e.target.checked });
+                    }}
+                    className="w-4 h-4 rounded border-surface-300 text-rome-500 focus:ring-rome-500 cursor-pointer"
                   />
-                  <span>Remote / Flexible Only</span>
+                  <span className="font-medium">Remote / Flexible Only</span>
                 </label>
               </div>
             </div>
 
             {/* Fields */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
                 Field of Focus
-              </label>
+              </span>
               <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
                 {FIELDS.map((field: string) => (
                   <Chip
@@ -318,7 +342,7 @@ export default function ExplorePage() {
                     selected={selectedFields.includes(field)}
                     onClick={() => toggleField(field)}
                     size="sm"
-                    className={selectedFields.includes(field) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 hover:bg-surface-800 dark:hover:bg-surface-100" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
+                    className={selectedFields.includes(field) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
                   />
                 ))}
               </div>
@@ -326,9 +350,9 @@ export default function ExplorePage() {
 
             {/* Locations */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
                 Location
-              </label>
+              </span>
               <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
                 {LOCATIONS.map((loc: string) => (
                   <Chip
@@ -337,69 +361,95 @@ export default function ExplorePage() {
                     selected={selectedLocations.includes(loc)}
                     onClick={() => toggleLocation(loc)}
                     size="sm"
-                    className={selectedLocations.includes(loc) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 hover:bg-surface-800 dark:hover:bg-surface-100" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
+                    className={selectedLocations.includes(loc) ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900" : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-800"}
                   />
                 ))}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Content Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Mobile Filter & Sort Bar */}
-          <div className="md:hidden mb-4 flex items-center justify-between gap-3">
+          {/* Mobile Drawer Bottom Action */}
+          {showMobileFilters && (
+            <div className="mt-8 pt-4 border-t border-surface-200 dark:border-surface-800 flex gap-2.5">
+              <Button
+                variant="outline"
+                size="default"
+                className="flex-1 h-11 min-h-[44px] text-sm font-semibold"
+                onClick={clearAllFilters}
+              >
+                Reset
+              </Button>
+              <Button
+                variant="default"
+                size="default"
+                className="flex-[2] h-11 min-h-[44px] text-sm font-semibold justify-center"
+                onClick={() => setShowMobileFilters(false)}
+              >
+                Show Results ({results.length})
+              </Button>
+            </div>
+          )}
+        </aside>
+
+        {/* ─── 3. Content Area ─── */}
+        <main className="flex-1 flex flex-col min-w-0 w-full">
+          {/* Mobile Filter & Sort Action Bar */}
+          <div className="md:hidden mb-4 flex items-center justify-between gap-2.5 w-full">
             <Button 
               variant="outline"
-              size="sm"
-              onClick={() => setShowMobileFilters(!showMobileFilters)}
-              leftIcon={<Filter className="w-4 h-4" />}
+              size="default"
+              className="flex-1 h-11 min-h-[44px] justify-center gap-2 text-sm font-semibold"
+              onClick={() => setShowMobileFilters(true)}
             >
-              Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+              <SolarIcon name="filter-linear" size={16} />
+              <span>Filters {activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}</span>
             </Button>
             
             <select 
               value={sortBy} 
               onChange={(e) => setSortBy(e.target.value)}
-              className="bg-surface-100 dark:bg-surface-800 text-xs font-medium px-3 py-2 rounded-lg border-none"
+              className="h-11 min-h-[44px] px-3.5 bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-xs font-semibold rounded-xl outline-none"
+              aria-label="Sort opportunities"
             >
-              <option value="relevance">Relevance</option>
+              <option value="relevance">Relevance Match</option>
               <option value="deadline">Deadline (Soonest)</option>
-              <option value="newest">Newest</option>
+              <option value="newest">Newest Added</option>
             </select>
           </div>
 
-          {/* Active Filter Chips */}
+          {/* Active Filter Chips with Self-Contained Horizontal Scroll Container */}
           {activeFiltersCount > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mb-6 p-3 bg-surface-50 dark:bg-surface-800/40 rounded-xl border border-surface-200 dark:border-surface-700/50">
-              <span className="text-xs font-medium text-surface-500">Active:</span>
-              {selectedTypes.map((t: OpportunityType) => (
-                <Chip key={t} label={t} selected onRemove={() => toggleType(t)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
-              ))}
-              {selectedFields.map((f: string) => (
-                <Chip key={f} label={f} selected onRemove={() => toggleField(f)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
-              ))}
-              {selectedLocations.map((loc: string) => (
-                <Chip key={loc} label={loc} selected onRemove={() => toggleLocation(loc)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
-              ))}
-              {fundedOnly && (
-                <Chip label="Funded Only" selected onRemove={() => setFundedOnly(false)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
-              )}
-              {remoteOnly && (
-                <Chip label="Remote Only" selected onRemove={() => setRemoteOnly(false)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900" />
-              )}
-              <button 
-                onClick={clearAllFilters}
-                className="text-xs text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 ml-auto font-medium"
-              >
-                Reset
-              </button>
+            <div className="mb-6 p-3 bg-surface-50 dark:bg-surface-850/60 rounded-xl border border-surface-200 dark:border-surface-800 w-full overflow-hidden">
+              <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-0.5">
+                <span className="text-xs font-semibold text-surface-500 shrink-0">Active:</span>
+                {selectedTypes.map((t: OpportunityType) => (
+                  <Chip key={t} label={t} selected onRemove={() => toggleType(t)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900 shrink-0" />
+                ))}
+                {selectedFields.map((f: string) => (
+                  <Chip key={f} label={f} selected onRemove={() => toggleField(f)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900 shrink-0" />
+                ))}
+                {selectedLocations.map((loc: string) => (
+                  <Chip key={loc} label={loc} selected onRemove={() => toggleLocation(loc)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900 shrink-0" />
+                ))}
+                {fundedOnly && (
+                  <Chip label="Funded Only" selected onRemove={() => { setFundedOnly(false); updateUrlParams({ funded: false }); }} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900 shrink-0" />
+                )}
+                {remoteOnly && (
+                  <Chip label="Remote Only" selected onRemove={() => { setRemoteOnly(false); updateUrlParams({ remote: false }); }} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900 shrink-0" />
+                )}
+                <button 
+                  onClick={clearAllFilters}
+                  className="text-xs text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 ml-auto font-semibold shrink-0 pl-2 cursor-pointer"
+                >
+                  Clear all
+                </button>
+              </div>
             </div>
           )}
 
           {/* Results Summary Bar */}
           <div className="flex items-center justify-between mb-6 pb-2 border-b border-surface-100 dark:border-surface-800">
-            <h2 className="text-xl font-bold text-surface-900 dark:text-surface-100">
+            <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-100">
               {query || activeFiltersCount > 0 ? (
                 <span>Found {results.length} opportunit{results.length === 1 ? 'y' : 'ies'}</span>
               ) : (
@@ -407,7 +457,7 @@ export default function ExplorePage() {
               )}
             </h2>
             <div className="hidden md:flex items-center gap-2 text-xs text-surface-600 dark:text-surface-400">
-              <ArrowDownWideNarrow className="w-4 h-4" />
+              <SolarIcon name="sort-from-bottom-to-top-linear" size={16} />
               <span className="font-medium">Sort by:</span>
               <select 
                 value={sortBy} 
@@ -432,7 +482,8 @@ export default function ExplorePage() {
                 />
               </div>
             ) : (
-              <div className="space-y-8" aria-live="polite" aria-label={`${opportunities.length} opportunities found`}>
+              <div className="space-y-10" aria-live="polite" aria-label={`${opportunities.length} opportunities found`}>
+                {/* ── Goal exploration grid ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {categories.goals.map((goal) => {
                     const IconComp = GOAL_ICON_MAP[goal.icon] || Compass;
@@ -441,11 +492,12 @@ export default function ExplorePage() {
                         key={goal.id}
                         onClick={() => {
                           setSelectedTypes(goal.relatedTypes);
+                          updateUrlParams({ types: goal.relatedTypes });
                         }}
-                        className="group cursor-pointer rounded-xl bg-white dark:bg-surface-900 hover:bg-rome-50/50 dark:hover:bg-surface-800/80 p-6 transition-all border border-surface-200 dark:border-surface-800 hover:border-rome-300 dark:hover:border-rome-700 shadow-card hover:shadow-card-hover flex flex-col justify-between"
+                        className="group cursor-pointer rounded-2xl bg-white dark:bg-surface-900 hover:bg-surface-50 dark:hover:bg-surface-850 p-5 sm:p-6 transition-all border border-surface-200 dark:border-surface-800 hover:border-rome-300 dark:hover:border-rome-700 shadow-card hover:shadow-card-hover flex flex-col justify-between"
                       >
                         <div>
-                          <div className="w-10 h-10 rounded-lg bg-rome-100 dark:bg-rome-900/30 text-rome-600 dark:text-rome-400 flex items-center justify-center mb-3.5 group-hover:scale-105 transition-transform">
+                          <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-200 flex items-center justify-center mb-3.5 group-hover:scale-105 transition-transform">
                             <IconComp className="w-5 h-5" />
                           </div>
                           <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 mb-1.5 group-hover:text-rome-600 transition-colors">
@@ -457,7 +509,7 @@ export default function ExplorePage() {
                         </div>
                         <div className="mt-4 flex flex-wrap gap-1">
                           {goal.relatedTypes.slice(0, 3).map((t: OpportunityType) => (
-                            <span key={t} className="text-xs bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 px-2 py-0.5 rounded-full font-medium">
+                            <span key={t} className="text-xs bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 px-2 py-0.5 rounded-lg font-medium">
                               {t}
                             </span>
                           ))}
@@ -467,10 +519,16 @@ export default function ExplorePage() {
                   })}
                 </div>
 
-                <div className="pt-4">
-                  <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-4">
-                    All Active Opportunities ({opportunities.length})
-                  </h3>
+                {/* ── Active Opportunities Feed ── */}
+                <div className="pt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-surface-900 dark:text-surface-100">
+                        All Active Opportunities ({opportunities.length})
+                      </h3>
+                      <p className="text-xs text-surface-500">Curated opportunities across programs, fellowships, and jobs.</p>
+                    </div>
+                  </div>
                   <OpportunityList 
                     opportunities={opportunities} 
                     loading={false} 
@@ -496,17 +554,19 @@ export default function ExplorePage() {
               />
             </div>
           ) : (
-            <div className="py-12 flex justify-center" aria-live="polite">
+            <div className="py-12 flex justify-center w-full" aria-live="polite">
               <EmptyState 
                 icon="magnifer-linear"
-                title="No matches found"
-                description="Try removing a filter or broadening your search."
+                title="No opportunities match your current filters."
+                description="Try removing a filter or exploring a related field to discover opportunities."
                 actionLabel="Clear filters"
                 onAction={clearAllFilters}
+                secondaryActionLabel="Explore all opportunities"
+                onSecondaryAction={clearAllFilters}
               />
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );

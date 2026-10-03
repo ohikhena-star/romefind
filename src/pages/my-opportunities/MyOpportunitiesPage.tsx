@@ -177,18 +177,18 @@ export default function MyOpportunitiesPage() {
                 <div className="flex gap-2">
                   <Button
                     onClick={() => navigate(`/my-opportunities/${app.opportunityId}/workspace`)}
-                    variant="primary"
-                    className="flex-1"
-                    size="sm"
-                    rightIcon={<ArrowUpRight size={14} />}
+                    variant="default"
+                    size="default"
+                    className="flex-1 justify-center gap-1.5 h-11 min-h-[44px] text-sm font-semibold"
                   >
-                    Open Workspace
+                    <span>Open Workspace</span>
+                    <ArrowUpRight size={16} />
                   </Button>
                   <Button
                     onClick={() => setSelectedAppForOutcome({ id: app.id, opp })}
                     variant="outline"
-                    size="sm"
-                    className="shrink-0 text-xs font-bold"
+                    size="default"
+                    className="shrink-0 h-11 min-h-[44px] px-3.5 text-xs font-bold"
                     title="Report acceptance outcome"
                   >
                     Got In!

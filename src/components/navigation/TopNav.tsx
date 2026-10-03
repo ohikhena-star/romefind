@@ -51,24 +51,31 @@ const TopNav = () => {
           {/* Center Links (Auth only) */}
           {isAuthenticated && (
             <nav role="navigation" aria-label="Main navigation" className="flex items-center gap-1.5 bg-surface-100 dark:bg-surface-800/60 p-1 rounded-2xl border border-surface-200/80 dark:border-surface-800">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }: { isActive: boolean }) =>
-                    cn(
-                      'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
-                      isActive
-                        ? 'bg-white dark:bg-surface-900 text-surface-950 dark:text-white shadow-xs border border-surface-200/60 dark:border-surface-700'
-                        : 'text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
-                    )
-                  }
-                >
-                  {({ isActive }: { isActive: boolean }) => (
-                    <span aria-current={isActive ? 'page' : undefined}>{link.label}</span>
-                  )}
-                </NavLink>
-              ))}
+              {navLinks.map((link) => {
+                let linkId = undefined;
+                if (link.to === '/explore') linkId = 'nav-explore';
+                if (link.to === '/my-opportunities') linkId = 'nav-my-opps';
+
+                return (
+                  <NavLink
+                    key={link.to}
+                    id={linkId}
+                    to={link.to}
+                    className={({ isActive }: { isActive: boolean }) =>
+                      cn(
+                        'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
+                        isActive
+                          ? 'bg-white dark:bg-surface-900 text-surface-950 dark:text-white shadow-xs border border-surface-200/60 dark:border-surface-700'
+                          : 'text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
+                      )
+                    }
+                  >
+                    {({ isActive }: { isActive: boolean }) => (
+                      <span aria-current={isActive ? 'page' : undefined}>{link.label}</span>
+                    )}
+                  </NavLink>
+                );
+              })}
             </nav>
           )}
 
@@ -76,6 +83,7 @@ const TopNav = () => {
           <div className="flex items-center gap-3">
             {isAuthenticated && (
               <button
+                id="nav-search"
                 onClick={toggleSearch}
                 className="hidden lg:flex items-center gap-3 px-3.5 py-1.5 rounded-xl bg-surface-100 dark:bg-surface-800/80 border border-surface-200 dark:border-surface-700/80 text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 hover:border-surface-300 transition-all text-xs cursor-pointer group shadow-xs"
               >

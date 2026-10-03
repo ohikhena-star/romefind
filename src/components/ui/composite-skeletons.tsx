@@ -4,24 +4,43 @@ import { Skeleton } from '@/components/ui/Skeleton';
 
 // ─── Opportunity Card Skeleton ────────────────────────────────────────
 export const OpportunityCardSkeleton: React.FC<{ className?: string }> = ({ className }) => (
-  <div className={cn('rounded-2xl border border-border bg-card p-5 flex flex-col justify-between space-y-4', className)}>
+  <div className={cn('rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-5 flex flex-col justify-between space-y-4', className)}>
     <div className="space-y-3">
+      {/* Header: Org + Save button */}
       <div className="flex items-center justify-between">
-        <Skeleton className="h-5 w-24 rounded-full" />
-        <Skeleton className="h-5 w-16 rounded-full" />
+        <Skeleton className="h-3.5 w-28 rounded-md bg-surface-200 dark:bg-surface-800" />
+        <Skeleton className="h-9 w-9 rounded-xl bg-surface-100 dark:bg-surface-800" />
       </div>
-      <Skeleton className="h-6 w-4/5 rounded-lg" />
-      <Skeleton className="h-4 w-1/2 rounded-md" />
-      <div className="space-y-1.5 pt-1">
-        <Skeleton className="h-3.5 w-full rounded-md" />
-        <Skeleton className="h-3.5 w-5/6 rounded-md" />
+
+      {/* Title */}
+      <Skeleton className="h-6 w-5/6 rounded-lg bg-surface-200 dark:bg-surface-800" />
+      <Skeleton className="h-5 w-3/5 rounded-lg bg-surface-200 dark:bg-surface-800" />
+
+      {/* Type & Field tags */}
+      <div className="flex items-center gap-2 pt-1">
+        <Skeleton className="h-6 w-20 rounded-lg bg-surface-100 dark:bg-surface-800" />
+        <Skeleton className="h-6 w-24 rounded-lg bg-surface-100 dark:bg-surface-800" />
+      </div>
+
+      {/* Description lines */}
+      <div className="space-y-1.5 pt-2">
+        <Skeleton className="h-3.5 w-full rounded-md bg-surface-100 dark:bg-surface-800" />
+        <Skeleton className="h-3.5 w-4/5 rounded-md bg-surface-100 dark:bg-surface-800" />
+      </div>
+
+      {/* Structured metadata box */}
+      <div className="p-3 rounded-xl bg-surface-50/60 dark:bg-surface-850/60 border border-surface-100 dark:border-surface-800 space-y-2">
+        <div className="grid grid-cols-2 gap-2">
+          <Skeleton className="h-4 w-20 rounded-md bg-surface-200 dark:bg-surface-700" />
+          <Skeleton className="h-4 w-24 rounded-md bg-surface-200 dark:bg-surface-700" />
+        </div>
+        <Skeleton className="h-4 w-32 rounded-md bg-surface-200 dark:bg-surface-700" />
       </div>
     </div>
-    <div className="pt-3 border-t border-border space-y-3">
-      <div className="flex items-center gap-2">
-        <Skeleton className="h-5 w-20 rounded-md" />
-        <Skeleton className="h-5 w-24 rounded-md" />
-      </div>
+
+    {/* Single full-width button */}
+    <div className="pt-2 flex items-center w-full">
+      <Skeleton className="h-11 w-full rounded-xl bg-surface-200 dark:bg-surface-700" />
     </div>
   </div>
 );

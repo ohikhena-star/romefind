@@ -171,9 +171,10 @@ export default function DiscoverPage() {
 
         {recommendations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {recommendations.map(rec => (
+            {recommendations.map((rec, idx) => (
               <OpportunityCard 
                 key={rec.opportunity.id} 
+                id={idx === 0 ? 'tour-card' : undefined}
                 opportunity={rec.opportunity}
                 relevanceScore={rec.relevanceScore}
                 relevanceReasons={rec.relevanceReasons}

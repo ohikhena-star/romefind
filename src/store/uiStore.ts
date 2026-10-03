@@ -6,6 +6,9 @@ interface UIState {
   sidebarOpen: boolean;
   onboardingStep: number; // 0-4, 0=not started, 4=complete
   searchOpen: boolean;
+  hasSeenProductTour: boolean;
+  tourOpen: boolean;
+  tourStep: number; // 0 to 6
   
   toggleTheme: () => void;
   setTheme: (theme: 'light' | 'dark') => void;
@@ -14,6 +17,12 @@ interface UIState {
   setOnboardingStep: (step: number) => void;
   toggleSearch: () => void;
   setSearchOpen: (open: boolean) => void;
+  startTour: () => void;
+  endTour: () => void;
+  setTourStep: (step: number) => void;
+  nextTourStep: () => void;
+  prevTourStep: () => void;
+  resetTour: () => void;
 }
 
 const getSystemTheme = (): 'light' | 'dark' => {
@@ -41,6 +50,9 @@ export const useUIStore = create<UIState>()(
       sidebarOpen: false,
       onboardingStep: 0,
       searchOpen: false,
+      hasSeenProductTour: false,
+      tourOpen: false,
+      tourStep: 0,
 
       toggleTheme: () => {
         const newTheme = get().theme === 'light' ? 'dark' : 'light';
@@ -71,6 +83,35 @@ export const useUIStore = create<UIState>()(
 
       setSearchOpen: (open) => {
         set({ searchOpen: open });
+      },
+
+      startTour: () => {
+        set({ tourOpen: true, tourStep: 0 });
+      },
+
+      endTour: () => {
+        set({ tourOpen: false, hasSeenProductTour: true });
+      },
+
+      setTourStep: (step: number) => {
+        set({ tourStep: step });
+      },
+
+      nextTourStep: () => {
+        const next = get().tourStep + 1;
+        if (next > 6) {
+          get().endTour();
+        } else {
+          set({ tourStep: next });
+        }
+      },
+
+      prevTourStep: () => {
+        set((state) => ({ tourStep: Math.max(0, state.tourStep - 1) }));
+      },
+
+      resetTour: () => {
+        set({ hasSeenProductTour: false, tourOpen: true, tourStep: 0 });
       }
     }),
     {

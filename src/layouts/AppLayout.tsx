@@ -3,10 +3,13 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import TopNav from '@/components/navigation/TopNav';
 import BottomNav from '@/components/navigation/BottomNav';
 import { CompareBar } from '@/components/navigation/CompareBar';
+import { ProductTour } from '@/components/guidance/ProductTour';
 import { useAuthStore } from '@/store/authStore';
+import { useUiStore } from '@/store/uiStore';
 
 const AppLayout = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
+  const { hasSeenProductTour, startTour, tourOpen } = useUiStore();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,6 +19,16 @@ const AppLayout = () => {
       navigate('/login', { state: { from: location }, replace: true });
     }
   }, [isAuthenticated, navigate, location]);
+
+  // Check if first-time user should see the tour on /discover
+  useEffect(() => {
+    if (isAuthenticated && user && !hasSeenProductTour && !tourOpen && location.pathname === '/discover') {
+      const timer = setTimeout(() => {
+        startTour();
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, user, hasSeenProductTour, tourOpen, location.pathname, startTour]);
 
   if (!isAuthenticated) return null;
 
@@ -28,6 +41,7 @@ const AppLayout = () => {
       </main>
       <CompareBar />
       <BottomNav />
+      <ProductTour />
     </div>
   );
 };
