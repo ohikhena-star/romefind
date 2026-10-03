@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticateToken, requireAdmin, optionalAuth } from './middleware/auth.middleware.js';
+import { authRateLimiter, strictAuthLimiter, adviceRateLimiter } from './middleware/rate-limit.middleware.js';
 
 // Controllers
 import * as authController from './modules/auth/auth.controller.js';
@@ -27,12 +28,12 @@ apiRouter.get('/health', (req, res) => {
 });
 
 // ── Auth Endpoints ──────────────────────────────────────────────────────
-apiRouter.post('/auth/register', authController.register);
-apiRouter.post('/auth/login', authController.login);
+apiRouter.post('/auth/register', authRateLimiter, authController.register);
+apiRouter.post('/auth/login', authRateLimiter, authController.login);
 apiRouter.get('/auth/me', authenticateToken, authController.getMe);
 apiRouter.post('/auth/logout', authenticateToken, authController.logout);
-apiRouter.post('/auth/forgot-password', authController.forgotPassword);
-apiRouter.post('/auth/reset-password', authController.resetPassword);
+apiRouter.post('/auth/forgot-password', strictAuthLimiter, authController.forgotPassword);
+apiRouter.post('/auth/reset-password', authRateLimiter, authController.resetPassword);
 
 // ── Profile Endpoints ───────────────────────────────────────────────────
 apiRouter.get('/profiles/me', authenticateToken, profileController.getMyProfile);
@@ -52,8 +53,9 @@ apiRouter.delete('/opportunities/:id/save', authenticateToken, opportunityContro
 apiRouter.post('/opportunities/:id/reject', authenticateToken, opportunityController.rejectOpportunity);
 apiRouter.post('/opportunities/:id/report', optionalAuth, opportunityController.reportOpportunity);
 apiRouter.get('/opportunities/:id/advice', opportunityController.getOpportunityAdvice);
-apiRouter.post('/opportunities/:id/advice', authenticateToken, opportunityController.addOpportunityAdvice);
+apiRouter.post('/opportunities/:id/advice', authenticateToken, adviceRateLimiter, opportunityController.addOpportunityAdvice);
 apiRouter.delete('/opportunities/:id/advice/:adviceId', authenticateToken, opportunityController.deleteOpportunityAdvice);
+
 
 // ── Search & Discovery Endpoints ────────────────────────────────────────
 apiRouter.get('/search', optionalAuth, searchController.searchOpportunities);

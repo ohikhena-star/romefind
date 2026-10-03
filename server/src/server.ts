@@ -7,13 +7,14 @@ import { errorHandler } from './middleware/error.middleware.js';
 
 export const app = express();
 
-// Middlewares
+// ─── Middlewares ─────────────────────────────────────────────────────────────
 app.use(cors({
   origin: config.corsOrigin || '*',
   credentials: true
 }));
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Tightened from 10mb — no legitimate API call in this application needs that much
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 if (process.env.NODE_ENV !== 'test' && !process.env.TESTING) {
   app.use(morgan('dev'));
@@ -29,8 +30,8 @@ app.use(errorHandler);
 const PORT = config.port || 4000;
 
 const isMainEntry = process.argv[1] && (
-  process.argv[1].endsWith('server.ts') || 
-  process.argv[1].endsWith('server.js') || 
+  process.argv[1].endsWith('server.ts') ||
+  process.argv[1].endsWith('server.js') ||
   process.argv[1].includes('server')
 ) && !process.argv[1].includes('test');
 

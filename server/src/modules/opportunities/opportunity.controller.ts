@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { z } from 'zod';
 import { prisma } from '../../config/prisma.js';
 import { parseJsonArray, formatOpportunityResponse } from '../../utils/helpers.js';
 
@@ -393,11 +394,26 @@ export const addOpportunityAdvice = async (req: Request, res: Response, next: Ne
   try {
     const userId = (req as any).user.id;
     const { id } = req.params;
-    const { authorName, authorRole, outcomeStatus, adviceType, title, content } = req.body;
 
-    if (!title || !content) {
-      return res.status(400).json({ success: false, message: 'Title and content are required' });
+    // Validate + length-limit user input with Zod
+    const adviceSchema = z.object({
+      title:        z.string().min(1, 'Title is required').max(200, 'Title must be 200 characters or fewer'),
+      content:      z.string().min(1, 'Content is required').max(5000, 'Review must be 5,000 characters or fewer'),
+      authorName:   z.string().max(100).optional(),
+      authorRole:   z.string().max(100).optional(),
+      outcomeStatus: z.string().max(50).optional(),
+      adviceType:   z.string().max(50).optional(),
+    });
+
+    const parsed = adviceSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        success: false,
+        message: parsed.error.errors[0]?.message || 'Invalid input'
+      });
     }
+
+    const { authorName, authorRole, outcomeStatus, adviceType, title, content } = parsed.data;
 
     const opp = await prisma.opportunity.findUnique({ where: { id } });
     if (!opp) {
@@ -412,8 +428,8 @@ export const addOpportunityAdvice = async (req: Request, res: Response, next: Ne
         authorRole: authorRole || 'Past Applicant',
         outcomeStatus: outcomeStatus || 'Applied',
         adviceType: adviceType || 'General',
-        title: String(title).trim(),
-        content: String(content).trim(),
+        title: title.trim(),
+        content: content.trim(),
         isVerified: true
       }
     });
@@ -427,6 +443,7 @@ export const addOpportunityAdvice = async (req: Request, res: Response, next: Ne
     next(error);
   }
 };
+
 
 // DELETE /api/opportunities/:id/advice/:adviceId
 export const deleteOpportunityAdvice = async (req: Request, res: Response, next: NextFunction) => {

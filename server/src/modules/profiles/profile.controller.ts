@@ -62,6 +62,28 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
     const userId = req.user!.id;
     const { profile, preferences, onboardingCompleted, onboardingStep, bio, skills, interests, goals, education, experience, currentStatus, location, country } = req.body;
 
+    // Length limit checks on user-provided text
+    const rawBio = bio !== undefined ? bio : profile?.bio;
+    if (typeof rawBio === 'string' && rawBio.length > 2000) {
+      res.status(400).json({ success: false, message: 'Bio must be 2,000 characters or fewer' });
+      return;
+    }
+    const rawName = profile?.name;
+    if (typeof rawName === 'string' && rawName.length > 100) {
+      res.status(400).json({ success: false, message: 'Name must be 100 characters or fewer' });
+      return;
+    }
+    const rawLocation = location !== undefined ? location : profile?.location;
+    if (typeof rawLocation === 'string' && rawLocation.length > 100) {
+      res.status(400).json({ success: false, message: 'Location must be 100 characters or fewer' });
+      return;
+    }
+    const rawStatus = currentStatus !== undefined ? currentStatus : profile?.currentStatus;
+    if (typeof rawStatus === 'string' && rawStatus.length > 100) {
+      res.status(400).json({ success: false, message: 'Status must be 100 characters or fewer' });
+      return;
+    }
+
     const currentUser = await prisma.user.findUnique({
       where: { id: userId },
       include: { profile: true }
@@ -78,6 +100,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
     const name = profile?.name;
     if (name) {
       const parts = name.trim().split(' ');
+
       firstName = parts[0] || '';
       lastName = parts.slice(1).join(' ') || '';
     }
