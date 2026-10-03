@@ -1,43 +1,40 @@
-import React from 'react';
-import { cn } from '@/utils/cn';
-import { ApplicationStatus } from '@/types/models';
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/utils/cn"
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  status?: ApplicationStatus | string;
-  variant?: string;
-  size?: 'sm' | 'md';
-  children?: React.ReactNode;
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default:     "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary:   "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        outline:     "text-foreground border border-border",
+        // semantic aliases mapped to shadcn tokens
+        primary:     "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        success:     "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
+        warning:     "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
+        info:        "border-transparent bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300",
+        verified:    "border-transparent bg-rome-100 text-rome-800 dark:bg-rome-950 dark:text-rome-300",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {
+  status?: string;
 }
 
-export const Badge: React.FC<BadgeProps> = ({ status, variant, size = 'sm', className, children, ...props }) => {
-  const displayStatus = status || (typeof children === 'string' ? children : '') || variant || '';
-  
-  const getStatusColor = (st: string) => {
-    switch (st.toLowerCase()) {
-      case 'saved': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-      case 'considering': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
-      case 'preparing': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
-      case 'applying': return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
-      case 'submitted': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-      case 'result': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300';
-      case 'verified': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300';
-      case 'urgent': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-      case 'secondary': return 'bg-surface-200 text-surface-800 dark:bg-surface-700 dark:text-surface-200';
-      default: return 'bg-surface-100 text-surface-800 dark:bg-surface-800 dark:text-surface-300';
-    }
-  };
-
+function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full font-medium",
-        size === 'sm' ? "px-2 py-0.5 text-xs" : "px-3 py-1 text-sm",
-        getStatusColor(displayStatus),
-        className
-      )}
-      {...props}
-    >
-      {children || displayStatus}
-    </span>
-  );
-};
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  )
+}
+
+export { Badge, badgeVariants }

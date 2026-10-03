@@ -225,7 +225,7 @@ export default function ComparePage() {
                   <td className="p-4 border-b-0"></td>
                   {compareOpps.map((opp: Opportunity) => (
                     <td key={opp.id} className="p-6 border-b-0">
-                      <Button variant="primary" fullWidth size="sm" onClick={() => navigate(`/opportunity/${opp.id}`)}>
+                      <Button variant="default" fullWidth size="sm" onClick={() => navigate(`/opportunity/${opp.id}`)}>
                         View Details
                       </Button>
                     </td>
@@ -278,7 +278,7 @@ export default function ComparePage() {
                   </div>
                 </div>
 
-                <Button variant="primary" fullWidth size="sm" className="mt-6" onClick={() => navigate(`/opportunity/${opp.id}`)}>
+                <Button variant="default" fullWidth size="sm" className="mt-6" onClick={() => navigate(`/opportunity/${opp.id}`)}>
                   View Details
                 </Button>
               </div>

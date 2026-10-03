@@ -37,7 +37,7 @@ export default function ApplicationWorkspacePage() {
       <div className="p-8 text-center max-w-md mx-auto">
         <h2 className="text-xl font-bold mb-2">Workspace not found</h2>
         <p className="text-surface-500 mb-4">The opportunity you are trying to view could not be located.</p>
-        <Button variant="primary" onClick={() => navigate('/my-opportunities')}>
+        <Button variant="default" onClick={() => navigate('/my-opportunities')}>
           Back to My Opportunities
         </Button>
       </div>
@@ -240,7 +240,7 @@ export default function ApplicationWorkspacePage() {
                 onChange={(e) => setNewNote(e.target.value)}
               />
               <div className="flex justify-end">
-                <Button variant="primary" size="sm" onClick={handleAddNote} disabled={!newNote.trim()}>
+                <Button variant="default" size="sm" onClick={handleAddNote} disabled={!newNote.trim()}>
                   Save Note
                 </Button>
               </div>
@@ -351,7 +351,7 @@ export default function ApplicationWorkspacePage() {
               rel="noopener noreferrer"
               className="w-full"
             >
-              <Button variant="primary" fullWidth size="lg" rightIcon={<ExternalLink size={16} />}>
+              <Button variant="default" fullWidth size="lg" rightIcon={<ExternalLink size={16} />}>
                 Go to official application
               </Button>
             </a>

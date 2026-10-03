@@ -2,26 +2,47 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useProfileStore } from '@/store/profileStore';
-import { Button, Chip, Input } from '@/components/ui';
-import { 
-  Check, Briefcase, GraduationCap, Globe, Lightbulb, Heart, 
-  Compass, Rocket, Award, Users, Laptop, DollarSign, MapPin, 
-  Sparkles, ArrowRight, ArrowLeft 
-} from 'lucide-react';
+import { Button, Input, Chip } from '@/components/ui';
 import { cn } from '@/utils/cn';
-import { OpportunityType, RemoteStatus, ExperienceLevel } from '@/types/models';
-import { FIELDS, GOALS, LOCATIONS, WORK_MODALITIES } from '@/utils/constants';
+
+const INTEREST_FIELDS = [
+  'Product Design', 'UX/UI', 'UX Research', 'Software Engineering', 'AI / Machine Learning', 
+  'Data Science', 'Cybersecurity', 'Cloud Computing', 'Product Management', 'Business', 
+  'Finance', 'Marketing', 'Sales', 'Strategy', 'Research', 'Agriculture', 'Climate', 
+  'Energy', 'Healthcare', 'Education', 'Law', 'Policy', 'Media', 'Creative', 
+  'Entrepreneurship', 'Social Impact', 'Biotechnology', 'Life Sciences'
+];
+
+const DESTINATIONS = [
+  'Stay where I am', 'Explore my country', 'Explore Africa', 'Europe', 'UK', 
+  'North America', 'Asia', 'Middle East', 'Latin America & Caribbean', 'Oceania', 
+  'Remote', 'Anywhere', 'I\'m not sure yet'
+];
+
+const GOALS_LIST = [
+  'Find work', 'Build my experience', 'Get funded', 'Study somewhere new', 
+  'Build my portfolio', 'Get into research', 'Meet people', 'Start something', 
+  'Find international opportunities', 'I\'m still figuring it out'
+];
+
+const EXPERIENCE_LEVELS = [
+  'Student', 'Recent graduate', 'Early career', 'Experienced professional', 
+  'Career switcher', 'Founder / builder', 'Researcher', 'Other'
+];
 
 const OPPORTUNITY_TYPES = [
-  { id: OpportunityType.Fellowship, label: 'Fellowships', desc: 'Mentorship, funding, and career acceleration', icon: GraduationCap, color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' },
-  { id: OpportunityType.Scholarship, label: 'Scholarships', desc: 'Degree and tuition financial support', icon: Award, color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' },
-  { id: OpportunityType.Internship, label: 'Internships', desc: 'Hands-on practical industry experience', icon: Briefcase, color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
-  { id: OpportunityType.Job, label: 'Full-Time & Remote Jobs', desc: 'Direct career roles and positions', icon: Users, color: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400' },
-  { id: OpportunityType.Grant, label: 'Grants & Funding', desc: 'Non-dilutive capital for projects and research', icon: Lightbulb, color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
-  { id: OpportunityType.Research, label: 'Research Positions', desc: 'Academic and scientific lab investigations', icon: Rocket, color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
-  { id: OpportunityType.Programme, label: 'Programmes & Accelerators', desc: 'Structured cohorts and bootcamps', icon: Compass, color: 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400' },
-  { id: OpportunityType.Competition, label: 'Competitions & Hackathons', desc: 'Prizes, challenges, and recognition', icon: Globe, color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' },
-  { id: OpportunityType.Volunteering, label: 'Volunteering & Impact', desc: 'Community and civic leadership roles', icon: Heart, color: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' },
+  'Jobs', 'Internships', 'Fellowships', 'Scholarships', 'Grants', 'Research', 
+  'Competitions', 'Accelerators', 'Conferences', 'Programmes', 'Training', 
+  'Volunteer opportunities', 'Exchange opportunities'
+];
+
+const RELOCATION_OPTIONS = [
+  'Yes', 'Maybe', 'No', 'Remote is my preference', 'I\'m not sure yet'
+];
+
+const FUNDING_OPTIONS = [
+  'I need fully funded opportunities', 'Funding would be helpful', 
+  'I\'m open to paid opportunities', 'Funding isn\'t a deciding factor', 'It depends'
 ];
 
 const OnboardingFlow: React.FC = () => {
@@ -29,161 +50,56 @@ const OnboardingFlow: React.FC = () => {
   const { user, updateUser } = useAuthStore();
   const { updateProfile } = useProfileStore();
   
-  // Initialize step from backend user state if available
-  const initialStep = user?.profile?.onboardingStep || user?.onboardingStep || 1;
-  const [currentStep, setCurrentStep] = useState<number>(initialStep);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const totalSteps = 5;
-
-  // Sync step if user loaded later
-  React.useEffect(() => {
-    if (user?.profile?.onboardingStep && user.profile.onboardingStep !== currentStep) {
-      setCurrentStep(user.profile.onboardingStep);
-    }
-  }, [user?.profile?.onboardingStep]);
-
-  // Selected State
-  const [selectedTypes, setSelectedTypes] = useState<OpportunityType[]>(
-    user?.preferences?.opportunityTypes?.length 
-      ? user.preferences.opportunityTypes 
-      : [OpportunityType.Fellowship, OpportunityType.Internship, OpportunityType.Grant]
-  );
+  const [step, setStep] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
   
-  const [selectedFields, setSelectedFields] = useState<string[]>(
-    user?.preferences?.fields?.length || user?.profile?.interests?.length
-      ? (user.preferences?.fields || user.profile?.interests || [])
-      : ['Public Health', 'Technology', 'Social Impact']
-  );
-  
-  const [selectedGoals, setSelectedGoals] = useState<string[]>(
-    user?.preferences?.goals?.length || user?.profile?.goals?.length
-      ? (user.preferences?.goals || user.profile?.goals || [])
-      : ['Build practical experience', 'Find funding & grants']
-  );
+  const [name, setName] = useState(user?.profile?.name || '');
+  const [location, setLocation] = useState(user?.profile?.location || '');
+  const [destinations, setDestinations] = useState<string[]>(user?.preferences?.locationPreference || []);
+  const [goals, setGoals] = useState<string[]>(user?.preferences?.goals || []);
+  const [interests, setInterests] = useState<string[]>(user?.preferences?.fields || []);
+  const [fieldSearch, setFieldSearch] = useState('');
+  const [experience, setExperience] = useState<string>('');
+  const [oppTypes, setOppTypes] = useState<string[]>([]);
+  const [relocation, setRelocation] = useState<string>('');
+  const [funding, setFunding] = useState<string>('');
 
-  const [remotePreferences, setRemotePreferences] = useState<string[]>(
-    user?.preferences?.remotePreference?.length
-      ? user.preferences.remotePreference.map(r => r.toString())
-      : ['Remote', 'Hybrid']
-  );
+  const next = () => setStep(s => s + 1);
+  const back = () => setStep(s => Math.max(0, s - 1));
 
-  const [targetLocations, setTargetLocations] = useState<string[]>(
-    user?.preferences?.locationPreference?.length
-      ? user.preferences.locationPreference
-      : ['Remote (Worldwide)', 'United States', 'United Kingdom', 'Nigeria']
-  );
-
-  const [requireFunding, setRequireFunding] = useState<boolean>(
-    user?.preferences?.fundingPreference !== undefined ? user.preferences.fundingPreference : true
-  );
-  const [experienceLevel, setExperienceLevel] = useState<string>(
-    (user?.profile as any)?.experienceLevel || 'Intermediate'
-  );
-
-  const [profileData, setProfileData] = useState({
-    name: user?.profile?.name || '',
-    residence: user?.profile?.location || 'Nigeria',
-    country: user?.profile?.country || 'Nigeria',
-    status: user?.profile?.currentStatus || 'University Student',
-    bio: user?.profile?.bio || ''
-  });
-
-  const persistCurrentProgress = async (nextStep: number) => {
-    const updatedProfile = {
-      ...(user?.profile || {}),
-      name: profileData.name.trim() || user?.profile?.name || 'Explorer',
-      location: profileData.residence,
-      country: profileData.country,
-      currentStatus: profileData.status,
-      bio: profileData.bio || 'Exploring transformative opportunities across fields.',
-      interests: selectedFields,
-      goals: selectedGoals,
-      experienceLevel,
-      completeness: Math.min(100, nextStep * 20),
-      onboardingStep: nextStep
-    };
-
-    const updatedPreferences = {
-      ...(user?.preferences || {}),
-      opportunityTypes: selectedTypes,
-      fields: selectedFields,
-      goals: selectedGoals,
-      remotePreference: remotePreferences.map(r => r === 'Remote' ? RemoteStatus.Remote : r === 'Hybrid' ? RemoteStatus.Hybrid : RemoteStatus.InPerson),
-      locationPreference: targetLocations,
-      fundingPreference: requireFunding
-    };
-
-    await updateUser({
-      profile: updatedProfile as any,
-      preferences: updatedPreferences as any,
-      onboardingStep: nextStep
-    });
-
-    updateProfile(updatedProfile as any);
+  const toggleArray = (setter: React.Dispatch<React.SetStateAction<string[]>>, item: string) => {
+    setter(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]);
   };
 
-  const handleNext = async () => {
-    if (isSaving) return;
-    setIsSaving(true);
-    try {
-      if (currentStep < totalSteps) {
-        const nextStep = currentStep + 1;
-        await persistCurrentProgress(nextStep);
-        setCurrentStep(nextStep);
-      } else {
-        await completeOnboarding();
-      }
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleBack = async () => {
-    if (isSaving) return;
-    if (currentStep > 1) {
-      const prevStep = currentStep - 1;
-      setIsSaving(true);
-      try {
-        await persistCurrentProgress(prevStep);
-        setCurrentStep(prevStep);
-      } finally {
-        setIsSaving(false);
-      }
-    }
-  };
-
-  const completeOnboarding = async () => {
+  const handleComplete = async () => {
     setIsSaving(true);
     try {
       const updatedProfile = {
         ...(user?.profile || {}),
-        name: profileData.name.trim() || user?.profile?.name || 'Explorer',
-        location: profileData.residence,
-        country: profileData.country,
-        currentStatus: profileData.status,
-        bio: profileData.bio || 'Exploring transformative opportunities across fields.',
-        interests: selectedFields,
-        goals: selectedGoals,
-        experienceLevel,
+        name: name.trim() || 'Explorer',
+        location,
+        country: location,
+        bio: 'Exploring transformative opportunities.',
+        interests: interests,
+        goals: goals,
+        currentStatus: experience,
         completeness: 100,
-        onboardingStep: 5
+        onboardingStep: 10
       };
 
       const updatedPreferences = {
         ...(user?.preferences || {}),
-        opportunityTypes: selectedTypes,
-        fields: selectedFields,
-        goals: selectedGoals,
-        remotePreference: remotePreferences.map(r => r === 'Remote' ? RemoteStatus.Remote : r === 'Hybrid' ? RemoteStatus.Hybrid : RemoteStatus.InPerson),
-        locationPreference: targetLocations,
-        fundingPreference: requireFunding
+        fields: interests,
+        goals: goals,
+        locationPreference: destinations,
+        fundingPreference: funding.includes('fully funded') || funding.includes('helpful')
       };
 
       await updateUser({
         profile: updatedProfile as any,
         preferences: updatedPreferences as any,
         onboardingCompleted: true,
-        onboardingStep: 5
+        onboardingStep: 10
       });
 
       updateProfile(updatedProfile as any);
@@ -193,395 +109,333 @@ const OnboardingFlow: React.FC = () => {
     }
   };
 
-  const toggleType = (type: OpportunityType) => {
-    setSelectedTypes(prev => 
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    );
-  };
+  const filteredInterests = INTEREST_FIELDS.filter(f => f.toLowerCase().includes(fieldSearch.toLowerCase()));
 
-  const toggleField = (field: string) => {
-    setSelectedFields(prev => 
-      prev.includes(field) ? prev.filter(f => f !== field) : [...prev, field]
-    );
-  };
-
-  const toggleGoal = (goal: string) => {
-    setSelectedGoals(prev => 
-      prev.includes(goal) ? prev.filter(g => g !== goal) : [...prev, goal]
-    );
-  };
-
-  const toggleRemote = (status: string) => {
-    setRemotePreferences(prev =>
-      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
-    );
-  };
-
-  const toggleTargetLocation = (loc: string) => {
-    setTargetLocations(prev =>
-      prev.includes(loc) ? prev.filter(l => l !== loc) : [...prev, loc]
-    );
-  };
-
-  const isNextDisabled = () => {
-    switch (currentStep) {
-      case 1: return selectedTypes.length === 0;
-      case 2: return selectedFields.length === 0;
-      case 3: return selectedGoals.length === 0;
-      case 4: return remotePreferences.length === 0 || targetLocations.length === 0;
-      case 5: return !profileData.name.trim();
-      default: return false;
-    }
-  };
-
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
+  const renderStep = () => {
+    switch(step) {
+      case 0:
         return (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 mb-1">
-              <Sparkles className="w-4 h-4" /> Step 1 of {totalSteps}
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-surface-900 dark:text-white mb-2">
-              What types of opportunities are you seeking?
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-500 text-center max-w-lg mx-auto flex flex-col items-center justify-center h-[50vh]">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-surface-950 dark:text-white">
+              Hey, I'm ROMEfind.
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-medium mb-6 text-surface-700 dark:text-surface-300">
+              Let's figure out what's possible for you.
             </h2>
-            <p className="text-surface-600 dark:text-surface-400 mb-6 text-sm md:text-base">
-              Select all that apply. ROMEfind will construct your personalized opportunity map.
+            <p className="text-surface-500 dark:text-surface-400 mb-10 text-lg">
+              Tell me a little about where you are, where you're headed, and what you're hoping to find. You can always change this later.
             </p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {OPPORTUNITY_TYPES.map((type) => {
-                const isSelected = selectedTypes.includes(type.id);
-                const Icon = type.icon;
-                return (
-                  <button
-                    key={type.id}
-                    onClick={() => toggleType(type.id)}
-                    className={cn(
-                      "flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all duration-200 cursor-pointer",
-                      isSelected 
-                        ? "border-rome-500 bg-rome-50/70 dark:bg-rome-950/30 shadow-sm ring-1 ring-rome-500/50" 
-                        : "border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600 bg-white dark:bg-surface-800"
-                    )}
-                  >
-                    <div className={cn("p-2 rounded-lg flex-shrink-0 mt-0.5", type.color)}>
-                      <Icon size={18} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className={cn("font-bold text-sm", isSelected ? "text-rome-700 dark:text-rome-400" : "text-surface-900 dark:text-white")}>
-                          {type.label}
-                        </h3>
-                        <div className={cn("w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 ml-1 transition-colors", 
-                          isSelected ? "border-rome-500 bg-rome-500 text-white" : "border-surface-300 dark:border-surface-600 text-transparent"
-                        )}>
-                          <Check size={10} className={isSelected ? "opacity-100 stroke-[3]" : "opacity-0"} />
-                        </div>
-                      </div>
-                      <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5 leading-snug">
-                        {type.desc}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            <Button size="lg" onClick={next} className="w-48 text-base font-medium mx-auto">Let's start</Button>
           </div>
         );
       
+      case 1:
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              First things first — what should I call you?
+            </h2>
+            <Input 
+              value={name} 
+              onChange={e => setName(e.target.value)} 
+              placeholder="Your name" 
+              className="text-lg py-6"
+              autoFocus
+              onKeyDown={e => e.key === 'Enter' && name.trim() && next()}
+            />
+            <div className="mt-8">
+              <Button onClick={next} disabled={!name.trim()}>Continue</Button>
+            </div>
+          </div>
+        );
+
       case 2:
         return (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 mb-1">
-              <Sparkles className="w-4 h-4" /> Step 2 of {totalSteps}
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-surface-900 dark:text-white mb-2">
-              What fields and sectors excite you?
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <p className="text-rome-600 dark:text-rome-400 font-medium mb-4">Nice to meet you, {name || 'there'}.</p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              Where are you based right now?
             </h2>
-            <p className="text-surface-600 dark:text-surface-400 mb-6 text-sm md:text-base">
-              Choose your disciplines (e.g. Public Health, Technology, Climate, Life Sciences).
-            </p>
-            
-            <div className="flex flex-wrap gap-2.5">
-              {FIELDS.map((field: string) => {
-                const isSelected = selectedFields.includes(field);
-                return (
-                  <Chip
-                    key={field}
-                    label={field}
-                    selected={isSelected}
-                    onClick={() => toggleField(field)}
-                    size="md"
-                    className="cursor-pointer font-medium"
-                  />
-                );
-              })}
+            <Input 
+              value={location} 
+              onChange={e => setLocation(e.target.value)} 
+              placeholder="Country, region, or city" 
+              className="text-lg py-6"
+              autoFocus
+              onKeyDown={e => e.key === 'Enter' && location.trim() && next()}
+            />
+            <div className="mt-8 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={!location.trim()}>Continue</Button>
             </div>
           </div>
         );
 
       case 3:
         return (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 mb-1">
-              <Sparkles className="w-4 h-4" /> Step 3 of {totalSteps}
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-surface-900 dark:text-white mb-2">
-              What are you trying to make happen?
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <p className="text-rome-600 dark:text-rome-400 font-medium mb-4">Got it. And where are you hoping to explore?</p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-surface-900 dark:text-white leading-tight">
+              Where are you looking toward?
             </h2>
-            <p className="text-surface-600 dark:text-surface-400 mb-6 text-base">
-              Goal-based exploration connects you to hidden alternative pathways.
-            </p>
-            
+            <p className="text-surface-500 mb-8">You don't have to know exactly yet. Select all that apply.</p>
             <div className="flex flex-wrap gap-2.5">
-              {GOALS.map((goal: string) => {
-                const isSelected = selectedGoals.includes(goal);
-                return (
-                  <Chip
-                    key={goal}
-                    label={goal}
-                    selected={isSelected}
-                    onClick={() => toggleGoal(goal)}
-                    variant="outline"
-                    size="md"
-                    className="cursor-pointer font-medium"
-                  />
-                );
-              })}
+              {DESTINATIONS.map(dest => (
+                <Chip 
+                  key={dest} 
+                  label={dest} 
+                  selected={destinations.includes(dest)} 
+                  onClick={() => toggleArray(setDestinations, dest)} 
+                  className="cursor-pointer py-2 px-4 text-sm font-medium"
+                />
+              ))}
+            </div>
+            <div className="mt-8 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={destinations.length === 0}>Continue</Button>
             </div>
           </div>
         );
 
       case 4:
         return (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 mb-1">
-              <Sparkles className="w-4 h-4" /> Step 4 of {totalSteps}
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-surface-900 dark:text-white mb-2">
-              Work arrangement & location preferences
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              What are you hoping to find right now?
             </h2>
-            <p className="text-surface-600 dark:text-surface-400 mb-6 text-sm md:text-base">
-              Tell us where and how you want to work or pursue opportunities.
-            </p>
-
-            <div className="space-y-6 max-w-2xl">
-              {/* Remote / In-Person Setup */}
-              <div>
-                <label className="block text-sm font-bold text-surface-900 dark:text-white mb-2 flex items-center gap-1.5">
-                  <Laptop className="w-4 h-4 text-rome-500" />
-                  Work Modality & Arrangement
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {['Remote', 'Hybrid', 'In-Person', 'Flexible'].map((mod) => (
-                    <button
-                      key={mod}
-                      type="button"
-                      onClick={() => toggleRemote(mod)}
-                      className={cn(
-                        "px-4 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer",
-                        remotePreferences.includes(mod)
-                          ? "bg-rome-500 text-white border-rome-600 shadow-sm"
-                          : "bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-surface-200"
-                      )}
-                    >
-                      {mod === 'Remote' ? '🌐 Full-Time Remote' : mod}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Target / Preferred Locations */}
-              <div>
-                <label className="block text-sm font-bold text-surface-900 dark:text-white mb-2 flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-rome-500" />
-                  Target / Preferred Locations (Where you want opportunities to be based)
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {LOCATIONS.map((loc) => (
-                    <button
-                      key={loc}
-                      type="button"
-                      onClick={() => toggleTargetLocation(loc)}
-                      className={cn(
-                        "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border cursor-pointer",
-                        targetLocations.includes(loc)
-                          ? "bg-emerald-600 text-white border-emerald-700 shadow-xs"
-                          : "bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-surface-200"
-                      )}
-                    >
-                      {loc}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Funding Requirement */}
-              <div className="pt-2 border-t border-surface-200 dark:border-surface-700 flex items-center justify-between">
-                <div>
-                  <h4 className="text-sm font-bold text-surface-900 dark:text-white flex items-center gap-1">
-                    <DollarSign className="w-4 h-4 text-emerald-500" />
-                    Funding & Stipend Requirement
-                  </h4>
-                  <p className="text-xs text-surface-500">Prioritize fully-funded opportunities, grants, and paid stipends</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setRequireFunding(!requireFunding)}
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer",
-                    requireFunding 
-                      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-300"
-                      : "bg-surface-100 dark:bg-surface-800 text-surface-500 border-surface-200 dark:border-surface-700"
-                  )}
-                >
-                  {requireFunding ? "✓ Required / Preferred" : "Open to All"}
-                </button>
-              </div>
+            <div className="flex flex-wrap gap-2.5">
+              {GOALS_LIST.map(goal => (
+                <Chip 
+                  key={goal} 
+                  label={goal} 
+                  selected={goals.includes(goal)} 
+                  onClick={() => toggleArray(setGoals, goal)} 
+                  className="cursor-pointer py-2 px-4 text-sm font-medium"
+                />
+              ))}
+            </div>
+            <div className="mt-8 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={goals.length === 0}>Continue</Button>
             </div>
           </div>
         );
 
       case 5:
         return (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 mb-1">
-              <Sparkles className="w-4 h-4" /> Step 5 of {totalSteps}
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-surface-900 dark:text-white mb-2">
-              Complete your Opportunity Profile
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-surface-900 dark:text-white leading-tight">
+              What are you interested in?
             </h2>
-            <p className="text-surface-600 dark:text-surface-400 mb-6 text-sm md:text-base">
-              These details tailor eligibility checks and personalize your fit scores.
-            </p>
-            
-            <div className="space-y-4 max-w-md">
-              <Input
-                label="Full Name *"
-                value={profileData.name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfileData({ ...profileData, name: e.target.value })}
-                placeholder="e.g. Alex Chen"
-                required
-              />
-              
-              <div>
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-200 mb-1.5">
-                  Current Status / Role
-                </label>
-                <select 
-                  className="w-full px-3 py-2.5 bg-white dark:bg-surface-900 border border-surface-300 dark:border-surface-700 rounded-lg text-sm text-surface-900 dark:text-white focus:ring-2 focus:ring-rome-500 outline-none cursor-pointer"
-                  value={profileData.status}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setProfileData({ ...profileData, status: e.target.value })}
-                >
-                  <option value="University Student">University Student (Undergrad / Master's / PhD)</option>
-                  <option value="Working Professional">Working Professional / Practitioner</option>
-                  <option value="Public Health Specialist">Public Health / Medical Specialist</option>
-                  <option value="Software Engineer / AI Researcher">Software Engineer / AI Researcher</option>
-                  <option value="Founder / Entrepreneur">Founder / Entrepreneur</option>
-                  <option value="Recent Graduate">Recent Graduate</option>
-                  <option value="High School Student">High School Student</option>
-                  <option value="Career Transitioner">Career Transitioner / Seeking New Role</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-200 mb-1.5">
-                  Current Residence / Country of Citizenship
-                </label>
-                <select 
-                  className="w-full px-3 py-2.5 bg-white dark:bg-surface-900 border border-surface-300 dark:border-surface-700 rounded-lg text-sm text-surface-900 dark:text-white focus:ring-2 focus:ring-rome-500 outline-none cursor-pointer"
-                  value={profileData.residence}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setProfileData({ ...profileData, residence: e.target.value, country: e.target.value })}
-                >
-                  {LOCATIONS.filter(l => !l.includes('Remote')).map((loc: string) => (
-                    <option key={loc} value={loc}>{loc}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-200 mb-1.5">
-                  Experience Level
-                </label>
-                <select 
-                  className="w-full px-3 py-2.5 bg-white dark:bg-surface-900 border border-surface-300 dark:border-surface-700 rounded-lg text-sm text-surface-900 dark:text-white focus:ring-2 focus:ring-rome-500 outline-none cursor-pointer"
-                  value={experienceLevel}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setExperienceLevel(e.target.value)}
-                >
-                  <option value="Beginner">Beginner / Student (0-1 yrs)</option>
-                  <option value="Intermediate">Intermediate (1-3 yrs experience)</option>
-                  <option value="Advanced">Advanced (4-7 yrs experience)</option>
-                  <option value="Expert">Expert / Lead (8+ yrs experience)</option>
-                </select>
-              </div>
+            <Input 
+              value={fieldSearch} 
+              onChange={e => setFieldSearch(e.target.value)} 
+              placeholder="Search fields (e.g. Product Design, Engineering)" 
+              className="mb-6"
+            />
+            <div className="flex flex-wrap gap-2.5 max-h-[40vh] overflow-y-auto pb-4">
+              {filteredInterests.map(field => (
+                <Chip 
+                  key={field} 
+                  label={field} 
+                  selected={interests.includes(field)} 
+                  onClick={() => toggleArray(setInterests, field)} 
+                  className="cursor-pointer py-1.5 px-3 text-sm"
+                />
+              ))}
+              {filteredInterests.length === 0 && (
+                <p className="text-surface-500 italic">No matches found. Try a different term.</p>
+              )}
+            </div>
+            <div className="mt-6 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={interests.length === 0}>Continue</Button>
             </div>
           </div>
         );
-      
+
+      case 6:
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              Where are you right now?
+            </h2>
+            <div className="flex flex-col gap-2">
+              {EXPERIENCE_LEVELS.map(exp => (
+                <button
+                  key={exp}
+                  onClick={() => { setExperience(exp); setTimeout(next, 300); }}
+                  className={cn(
+                    "w-full text-left p-4 rounded-xl border transition-all cursor-pointer font-medium",
+                    experience === exp 
+                      ? "border-rome-500 bg-rome-50 dark:bg-rome-900/20 text-rome-700 dark:text-rome-300 shadow-sm ring-1 ring-rome-500"
+                      : "border-surface-200 dark:border-surface-700 hover:border-rome-300 dark:hover:border-rome-700 bg-white dark:bg-surface-800"
+                  )}
+                >
+                  {exp}
+                </button>
+              ))}
+            </div>
+            <div className="mt-8 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={!experience}>Continue</Button>
+            </div>
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              What kinds of opportunities would you actually consider?
+            </h2>
+            <div className="flex flex-wrap gap-2.5">
+              {OPPORTUNITY_TYPES.map(opt => (
+                <Chip 
+                  key={opt} 
+                  label={opt} 
+                  selected={oppTypes.includes(opt)} 
+                  onClick={() => toggleArray(setOppTypes, opt)} 
+                  className="cursor-pointer py-2 px-4 text-sm font-medium"
+                />
+              ))}
+            </div>
+            <div className="mt-8 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={oppTypes.length === 0}>Continue</Button>
+            </div>
+          </div>
+        );
+
+      case 8:
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              If the right opportunity came along, would you relocate?
+            </h2>
+            <div className="flex flex-col gap-2">
+              {RELOCATION_OPTIONS.map(rel => (
+                <button
+                  key={rel}
+                  onClick={() => { setRelocation(rel); setTimeout(next, 300); }}
+                  className={cn(
+                    "w-full text-left p-4 rounded-xl border transition-all cursor-pointer font-medium",
+                    relocation === rel 
+                      ? "border-rome-500 bg-rome-50 dark:bg-rome-900/20 text-rome-700 dark:text-rome-300 shadow-sm ring-1 ring-rome-500"
+                      : "border-surface-200 dark:border-surface-700 hover:border-rome-300 dark:hover:border-rome-700 bg-white dark:bg-surface-800"
+                  )}
+                >
+                  {rel}
+                </button>
+              ))}
+            </div>
+            <div className="mt-8 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={!relocation}>Continue</Button>
+            </div>
+          </div>
+        );
+
+      case 9:
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              Does funding matter for what you're looking for?
+            </h2>
+            <div className="flex flex-col gap-2">
+              {FUNDING_OPTIONS.map(fund => (
+                <button
+                  key={fund}
+                  onClick={() => { setFunding(fund); setTimeout(next, 300); }}
+                  className={cn(
+                    "w-full text-left p-4 rounded-xl border transition-all cursor-pointer font-medium",
+                    funding === fund 
+                      ? "border-rome-500 bg-rome-50 dark:bg-rome-900/20 text-rome-700 dark:text-rome-300 shadow-sm ring-1 ring-rome-500"
+                      : "border-surface-200 dark:border-surface-700 hover:border-rome-300 dark:hover:border-rome-700 bg-white dark:bg-surface-800"
+                  )}
+                >
+                  {fund}
+                </button>
+              ))}
+            </div>
+            <div className="mt-8 flex gap-3">
+              <Button variant="outline" onClick={back}>Back</Button>
+              <Button onClick={next} disabled={!funding}>Continue</Button>
+            </div>
+          </div>
+        );
+
+      case 10:
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 max-w-lg mx-auto py-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
+              Okay, we've got a starting point.
+            </h2>
+            
+            <div className="space-y-4 mb-12 text-lg text-surface-700 dark:text-surface-300">
+              <p className="flex items-start gap-3">
+                <span className="text-rome-500 text-xl mt-1">•</span> 
+                <span>You're based in <strong className="font-semibold text-surface-950 dark:text-white">{location}</strong>.</span>
+              </p>
+              <p className="flex items-start gap-3">
+                <span className="text-rome-500 text-xl mt-1">•</span> 
+                <span>You're exploring <strong className="font-semibold text-surface-950 dark:text-white">{destinations.slice(0, 2).join(' and ')}{destinations.length > 2 ? ' and other places' : ''}</strong>.</span>
+              </p>
+              <p className="flex items-start gap-3">
+                <span className="text-rome-500 text-xl mt-1">•</span> 
+                <span>You're interested in <strong className="font-semibold text-surface-950 dark:text-white">{interests.slice(0, 2).join(' and ')}{interests.length > 2 ? ' and more' : ''}</strong>.</span>
+              </p>
+              <p className="flex items-start gap-3">
+                <span className="text-rome-500 text-xl mt-1">•</span> 
+                <span>You're looking for ways to <strong className="font-semibold text-surface-950 dark:text-white">{goals[0]?.toLowerCase()}</strong>.</span>
+              </p>
+            </div>
+
+            <h3 className="text-2xl font-bold mb-8 text-surface-900 dark:text-white">
+              Let's see what's possible.
+            </h3>
+            
+            <Button size="lg" onClick={handleComplete} disabled={isSaving} className="w-full text-base font-bold py-6">
+              {isSaving ? "Preparing your map..." : "Show me"}
+            </Button>
+            
+            <div className="mt-4 text-center">
+              <button onClick={() => setStep(1)} className="text-sm text-surface-500 hover:text-surface-800 underline underline-offset-2">
+                Wait, let me change something
+              </button>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="w-full flex flex-col min-h-[460px] max-w-3xl mx-auto py-4">
-      {/* Progress Bar Header */}
-      <div className="flex items-center gap-2 mb-8">
-        {[1, 2, 3, 4, 5].map((step) => (
-          <div 
-            key={step} 
-            className={cn(
-              "h-1.5 rounded-full transition-all duration-300 flex-1",
-              step === currentStep ? "bg-rome-500" : 
-              step < currentStep ? "bg-rome-200 dark:bg-rome-900/50" : 
-              "bg-surface-100 dark:bg-surface-800"
-            )} 
-          />
-        ))}
-      </div>
-
-      <div className="flex-1">
-        {renderStepContent()}
-      </div>
-
-      {/* Navigation Footer */}
-      <div className="mt-10 pt-6 border-t border-surface-200 dark:border-surface-800 flex items-center justify-between">
-        {currentStep > 1 ? (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleBack}
-            disabled={isSaving}
-            leftIcon={<ArrowLeft size={16} />}
-          >
-            Back
-          </Button>
-        ) : (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={completeOnboarding} 
-            disabled={isSaving}
-            className="text-surface-400 hover:text-surface-700 dark:hover:text-surface-200"
-          >
-            Skip for now
-          </Button>
-        )}
-        
-        <Button 
-          variant="primary" 
-          size="sm"
-          onClick={handleNext} 
-          disabled={isNextDisabled() || isSaving}
-          isLoading={isSaving}
-          rightIcon={!isSaving ? <ArrowRight size={16} /> : undefined}
-          className="ml-auto"
-        >
-          {isSaving 
-            ? (currentStep === totalSteps ? "Launching Opportunity Map…" : "Saving…")
-            : (currentStep === totalSteps ? "Launch Opportunity Map 🚀" : "Continue")
-          }
-        </Button>
+    <div className="w-full min-h-[70vh] flex flex-col pt-8 md:pt-16 pb-12 px-4">
+      {step > 0 && step < 10 && (
+        <div className="max-w-xl mx-auto w-full mb-12">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold text-surface-400 uppercase tracking-wider">Getting to know you</span>
+            <button 
+              onClick={handleComplete}
+              className="text-xs text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 font-medium"
+            >
+              Skip
+            </button>
+          </div>
+          <div className="h-1 bg-surface-100 dark:bg-surface-800 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-rome-500 transition-all duration-500 ease-out" 
+              style={{ width: `${(step / 9) * 100}%` }}
+            />
+          </div>
+        </div>
+      )}
+      
+      <div className="flex-1 w-full">
+        {renderStep()}
       </div>
     </div>
   );

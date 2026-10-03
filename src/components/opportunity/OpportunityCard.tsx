@@ -119,17 +119,22 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
     }
   };
 
-  const orgName = typeof opportunity.organization === 'object' 
-    ? opportunity.organization?.name 
+  const orgName = typeof opportunity.organization === 'object'
+    ? opportunity.organization?.name
     : String(opportunity.organization || '');
 
   return (
-    <Card 
-      hoverable
+    <div
+      role="article"
+      aria-label={opportunity.title}
+      tabIndex={0}
       onClick={handleCardClick}
-      padding="none"
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCardClick(); }}
       className={cn(
-        "flex flex-col h-full relative group transition-all duration-200 border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900",
+        "flex flex-col h-full relative group cursor-pointer transition-all duration-200",
+        "rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900",
+        "hover:shadow-card-hover hover:border-surface-300 dark:hover:border-surface-700",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         isComparing && "ring-2 ring-rome-500/70 dark:ring-rome-400 bg-rome-50/20 dark:bg-rome-950/20",
         className
       )}
@@ -302,6 +307,6 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
           )}
         </div>
       </div>
-    </Card>
+    </div>
   );
 };

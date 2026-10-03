@@ -324,19 +324,48 @@ export const getPersonalizedRecommendations = (
   });
 
   // Strict Threshold:
-  // Must score >= 45 AND have at least an interestMatch, goalMatch, or skillMatch
   const highQuality = scored.filter(item => {
     if (item.relevanceScore < 45) return false;
     const signals = item.matchSignals;
     if (!signals) return false;
-    // An opportunity with zero interest, zero goal, and zero skill match should NEVER be a top recommendation
     return signals.interestMatch || signals.goalMatch || signals.skillMatch;
   });
 
-  // Sort descending by score
-  return highQuality
-    .sort((a, b) => b.relevanceScore - a.relevanceScore)
-    .slice(0, limit);
+  // Sort descending by score initially
+  const sorted = highQuality.sort((a, b) => b.relevanceScore - a.relevanceScore);
+  
+  // Introduce Field Diversity (Round-Robin by Field)
+  const finalRecommendations: SearchResult[] = [];
+  const selectedFields = new Map<string, number>();
+
+  let index = 0;
+  while (finalRecommendations.length < limit && sorted.length > 0) {
+    if (index >= sorted.length) index = 0;
+
+    const current = sorted[index];
+    const primaryField = current.opportunity.field?.[0] || 'Unknown';
+    const fieldCount = selectedFields.get(primaryField) || 0;
+
+    // Allow maximum 2 from the same primary field unless we run out of options
+    if (fieldCount < 2 || sorted.length === 1) {
+      finalRecommendations.push(current);
+      selectedFields.set(primaryField, fieldCount + 1);
+      sorted.splice(index, 1); // Remove from pool
+    } else {
+      // If we've already selected 2 from this field, try to find another field
+      const hasOtherFields = sorted.some(s => (s.opportunity.field?.[0] || 'Unknown') !== primaryField);
+      if (!hasOtherFields) {
+        // If no other fields remain, just take it
+        finalRecommendations.push(current);
+        selectedFields.set(primaryField, fieldCount + 1);
+        sorted.splice(index, 1);
+      } else {
+        index++;
+      }
+    }
+  }
+
+  return finalRecommendations;
 };
 
 /**

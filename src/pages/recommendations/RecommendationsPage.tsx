@@ -4,7 +4,7 @@ import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
-import { OpportunityGridSkeleton } from '@/components/ui';
+import { OpportunityGridSkeleton } from '@/components/ui/composite-skeletons';
 import { TrendingUp, CheckCircle2, Compass, Award, Globe, Activity, Filter, DollarSign, ArrowRight } from 'lucide-react';
 import { RemoteStatus, Opportunity } from '@/types/models';
 

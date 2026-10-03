@@ -33,7 +33,7 @@ import LearnPage from '@/pages/learn/LearnPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import NotificationsPage from '@/pages/notifications/NotificationsPage';
 
-import { DashboardSkeleton } from '@/components/ui/Skeleton';
+import { DashboardSkeleton } from '@/components/ui/composite-skeletons';
 
 const ProtectedRoute = () => {
   const { isAuthenticated, user, isInitializing } = useAuthStore();

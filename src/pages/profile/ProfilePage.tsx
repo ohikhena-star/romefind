@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
-import { Avatar, ProgressBar, Chip, Button, Input, ProfileSkeleton } from '@/components/ui';
+import { ProgressBar, Chip, Button, Input } from '@/components/ui';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
+import { ProfileSkeleton } from '@/components/ui/composite-skeletons';
 import { calculateProfileCompleteness } from '@/utils/format';
 import { FIELDS, GOALS, LOCATIONS } from '@/utils/constants';
 import { cn } from '@/utils/cn';
@@ -209,7 +211,10 @@ export default function ProfilePage() {
       <div className="bg-white dark:bg-surface-900 rounded-2xl p-6 md:p-8 shadow-card border border-surface-200 dark:border-surface-800 flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left relative">
         {/* Avatar with upload */}
         <div className="flex-shrink-0 relative group">
-          <Avatar name={localProfile.name || 'User'} size="xl" src={localProfile.photo || undefined} />
+          <Avatar className="h-24 w-24">
+            <AvatarImage src={localProfile.photo || undefined} alt={localProfile.name || 'User'} />
+            <AvatarFallback>{(localProfile.name || 'U').charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
           {isEditing && (
             <>
               <button
@@ -239,7 +244,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <>
                   <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isSaving}>Cancel</Button>
-                  <Button variant="primary" size="sm" onClick={handleSave} isLoading={isSaving}>
+                  <Button variant="default" size="sm" onClick={handleSave} disabled={isSaving}>
                     {isSaving ? 'Saving…' : 'Save Changes'}
                   </Button>
                 </>
@@ -281,7 +286,10 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Input label="Full Name" value={localProfile.name} onChange={e => setLocalProfile(p => ({ ...p, name: e.target.value }))} />
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-foreground">Full Name</label>
+                    <Input value={localProfile.name} onChange={e => setLocalProfile(p => ({ ...p, name: e.target.value }))} />
+                  </div>
                   <div>
                     <label className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1.5">Current Status</label>
                     <select
@@ -292,7 +300,10 @@ export default function ProfilePage() {
                       {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
-                  <Input label="Location / City" value={localProfile.location} onChange={e => setLocalProfile(p => ({ ...p, location: e.target.value }))} placeholder="e.g. Lagos, Nigeria" />
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-foreground">Location / City</label>
+                    <Input value={localProfile.location} onChange={e => setLocalProfile(p => ({ ...p, location: e.target.value }))} placeholder="e.g. Lagos, Nigeria" />
+                  </div>
                   <div>
                     <label className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1.5">Experience Level</label>
                     <select

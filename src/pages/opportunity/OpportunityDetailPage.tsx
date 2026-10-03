@@ -5,7 +5,8 @@ import { useAuthStore } from '@/store/authStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { calculateRelevanceScore } from '@/services/personalization.service';
 import { api } from '@/api/client';
-import { Button, Tag, DeadlineIndicator, MatchIndicator, Badge, EmptyState, OpportunityDetailSkeleton } from '@/components/ui';
+import { Button, Tag, DeadlineIndicator, MatchIndicator, Badge, EmptyState } from '@/components/ui';
+import { OpportunityDetailSkeleton } from '@/components/ui/composite-skeletons';
 import { OpportunityCard } from '@/components/opportunity';
 import { OPPORTUNITY_TYPE_COLORS } from '@/utils/constants';
 import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck, Share2, Trash2 } from 'lucide-react';
@@ -196,7 +197,7 @@ export default function OpportunityDetailPage() {
             <div className="flex flex-wrap items-center gap-2">
               <Tag label={opportunity.type} />
               {opportunity.verificationStatus && (
-                <Badge variant="verified" className="flex items-center gap-1">
+                <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 flex items-center gap-1">
                   <ShieldCheck size={12} />
                   Verified Source
                 </Badge>
@@ -280,20 +281,19 @@ export default function OpportunityDetailPage() {
 
                 <div className="pt-6 border-t border-surface-100 dark:border-surface-800 flex flex-col gap-3">
                   <Button 
-                    variant="primary" 
-                    fullWidth
+                    variant="default" 
+                    className="w-full"
                     size="lg"
                     onClick={() => window.open(opportunity.applicationUrl, '_blank', 'noopener noreferrer')}
-                    rightIcon={<ExternalLink size={16} />}
                     aria-label={`Apply to ${opportunity.title}`}
                   >
                     Apply on Official Site
+                    <ExternalLink size={16} className="ml-2" />
                   </Button>
                   
                   <Button 
                     variant="secondary"
-                    fullWidth
-                    size="md"
+                    className="w-full"
                     onClick={handleStartApplication}
                   >
                     Track in Workspace
@@ -437,7 +437,7 @@ export default function OpportunityDetailPage() {
               </button>
             </div>
             <div className="flex flex-wrap items-center gap-4 bg-surface-50 dark:bg-surface-900 p-4 rounded-xl border border-surface-200 dark:border-surface-800">
-              <Badge variant="verified">
+              <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
                 {opportunity.verificationStatus || 'Verified'}
               </Badge>
               <span className="text-xs text-surface-500">
@@ -622,8 +622,8 @@ export default function OpportunityDetailPage() {
                   rows={3}
                   className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
                 />
-                <Button type="submit" variant="primary" fullWidth size="sm" isLoading={reportLoading}>
-                  Submit Report
+                <Button type="submit" variant="default" className="w-full" size="sm" disabled={reportLoading}>
+                  {reportLoading ? 'Submitting...' : 'Submit Report'}
                 </Button>
               </form>
             )}
@@ -693,8 +693,8 @@ export default function OpportunityDetailPage() {
                 rows={4}
                 className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
               />
-              <Button type="submit" variant="primary" fullWidth size="sm" isLoading={adviceLoading}>
-                Publish Community Advice
+              <Button type="submit" variant="default" className="w-full" size="sm" disabled={adviceLoading}>
+                {adviceLoading ? 'Publishing...' : 'Publish Community Advice'}
               </Button>
             </form>
           </div>
@@ -795,7 +795,6 @@ export default function OpportunityDetailPage() {
           <Button 
             variant="outline" 
             className="flex-1 justify-center"
-            size="md"
             onClick={() => saved ? unsaveOpportunity(opportunity.id) : saveOpportunity(opportunity.id)}
           >
             {saved ? <BookmarkCheck className="w-5 h-5 text-rome-500" /> : <Bookmark className="w-5 h-5" />}
@@ -803,19 +802,17 @@ export default function OpportunityDetailPage() {
           <Button
             variant="outline"
             className="flex-1 justify-center"
-            size="md"
             onClick={() => setShowShareModal(true)}
           >
             Share
           </Button>
           <Button 
-            variant="primary" 
+            variant="default" 
             className="flex-[3] justify-center text-sm font-semibold"
-            size="md"
             onClick={() => window.open(opportunity.applicationUrl, '_blank')}
-            rightIcon={<ExternalLink size={14} />}
           >
             Apply Now
+            <ExternalLink size={14} className="ml-2" />
           </Button>
         </div>
       </div>
