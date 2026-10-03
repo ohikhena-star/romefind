@@ -603,18 +603,12 @@ export default function OpportunityDetailPage() {
                 <p className="text-xs text-surface-500 dark:text-surface-400 max-w-md mx-auto">
                   Have you applied, interviewed, or received an offer for this program? Share your insights to help the community prepare.
                 </p>
-                <button
-                  onClick={() => setShowAdviceModal(true)}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl bg-rome-500 hover:bg-rome-600 text-white shadow-xs transition-colors cursor-pointer"
-                >
-                  + Be the first to share your experience
-                </button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {adviceList.map((adv) => (
-                  <div key={adv.id} className="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div key={adv.id} className="p-6 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-surface-100 dark:border-surface-800">
                       <div className="flex items-center gap-2">
                         <span className={cn(
                           "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border",
@@ -646,10 +640,10 @@ export default function OpportunityDetailPage() {
                     </div>
 
                     {adv.title && (
-                      <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100">{adv.title}</h4>
+                      <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100 mt-1">{adv.title}</h4>
                     )}
 
-                    <p className="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">{adv.content}</p>
+                    <p className="text-sm text-surface-600 dark:text-surface-300 leading-relaxed">{adv.content}</p>
                   </div>
                 ))}
               </div>

@@ -100,11 +100,11 @@ export default function ApplicationWorkspacePage() {
           </div>
           <div className="flex items-center gap-3">
             <Button
-              variant="outline"
+              variant={isAccepted ? "outline" : "primary"}
               size="sm"
               onClick={() => setShowOutcomeModal(true)}
-              className="text-xs font-bold border-amber-300 text-amber-700 dark:text-amber-300 hover:bg-amber-50"
-              leftIcon={<Trophy className="w-4 h-4 text-amber-500" />}
+              className="text-xs font-bold"
+              leftIcon={<Trophy className="w-4 h-4" />}
             >
               {isAccepted ? 'Update Acceptance Info' : 'I Got Accepted! 🎉'}
             </Button>
@@ -116,9 +116,9 @@ export default function ApplicationWorkspacePage() {
 
       {/* Accepted Celebration Banner */}
       {isAccepted && (
-        <div className="bg-gradient-to-r from-amber-50 via-emerald-50 to-teal-50 dark:from-amber-950/20 dark:via-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+        <div className="bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-bold text-xl shrink-0 shadow-md">
+            <div className="w-12 h-12 rounded-2xl bg-rome-500 text-white flex items-center justify-center font-bold text-xl shrink-0 shadow-md">
               🏆
             </div>
             <div>
@@ -310,7 +310,7 @@ export default function ApplicationWorkspacePage() {
               size="sm"
               onClick={() => setShowOutcomeModal(true)}
               className="w-full justify-center text-xs font-bold"
-              leftIcon={<Trophy className="w-4 h-4 text-amber-500" />}
+              leftIcon={<Trophy className="w-4 h-4" />}
             >
               Report Outcome / Acceptance
             </Button>

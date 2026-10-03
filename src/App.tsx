@@ -58,6 +58,27 @@ const ProtectedRoute = () => {
   return <AppLayout />;
 };
 
+const AuthAwareRoot = () => {
+  const { isAuthenticated, user, isInitializing } = useAuthStore();
+  
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen bg-surface-50 dark:bg-surface-950 p-6">
+        <DashboardSkeleton />
+      </div>
+    );
+  }
+  
+  if (isAuthenticated) {
+    if (user && !user.onboardingCompleted) {
+      return <Navigate to="/onboarding" replace />;
+    }
+    return <Navigate to="/discover" replace />;
+  }
+  
+  return <LandingPage />;
+};
+
 export default function App() {
   const { theme } = useUIStore();
   const { isAuthenticated, syncProfile, initAuth } = useAuthStore();
@@ -91,7 +112,7 @@ export default function App() {
     <Routes>
       {/* Public Routes */}
       <Route element={<PublicLayout />}>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<AuthAwareRoot />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />

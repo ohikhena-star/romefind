@@ -236,74 +236,60 @@ export default function ComparePage() {
           </div>
 
           {/* Mobile Comparison View (Clean Stacked & Scannable) */}
-          <div className="md:hidden flex flex-col gap-4 mb-10 w-full">
+          <div className="md:hidden flex flex-col w-full divide-y divide-surface-200 dark:divide-surface-800">
             {compareOpps.map((opp: Opportunity) => (
-              <div
-                key={opp.id}
-                className="w-full bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl p-5 flex flex-col gap-4 shadow-card"
-              >
-                <div className="flex justify-between items-start gap-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-rome-600 dark:text-rome-400 mb-0.5 truncate">
-                      {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
-                    </p>
-                    <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 leading-snug">
-                      {opp.title}
-                    </h3>
-                  </div>
+              <div key={opp.id} className="py-6 first:pt-0 last:pb-0 w-full">
+                <div className="flex justify-between items-start mb-1">
+                  <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 pr-4 leading-snug">
+                    {opp.title}
+                  </h3>
                   <button
                     onClick={() => removeFromCompare(opp.id)}
-                    className="p-1.5 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 hover:text-red-500 shrink-0 cursor-pointer"
-                    aria-label={`Remove ${opp.title} from comparison`}
+                    className="text-surface-400 hover:text-red-500 shrink-0 p-1 -mr-1"
+                    aria-label={`Remove ${opp.title}`}
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
+                <p className="text-sm text-rome-600 dark:text-rome-400 font-semibold mb-4">
+                  {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
+                </p>
 
-                <div className="space-y-3 text-xs border-t border-surface-100 dark:border-surface-800 pt-3">
-                  <div className="bg-surface-50 dark:bg-surface-850/60 p-3 rounded-xl border border-surface-200/60 dark:border-surface-700/60 flex items-center justify-between">
-                    <span className="text-surface-500 font-medium">Value / Funding</span>
-                    <span className="font-bold text-surface-900 dark:text-surface-100 text-right">
-                      {opp.funding || 'Unfunded / Not specified'}
+                <div className="space-y-2 text-sm">
+                  <div className="flex">
+                    <span className="w-24 shrink-0 text-surface-500">Type:</span>
+                    <span className="font-medium text-surface-900 dark:text-surface-100">{opp.type}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="w-24 shrink-0 text-surface-500">Deadline:</span>
+                    <span className="font-medium text-surface-900 dark:text-surface-100">
+                      {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'Rolling'}
                     </span>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="p-2.5 rounded-lg bg-surface-50 dark:bg-surface-850/40 border border-surface-100 dark:border-surface-800">
-                      <span className="text-surface-400 block mb-0.5">Type</span>
-                      <span className="font-semibold text-surface-800 dark:text-surface-200 truncate block">
-                        {opp.type}
-                      </span>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-surface-50 dark:bg-surface-850/40 border border-surface-100 dark:border-surface-800">
-                      <span className="text-surface-400 block mb-0.5">Deadline</span>
-                      {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : <span className="font-semibold text-surface-600">Rolling</span>}
-                    </div>
+                  <div className="flex">
+                    <span className="w-24 shrink-0 text-surface-500">Funding:</span>
+                    <span className="font-medium text-surface-900 dark:text-surface-100">
+                      {opp.funding || 'Unfunded'}
+                    </span>
                   </div>
-
-                  <div>
-                    <span className="text-surface-500 font-medium block mb-1">Location & Modality</span>
-                    <p className="font-medium text-surface-800 dark:text-surface-200 leading-relaxed">
-                      {opp.location} <span className="text-surface-500">({opp.remoteStatus})</span>
-                    </p>
+                  <div className="flex">
+                    <span className="w-24 shrink-0 text-surface-500">Duration:</span>
+                    <span className="font-medium text-surface-900 dark:text-surface-100">
+                      {opp.duration || 'Flexible'}
+                    </span>
                   </div>
-
-                  {opp.requirements && opp.requirements.length > 0 && (
-                    <div>
-                      <span className="text-surface-500 font-medium block mb-1">Key Requirements</span>
-                      <ul className="list-disc pl-4 space-y-1 text-surface-700 dark:text-surface-300">
-                        {opp.requirements.slice(0, 3).map((req: string, i: number) => (
-                          <li key={i}>{req}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  <div className="flex">
+                    <span className="w-24 shrink-0 text-surface-500">Location:</span>
+                    <span className="font-medium text-surface-900 dark:text-surface-100">
+                      {opp.location} {opp.remoteStatus ? `(${opp.remoteStatus})` : ''}
+                    </span>
+                  </div>
                 </div>
 
                 <Button
-                  variant="default"
-                  size="default"
-                  className="w-full h-11 min-h-[44px] text-sm font-semibold justify-center"
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-4 justify-center"
                   onClick={() => navigate(`/opportunity/${opp.id}`)}
                 >
                   <span>View Details</span>

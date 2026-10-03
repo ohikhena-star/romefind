@@ -44,11 +44,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
   className
 }) => {
   const navigate = useNavigate();
-  const [inspectorOpen, setInspectorOpen] = useState(showDebugSignals);
-
-  useEffect(() => {
-    setInspectorOpen(showDebugSignals);
-  }, [showDebugSignals]);
+  const [inspectorOpen, setInspectorOpen] = useState(false);
 
   const { 
     isSaved: storeIsSaved, 

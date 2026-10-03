@@ -493,7 +493,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Section 2: Opportunity Discovery & Decision Support (Pillars) ─── */}
-      <section className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900/40">
+      <section className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-left max-w-2xl mb-12">
             <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 block mb-2">
@@ -565,7 +565,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Section: FAQ (In-Page Section) ─── */}
-      <section id="faq" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900/40 scroll-mt-20">
+      <section id="faq" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900 scroll-mt-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-left max-w-2xl mb-12">
             <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 block mb-2">
@@ -612,7 +612,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Section 4: Final CTA ─── */}
-      <section className="py-16 sm:py-24 bg-surface-50/60 dark:bg-surface-900/40">
+      <section className="py-16 sm:py-24 bg-surface-50/60 dark:bg-surface-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50">
             Find what’s possible.

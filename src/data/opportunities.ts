@@ -2895,7 +2895,7 @@ export const opportunities: Opportunity[] = [
     "isFeatured": true
   },
   {
-    "id": "opp-tech-05",
+    "id": "opp-deepmind-01",
     "title": "DeepMind AI & Machine Learning Research Fellowship",
     "organization": {
       "id": "org-deepmind",
@@ -3834,7 +3834,7 @@ export const opportunities: Opportunity[] = [
     "isFeatured": true
   },
   {
-    "id": "opp-pm-02",
+    "id": "opp-reforge-01",
     "title": "Reforge Product Management Residency",
     "organization": {
       "id": "org-reforge",
