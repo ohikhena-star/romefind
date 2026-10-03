@@ -173,21 +173,36 @@ export default function LandingPage() {
             >
               {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={18} /> : <SolarIcon name="moon-linear" size={18} />}
             </button>
-            <Link 
-              to="/login"
-              className="text-sm font-semibold text-surface-700 dark:text-surface-200 hover:text-surface-950 dark:hover:text-white px-3 py-2 transition-colors"
-            >
-              Sign in
-            </Link>
-            <Button
-              variant="default"
-              size="default"
-              className="bg-rome-500 hover:bg-rome-600 text-white text-sm font-semibold h-11 min-h-[44px] px-5 rounded-xl shadow-xs"
-              onClick={handleCtaClick}
-            >
-              <span>Explore opportunities</span>
-              <SolarIcon name="alt-arrow-right-linear" size={16} />
-            </Button>
+            {isAuthenticated ? (
+              <Link to="/discover">
+                <Button
+                  variant="default"
+                  size="default"
+                  className="bg-rome-500 hover:bg-rome-600 text-white text-sm font-semibold h-10 min-h-[40px] px-5 rounded-xl shadow-xs"
+                >
+                  <span>Go to App</span>
+                  <SolarIcon name="alt-arrow-right-linear" size={16} />
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link 
+                  to="/login"
+                  className="text-sm font-semibold text-surface-700 dark:text-surface-200 hover:text-surface-950 dark:hover:text-white px-3.5 py-2 transition-colors rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800"
+                >
+                  Sign in
+                </Link>
+                <Link to="/signup">
+                  <Button
+                    variant="default"
+                    size="default"
+                    className="bg-rome-500 hover:bg-rome-600 text-white text-sm font-semibold h-10 min-h-[40px] px-5 rounded-xl shadow-xs"
+                  >
+                    Sign up
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Trigger */}
@@ -215,43 +230,51 @@ export default function LandingPage() {
             <div className="space-y-3">
               <button 
                 onClick={() => scrollToSection('about')}
-                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-1.5 cursor-pointer"
+                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-2 cursor-pointer min-h-[44px] flex items-center"
               >
                 About
               </button>
               <button 
                 onClick={() => scrollToSection('how-it-works')}
-                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-1.5 cursor-pointer"
+                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-2 cursor-pointer min-h-[44px] flex items-center"
               >
                 How It Works
               </button>
               <button 
                 onClick={() => scrollToSection('faq')}
-                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-1.5 cursor-pointer"
+                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-2 cursor-pointer min-h-[44px] flex items-center"
               >
                 FAQ
               </button>
             </div>
             <div className="pt-4 border-t border-surface-100 dark:border-surface-800 space-y-2.5">
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-center py-3 text-sm font-semibold border border-surface-200 dark:border-surface-700 rounded-xl text-surface-900 dark:text-surface-100"
-              >
-                Sign in
-              </Link>
-              <Button
-                variant="default"
-                size="default"
-                className="w-full bg-rome-500 hover:bg-rome-600 text-white text-sm font-semibold h-12 min-h-[48px] justify-center rounded-xl"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  handleCtaClick();
-                }}
-              >
-                <span>Explore opportunities</span>
-                <SolarIcon name="alt-arrow-right-linear" size={16} />
-              </Button>
+              {isAuthenticated ? (
+                <Link
+                  to="/discover"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full py-3 text-sm font-semibold bg-rome-500 hover:bg-rome-600 text-white rounded-xl shadow-xs transition-colors min-h-[48px]"
+                >
+                  <span>Go to App</span>
+                  <SolarIcon name="alt-arrow-right-linear" size={16} />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center w-full py-3 text-sm font-semibold border border-surface-200 dark:border-surface-700 rounded-xl text-surface-900 dark:text-surface-100 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors min-h-[48px]"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center w-full py-3 text-sm font-semibold bg-rome-500 hover:bg-rome-600 text-white rounded-xl shadow-xs transition-colors min-h-[48px]"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -365,17 +388,12 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Card Action Mock */}
+                {/* Decorative Opportunity Preview Footer (Illustrative - does not navigate) */}
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="default"
-                    size="default"
-                    className="w-full bg-rome-500 hover:bg-rome-600 text-white font-semibold text-sm h-11 min-h-[44px] justify-center"
-                    onClick={handleCtaClick}
-                  >
-                    <span>View opportunity details</span>
-                    <SolarIcon name="alt-arrow-right-linear" size={15} />
-                  </Button>
+                  <div className="w-full py-2.5 px-4 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 text-center text-xs font-semibold flex items-center justify-center gap-1.5 cursor-default select-none border border-surface-200/50 dark:border-surface-700/50">
+                    <span>Verified Opportunity Preview</span>
+                    <SolarIcon name="check-circle-linear" size={14} className="text-rome-500" />
+                  </div>
                 </div>
               </div>
             </div>
