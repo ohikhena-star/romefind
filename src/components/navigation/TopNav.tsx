@@ -133,8 +133,8 @@ const TopNav = () => {
                       className="w-8 h-8 rounded-xl bg-surface-200 dark:bg-surface-700 flex items-center justify-center text-surface-700 dark:text-surface-200 border border-surface-300 dark:border-surface-600 hover:border-rome-500 transition-colors overflow-hidden cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500"
                       aria-label="User account menu"
                     >
-                      {user?.profile?.photo ? (
-                        <img src={user.profile.photo} alt={user.profile.name || 'User'} className="w-full h-full object-cover" />
+                      {user?.profileImage || (user?.profile as any)?.photo ? (
+                        <img src={user?.profileImage || (user?.profile as any)?.photo} alt={user?.profile?.name || 'User'} className="w-full h-full object-cover" />
                       ) : (
                         <SolarIcon name="user-rounded-linear" size={15} />
                       )}
@@ -228,8 +228,12 @@ const TopNav = () => {
           <div className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800 px-4 py-4 space-y-3 shadow-xl animate-in slide-in-from-top-2">
             {/* User info snippet */}
             <div className="pb-3 border-b border-surface-100 dark:border-surface-800 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-surface-200 dark:bg-surface-700 flex items-center justify-center text-surface-700 dark:text-surface-200 font-bold">
-                {(user?.profile?.name || 'U').charAt(0).toUpperCase()}
+              <div className="w-10 h-10 rounded-xl bg-surface-200 dark:bg-surface-700 flex items-center justify-center text-surface-700 dark:text-surface-200 font-bold overflow-hidden">
+                {user?.profileImage || (user?.profile as any)?.photo ? (
+                  <img src={user?.profileImage || (user?.profile as any)?.photo} alt={user?.profile?.name || 'User'} className="w-full h-full object-cover" />
+                ) : (
+                  (user?.profile?.name || 'U').charAt(0).toUpperCase()
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold text-surface-900 dark:text-white truncate">{user?.profile?.name || 'Explorer'}</p>

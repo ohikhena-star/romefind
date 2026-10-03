@@ -89,6 +89,7 @@ export async function register(req: Request, res: Response): Promise<void> {
       email: user.email,
       name: displayName,
       role: user.role,
+      profileImage: user.profileImage || '',
       onboardingCompleted: user.onboardingCompleted,
       profile: {
         name: displayName,
@@ -239,6 +240,7 @@ export async function getMe(req: AuthRequest, res: Response): Promise<void> {
       email: user.email,
       name: displayName,
       role: user.role,
+      profileImage: user.profileImage || '',
       onboardingCompleted: user.onboardingCompleted,
       profile: {
         name: displayName,

@@ -221,7 +221,7 @@ export default function ProfilePage() {
         {/* Avatar with upload */}
         <div className="flex-shrink-0 relative group">
           <Avatar className="h-24 w-24">
-            <AvatarImage src={localProfile.photo || undefined} alt={localProfile.name || 'User'} />
+            <AvatarImage src={localProfile.photo || user?.profileImage || undefined} alt={localProfile.name || 'User'} />
             <AvatarFallback>{(localProfile.name || 'U').charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           {isEditing && (

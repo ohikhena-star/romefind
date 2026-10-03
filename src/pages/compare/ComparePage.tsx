@@ -235,65 +235,111 @@ export default function ComparePage() {
             </table>
           </div>
 
-          {/* Mobile Comparison View (Clean Stacked & Scannable) */}
-          <div className="md:hidden flex flex-col w-full divide-y divide-surface-200 dark:divide-surface-800">
-            {compareOpps.map((opp: Opportunity) => (
-              <div key={opp.id} className="py-6 first:pt-0 last:pb-0 w-full">
-                <div className="flex justify-between items-start mb-1">
-                  <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 pr-4 leading-snug">
-                    {opp.title}
-                  </h3>
+          {/* Mobile Comparison View (Clean, Structured, Scannable Cards) */}
+          <div className="md:hidden flex flex-col w-full space-y-4 mb-8">
+            <div className="flex items-center justify-between px-1 mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500">
+                Comparing {compareOpps.length} Opportunities
+              </span>
+              <span className="text-xs text-rome-600 dark:text-rome-400 font-medium">
+                Tap card to view details
+              </span>
+            </div>
+
+            {compareOpps.map((opp: Opportunity, idx: number) => (
+              <div 
+                key={opp.id} 
+                className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-5 shadow-xs relative space-y-4"
+              >
+                {/* Header Row */}
+                <div className="flex justify-between items-start gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="w-5 h-5 rounded-full bg-rome-100 dark:bg-rome-900/60 text-rome-600 dark:text-rome-400 text-xs font-bold flex items-center justify-center">
+                        {idx + 1}
+                      </span>
+                      <p className="text-xs font-semibold text-rome-600 dark:text-rome-400 truncate">
+                        {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
+                      </p>
+                    </div>
+                    <h3 className="text-base font-bold text-surface-950 dark:text-white leading-snug">
+                      {opp.title}
+                    </h3>
+                  </div>
                   <button
                     onClick={() => removeFromCompare(opp.id)}
-                    className="text-surface-400 hover:text-red-500 shrink-0 p-1 -mr-1"
-                    aria-label={`Remove ${opp.title}`}
+                    className="w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0 cursor-pointer"
+                    aria-label={`Remove ${opp.title} from comparison`}
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
-                <p className="text-sm text-rome-600 dark:text-rome-400 font-semibold mb-4">
-                  {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
-                </p>
 
-                <div className="space-y-2 text-sm">
-                  <div className="flex">
-                    <span className="w-24 shrink-0 text-surface-500">Type:</span>
-                    <span className="font-medium text-surface-900 dark:text-surface-100">{opp.type}</span>
-                  </div>
-                  <div className="flex">
-                    <span className="w-24 shrink-0 text-surface-500">Deadline:</span>
-                    <span className="font-medium text-surface-900 dark:text-surface-100">
+                {/* Badges */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <Tag label={opp.type} />
+                  {opp.funding ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-100 border border-surface-200 dark:border-surface-700">
+                      <DollarSign className="w-3 h-3 text-surface-400" />
+                      {opp.funding}
+                    </span>
+                  ) : (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-surface-100 dark:bg-surface-800 text-surface-500">
+                      Unfunded
+                    </span>
+                  )}
+                </div>
+
+                {/* Key Attributes Grid */}
+                <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-surface-100 dark:border-surface-800/80 text-xs">
+                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
+                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Deadline</span>
+                    <span className="font-semibold text-surface-900 dark:text-white">
                       {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'Rolling'}
                     </span>
                   </div>
-                  <div className="flex">
-                    <span className="w-24 shrink-0 text-surface-500">Funding:</span>
-                    <span className="font-medium text-surface-900 dark:text-surface-100">
-                      {opp.funding || 'Unfunded'}
-                    </span>
-                  </div>
-                  <div className="flex">
-                    <span className="w-24 shrink-0 text-surface-500">Duration:</span>
-                    <span className="font-medium text-surface-900 dark:text-surface-100">
+
+                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
+                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Duration</span>
+                    <span className="font-semibold text-surface-900 dark:text-white truncate block">
                       {opp.duration || 'Flexible'}
                     </span>
                   </div>
-                  <div className="flex">
-                    <span className="w-24 shrink-0 text-surface-500">Location:</span>
-                    <span className="font-medium text-surface-900 dark:text-surface-100">
+
+                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
+                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Location</span>
+                    <span className="font-semibold text-surface-900 dark:text-white truncate block">
                       {opp.location} {opp.remoteStatus ? `(${opp.remoteStatus})` : ''}
+                    </span>
+                  </div>
+
+                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
+                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Eligibility</span>
+                    <span className="font-semibold text-surface-900 dark:text-white truncate block">
+                      {opp.experienceRequirements || 'All Levels'}
                     </span>
                   </div>
                 </div>
 
+                {/* Benefits / Requirements snippet */}
+                {opp.benefits && opp.benefits.length > 0 && (
+                  <div className="text-xs pt-1">
+                    <span className="text-surface-500 font-medium block mb-1">Key Perks:</span>
+                    <p className="text-surface-700 dark:text-surface-300 line-clamp-2">
+                      {opp.benefits.join(' • ')}
+                    </p>
+                  </div>
+                )}
+
+                {/* Action CTA */}
                 <Button
-                  variant="outline"
+                  variant="default"
                   size="sm"
-                  className="w-full mt-4 justify-center"
+                  className="w-full justify-center h-10 min-h-[40px] text-xs font-bold"
                   onClick={() => navigate(`/opportunity/${opp.id}`)}
                 >
                   <span>View Details</span>
-                  <SolarIcon name="alt-arrow-right-linear" size={16} />
+                  <SolarIcon name="alt-arrow-right-linear" size={15} />
                 </Button>
               </div>
             ))}
