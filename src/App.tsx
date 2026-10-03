@@ -32,6 +32,7 @@ import ApplicationWorkspacePage from '@/pages/my-opportunities/ApplicationWorksp
 import LearnPage from '@/pages/learn/LearnPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import NotificationsPage from '@/pages/notifications/NotificationsPage';
+import SearchesPage from '@/pages/searches/SearchesPage';
 
 import { DashboardSkeleton } from '@/components/ui/composite-skeletons';
 
@@ -143,7 +144,10 @@ export default function App() {
         <Route path="/learn" element={<LearnPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/searches" element={<SearchesPage />} />
+        <Route path="/search" element={<SearchesPage />} />
       </Route>
+
       
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

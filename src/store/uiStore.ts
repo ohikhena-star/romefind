@@ -9,6 +9,7 @@ interface UIState {
   hasSeenProductTour: boolean;
   tourOpen: boolean;
   tourStep: number; // 0 to 6
+  recentSearches: string[];
   
   toggleTheme: () => void;
   setTheme: (theme: 'light' | 'dark') => void;
@@ -23,6 +24,9 @@ interface UIState {
   nextTourStep: () => void;
   prevTourStep: () => void;
   resetTour: () => void;
+  addRecentSearch: (query: string) => void;
+  removeRecentSearch: (query: string) => void;
+  clearRecentSearches: () => void;
 }
 
 const getSystemTheme = (): 'light' | 'dark' => {
@@ -53,6 +57,7 @@ export const useUIStore = create<UIState>()(
       hasSeenProductTour: false,
       tourOpen: false,
       tourStep: 0,
+      recentSearches: [],
 
       toggleTheme: () => {
         const newTheme = get().theme === 'light' ? 'dark' : 'light';
@@ -112,6 +117,24 @@ export const useUIStore = create<UIState>()(
 
       resetTour: () => {
         set({ hasSeenProductTour: false, tourOpen: true, tourStep: 0 });
+      },
+
+      addRecentSearch: (query: string) => {
+        const clean = (query || '').trim();
+        if (!clean || clean.length < 2) return;
+        const current = get().recentSearches || [];
+        // Filter out case-insensitive duplicates and limit to 10
+        const filtered = current.filter(item => item.toLowerCase() !== clean.toLowerCase());
+        set({ recentSearches: [clean, ...filtered].slice(0, 10) });
+      },
+
+      removeRecentSearch: (query: string) => {
+        const current = get().recentSearches || [];
+        set({ recentSearches: current.filter(item => item.toLowerCase() !== (query || '').trim().toLowerCase()) });
+      },
+
+      clearRecentSearches: () => {
+        set({ recentSearches: [] });
       }
     }),
     {

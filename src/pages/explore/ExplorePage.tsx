@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { useAuthStore } from '@/store/authStore';
+import { useUIStore } from '@/store/uiStore';
 import { searchOpportunities, sortByRelevance } from '@/services/search.service';
 import { SearchInput, Chip, OpportunityList, EmptyState, Button, OpportunityGridSkeleton } from '@/components/ui';
 import { SolarIcon } from '@/components/ui/SolarIcon';
@@ -32,6 +33,8 @@ export default function ExplorePage() {
   const { opportunities, isLoading } = useOpportunityStore();
   const { isSaved, saveOpportunity, unsaveOpportunity } = useApplicationStore();
   const { user } = useAuthStore();
+  const { addRecentSearch } = useUIStore();
+
   
   const [query, setQuery] = useState<string>(searchParams.get('q') || '');
   
@@ -146,6 +149,9 @@ export default function ExplorePage() {
 
   const handleSearch = (newQuery: string) => {
     setQuery(newQuery);
+    if (newQuery && newQuery.trim().length > 1) {
+      addRecentSearch(newQuery.trim());
+    }
     updateUrlParams({ q: newQuery });
   };
 

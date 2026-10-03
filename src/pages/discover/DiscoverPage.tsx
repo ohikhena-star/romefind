@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useApplicationStore } from '@/store/applicationStore';
+import { useUIStore } from '@/store/uiStore';
 import { getPersonalizedRecommendations, getOverlookingOpportunities } from '@/services/personalization.service';
 import { OpportunityCard } from '@/components/opportunity';
 import { EmptyState, DashboardSkeleton, Button } from '@/components/ui';
@@ -18,6 +19,7 @@ export default function DiscoverPage() {
   const { user, isAuthenticated } = useAuthStore();
   const { opportunities, isLoading } = useOpportunityStore();
   const { savedOpportunities, trackedApplications, saveOpportunity, unsaveOpportunity, isSaved } = useApplicationStore();
+  const { addRecentSearch } = useUIStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [debugMode, setDebugMode] = useState(() => {
@@ -26,12 +28,15 @@ export default function DiscoverPage() {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/explore?q=${encodeURIComponent(searchQuery.trim())}`);
+    const clean = searchQuery.trim();
+    if (clean) {
+      addRecentSearch(clean);
+      navigate(`/explore?q=${encodeURIComponent(clean)}`);
     } else {
       navigate('/explore');
     }
   };
+
 
   const trackingItems = useMemo(() => {
     const items: Array<{
