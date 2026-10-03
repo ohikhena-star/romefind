@@ -4,25 +4,26 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/utils/cn"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer [&_svg]:pointer-events-none [&_svg]:size-4.5 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default:     "bg-rome-500 text-white hover:bg-rome-600 active:bg-rome-700 shadow-2xs",
-        primary:     "bg-rome-500 text-white hover:bg-rome-600 active:bg-rome-700 shadow-2xs",
-        secondary:   "bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 hover:bg-surface-200 dark:hover:bg-surface-700 border border-surface-200/80 dark:border-surface-700",
+        default:     "bg-rome-500 text-white hover:bg-rome-600 active:bg-rome-700 shadow-xs",
+        primary:     "bg-rome-500 text-white hover:bg-rome-600 active:bg-rome-700 shadow-xs",
+        secondary:   "bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-100 hover:bg-surface-200 dark:hover:bg-surface-700 border border-surface-200/90 dark:border-surface-700",
         outline:     "border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-900 text-surface-800 dark:text-surface-200 hover:bg-surface-50 dark:hover:bg-surface-800 hover:border-surface-400 dark:hover:border-surface-600",
         ghost:       "text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 hover:text-surface-900 dark:hover:text-white",
         link:        "text-rome-600 dark:text-rome-400 underline-offset-4 hover:underline p-0 h-auto font-medium",
-        destructive: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-2xs",
+        destructive: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-xs",
       },
       size: {
-        default: "h-10 px-4 py-2 text-sm",
-        md:      "h-10 px-4 py-2 text-sm",
-        sm:      "h-8.5 px-3 rounded-lg text-xs",
-        xs:      "h-7 px-2.5 rounded-lg text-xs",
-        lg:      "h-11 px-6 rounded-xl text-base font-bold",
-        icon:    "h-9 w-9 rounded-xl p-0",
+        default: "h-11 min-h-[44px] px-5 py-2.5 text-sm sm:text-base",
+        md:      "h-11 min-h-[44px] px-5 py-2.5 text-sm sm:text-base",
+        sm:      "h-10 min-h-[40px] px-4 py-2 text-sm font-medium rounded-lg",
+        xs:      "h-9 min-h-[36px] px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg",
+        lg:      "h-12 sm:h-[50px] min-h-[48px] px-6 sm:px-7 py-3 text-base font-semibold rounded-xl",
+        icon:    "h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl p-0",
+        "icon-sm": "h-10 w-10 min-h-[40px] min-w-[40px] rounded-lg p-0",
       },
     },
     defaultVariants: {

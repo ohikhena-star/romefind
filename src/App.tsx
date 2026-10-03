@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useApplicationStore } from '@/store/applicationStore';
@@ -37,6 +37,7 @@ import { DashboardSkeleton } from '@/components/ui/composite-skeletons';
 
 const ProtectedRoute = () => {
   const { isAuthenticated, user, isInitializing } = useAuthStore();
+  const location = useLocation();
   
   if (isInitializing) {
     return (
@@ -47,7 +48,7 @@ const ProtectedRoute = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
   
   if (user && !user.onboardingCompleted) {
@@ -59,10 +60,14 @@ const ProtectedRoute = () => {
 
 export default function App() {
   const { theme } = useUIStore();
-  const { isAuthenticated, syncProfile } = useAuthStore();
+  const { isAuthenticated, syncProfile, initAuth } = useAuthStore();
   const { fetchOpportunities } = useOpportunityStore();
   const { fetchApplications } = useApplicationStore();
   const { fetchNotifications } = useNotificationStore();
+
+  useEffect(() => {
+    initAuth();
+  }, [initAuth]);
 
   useEffect(() => {
     if (theme === 'dark') {

@@ -150,11 +150,11 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
         <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
           {/* Share & Compare on hover */}
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={handleShare}
               className={cn(
-                "p-1.5 rounded-lg transition-colors cursor-pointer border text-xs",
+                "w-9 h-9 min-w-[36px] min-h-[36px] rounded-xl transition-colors cursor-pointer border flex items-center justify-center",
                 copied
                   ? "text-emerald-600 bg-emerald-50 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800"
                   : "text-surface-400 bg-surface-50 dark:bg-surface-800 hover:text-surface-700 dark:hover:text-surface-200 border-surface-200 dark:border-surface-700"
@@ -162,14 +162,14 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
               title={copied ? "Link Copied!" : "Share Opportunity"}
               aria-label="Share opportunity"
             >
-              {copied ? <SolarIcon name="check-circle-linear" size={13} className="text-emerald-500" /> : <SolarIcon name="share-linear" size={13} />}
+              {copied ? <SolarIcon name="check-circle-linear" size={16} className="text-emerald-500" /> : <SolarIcon name="share-linear" size={16} />}
             </button>
 
             {showCompareButton && (
               <button
                 onClick={handleCompareToggle}
                 className={cn(
-                  "p-1.5 rounded-lg text-xs font-semibold flex items-center transition-all cursor-pointer border",
+                  "w-9 h-9 min-w-[36px] min-h-[36px] rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer border",
                   isComparing
                     ? "bg-rome-500 text-white border-rome-600 shadow-2xs"
                     : "bg-surface-50 dark:bg-surface-800 text-surface-400 hover:text-rome-600 border-surface-200 dark:border-surface-700"
@@ -177,7 +177,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
                 title={isComparing ? "Remove from Compare" : "Compare with other opportunities"}
                 aria-label={isComparing ? "Remove from comparison" : "Add to comparison"}
               >
-                <SolarIcon name="scale-linear" size={13} className={isComparing ? "text-white" : ""} />
+                <SolarIcon name="scale-linear" size={16} className={isComparing ? "text-white" : ""} />
               </button>
             )}
           </div>
@@ -187,7 +187,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
             <button
               onClick={handleSaveToggle}
               className={cn(
-                "p-1.5 rounded-lg transition-colors cursor-pointer border",
+                "w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl transition-colors cursor-pointer border flex items-center justify-center",
                 isSaved 
                   ? "text-rose-500 bg-rose-50 border-rose-200 dark:bg-rose-950/30 dark:border-rose-900/60 shadow-2xs" 
                   : "text-surface-400 bg-surface-50 dark:bg-surface-800 hover:text-rose-500 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
@@ -195,7 +195,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
               aria-label={isSaved ? "Unsave opportunity" : "Save opportunity"}
               title={isSaved ? "Saved in My Opportunities" : "Save opportunity"}
             >
-              <SolarIcon name={isSaved ? "heart-bold" : "heart-linear"} size={14} className={isSaved ? "text-rose-500" : ""} />
+              <SolarIcon name={isSaved ? "heart-bold" : "heart-linear"} size={18} className={isSaved ? "text-rose-500" : ""} />
             </button>
           )}
         </div>
@@ -204,49 +204,49 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
       {/* ─── 2. Title & Type/Field Badges ─── */}
       <h3 className={cn(
         "font-bold text-surface-900 dark:text-white leading-snug mb-2 line-clamp-2 group-hover:text-rome-600 dark:group-hover:text-rome-400 transition-colors",
-        compact ? "text-sm" : "text-base"
+        compact ? "text-base" : "text-lg"
       )}>
         {opportunity.title}
       </h3>
 
       <div className="flex flex-wrap items-center gap-1.5 mb-3">
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
           {opportunity.type}
         </span>
         {primaryField && (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-600 dark:text-surface-400">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-600 dark:text-surface-400">
             {primaryField}
           </span>
         )}
       </div>
 
       {/* ─── 3. Description ─── */}
-      <p className="text-xs text-surface-500 dark:text-surface-400 mb-4 line-clamp-2 leading-relaxed">
+      <p className="text-sm text-surface-600 dark:text-surface-400 mb-4 line-clamp-2 leading-relaxed">
         {opportunity.shortDescription || opportunity.description}
       </p>
 
       {/* ─── 4. Structured Metadata: Location, Deadline, Funding ─── */}
-      <div className="grid grid-cols-2 gap-2 text-xs text-surface-600 dark:text-surface-400 py-3 border-y border-surface-100 dark:border-surface-800 mb-3 bg-surface-50/40 dark:bg-surface-850/40 rounded-xl px-3">
+      <div className="grid grid-cols-2 gap-2 text-xs text-surface-600 dark:text-surface-400 py-3 border-y border-surface-100 dark:border-surface-800 mb-3 bg-surface-50/40 dark:bg-surface-850/40 rounded-xl px-3.5">
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Location</span>
-          <span className="font-medium text-surface-800 dark:text-surface-200 truncate block" title={opportunity.location}>
+          <span className="text-xs uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Location</span>
+          <span className="font-medium text-surface-800 dark:text-surface-200 truncate block text-sm" title={opportunity.location}>
             {opportunity.location || 'Remote / Worldwide'}
           </span>
         </div>
 
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Deadline</span>
+          <span className="text-xs uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Deadline</span>
           {opportunity.deadline ? (
             <DeadlineIndicator deadline={opportunity.deadline} />
           ) : (
-            <span className="font-medium text-surface-700 dark:text-surface-300">Rolling</span>
+            <span className="font-medium text-surface-700 dark:text-surface-300 text-sm">Rolling</span>
           )}
         </div>
 
         {opportunity.funding && (
-          <div className="col-span-2 pt-1 border-t border-surface-100/80 dark:border-surface-800/80 flex items-center justify-between">
-            <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold">Funding</span>
-            <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[200px]" title={opportunity.funding}>
+          <div className="col-span-2 pt-1.5 border-t border-surface-100/80 dark:border-surface-800/80 flex items-center justify-between">
+            <span className="text-xs uppercase tracking-wider text-surface-400 font-semibold">Funding</span>
+            <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[200px] text-sm" title={opportunity.funding}>
               {opportunity.funding}
             </span>
           </div>
@@ -255,37 +255,40 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
       {/* ─── 5. Contextual "Why this is here" ─── */}
       {(relevanceReasons && relevanceReasons.length > 0) && (
-        <div className="mb-4 text-xs text-surface-500 dark:text-surface-400 bg-surface-50/80 dark:bg-surface-800/50 p-2 rounded-lg border border-surface-100 dark:border-surface-800">
-          <p className="line-clamp-2">
-            <span className="font-semibold text-surface-700 dark:text-surface-300">Why this is here: </span>
+        <div className="mb-4 text-xs sm:text-sm text-surface-600 dark:text-surface-400 bg-surface-50/80 dark:bg-surface-800/50 p-2.5 rounded-xl border border-surface-100 dark:border-surface-800">
+          <p className="line-clamp-2 leading-relaxed">
+            <span className="font-semibold text-surface-800 dark:text-surface-200">Why this is here: </span>
             {relevanceReasons[0]}
           </p>
         </div>
       )}
 
       {/* ─── 6. Primary Action Buttons ─── */}
-      <div className="mt-auto pt-2 flex items-center gap-2">
+      <div className="mt-auto pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
         <Button 
           variant="default"
-          size="sm"
-          className="flex-1 text-xs font-semibold"
+          size="default"
+          className="flex-1 text-sm font-semibold justify-center h-11 min-h-[44px]"
           onClick={(e) => {
             e.stopPropagation();
             handleCardClick();
           }}
         >
           <span>View opportunity</span>
-          <SolarIcon name="alt-arrow-right-linear" size={13} />
+          <SolarIcon name="alt-arrow-right-linear" size={15} />
         </Button>
 
         <Button
           variant={isSaved ? "secondary" : "outline"}
-          size="sm"
-          className={cn("px-3 text-xs", isSaved && "text-rose-600 dark:text-rose-400")}
+          size="default"
+          className={cn(
+            "px-4 text-sm font-semibold justify-center h-11 min-h-[44px]", 
+            isSaved && "text-rose-600 dark:text-rose-400"
+          )}
           onClick={handleSaveToggle}
           title={isSaved ? "Saved" : "Save"}
         >
-          <SolarIcon name={isSaved ? "heart-bold" : "heart-linear"} size={13} />
+          <SolarIcon name={isSaved ? "heart-bold" : "heart-linear"} size={16} />
           <span>{isSaved ? "Saved" : "Save"}</span>
         </Button>
       </div>

@@ -7,8 +7,9 @@ import { searchOpportunities, sortByRelevance } from '@/services/search.service'
 import { SearchInput, Chip, OpportunityList, EmptyState, Button, OpportunityGridSkeleton } from '@/components/ui';
 import { categories } from '@/data/categories';
 import { OpportunityType, RemoteStatus, Opportunity, SearchResult } from '@/types/models';
-import { Filter, ArrowDownWideNarrow, Briefcase, DollarSign, GraduationCap, Target, Layers, Users, Microscope, TrendingUp, Globe, Rocket, Compass } from 'lucide-react';
+import { Filter, ArrowDownWideNarrow, Briefcase, DollarSign, GraduationCap, Target, Layers, Users, Microscope, TrendingUp, Globe, Rocket, Compass, X } from 'lucide-react';
 import { FIELDS, LOCATIONS } from '@/utils/constants';
+import { cn } from '@/utils/cn';
 
 const GOAL_ICON_MAP: Record<string, React.ElementType> = {
   Briefcase,
@@ -32,56 +33,128 @@ export default function ExplorePage() {
   const { user } = useAuthStore();
   
   const [query, setQuery] = useState<string>(searchParams.get('q') || '');
-  const initialType = searchParams.get('type');
   
-  const [selectedTypes, setSelectedTypes] = useState<OpportunityType[]>(
-    initialType ? [initialType as OpportunityType] : []
-  );
-  const [selectedFields, setSelectedFields] = useState<string[]>([]);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [fundedOnly, setFundedOnly] = useState<boolean>(false);
-  const [remoteOnly, setRemoteOnly] = useState<boolean>(false);
+  const [selectedTypes, setSelectedTypes] = useState<OpportunityType[]>(() => {
+    const typeParam = searchParams.get('type');
+    return typeParam ? [typeParam as OpportunityType] : [];
+  });
+  
+  const [selectedFields, setSelectedFields] = useState<string[]>(() => {
+    const fieldParam = searchParams.get('field');
+    return fieldParam ? [fieldParam] : [];
+  });
+  
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(() => {
+    const locParam = searchParams.get('location');
+    return locParam ? [locParam] : [];
+  });
+  
+  const [fundedOnly, setFundedOnly] = useState<boolean>(() => {
+    return searchParams.get('funded') === 'true';
+  });
+  
+  const [remoteOnly, setRemoteOnly] = useState<boolean>(() => {
+    return searchParams.get('remote') === 'true';
+  });
   
   const [sortBy, setSortBy] = useState<string>('relevance');
   const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
 
+  // Sync state from URL parameters
   useEffect(() => {
     const qParam = searchParams.get('q');
     if (qParam !== null) setQuery(qParam);
-    
+
     const typeParam = searchParams.get('type');
     if (typeParam) {
       setSelectedTypes([typeParam as OpportunityType]);
     }
+
+    const fieldParam = searchParams.get('field');
+    if (fieldParam) {
+      setSelectedFields([fieldParam]);
+    }
+
+    const locParam = searchParams.get('location');
+    if (locParam) {
+      setSelectedLocations([locParam]);
+    }
+
+    const fundedParam = searchParams.get('funded');
+    if (fundedParam !== null) {
+      setFundedOnly(fundedParam === 'true');
+    }
+
+    const remoteParam = searchParams.get('remote');
+    if (remoteParam !== null) {
+      setRemoteOnly(remoteParam === 'true');
+    }
   }, [searchParams]);
 
-  const handleSearch = (newQuery: string) => {
-    setQuery(newQuery);
+  const updateUrlParams = (updates: {
+    q?: string;
+    types?: OpportunityType[];
+    fields?: string[];
+    locations?: string[];
+    funded?: boolean;
+    remote?: boolean;
+  }) => {
     const newParams = new URLSearchParams(searchParams);
-    if (newQuery) {
-      newParams.set('q', newQuery);
-    } else {
-      newParams.delete('q');
+    
+    if (updates.q !== undefined) {
+      if (updates.q.trim()) newParams.set('q', updates.q.trim());
+      else newParams.delete('q');
     }
+    
+    if (updates.types !== undefined) {
+      if (updates.types.length > 0) newParams.set('type', updates.types[0]);
+      else newParams.delete('type');
+    }
+
+    if (updates.fields !== undefined) {
+      if (updates.fields.length > 0) newParams.set('field', updates.fields[0]);
+      else newParams.delete('field');
+    }
+
+    if (updates.locations !== undefined) {
+      if (updates.locations.length > 0) newParams.set('location', updates.locations[0]);
+      else newParams.delete('location');
+    }
+
+    if (updates.funded !== undefined) {
+      if (updates.funded) newParams.set('funded', 'true');
+      else newParams.delete('funded');
+    }
+
+    if (updates.remote !== undefined) {
+      if (updates.remote) newParams.set('remote', 'true');
+      else newParams.delete('remote');
+    }
+
     setSearchParams(newParams);
   };
 
+  const handleSearch = (newQuery: string) => {
+    setQuery(newQuery);
+    updateUrlParams({ q: newQuery });
+  };
+
   const toggleType = (t: OpportunityType) => {
-    setSelectedTypes(prev => 
-      prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]
-    );
+    const updated = selectedTypes.includes(t) ? selectedTypes.filter(x => x !== t) : [...selectedTypes, t];
+    setSelectedTypes(updated);
+    updateUrlParams({ types: updated });
   };
 
   const toggleField = (f: string) => {
-    setSelectedFields(prev => 
-      prev.includes(f) ? prev.filter(x => x !== f) : [...prev, f]
-    );
+    const updated = selectedFields.includes(f) ? selectedFields.filter(x => x !== f) : [...selectedFields, f];
+    setSelectedFields(updated);
+    updateUrlParams({ fields: updated });
   };
 
   const toggleLocation = (loc: string) => {
-    setSelectedLocations(prev => 
-      prev.includes(loc) ? prev.filter(x => x !== loc) : [...prev, loc]
-    );
+    const updated = selectedLocations.includes(loc) ? selectedLocations.filter(x => x !== loc) : [...selectedLocations, loc];
+    setSelectedLocations(updated);
+    updateUrlParams({ locations: updated });
   };
 
   const clearAllFilters = () => {
@@ -147,18 +220,42 @@ export default function ExplorePage() {
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 flex-1">
-        {/* Sidebar Filters */}
-        <div className={`w-full md:w-64 space-y-6 flex-shrink-0 ${showMobileFilters ? 'block' : 'hidden md:block'}`}>
-          <div className="flex items-center justify-between pb-2 border-b border-surface-200 dark:border-surface-800">
+        {/* Mobile Backdrop & Drawer Wrapper */}
+        {showMobileFilters && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs md:hidden"
+            onClick={() => setShowMobileFilters(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Sidebar Filters (Desktop Sticky / Mobile Drawer) */}
+        <div className={cn(
+          "w-full md:w-64 space-y-6 flex-shrink-0",
+          showMobileFilters 
+            ? "fixed inset-y-0 right-0 z-50 w-80 max-w-[85vw] bg-white dark:bg-surface-900 p-6 overflow-y-auto shadow-2xl border-l border-surface-200 dark:border-surface-800 animate-in slide-in-from-right duration-200 md:relative md:inset-auto md:w-64 md:p-0 md:shadow-none md:border-none md:overflow-visible" 
+            : "hidden md:block"
+        )}>
+          <div className="flex items-center justify-between pb-3 border-b border-surface-200 dark:border-surface-800">
             <h3 className="font-bold text-base text-surface-900 dark:text-surface-50">Filters</h3>
-            {activeFiltersCount > 0 && (
-              <button 
-                onClick={clearAllFilters}
-                className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:text-rome-700"
+            <div className="flex items-center gap-2">
+              {activeFiltersCount > 0 && (
+                <button 
+                  onClick={clearAllFilters}
+                  className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:text-rome-700"
+                >
+                  Clear all ({activeFiltersCount})
+                </button>
+              )}
+              {/* Mobile Close Button */}
+              <button
+                onClick={() => setShowMobileFilters(false)}
+                className="md:hidden p-1.5 rounded-lg text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                aria-label="Close filters"
               >
-                Clear all ({activeFiltersCount})
+                <X className="w-5 h-5" />
               </button>
-            )}
+            </div>
           </div>
           
           <div className="space-y-6">

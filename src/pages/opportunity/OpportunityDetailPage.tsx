@@ -299,31 +299,34 @@ export default function OpportunityDetailPage() {
                     Track in Workspace
                   </Button>
 
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <Button 
                       variant="outline" 
-                      className="flex-1 justify-center gap-1.5 text-xs px-2"
+                      size="default"
+                      className="flex-1 justify-center gap-1.5 text-sm font-semibold h-11 min-h-[44px]"
                       onClick={() => saved ? unsaveOpportunity(opportunity.id) : saveOpportunity(opportunity.id)}
                       aria-label={saved ? 'Remove from saved' : 'Save opportunity'}
                     >
-                      {saved ? <BookmarkCheck className="w-3.5 h-3.5 text-rome-500" /> : <Bookmark className="w-3.5 h-3.5" />}
-                      {saved ? 'Saved' : 'Save'}
+                      {saved ? <BookmarkCheck className="w-4 h-4 text-rome-500" /> : <Bookmark className="w-4 h-4" />}
+                      <span>{saved ? 'Saved' : 'Save'}</span>
                     </Button>
                     <Button 
                       variant={isComparing ? 'secondary' : 'outline'}
-                      className="flex-1 justify-center text-xs px-2"
+                      size="default"
+                      className="flex-1 justify-center text-sm font-semibold h-11 min-h-[44px]"
                       onClick={() => isComparing ? removeFromCompare(opportunity.id) : addToCompare(opportunity.id)}
                     >
                       {isComparing ? 'Comparing ✓' : '+ Compare'}
                     </Button>
                     <Button
                       variant="outline"
-                      className="justify-center text-xs px-2.5"
+                      size="default"
+                      className="w-11 h-11 min-w-[44px] min-h-[44px] p-0 flex items-center justify-center"
                       onClick={() => setShowShareModal(true)}
                       title="Share Opportunity"
                       aria-label="Share Opportunity"
                     >
-                      <Share2 className="w-3.5 h-3.5" />
+                      <Share2 className="w-4 h-4" />
                     </Button>
                   </div>
 
@@ -791,28 +794,34 @@ export default function OpportunityDetailPage() {
 
       {/* Mobile Sticky Action Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-surface-900 border-t border-surface-200 dark:border-surface-800 p-3.5 shadow-elevated z-50">
-        <div className="flex gap-2.5 max-w-md mx-auto">
+        <div className="flex items-center gap-2.5 max-w-md mx-auto">
           <Button 
             variant="outline" 
-            className="flex-1 justify-center"
+            size="default"
+            className="w-12 h-12 min-w-[48px] min-h-[48px] p-0 flex items-center justify-center rounded-xl"
             onClick={() => saved ? unsaveOpportunity(opportunity.id) : saveOpportunity(opportunity.id)}
+            aria-label={saved ? 'Remove from saved' : 'Save opportunity'}
           >
             {saved ? <BookmarkCheck className="w-5 h-5 text-rome-500" /> : <Bookmark className="w-5 h-5" />}
           </Button>
           <Button
             variant="outline"
-            className="flex-1 justify-center"
+            size="default"
+            className="w-12 h-12 min-w-[48px] min-h-[48px] p-0 flex items-center justify-center rounded-xl"
             onClick={() => setShowShareModal(true)}
+            aria-label="Share opportunity"
           >
-            Share
+            <Share2 className="w-5 h-5" />
           </Button>
           <Button 
             variant="default" 
-            className="flex-[3] justify-center text-sm font-semibold"
-            onClick={() => window.open(opportunity.applicationUrl, '_blank')}
+            size="default"
+            className="flex-1 justify-center text-sm sm:text-base font-semibold h-12 min-h-[48px] rounded-xl"
+            onClick={() => window.open(opportunity.applicationUrl, '_blank', 'noopener noreferrer')}
+            aria-label={`Apply to ${opportunity.title}`}
           >
-            Apply Now
-            <ExternalLink size={14} className="ml-2" />
+            <span>Apply on Official Site</span>
+            <ExternalLink size={16} className="ml-2" />
           </Button>
         </div>
       </div>

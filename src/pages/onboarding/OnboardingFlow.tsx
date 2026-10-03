@@ -144,7 +144,7 @@ const OnboardingFlow: React.FC = () => {
               onKeyDown={e => e.key === 'Enter' && name.trim() && next()}
             />
             <div className="mt-8">
-              <Button onClick={next} disabled={!name.trim()}>Continue</Button>
+              <Button size="lg" onClick={next} disabled={!name.trim()} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -165,8 +165,8 @@ const OnboardingFlow: React.FC = () => {
               onKeyDown={e => e.key === 'Enter' && location.trim() && next()}
             />
             <div className="mt-8 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={!location.trim()}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={!location.trim()} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -184,15 +184,16 @@ const OnboardingFlow: React.FC = () => {
                 <Chip 
                   key={dest} 
                   label={dest} 
+                  size="md"
                   selected={destinations.includes(dest)} 
                   onClick={() => toggleArray(setDestinations, dest)} 
-                  className="cursor-pointer py-2 px-4 text-sm font-medium"
+                  className="cursor-pointer"
                 />
               ))}
             </div>
             <div className="mt-8 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={destinations.length === 0}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={destinations.length === 0} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -208,15 +209,16 @@ const OnboardingFlow: React.FC = () => {
                 <Chip 
                   key={goal} 
                   label={goal} 
+                  size="md"
                   selected={goals.includes(goal)} 
                   onClick={() => toggleArray(setGoals, goal)} 
-                  className="cursor-pointer py-2 px-4 text-sm font-medium"
+                  className="cursor-pointer"
                 />
               ))}
             </div>
             <div className="mt-8 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={goals.length === 0}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={goals.length === 0} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -238,9 +240,10 @@ const OnboardingFlow: React.FC = () => {
                 <Chip 
                   key={field} 
                   label={field} 
+                  size="md"
                   selected={interests.includes(field)} 
                   onClick={() => toggleArray(setInterests, field)} 
-                  className="cursor-pointer py-1.5 px-3 text-sm"
+                  className="cursor-pointer"
                 />
               ))}
               {filteredInterests.length === 0 && (
@@ -248,8 +251,8 @@ const OnboardingFlow: React.FC = () => {
               )}
             </div>
             <div className="mt-6 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={interests.length === 0}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={interests.length === 0} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -260,25 +263,26 @@ const OnboardingFlow: React.FC = () => {
             <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
               Where are you right now?
             </h2>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               {EXPERIENCE_LEVELS.map(exp => (
                 <button
                   key={exp}
                   onClick={() => { setExperience(exp); setTimeout(next, 300); }}
                   className={cn(
-                    "w-full text-left p-4 rounded-xl border transition-all cursor-pointer font-medium",
+                    "w-full text-left p-4 sm:p-5 rounded-xl border transition-all cursor-pointer font-medium text-base sm:text-lg min-h-[56px] flex items-center justify-between",
                     experience === exp 
                       ? "border-rome-500 bg-rome-50 dark:bg-rome-900/20 text-rome-700 dark:text-rome-300 shadow-sm ring-1 ring-rome-500"
                       : "border-surface-200 dark:border-surface-700 hover:border-rome-300 dark:hover:border-rome-700 bg-white dark:bg-surface-800"
                   )}
                 >
-                  {exp}
+                  <span>{exp}</span>
+                  {experience === exp && <span className="text-rome-500 font-bold">✓</span>}
                 </button>
               ))}
             </div>
             <div className="mt-8 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={!experience}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={!experience} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -294,15 +298,16 @@ const OnboardingFlow: React.FC = () => {
                 <Chip 
                   key={opt} 
                   label={opt} 
+                  size="md"
                   selected={oppTypes.includes(opt)} 
                   onClick={() => toggleArray(setOppTypes, opt)} 
-                  className="cursor-pointer py-2 px-4 text-sm font-medium"
+                  className="cursor-pointer"
                 />
               ))}
             </div>
             <div className="mt-8 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={oppTypes.length === 0}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={oppTypes.length === 0} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -313,25 +318,26 @@ const OnboardingFlow: React.FC = () => {
             <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
               If the right opportunity came along, would you relocate?
             </h2>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               {RELOCATION_OPTIONS.map(rel => (
                 <button
                   key={rel}
                   onClick={() => { setRelocation(rel); setTimeout(next, 300); }}
                   className={cn(
-                    "w-full text-left p-4 rounded-xl border transition-all cursor-pointer font-medium",
+                    "w-full text-left p-4 sm:p-5 rounded-xl border transition-all cursor-pointer font-medium text-base sm:text-lg min-h-[56px] flex items-center justify-between",
                     relocation === rel 
                       ? "border-rome-500 bg-rome-50 dark:bg-rome-900/20 text-rome-700 dark:text-rome-300 shadow-sm ring-1 ring-rome-500"
                       : "border-surface-200 dark:border-surface-700 hover:border-rome-300 dark:hover:border-rome-700 bg-white dark:bg-surface-800"
                   )}
                 >
-                  {rel}
+                  <span>{rel}</span>
+                  {relocation === rel && <span className="text-rome-500 font-bold">✓</span>}
                 </button>
               ))}
             </div>
             <div className="mt-8 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={!relocation}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={!relocation} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );
@@ -342,25 +348,26 @@ const OnboardingFlow: React.FC = () => {
             <h2 className="text-2xl md:text-3xl font-bold mb-8 text-surface-900 dark:text-white leading-tight">
               Does funding matter for what you're looking for?
             </h2>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               {FUNDING_OPTIONS.map(fund => (
                 <button
                   key={fund}
                   onClick={() => { setFunding(fund); setTimeout(next, 300); }}
                   className={cn(
-                    "w-full text-left p-4 rounded-xl border transition-all cursor-pointer font-medium",
+                    "w-full text-left p-4 sm:p-5 rounded-xl border transition-all cursor-pointer font-medium text-base sm:text-lg min-h-[56px] flex items-center justify-between",
                     funding === fund 
                       ? "border-rome-500 bg-rome-50 dark:bg-rome-900/20 text-rome-700 dark:text-rome-300 shadow-sm ring-1 ring-rome-500"
                       : "border-surface-200 dark:border-surface-700 hover:border-rome-300 dark:hover:border-rome-700 bg-white dark:bg-surface-800"
                   )}
                 >
-                  {fund}
+                  <span>{fund}</span>
+                  {funding === fund && <span className="text-rome-500 font-bold">✓</span>}
                 </button>
               ))}
             </div>
             <div className="mt-8 flex gap-3">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} disabled={!funding}>Continue</Button>
+              <Button variant="outline" size="lg" onClick={back} className="px-6 text-base">Back</Button>
+              <Button size="lg" onClick={next} disabled={!funding} className="px-8 text-base">Continue</Button>
             </div>
           </div>
         );

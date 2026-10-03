@@ -25,7 +25,7 @@ const PublicLayout = () => {
                 Log in
               </Link>
               <Link to="/signup">
-                <Button variant="primary" size="sm" className="hidden sm:inline-flex">
+                <Button variant="default" size="sm" className="hidden sm:inline-flex">
                   Get started
                 </Button>
               </Link>

@@ -7,7 +7,7 @@ export interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
   selected?: boolean;
   onRemove?: () => void;
   variant?: 'default' | 'outline';
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export const Chip: React.FC<ChipProps> = ({
@@ -28,11 +28,13 @@ export const Chip: React.FC<ChipProps> = ({
       onClick={onClick}
       disabled={!isInteractive && !onRemove}
       className={cn(
-        "inline-flex items-center rounded-full font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-surface-900",
-        size === 'sm' ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-sm",
-        variant === 'default' && !selected && "bg-surface-100 text-surface-700 hover:bg-surface-200 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700",
+        "inline-flex items-center justify-center font-medium transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-surface-900",
+        size === 'sm' && "px-3 py-1.5 min-h-[36px] text-xs sm:text-sm rounded-lg",
+        size === 'md' && "px-4 py-2 min-h-[42px] sm:min-h-[44px] text-sm sm:text-base rounded-xl",
+        size === 'lg' && "px-5 py-3 min-h-[48px] text-base rounded-xl",
+        variant === 'default' && !selected && "bg-surface-100 text-surface-700 hover:bg-surface-200 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700 border border-surface-200/80 dark:border-surface-700",
         variant === 'outline' && !selected && "border border-surface-300 bg-transparent text-surface-700 hover:bg-surface-50 dark:border-surface-700 dark:text-surface-300 dark:hover:bg-surface-800",
-        selected && "bg-rome-500 text-white hover:bg-rome-600 border-transparent",
+        selected && "bg-rome-500 text-white hover:bg-rome-600 border-transparent shadow-xs",
         !isInteractive && !onRemove && "cursor-default",
         className
       )}

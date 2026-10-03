@@ -103,13 +103,14 @@ const LoginPage = () => {
 
         <Button
           type="submit"
-          variant="primary"
+          variant="default"
+          size="lg"
           fullWidth
           isLoading={isLoading}
           disabled={isLoading}
-          className="mt-6"
+          className="mt-6 h-12 min-h-[48px] text-base font-semibold"
         >
-          {isLoading ? 'Signing in…' : 'Log in'}
+          {isLoading ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
 

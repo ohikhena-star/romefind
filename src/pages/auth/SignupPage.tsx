@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/Input';
 import { Eye, EyeOff } from 'lucide-react';
 
 const SignupPage = () => {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,7 +21,7 @@ const SignupPage = () => {
     e.preventDefault();
     setError('');
     
-    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
+    if (!email.trim() || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
@@ -40,7 +39,7 @@ const SignupPage = () => {
     setIsLoading(true);
     
     try {
-      await signup(email.trim(), password, name.trim());
+      await signup(email.trim(), password, '');
       navigate('/onboarding');
     } catch (err: any) {
       setError(err?.message || 'Failed to create account. Please try again.');
@@ -62,18 +61,6 @@ const SignupPage = () => {
             {error}
           </div>
         )}
-        
-        <Input
-          id="name"
-          type="text"
-          label="Full name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Jane Doe"
-          required
-          fullWidth
-          disabled={isLoading}
-        />
 
         <Input
           id="email"
@@ -133,11 +120,12 @@ const SignupPage = () => {
 
         <Button
           type="submit"
-          variant="primary"
+          variant="default"
+          size="lg"
           fullWidth
           isLoading={isLoading}
           disabled={isLoading}
-          className="mt-6"
+          className="mt-6 h-12 min-h-[48px] text-base font-semibold"
         >
           {isLoading ? 'Creating account…' : 'Create account'}
         </Button>
