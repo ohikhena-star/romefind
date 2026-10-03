@@ -18,21 +18,14 @@ export default function DiscoverPage() {
   const { opportunities, isLoading } = useOpportunityStore();
   const { savedOpportunities, trackedApplications, saveOpportunity, unsaveOpportunity, isSaved } = useApplicationStore();
 
-  const [searchQuery, setSearchQuery] = useState('');
   const [debugMode, setDebugMode] = useState(() => {
     return searchParams.get('debug') === '1' || searchParams.get('debug') === 'true';
   });
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/explore?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
-
-  const handleQuickIntent = (query: string) => {
-    navigate(`/explore?q=${encodeURIComponent(query)}`);
-  };
+  const activeItems = useMemo(() => {
+    const saved = opportunities.filter((o: Opportunity) => savedOpportunities.includes(o.id));
+    return saved.slice(0, 3);
+  }, [opportunities, savedOpportunities]);
 
   const recommendations: SearchResult[] = useMemo(() => {
     if (!user?.profile || !user?.preferences) {
@@ -123,97 +116,41 @@ export default function DiscoverPage() {
         </div>
       )}
 
-      {/* ─── PRIMARY INTENT HERO: WHAT ARE YOU TRYING TO MAKE HAPPEN? ─── */}
-      <section className="rounded-2xl border border-surface-200/90 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-8 shadow-xs">
-        <div className="max-w-4xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rome-50 dark:bg-rome-950/40 text-rome-600 dark:text-rome-400 border border-rome-200/60 dark:border-rome-800/40">
-              Intent-Driven Discovery
-            </span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-surface-900 dark:text-white tracking-tight leading-snug mb-2">
-            What are you trying to make happen?
-          </h2>
-          <p className="text-sm text-surface-600 dark:text-surface-400 mb-6">
-            Whatever you're trying to build next, there's somewhere to start. Choose a pathway or search directly across any discipline.
-          </p>
 
-          {/* 9 Intent Pathways Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-6">
-            {[
-              { id: 'find-work', label: 'Find work', icon: 'case-linear', query: 'Jobs' },
-              { id: 'build-experience', label: 'Build experience', icon: 'cup-star-linear', query: 'Internships' },
-              { id: 'get-funded', label: 'Get funded', icon: 'dollar-minimalistic-linear', query: 'Grants' },
-              { id: 'study', label: 'Study somewhere new', icon: 'graduation-cap-linear', query: 'Scholarships' },
-              { id: 'build-portfolio', label: 'Build my portfolio', icon: 'layers-minimalistic-linear', query: 'Competitions' },
-              { id: 'research', label: 'Get into research', icon: 'test-tube-linear', query: 'Research' },
-              { id: 'start-something', label: 'Start something', icon: 'rocket-linear', query: 'Startups' },
-              { id: 'explore-new-field', label: 'Explore a new field', icon: 'compass-linear', query: 'Fellowships' },
-              { id: 'not-sure', label: 'I\'m still figuring it out', icon: 'magic-stick-linear', query: '' },
-            ].map(pathway => (
-              <button
-                key={pathway.id}
-                type="button"
-                onClick={() => pathway.query ? handleQuickIntent(pathway.query) : navigate('/explore')}
-                className="flex items-center gap-2.5 p-2.5 rounded-xl border border-surface-200 dark:border-surface-800 bg-surface-50/60 dark:bg-surface-850 hover:border-rome-400 dark:hover:border-rome-600 hover:bg-white dark:hover:bg-surface-800 text-left transition-all cursor-pointer group"
-              >
-                <div className="w-7 h-7 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 flex items-center justify-center shrink-0 group-hover:text-rome-500 group-hover:bg-rome-50 dark:group-hover:bg-rome-950/40 transition-colors">
-                  <SolarIcon name={pathway.icon} size={15} />
-                </div>
-                <span className="text-xs font-semibold text-surface-800 dark:text-surface-200 group-hover:text-surface-950 dark:group-hover:text-white transition-colors line-clamp-1">
-                  {pathway.label}
-                </span>
-              </button>
-            ))}
-          </div>
 
-          {/* Search Input for users who know exactly what they want */}
-          <form onSubmit={handleSearchSubmit} className="relative flex items-center gap-2 mb-4">
-            <div className="relative flex-1">
-              <SolarIcon name="magnifer-linear" size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Or search by profession, field, or intent... e.g. Project Manager, Customer Experience, Accountant, UX Design"
-                className="w-full pl-11 pr-4 py-3 text-sm rounded-xl border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-rome-500/50 focus:border-rome-500 transition-all shadow-2xs"
-              />
+      {/* ─── 0. CONTINUE WHERE YOU LEFT OFF (Only if active saved/tracked) ─── */}
+      {activeItems.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                <SolarIcon name="bookmark-linear" size={16} className="text-surface-400 dark:text-surface-500" />
+                Continue where you left off
+              </h2>
+              <p className="text-xs text-surface-500 dark:text-surface-400">
+                Opportunities you recently saved or began tracking.
+              </p>
             </div>
-            <button
-              type="submit"
-              className="px-5 py-3 rounded-xl bg-rome-500 hover:bg-rome-600 text-white font-bold text-sm transition-colors shrink-0 shadow-xs flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>Search</span>
-              <SolarIcon name="arrow-right-linear" size={14} className="w-3.5 h-3.5" />
-            </button>
-          </form>
+            <Link to="/my-opportunities" className="text-rome-600 dark:text-rome-400 hover:text-rome-700 font-semibold flex items-center gap-1 transition-colors text-xs">
+              View all ({savedOpportunities.length}) <SolarIcon name="alt-arrow-right-linear" size={14} className="w-3.5 h-3.5" />
+            </Link>
+          </div>
 
-          {/* Natural Human Intent Triggers */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <span className="text-xs font-medium text-surface-400 shrink-0">Try searching:</span>
-            {[
-              { label: '"behind the scenes"', query: 'behind the scenes' },
-              { label: '"working with people"', query: 'working with people' },
-              { label: '"money & numbers"', query: 'money and numbers' },
-              { label: '"create things"', query: 'create things' },
-              { label: '"solving technical problems"', query: 'solving technical problems' },
-              { label: '"help people"', query: 'help people' },
-              { label: 'Project Management', query: 'Project Management' },
-              { label: 'Customer Experience', query: 'Customer Experience' },
-              { label: 'Remote Virtual Assistant', query: 'Virtual Assistant' }
-            ].map(trigger => (
-              <button
-                key={trigger.label}
-                type="button"
-                onClick={() => handleQuickIntent(trigger.query)}
-                className="px-2 py-0.5 rounded-md text-xs text-surface-600 dark:text-surface-400 hover:text-rome-600 dark:hover:text-rome-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors border border-surface-200/60 dark:border-surface-800"
-              >
-                {trigger.label}
-              </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {activeItems.map((opp: Opportunity) => (
+              <OpportunityCard 
+                key={opp.id} 
+                opportunity={opp}
+                showSaveButton
+                isSaved={isSaved(opp.id)}
+                onSave={() => saveOpportunity(opp.id)}
+                onUnsave={() => unsaveOpportunity(opp.id)}
+                onClick={() => navigate(`/opportunity/${opp.id}`)}
+              />
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ─── SECTION 1: FOR YOU (HIGH-PRECISION RECOMMENDATIONS) ─── */}
       <section id="for-you" className="space-y-4 scroll-mt-20">

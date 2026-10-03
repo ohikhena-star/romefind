@@ -21,6 +21,18 @@ export * from './MatchIndicator';
 export * from './Toggle';
 export * from './Tooltip';
 export * from './Notification';
+export * from './dialog';
+export * from './dropdown-menu';
+export * from './progress';
+export * from './separator';
+export * from './scroll-area';
+export * from './sheet';
+export * from './popover';
+export * from './accordion';
+export * from './switch';
+export * from './alert';
+export * from './table';
 export * from '../opportunity/OpportunityCard';
 export * from '../opportunity/OpportunityList';
 export * from './SolarIcon';
+

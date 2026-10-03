@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { SolarIcon } from '@/components/ui/SolarIcon';
 import { Opportunity, SearchResult } from '@/types/models';
-import { Card, Tag, DeadlineIndicator } from '@/components/ui';
+import { Button, DeadlineIndicator } from '@/components/ui';
 import { useApplicationStore } from '@/store/applicationStore';
 
 export interface OpportunityCardProps {
@@ -123,190 +123,172 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
     ? opportunity.organization?.name
     : String(opportunity.organization || '');
 
+  const primaryField = opportunity.field?.[0] || 'General';
+
   return (
-    <div
-      role="article"
-      aria-label={opportunity.title}
+    <article
+      aria-label={`${opportunity.title} by ${orgName}`}
       tabIndex={0}
       onClick={handleCardClick}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCardClick(); }}
       className={cn(
-        "flex flex-col h-full relative group cursor-pointer transition-all duration-200",
-        "rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900",
-        "hover:shadow-card-hover hover:border-surface-300 dark:hover:border-surface-700",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        isComparing && "ring-2 ring-rome-500/70 dark:ring-rome-400 bg-rome-50/20 dark:bg-rome-950/20",
+        "flex flex-col h-full relative group cursor-pointer transition-all duration-200 text-left",
+        "rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-5",
+        "hover:border-surface-300 dark:hover:border-surface-700 hover:shadow-card-hover",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500 focus-visible:ring-offset-2",
+        isComparing && "ring-2 ring-rome-500/80 bg-rome-50/20 dark:bg-rome-950/20 border-rome-300 dark:border-rome-700",
         className
       )}
     >
-      {/* ─── Ticket Header Band ─── */}
-      <div className="bg-surface-50 dark:bg-surface-800/50 px-4 py-3 rounded-t-2xl border-b border-surface-100 dark:border-surface-800 flex justify-between items-center gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <Tag label={opportunity.type} size="sm" />
+      {/* ─── 1. Header: Organization & Meta Actions ─── */}
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-medium text-surface-500 dark:text-surface-400 truncate tracking-wide" title={orgName}>
+            {orgName}
+          </p>
         </div>
-        
-        <div className="flex items-center gap-2 shrink-0">
+
+        <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+          {/* Share & Compare on hover */}
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={handleShare}
+              className={cn(
+                "p-1.5 rounded-lg transition-colors cursor-pointer border text-xs",
+                copied
+                  ? "text-emerald-600 bg-emerald-50 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800"
+                  : "text-surface-400 bg-surface-50 dark:bg-surface-800 hover:text-surface-700 dark:hover:text-surface-200 border-surface-200 dark:border-surface-700"
+              )}
+              title={copied ? "Link Copied!" : "Share Opportunity"}
+              aria-label="Share opportunity"
+            >
+              {copied ? <SolarIcon name="check-circle-linear" size={13} className="text-emerald-500" /> : <SolarIcon name="share-linear" size={13} />}
+            </button>
+
+            {showCompareButton && (
+              <button
+                onClick={handleCompareToggle}
+                className={cn(
+                  "p-1.5 rounded-lg text-xs font-semibold flex items-center transition-all cursor-pointer border",
+                  isComparing
+                    ? "bg-rome-500 text-white border-rome-600 shadow-2xs"
+                    : "bg-surface-50 dark:bg-surface-800 text-surface-400 hover:text-rome-600 border-surface-200 dark:border-surface-700"
+                )}
+                title={isComparing ? "Remove from Compare" : "Compare with other opportunities"}
+                aria-label={isComparing ? "Remove from comparison" : "Add to comparison"}
+              >
+                <SolarIcon name="scale-linear" size={13} className={isComparing ? "text-white" : ""} />
+              </button>
+            )}
+          </div>
+
+          {/* Save Button */}
+          {showSaveButton && (
+            <button
+              onClick={handleSaveToggle}
+              className={cn(
+                "p-1.5 rounded-lg transition-colors cursor-pointer border",
+                isSaved 
+                  ? "text-rose-500 bg-rose-50 border-rose-200 dark:bg-rose-950/30 dark:border-rose-900/60 shadow-2xs" 
+                  : "text-surface-400 bg-surface-50 dark:bg-surface-800 hover:text-rose-500 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
+              )}
+              aria-label={isSaved ? "Unsave opportunity" : "Save opportunity"}
+              title={isSaved ? "Saved in My Opportunities" : "Save opportunity"}
+            >
+              <SolarIcon name={isSaved ? "heart-bold" : "heart-linear"} size={14} className={isSaved ? "text-rose-500" : ""} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ─── 2. Title & Type/Field Badges ─── */}
+      <h3 className={cn(
+        "font-bold text-surface-900 dark:text-white leading-snug mb-2 line-clamp-2 group-hover:text-rome-600 dark:group-hover:text-rome-400 transition-colors",
+        compact ? "text-sm" : "text-base"
+      )}>
+        {opportunity.title}
+      </h3>
+
+      <div className="flex flex-wrap items-center gap-1.5 mb-3">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
+          {opportunity.type}
+        </span>
+        {primaryField && (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-600 dark:text-surface-400">
+            {primaryField}
+          </span>
+        )}
+      </div>
+
+      {/* ─── 3. Description ─── */}
+      <p className="text-xs text-surface-500 dark:text-surface-400 mb-4 line-clamp-2 leading-relaxed">
+        {opportunity.shortDescription || opportunity.description}
+      </p>
+
+      {/* ─── 4. Structured Metadata: Location, Deadline, Funding ─── */}
+      <div className="grid grid-cols-2 gap-2 text-xs text-surface-600 dark:text-surface-400 py-3 border-y border-surface-100 dark:border-surface-800 mb-3 bg-surface-50/40 dark:bg-surface-850/40 rounded-xl px-3">
+        <div>
+          <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Location</span>
+          <span className="font-medium text-surface-800 dark:text-surface-200 truncate block" title={opportunity.location}>
+            {opportunity.location || 'Remote / Worldwide'}
+          </span>
+        </div>
+
+        <div>
+          <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold block mb-0.5">Deadline</span>
           {opportunity.deadline ? (
             <DeadlineIndicator deadline={opportunity.deadline} />
           ) : (
-            <span className="flex items-center gap-1 text-xs text-surface-500">
-              <SolarIcon name="calendar-linear" size={12} /> Rolling
-            </span>
+            <span className="font-medium text-surface-700 dark:text-surface-300">Rolling</span>
           )}
-          
-          <div className="flex items-center gap-1">
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button
-                onClick={handleShare}
-                className={cn(
-                  "p-1.5 rounded-lg transition-colors z-10 cursor-pointer border text-xs",
-                  copied
-                    ? "text-emerald-600 bg-emerald-50 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800"
-                    : "text-surface-400 bg-surface-50 dark:bg-surface-800/80 hover:text-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
-                )}
-                title={copied ? "Link Copied!" : "Share Opportunity"}
-                aria-label="Share opportunity"
-              >
-                {copied ? <SolarIcon name="check-circle-linear" size={14} className="text-emerald-500" /> : <SolarIcon name="share-linear" size={14} />}
-              </button>
-
-              {showCompareButton && (
-                <button
-                  onClick={handleCompareToggle}
-                  className={cn(
-                    "p-1.5 rounded-lg text-xs font-semibold flex items-center transition-all z-10 cursor-pointer border",
-                    isComparing
-                      ? "bg-rome-500 text-white border-rome-600 dark:bg-rome-600 dark:border-rome-500 shadow-2xs"
-                      : "bg-surface-50 dark:bg-surface-800/80 text-surface-400 hover:text-rome-600 border-surface-200 dark:border-surface-700 dark:hover:bg-surface-700"
-                  )}
-                  title={isComparing ? "Remove from Compare" : "Add to Compare"}
-                  aria-label="Toggle comparison"
-                >
-                  <SolarIcon name="scale-linear" size={14} className={isComparing ? "text-white" : ""} />
-                </button>
-              )}
-            </div>
-
-            {showSaveButton && (
-              <button
-                onClick={handleSaveToggle}
-                className={cn(
-                  "p-1.5 rounded-lg transition-colors z-10 cursor-pointer border",
-                  isSaved 
-                    ? "text-rose-500 bg-rose-50 border-rose-200 dark:bg-rose-950/30 dark:border-rose-900/60" 
-                    : "text-surface-400 bg-surface-50 dark:bg-surface-800/80 hover:text-surface-600 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 border-surface-200 dark:border-surface-700"
-                )}
-                aria-label={isSaved ? "Unsave opportunity" : "Save opportunity"}
-                title={isSaved ? "Saved" : "Save opportunity"}
-              >
-                <SolarIcon name={isSaved ? "heart-bold" : "heart-linear"} size={14} className={isSaved ? "text-rose-500" : ""} />
-              </button>
-            )}
-          </div>
         </div>
-      </div>
 
-      {/* ─── Card Body ─── */}
-      <div className={cn("flex flex-col flex-1", compact ? "px-4 pb-4" : "px-5 pb-5")}>
-        <div className="text-xs text-surface-500 dark:text-surface-400 mt-3 mb-1 truncate" title={orgName}>
-          {orgName}
-        </div>
-        
-        <h3 className={cn(
-          "font-bold text-surface-900 dark:text-white mb-2 leading-snug line-clamp-2",
-          compact ? "text-sm" : "text-base"
-        )}>
-          {opportunity.title}
-        </h3>
-        
-        <p className="text-xs text-surface-500 dark:text-surface-400 mb-4 line-clamp-2 leading-relaxed">
-          {opportunity.shortDescription || opportunity.description}
-        </p>
-
-        {relevanceScore !== undefined && (
-          <div className="mb-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center min-w-0">
-                <span className="text-xs text-surface-500 truncate" title={relevanceReasons?.join(' · ')}>
-                  {relevanceScore}% match{relevanceReasons && relevanceReasons.length > 0 ? ` · ${relevanceReasons[0]}` : ''}
-                </span>
-              </div>
-
-              {showDebugSignals && matchSignals && (
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setDebugExpanded(!debugExpanded); }}
-                  className="text-xs text-surface-500 hover:text-rome-500 shrink-0 flex items-center gap-0.5"
-                  title="Inspect matching criteria"
-                >
-                  <span>debug</span>
-                  <SolarIcon name={debugExpanded ? "alt-arrow-up-linear" : "alt-arrow-down-linear"} size={12} />
-                </button>
-              )}
-            </div>
-
-            {showDebugSignals && debugExpanded && matchSignals && (
-              <div className="mt-1.5 p-2 rounded-lg bg-surface-100 dark:bg-surface-800 text-xs font-mono space-y-1 text-surface-600 dark:text-surface-300 border border-surface-200 dark:border-surface-700">
-                <div className="flex justify-between">
-                  <span>Field/Interest Match:</span>
-                  <span className={matchSignals.interestMatch ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-surface-500"}>
-                    {matchSignals.interestMatch ? `✓ (+${matchSignals.fieldMatchScore})` : '✗ (0)'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Skill Overlap:</span>
-                  <span className={matchSignals.skillMatch ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-surface-500"}>
-                    {matchSignals.skillMatch ? `✓ (+${matchSignals.skillMatchScore})` : '✗ (0)'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Goal/Intent Match:</span>
-                  <span className={matchSignals.goalMatch ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-surface-500"}>
-                    {matchSignals.goalMatch ? `✓ (+${matchSignals.goalMatchScore})` : '✗ (0)'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Opportunity Type Match:</span>
-                  <span className={matchSignals.typeMatch ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-surface-500"}>
-                    {matchSignals.typeMatch ? `✓ (+${matchSignals.typeMatchScore})` : 'neutral'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Eligibility / Experience:</span>
-                  <span className={matchSignals.eligibilityMatch && matchSignals.experienceMatch ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-amber-500"}>
-                    {matchSignals.eligibilityMatch ? `✓ (+${matchSignals.eligibilityScore})` : 'restricted'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Location / Remote:</span>
-                  <span className={matchSignals.locationMatch ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-surface-500"}>
-                    {matchSignals.locationMatch ? `✓ (+${matchSignals.locationScore})` : 'neutral'}
-                  </span>
-                </div>
-              </div>
-            )}
+        {opportunity.funding && (
+          <div className="col-span-2 pt-1 border-t border-surface-100/80 dark:border-surface-800/80 flex items-center justify-between">
+            <span className="text-[11px] uppercase tracking-wider text-surface-400 font-semibold">Funding</span>
+            <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[200px]" title={opportunity.funding}>
+              {opportunity.funding}
+            </span>
           </div>
         )}
-
-        {/* ─── Footer: Location + Funding ─── */}
-        <div className="mt-auto pt-3 border-t border-surface-100 dark:border-surface-800 flex items-center text-xs text-surface-500 gap-3">
-          {opportunity.location && (
-            <span className="flex items-center gap-1 truncate max-w-[150px]" title={opportunity.location}>
-              <SolarIcon name="map-point-linear" size={14} className="shrink-0" />
-              <span className="truncate">{opportunity.location}</span>
-            </span>
-          )}
-
-          {opportunity.funding && (
-            <span 
-              className="flex items-center gap-1 shrink-0 max-w-[140px] truncate"
-              title={opportunity.funding}
-            >
-              <SolarIcon name="dollar-minimalistic-linear" size={14} className="shrink-0" />
-              $<span className="truncate">{opportunity.funding}</span>
-            </span>
-          )}
-        </div>
       </div>
-    </div>
+
+      {/* ─── 5. Contextual "Why this is here" ─── */}
+      {(relevanceReasons && relevanceReasons.length > 0) && (
+        <div className="mb-4 text-xs text-surface-500 dark:text-surface-400 bg-surface-50/80 dark:bg-surface-800/50 p-2 rounded-lg border border-surface-100 dark:border-surface-800">
+          <p className="line-clamp-2">
+            <span className="font-semibold text-surface-700 dark:text-surface-300">Why this is here: </span>
+            {relevanceReasons[0]}
+          </p>
+        </div>
+      )}
+
+      {/* ─── 6. Primary Action Buttons ─── */}
+      <div className="mt-auto pt-2 flex items-center gap-2">
+        <Button 
+          variant="default"
+          size="sm"
+          className="flex-1 text-xs font-semibold"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleCardClick();
+          }}
+        >
+          <span>View opportunity</span>
+          <SolarIcon name="alt-arrow-right-linear" size={13} />
+        </Button>
+
+        <Button
+          variant={isSaved ? "secondary" : "outline"}
+          size="sm"
+          className={cn("px-3 text-xs", isSaved && "text-rose-600 dark:text-rose-400")}
+          onClick={handleSaveToggle}
+          title={isSaved ? "Saved" : "Save"}
+        >
+          <SolarIcon name={isSaved ? "heart-bold" : "heart-linear"} size={13} />
+          <span>{isSaved ? "Saved" : "Save"}</span>
+        </Button>
+      </div>
+    </article>
   );
 };

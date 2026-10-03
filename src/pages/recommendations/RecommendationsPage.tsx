@@ -1,328 +1,266 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
 import { useApplicationStore } from '@/store/applicationStore';
 import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
 import { OpportunityGridSkeleton } from '@/components/ui/composite-skeletons';
-import { TrendingUp, CheckCircle2, Compass, Award, Globe, Activity, Filter, DollarSign, ArrowRight } from 'lucide-react';
-import { RemoteStatus, Opportunity } from '@/types/models';
-
-type RecTab = 'all' | 'high_match' | 'public_health' | 'remote' | 'funded' | 'alternative';
-
-import { calculateRelevanceScore } from '@/services/personalization.service';
+import { Button, EmptyState } from '@/components/ui';
+import { SolarIcon } from '@/components/ui/SolarIcon';
+import { daysUntil } from '@/utils/format';
+import { Opportunity, AlternativeDiscovery, SearchResult } from '@/types/models';
+import { getPersonalizedRecommendations, getOverlookingOpportunities } from '@/services/personalization.service';
 
 export const RecommendationsPage: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<RecTab>('all');
   const { opportunities, isLoading } = useOpportunityStore();
-  const { user } = useAuthStore();
-  const { isSaved, saveOpportunity, unsaveOpportunity } = useApplicationStore();
+  const { user, isAuthenticated } = useAuthStore();
+  const { savedOpportunities, trackedApplications } = useApplicationStore();
 
-  const userFields = useMemo(() => {
-    const fields = user?.preferences?.fields || user?.profile?.interests || [];
-    return fields.map((f: string) => f.toLowerCase().trim());
+  const userInterests = useMemo(() => {
+    return user?.preferences?.fields || user?.profile?.interests || [];
   }, [user]);
 
-  const remotePref = useMemo(() => {
-    return user?.preferences?.locationPreference || [];
+  const userGoals = useMemo(() => {
+    return user?.preferences?.goals || user?.profile?.goals || [];
   }, [user]);
 
-  // Unified relevance scoring through centralized personalization service
-  const scoredOpportunities = useMemo(() => {
+  // Personalized recommendations scored dynamically
+  const recommendations: SearchResult[] = useMemo(() => {
     if (!user?.profile || !user?.preferences) {
-      return opportunities.map(opp => ({
+      return opportunities.slice(0, 6).map((opp: Opportunity) => ({
         opportunity: opp,
-        score: 55,
-        reasons: ['Curated open opportunity']
+        relevanceScore: 70,
+        relevanceReasons: ['Curated active opportunity']
       }));
     }
-    return opportunities.map(opp => {
-      const { score, reasons, matchSignals } = calculateRelevanceScore(opp, user.profile, user.preferences);
-      return {
-        opportunity: opp,
-        score,
-        reasons,
-        matchSignals
-      };
-    }).sort((a, b) => b.score - a.score);
+    return getPersonalizedRecommendations(opportunities, user.profile, user.preferences, 6);
   }, [opportunities, user]);
 
-  // Tab categorization filter logic
-  const tabFiltered = useMemo(() => {
-    switch (activeTab) {
-      case 'high_match':
-        return scoredOpportunities.filter(item => item.score >= 80);
-      case 'public_health':
-        return scoredOpportunities.filter(item => {
-          const fields = (item.opportunity.field || []).map(f => f.toLowerCase());
-          const title = (item.opportunity.title || '').toLowerCase();
-          const desc = (item.opportunity.description || '').toLowerCase();
-          const tags = (item.opportunity.tags || []).map(t => t.toLowerCase());
-          return (
-            fields.some(f => f.includes('health') || f.includes('medicine') || f.includes('epidemiology') || f.includes('bio') || f.includes('clinical')) ||
-            title.includes('health') || title.includes('epidemiology') || title.includes('who') || title.includes('biomedical') ||
-            tags.some(t => t.includes('health') || t.includes('epidemiology') || t.includes('bio')) ||
-            desc.includes('public health') || desc.includes('global health')
-          );
-        });
-      case 'remote':
-        return scoredOpportunities.filter(item => 
-          item.opportunity.remoteStatus === RemoteStatus.Remote || 
-          String(item.opportunity.remoteStatus).toLowerCase().includes('remote')
-        );
-      case 'funded':
-        return scoredOpportunities.filter(item => {
-          const fund = (item.opportunity.funding || '').toLowerCase();
-          return (
-            fund.includes('full') || 
-            fund.includes('stipend') ||
-            fund.includes('$') ||
-            fund.includes('£') ||
-            fund.includes('€') ||
-            fund.includes('grant') ||
-            fund.includes('award') ||
-            fund.includes('salary')
-          );
-        });
-      case 'alternative':
-        return scoredOpportunities.filter(item => {
-          const oppFields = (item.opportunity.field || []).map(f => f.toLowerCase());
-          const isDirectPrimary = oppFields.some(of => userFields.some(uf => of.includes(uf) || uf.includes(of)));
-          // Opportunities outside direct primary field that offer adjacent transferrable skills
-          return !isDirectPrimary || item.opportunity.field.length >= 2;
-        });
-      case 'all':
-      default:
-        return scoredOpportunities;
-    }
-  }, [scoredOpportunities, activeTab, userFields]);
+  // "You might be overlooking" adjacent opportunities
+  const overlooked: AlternativeDiscovery[] = useMemo(() => {
+    if (!user?.profile || !user?.preferences) return [];
+    return getOverlookingOpportunities(opportunities, user.profile, user.preferences);
+  }, [opportunities, user]);
 
-  // Live Counts for each tab
-  const counts = useMemo(() => {
-    return {
-      all: scoredOpportunities.length,
-      high_match: scoredOpportunities.filter(item => item.score >= 80).length,
-      public_health: scoredOpportunities.filter(item => {
-        const fields = (item.opportunity.field || []).map(f => f.toLowerCase());
-        const title = (item.opportunity.title || '').toLowerCase();
-        return (
-          fields.some(f => f.includes('health') || f.includes('medicine') || f.includes('epidemiology') || f.includes('bio')) ||
-          title.includes('health') || title.includes('epidemiology')
-        );
-      }).length,
-      remote: scoredOpportunities.filter(item => 
-        item.opportunity.remoteStatus === RemoteStatus.Remote || 
-        String(item.opportunity.remoteStatus).toLowerCase().includes('remote')
-      ).length,
-      funded: scoredOpportunities.filter(item => {
-        const fund = (item.opportunity.funding || '').toLowerCase();
-        return fund.includes('full') || fund.includes('stipend') || fund.includes('$') || fund.includes('£') || fund.includes('€') || fund.includes('grant');
-      }).length,
-      alternative: scoredOpportunities.filter(item => {
-        const oppFields = (item.opportunity.field || []).map(f => f.toLowerCase());
-        const isDirect = oppFields.some(of => userFields.some(uf => of.includes(uf) || uf.includes(of)));
-        return !isDirect || item.opportunity.field.length >= 2;
-      }).length
-    };
-  }, [scoredOpportunities, userFields]);
+  // Closing soon opportunities (urgency within 45 days)
+  const closingSoon: Opportunity[] = useMemo(() => {
+    return opportunities
+      .filter((opp: Opportunity) => {
+        if (!opp.deadline) return false;
+        const days = daysUntil(opp.deadline);
+        return days >= 0 && days <= 45;
+      })
+      .sort((a: Opportunity, b: Opportunity) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+      .slice(0, 3);
+  }, [opportunities]);
+
+  // "Continue where you left off" active opportunities
+  const activeItems = useMemo(() => {
+    const saved = opportunities.filter(o => savedOpportunities.includes(o.id));
+    return saved.slice(0, 3);
+  }, [opportunities, savedOpportunities]);
 
   if (isLoading && opportunities.length === 0) {
-    return <OpportunityGridSkeleton count={6} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" />;
+    return <OpportunityGridSkeleton count={6} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" />;
+  }
+
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="flex h-full min-h-[60vh] items-center justify-center p-8">
+        <EmptyState 
+          icon="user-rounded-linear"
+          title="Sign in to view your recommendations"
+          description="Create your profile to unlock personalized opportunity curation and adjacent career discovery."
+          actionLabel="Sign In"
+          onAction={() => navigate('/login')}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-8 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-in fade-in duration-300">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-surface-900 via-rome-950 to-surface-950 p-6 md:p-10 text-white shadow-2xl border border-surface-800">
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rome-500/20 text-rome-300 text-xs font-semibold mb-4 border border-rome-400/30 backdrop-blur-sm">
-            <Activity className="w-4 h-4 text-rome-400" />
-            Decision-Support Intelligence Engine
-          </div>
-          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-3">
-            Opportunities Tailored Specifically For You
+    <div className="space-y-12 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in duration-300">
+      {/* ─── 1. Editorial Header ─── */}
+      <header className="border-b border-surface-200 dark:border-surface-800 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-surface-950 dark:text-surface-50">
+            For You
           </h1>
-          <p className="text-surface-300 text-base md:text-lg mb-6 leading-relaxed">
-            Multi-factor scoring calculated dynamically against your target fields, work modality (Remote, Hybrid), experience level, and verified funding requirements.
+          <p className="text-sm text-surface-500 dark:text-surface-400 mt-1 max-w-2xl leading-relaxed">
+            Opportunities selected based on your interests, goals, experience, and where you’re looking.
           </p>
-
-          {/* User Personalization Badges */}
-          <div className="flex flex-wrap gap-2 text-xs">
-            {userFields.map((f, idx) => (
-              <span key={idx} className="px-3 py-1 rounded-xl bg-surface-800/90 text-surface-200 border border-surface-700/60 flex items-center gap-1.5 shadow-xs">
-                <CheckCircle2 className="text-emerald-400 w-3.5 h-3.5" /> Field: {f.charAt(0).toUpperCase() + f.slice(1)}
-              </span>
-            ))}
-            {remotePref.map((m: string, idx: number) => (
-              <span key={idx} className="px-3 py-1 rounded-xl bg-surface-800/90 text-surface-200 border border-surface-700/60 flex items-center gap-1.5 shadow-xs">
-                <Globe className="text-blue-400 w-3.5 h-3.5" /> Modality: {m}
-              </span>
-            ))}
-            {user?.profile?.currentStatus && (
-              <span className="px-3 py-1 rounded-xl bg-surface-800/90 text-surface-200 border border-surface-700/60">
-                Status: {user.profile.currentStatus}
-              </span>
-            )}
-          </div>
         </div>
 
-        {/* Ambient background decoration */}
-        <div className="absolute -right-16 -top-16 w-96 h-96 rounded-full bg-rome-500/15 blur-3xl pointer-events-none" />
-        <div className="absolute right-32 -bottom-20 w-80 h-80 rounded-full bg-blue-500/15 blur-3xl pointer-events-none" />
-      </div>
-
-      {/* Interactive Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-surface-200 dark:border-surface-800 pb-4">
-        <button
-          onClick={() => setActiveTab('all')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-            activeTab === 'all'
-              ? 'bg-rome-600 text-white shadow-md'
-              : 'text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800'
-          }`}
-        >
-          <TrendingUp className="w-4 h-4" />
-          All Recommendations
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'all' ? 'bg-white/20 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300'}`}>
-            {counts.all}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('high_match')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-            activeTab === 'high_match'
-              ? 'bg-rome-600 text-white shadow-md'
-              : 'text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800'
-          }`}
-        >
-          <Award className="w-4 h-4 text-amber-300" />
-          Top Matches (80%+ Fit)
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'high_match' ? 'bg-white/20 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300'}`}>
-            {counts.high_match}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('public_health')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-            activeTab === 'public_health'
-              ? 'bg-rome-600 text-white shadow-md'
-              : 'text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800'
-          }`}
-        >
-          <Activity className="w-4 h-4 text-emerald-400" />
-          Public & Global Health
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'public_health' ? 'bg-white/20 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300'}`}>
-            {counts.public_health}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('remote')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-            activeTab === 'remote'
-              ? 'bg-rome-600 text-white shadow-md'
-              : 'text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800'
-          }`}
-        >
-          <Globe className="w-4 h-4 text-sky-400" />
-          100% Full-Time Remote
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'remote' ? 'bg-white/20 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300'}`}>
-            {counts.remote}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('funded')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-            activeTab === 'funded'
-              ? 'bg-rome-600 text-white shadow-md'
-              : 'text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800'
-          }`}
-        >
-          <DollarSign className="w-4 h-4 text-amber-400" />
-          Fully Funded & Fellowships
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'funded' ? 'bg-white/20 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300'}`}>
-            {counts.funded}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('alternative')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-            activeTab === 'alternative'
-              ? 'bg-rome-600 text-white shadow-md'
-              : 'text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800'
-          }`}
-        >
-          <Compass className="w-4 h-4 text-purple-400" />
-          Alternative Paths & Adjacent
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'alternative' ? 'bg-white/20 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300'}`}>
-            {counts.alternative}
-          </span>
-        </button>
-      </div>
-
-      {/* Grid of Recommended Opportunities */}
-      {tabFiltered.length === 0 ? (
-        <div className="text-center py-16 bg-surface-50 dark:bg-surface-900/50 rounded-3xl border border-surface-200 dark:border-surface-800 p-8 space-y-4">
-          <Filter className="w-12 h-12 text-surface-400 mx-auto" />
-          <h3 className="text-xl font-bold text-surface-800 dark:text-surface-100">
-            No opportunities found in this category
-          </h3>
-          <p className="text-surface-500 text-sm max-w-md mx-auto">
-            Try switching to 'All Recommendations' or updating your profile interests to expand your matching pool.
-          </p>
-          <button
-            onClick={() => setActiveTab('all')}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rome-600 hover:bg-rome-700 text-white text-sm font-semibold transition-colors cursor-pointer"
-          >
-            View All Recommendations <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tabFiltered.map(({ opportunity, score, reasons }) => (
-            <div 
-              key={opportunity.id} 
-              className="flex flex-col relative group transition-transform hover:-translate-y-0.5"
-            >
-              {/* Fit Score Header on Card Top */}
-              <div 
-                onClick={() => navigate(`/opportunity/${opportunity.id}`)}
-                className="mb-1.5 flex items-center justify-between px-1 cursor-pointer"
-              >
-                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border shadow-2xs ${
-                  score >= 80 
-                    ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-                    : score >= 65
-                    ? 'bg-rome-50 text-rome-800 dark:bg-rome-950/70 dark:text-rome-300 border-rome-200 dark:border-rome-800'
-                    : 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 border-surface-200 dark:border-surface-700'
-                }`}>
-                  <TrendingUp className="w-3 h-3" />
-                  {score}% Fit Score
-                </span>
-                <span className="text-[11px] text-surface-500 dark:text-surface-400 truncate max-w-[190px] font-medium" title={reasons[0]}>
-                  {reasons[0]}
-                </span>
-              </div>
-
-              {/* Clickable Opportunity Card */}
-              <OpportunityCard 
-                opportunity={opportunity}
-                relevanceScore={score}
-                relevanceReasons={reasons}
-                showSaveButton
-                isSaved={isSaved(opportunity.id)}
-                onSave={() => saveOpportunity(opportunity.id)}
-                onUnsave={() => unsaveOpportunity(opportunity.id)}
-                onClick={() => navigate(`/opportunity/${opportunity.id}`)}
-              />
-            </div>
+        {/* User Focus Summary Pills */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          {userInterests.slice(0, 3).map((interest: string) => (
+            <span key={interest} className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 text-xs font-medium border border-surface-200/60 dark:border-surface-700">
+              {interest}
+            </span>
           ))}
+          <Link to="/profile" className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline px-1.5 py-1">
+            Edit preferences →
+          </Link>
         </div>
+      </header>
+
+      {/* ─── 2. Continue Where You Left Off (Only if user has activity) ─── */}
+      {activeItems.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-surface-900 dark:text-white">
+                Continue where you left off
+              </h2>
+              <p className="text-xs text-surface-500">Opportunities you recently saved or began tracking.</p>
+            </div>
+            <Link to="/my-opportunities" className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline">
+              View all saved ({savedOpportunities.length}) →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {activeItems.map((opp) => (
+              <OpportunityCard 
+                key={opp.id}
+                opportunity={opp}
+                compact
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ─── 3. Recommended For You (Primary Curated Feed) ─── */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-surface-900 dark:text-white">
+              Recommended for you
+            </h2>
+            <p className="text-xs text-surface-500">
+              Ranked by alignment with your active profile criteria.
+            </p>
+          </div>
+          <Link to="/explore" className="text-xs font-semibold text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white">
+            Explore full catalog →
+          </Link>
+        </div>
+
+        {recommendations.length === 0 ? (
+          <EmptyState
+            icon="compass-linear"
+            title="No recommendations yet"
+            description="Add your target disciplines and location preferences in your profile to generate matches."
+            actionLabel="Update Profile"
+            onAction={() => navigate('/profile')}
+          />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recommendations.map(({ opportunity, relevanceScore, relevanceReasons, matchSignals }) => (
+              <OpportunityCard 
+                key={opportunity.id}
+                opportunity={opportunity}
+                relevanceScore={relevanceScore}
+                relevanceReasons={relevanceReasons}
+                matchSignals={matchSignals}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ─── 4. You Might Be Overlooking (Adjacent Possibilities) ─── */}
+      {overlooked.length > 0 && (
+        <section className="space-y-4 pt-4 border-t border-surface-200 dark:border-surface-800">
+          <div>
+            <h2 className="text-xl font-bold text-surface-900 dark:text-white">
+              You might be overlooking
+            </h2>
+            <p className="text-xs text-surface-500">
+              Parallel pathways and adjacent fields that develop the same core competencies.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {overlooked.slice(0, 2).map((alt, idx) => (
+              <div key={idx} className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-850/50 p-5 space-y-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-surface-200/80 dark:bg-surface-700 text-surface-800 dark:text-surface-200 mb-1.5">
+                      Adjacent: {alt.alternativeType}
+                    </span>
+                    <p className="text-xs text-surface-600 dark:text-surface-400 leading-relaxed">
+                      {alt.reason}
+                    </p>
+                  </div>
+                </div>
+
+                {alt.opportunities[0] && (
+                  <OpportunityCard 
+                    opportunity={alt.opportunities[0]} 
+                    compact 
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ─── 5. Closing Soon (Approaching Deadlines) ─── */}
+      {closingSoon.length > 0 && (
+        <section className="space-y-4 pt-4 border-t border-surface-200 dark:border-surface-800">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-surface-900 dark:text-white">
+                Closing soon
+              </h2>
+              <p className="text-xs text-surface-500">Opportunities with application windows closing within 45 days.</p>
+            </div>
+            <Link to="/explore?sort=deadline" className="text-xs font-semibold text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white">
+              View all closing soon →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {closingSoon.map((opp) => (
+              <OpportunityCard 
+                key={opp.id}
+                opportunity={opp}
+                compact
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ─── 6. Based On Your Specific Interests ─── */}
+      {userInterests.length > 0 && (
+        <section className="space-y-4 pt-4 border-t border-surface-200 dark:border-surface-800">
+          <div>
+            <h2 className="text-xl font-bold text-surface-900 dark:text-white">
+              Explore by your interests
+            </h2>
+            <p className="text-xs text-surface-500">Quickly filter all opportunities matching your saved focus areas.</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {userInterests.map((interest: string) => (
+              <Button
+                key={interest}
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(`/explore?field=${encodeURIComponent(interest)}`)}
+                className="text-xs font-semibold"
+              >
+                <span>Explore {interest}</span>
+                <SolarIcon name="alt-arrow-right-linear" size={12} />
+              </Button>
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

@@ -6,6 +6,14 @@ import { useUiStore } from '@/store/uiStore';
 import { useNotificationStore } from '@/store/notificationStore';
 import { cn } from '@/utils/cn';
 import { Button } from '@/components/ui/Button';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from '@/components/ui/dropdown-menu';
 import SearchOverlay from './SearchOverlay';
 
 const TopNav = () => {
@@ -13,7 +21,6 @@ const TopNav = () => {
   const { theme, toggleTheme, searchOpen, toggleSearch } = useUiStore();
   const { notifications } = useNotificationStore();
   const navigate = useNavigate();
-  const [profileOpen, setProfileOpen] = useState(false);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -109,48 +116,41 @@ const TopNav = () => {
                     </span>
                   )}
                 </Link>
-                <div className="relative">
-                  <button
-                    onClick={() => setProfileOpen(!profileOpen)}
-                    aria-expanded={profileOpen}
-                    aria-haspopup="menu"
-                    className="w-8 h-8 rounded-xl bg-surface-200 dark:bg-surface-700 flex items-center justify-center text-surface-700 dark:text-surface-200 border border-surface-300 dark:border-surface-600 hover:border-rome-500 transition-colors overflow-hidden cursor-pointer shadow-xs"
-                  >
-                    {user?.profile?.photo ? (
-                      <img src={user.profile.photo} alt={user.profile.name || 'User'} className="w-full h-full object-cover" />
-                    ) : (
-                      <SolarIcon name="user-rounded-linear" size={15} />
-                    )}
-                  </button>
-                  
-                  {/* Dropdown */}
-                  {profileOpen && (
-                    <div role="menu" className="absolute right-0 mt-2 w-52 bg-white dark:bg-surface-900 rounded-2xl shadow-xl border border-surface-200 dark:border-surface-800 py-1.5 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
-                      <div className="px-4 py-2.5 border-b border-surface-100 dark:border-surface-800 mb-1">
-                        <p className="text-sm font-bold text-surface-900 dark:text-white truncate">{user?.profile?.name || 'Explorer'}</p>
-                        <p className="text-xs text-surface-500 dark:text-surface-400 truncate">{user?.profile?.email}</p>
-                      </div>
-                      <Link
-                        to="/profile"
-                        role="menuitem"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-surface-700 dark:text-surface-200 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
-                      >
-                        <SolarIcon name="user-rounded-linear" size={14} /> Profile Settings
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="w-8 h-8 rounded-xl bg-surface-200 dark:bg-surface-700 flex items-center justify-center text-surface-700 dark:text-surface-200 border border-surface-300 dark:border-surface-600 hover:border-rome-500 transition-colors overflow-hidden cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500"
+                      aria-label="User account menu"
+                    >
+                      {user?.profile?.photo ? (
+                        <img src={user.profile.photo} alt={user.profile.name || 'User'} className="w-full h-full object-cover" />
+                      ) : (
+                        <SolarIcon name="user-rounded-linear" size={15} />
+                      )}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 rounded-2xl p-1.5 shadow-xl border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900">
+                    <DropdownMenuLabel className="px-3 py-2 font-normal">
+                      <p className="text-sm font-bold text-surface-900 dark:text-white truncate">{user?.profile?.name || 'Explorer'}</p>
+                      <p className="text-xs text-surface-500 dark:text-surface-400 truncate">{user?.profile?.email}</p>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator className="my-1 bg-surface-100 dark:bg-surface-800" />
+                    <DropdownMenuItem asChild className="rounded-xl px-3 py-2 cursor-pointer focus:bg-surface-100 dark:focus:bg-surface-800">
+                      <Link to="/profile" className="flex items-center gap-2.5 text-xs font-semibold text-surface-700 dark:text-surface-200 w-full">
+                        <SolarIcon name="user-rounded-linear" size={14} />
+                        <span>Profile Settings</span>
                       </Link>
-                      <button
-                        role="menuitem"
-                        onClick={() => {
-                          setProfileOpen(false);
-                          handleLogout();
-                        }}
-                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 text-left cursor-pointer transition-colors"
-                      >
-                        <SolarIcon name="logout-2-linear" size={14} /> Sign out
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="my-1 bg-surface-100 dark:bg-surface-800" />
+                    <DropdownMenuItem 
+                      onClick={handleLogout}
+                      className="rounded-xl px-3 py-2 text-xs font-semibold text-red-600 dark:text-red-400 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer flex items-center gap-2.5"
+                    >
+                      <SolarIcon name="logout-2-linear" size={14} />
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             ) : (
               <div className="flex items-center gap-3">
