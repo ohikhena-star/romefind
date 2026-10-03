@@ -3,15 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useProfileStore } from '@/store/profileStore';
 import { Button, Input, Chip, CountrySelector } from '@/components/ui';
+import { FIELDS } from '@/utils/constants';
 import { cn } from '@/utils/cn';
 
-const INTEREST_FIELDS = [
-  'Product Design', 'UX/UI', 'UX Research', 'Software Engineering', 'AI / Machine Learning', 
-  'Data Science', 'Cybersecurity', 'Cloud Computing', 'Product Management', 'Business', 
-  'Finance', 'Marketing', 'Sales', 'Strategy', 'Research', 'Agriculture', 'Climate', 
-  'Energy', 'Healthcare', 'Education', 'Law', 'Policy', 'Media', 'Creative', 
-  'Entrepreneurship', 'Social Impact', 'Biotechnology', 'Life Sciences'
-];
+const INTEREST_FIELDS = [...FIELDS];
 
 const DESTINATIONS = [
   'Stay where I am', 'Explore my country', 'Explore Africa', 'Europe', 'UK', 

@@ -1,14 +1,10 @@
 import { OpportunityType } from '@/types/models';
+import { FIELDS } from '@/utils/constants';
 
 export const categories = {
   opportunityTypes: Object.values(OpportunityType),
   
-  fields: [
-    'Technology', 'Business', 'Finance', 'Design', 'Engineering',
-    'Science', 'Health', 'Education', 'Policy', 'Climate',
-    'Creative', 'Research', 'Social Impact', 'Arts', 'Law',
-    'Media', 'Data Science', 'AI/ML', 'Sustainability', 'Other',
-  ],
+  fields: [...FIELDS],
 
   goals: [
     { id: 'get-experience', label: 'Get experience', icon: 'Briefcase', description: 'Build real-world experience through internships, fellowships, and programmes', relatedTypes: [OpportunityType.Internship, OpportunityType.Fellowship, OpportunityType.Programme, OpportunityType.Volunteering] },
@@ -24,9 +20,5 @@ export const categories = {
     { id: 'explore', label: 'Explore opportunities', icon: 'Compass', description: 'Browse and discover what\'s out there', relatedTypes: Object.values(OpportunityType) },
   ],
 
-  interests: [
-    'Technology', 'Business', 'Finance', 'Design', 'Engineering',
-    'Science', 'Health', 'Education', 'Policy', 'Climate',
-    'Creative', 'Research', 'Other',
-  ],
+  interests: [...FIELDS],
 };

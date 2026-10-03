@@ -15,41 +15,28 @@ export const OPPORTUNITY_TYPE_COLORS: Record<OpportunityType, string> = {
 };
 
 export const FIELDS = [
-  // Business & Operations
-  'Project Management', 'Operations', 'Business Development', 'Strategy', 'Consulting',
-  'Customer Success', 'Customer Experience', 'Sales', 'Account Management', 'Procurement',
-  'Administration', 'Virtual Assistance', 'Executive Assistance', 'Human Resources', 'Recruitment',
-  'Business Analysis', 'Supply Chain', 'Logistics',
-  // Finance & Accounting
-  'Accounting', 'Financial Analysis', 'Investment', 'Banking', 'Fintech', 'Audit', 'Tax',
-  'Risk Management', 'Economics', 'Financial Planning', 'Treasury',
-  // Technology & Computing
-  'Software Engineering', 'Frontend Development', 'Backend Development', 'Full Stack',
-  'Mobile Development', 'Cloud', 'DevOps', 'Cybersecurity', 'AI', 'Machine Learning',
-  'Data Science', 'Data Analytics', 'QA / Testing', 'IT Support', 'Technical Writing',
-  // Product & Design
-  'Product Design', 'UX/UI', 'UX Research', 'Product Management', 'Design Systems',
-  'Interaction Design', 'Graphic Design', 'Brand Design', 'Motion Design', 'Visual Design', 'Industrial Design',
-  // Marketing & Communications
-  'Digital Marketing', 'Content Marketing', 'Social Media', 'SEO', 'Communications',
-  'Public Relations', 'Copywriting', 'Content Creation', 'Community Management', 'Growth Marketing',
-  // Creative & Arts
-  'Writing', 'Journalism', 'Photography', 'Film', 'Animation', 'Illustration', 'Music',
-  'Fashion', 'Architecture', 'Creative Direction', 'Publishing', 'Arts',
-  // Science & Engineering
-  'Engineering', 'Biotechnology', 'Chemistry', 'Physics', 'Mathematics', 'Environmental Science',
-  'Agriculture', 'Climate & Sustainability', 'Clean Energy', 'Life Sciences', 'Materials Science',
+  // Customer Experience & Success
+  'Customer Experience', 'Customer Success', 'UX Research',
+  // Business, Operations & Strategy
+  'Project Management', 'Operations', 'Business Development', 'Strategy', 'Human Resources',
+  // Finance, Investment & Banking
+  'Finance', 'Investment', 'Fintech', 'Venture Capital',
+  // Technology, Software & Computing
+  'Software Engineering', 'Cloud', 'Cybersecurity', 'AI', 'Machine Learning', 'Data Science', 'Engineering',
+  // Product, Design & UX
+  'Product Design', 'UX/UI', 'Product Management',
+  // Marketing, Communications & Media
+  'Digital Marketing', 'Content Marketing', 'Communications', 'Journalism', 'Media',
+  // Science, Climate & Sustainability
+  'Climate & Sustainability', 'Clean Energy', 'Life Sciences', 'Biotechnology', 'Environmental Science', 'Agriculture',
   // Health & Medicine
-  'Medicine', 'Nursing', 'Public Health', 'Mental Health', 'Healthcare Administration',
-  'Health Technology', 'Nutrition', 'Biomedical Sciences',
-  // Education & Teaching
-  'Teaching', 'Educational Technology', 'Curriculum Design', 'Academic Research', 'Education Administration',
-  // Law, Policy & Governance
-  'Law', 'Human Rights', 'Public Policy', 'Governance', 'International Relations',
-  'Social Impact', 'NGO / Nonprofit', 'Public Administration',
-  // Entrepreneurship
-  'Entrepreneurship', 'Startups', 'Venture Capital', 'Innovation',
-  'Other',
+  'Public Health', 'Healthcare Administration',
+  // Education & Academia
+  'Education', 'Teaching', 'Academic Research',
+  // Law, Policy & Social Impact
+  'Law', 'Human Rights', 'Public Policy', 'Governance', 'International Relations', 'Social Impact',
+  // Entrepreneurship & Innovation
+  'Entrepreneurship', 'Startups', 'Innovation',
 ] as const;
 
 export const INTENT_PATHWAYS = [

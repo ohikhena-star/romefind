@@ -1047,7 +1047,7 @@ export const opportunities: Opportunity[] = [
       "description": "Artificial Intelligence Research at Meta",
       "type": "Research Institute"
     },
-    "type": "Fellowship",
+    "type": "Research",
     "description": "A prestigious one-year research training program pairing emerging AI researchers with FAIR scientists to publish cutting-edge machine learning papers.",
     "shortDescription": "1-year AI research training fellowship with top FAIR scientists.",
     "field": [
@@ -1475,7 +1475,7 @@ export const opportunities: Opportunity[] = [
       "description": "World’s premier particle physics laboratory",
       "type": "Research Institute"
     },
-    "type": "Internship",
+    "type": "Research",
     "description": "Join day-to-day experimental research at the Large Hadron Collider in Geneva. Work on detector hardware, distributed computing, robotics, or high-energy physics data analysis.",
     "shortDescription": "Summer physics and engineering research internship at CERN Large Hadron Collider in Geneva.",
     "field": [
@@ -2461,5 +2461,1459 @@ export const opportunities: Opportunity[] = [
     "createdAt": "2026-09-16T00:00:00.000Z",
     "updatedAt": "2026-10-01T00:00:00.000Z",
     "isFeatured": false
+  },
+  {
+    "id": "opp-cx-03",
+    "title": "Flutterwave Customer Experience Researcher & Analyst",
+    "organization": {
+      "id": "org-flutterwave",
+      "name": "Flutterwave",
+      "website": "https://flutterwave.com/careers",
+      "description": "Leading African payments technology unicorn",
+      "type": "Company"
+    },
+    "type": "Job",
+    "description": "Lead Voice-of-Customer (VoC) research and customer journey analytics across digital payments and merchant checkout flows. Synthesize customer feedback, conduct usability interviews, and collaborate with product managers to resolve experience friction points.",
+    "shortDescription": "Customer experience and user journey research role at leading African payments technology firm.",
+    "field": [
+      "Customer Experience",
+      "UX Research",
+      "Fintech"
+    ],
+    "subfields": [
+      "Voice of Customer",
+      "Journey Management",
+      "Customer Insights",
+      "User Experience"
+    ],
+    "location": "Lagos, Nigeria / Hybrid",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "1-3 years experience in customer research, customer experience (CX), customer support analytics, or UX research",
+      "Strong analytical skills with qualitative feedback synthesis and Net Promoter Score (NPS) methodologies"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Competitive Salary + Health & Learning Stipend)",
+    "benefits": [
+      "Competitive tech compensation with annual equity review",
+      "Comprehensive private medical, dental, and life insurance",
+      "Annual $1,500 professional development and certification stipend",
+      "Hybrid flexible work arrangement"
+    ],
+    "duration": "Full-time",
+    "deadline": "2026-11-20",
+    "applicationUrl": "https://flutterwave.com/careers",
+    "officialSource": "https://flutterwave.com/careers",
+    "sourceName": "Flutterwave Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Customer Experience",
+      "CX",
+      "Flutterwave",
+      "UX Research",
+      "Lagos",
+      "Fintech"
+    ],
+    "requirements": [
+      "CV / Resume",
+      "Cover letter or portfolio of research / experience case studies",
+      "Live analytical scenario interview"
+    ],
+    "applicationSteps": [
+      "Online application via Flutterwave Careers",
+      "Recruiter screening chat",
+      "Take-home CX case study presentation",
+      "Final team interviews"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-22T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-cx-04",
+    "title": "Intercom Customer Success & Experience Specialist",
+    "organization": {
+      "id": "org-intercom",
+      "name": "Intercom",
+      "website": "https://www.intercom.com/careers",
+      "description": "Pioneering customer messaging, AI support, and service engagement platform",
+      "type": "Company"
+    },
+    "type": "Job",
+    "description": "Drive proactive customer success, adoption workflows, and exceptional support experiences for high-growth SaaS customers. Use Intercom AI and conversational support tools to optimize customer satisfaction (CSAT) and lifetime retention.",
+    "shortDescription": "Customer success and engagement specialist role at leading conversational AI and support platform.",
+    "field": [
+      "Customer Success",
+      "Customer Experience",
+      "Business Development"
+    ],
+    "subfields": [
+      "Account Management",
+      "Customer Retention",
+      "SaaS Support",
+      "Client Engagement"
+    ],
+    "location": "Dublin, Ireland / Remote",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Demonstrated passion for customer advocacy, digital onboarding, and SaaS service delivery",
+      "Excellent written communication and troubleshooting skills in fast-paced environments"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (€45,000 - €55,000 + Stock Options)",
+    "benefits": [
+      "Full remote home-office budget and monthly wellness allowance",
+      "Generous stock option grant with equity refreshers",
+      "Comprehensive healthcare and pension contribution",
+      "25 days annual leave plus company-wide recharge days"
+    ],
+    "duration": "Full-time",
+    "deadline": "2026-11-25",
+    "applicationUrl": "https://www.intercom.com/careers",
+    "officialSource": "https://www.intercom.com/careers",
+    "sourceName": "Intercom Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Customer Success",
+      "Customer Experience",
+      "Intercom",
+      "Remote",
+      "SaaS",
+      "Dublin"
+    ],
+    "requirements": [
+      "CV",
+      "Short video or written introduction",
+      "Customer scenario problem-solving assessment"
+    ],
+    "applicationSteps": [
+      "Submit application on Intercom Greenhouse portal",
+      "Values & experience screening call",
+      "Interactive customer scenario workshop",
+      "Leadership conversational interview"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-24T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-cx-05",
+    "title": "Paystack CX Operations & Escalations Associate",
+    "organization": {
+      "id": "org-paystack",
+      "name": "Paystack (Stripe)",
+      "website": "https://paystack.com/careers",
+      "description": "Leading modern online and offline payment provider across Africa",
+      "type": "Company"
+    },
+    "type": "Job",
+    "description": "Manage critical customer support escalations, transaction dispute workflows, and merchant operational reviews. Identify systematic operational bottlenecks and partner with engineering to build permanent UX fixes.",
+    "shortDescription": "Customer experience operations and merchant service role at leading African payments infrastructure company.",
+    "field": [
+      "Customer Experience",
+      "Operations",
+      "Customer Success"
+    ],
+    "subfields": [
+      "Escalation Management",
+      "SLA Governance",
+      "Merchant Operations",
+      "Payments Support"
+    ],
+    "location": "Lagos, Nigeria / Remote (Worldwide)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Strong empathy for merchants and small business owners",
+      "Analytical mindset with keen eye for transactional detail and root-cause analysis"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Competitive Salary + Stripe Stock Options)",
+    "benefits": [
+      "Competitive compensation benchmarked against top global fintechs",
+      "Stripe equity participation and 401(k) / pension matching",
+      "Full remote flexibility with co-working space pass",
+      "Annual health insurance, optical, and dental coverage"
+    ],
+    "duration": "Full-time",
+    "deadline": "2026-12-05",
+    "applicationUrl": "https://paystack.com/careers",
+    "officialSource": "https://paystack.com/careers",
+    "sourceName": "Paystack Jobs",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Paystack",
+      "Customer Experience",
+      "Operations",
+      "Fintech",
+      "Remote",
+      "Lagos"
+    ],
+    "requirements": [
+      "CV / LinkedIn Profile",
+      "Writing sample / customer communication exercise"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Written customer communication assessment",
+      "Operational problem-solving interview",
+      "Culture chat"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-25T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-ux-02",
+    "title": "Nielsen Norman Group UX Research & Service Design Grant",
+    "organization": {
+      "id": "org-nngroup",
+      "name": "Nielsen Norman Group",
+      "website": "https://www.nngroup.com",
+      "description": "World leaders in research-based user experience and interaction design",
+      "type": "Research Institute"
+    },
+    "type": "Grant",
+    "description": "Provides non-dilutive research funding of up to $25,000 for early-career researchers, UX practitioners, and service designers investigating accessibility, inclusive design, and complex workflow usability.",
+    "shortDescription": "Up to $25,000 research and field grant for innovative user experience and service design studies.",
+    "field": [
+      "UX Research",
+      "Product Design",
+      "UX/UI"
+    ],
+    "subfields": [
+      "Service Design",
+      "Usability Testing",
+      "Accessibility",
+      "User-Centered Research"
+    ],
+    "location": "Worldwide / Remote",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Open to graduate students, academic researchers, and UX design practitioners globally",
+      "Proposals focused on empirical user testing methodologies and digital accessibility"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Grant ($15,000 - $25,000 USD)",
+    "benefits": [
+      "Direct non-dilutive research stipend",
+      "Publication and co-authorship on Nielsen Norman Group research portal",
+      "NN/g UX Master Certification scholarship waiver",
+      "Dedicated mentorship from principal UX researchers"
+    ],
+    "duration": "9 months",
+    "deadline": "2027-01-30",
+    "applicationUrl": "https://www.nngroup.com/articles/ux-research-grant",
+    "officialSource": "https://www.nngroup.com",
+    "sourceName": "NN/g Research Grants",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "UX Research",
+      "Product Design",
+      "Grant",
+      "Accessibility",
+      "Remote"
+    ],
+    "requirements": [
+      "Research proposal (max 4 pages)",
+      "Methodology breakdown and participant recruitment plan",
+      "CV of principal investigator / designer"
+    ],
+    "applicationSteps": [
+      "Submit research abstract and budget outline",
+      "Review by NN/g scientific committee",
+      "Grant award notification"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-18T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-ux-03",
+    "title": "IDEO CoLab Design & Interaction Residency",
+    "organization": {
+      "id": "org-ideo",
+      "name": "IDEO CoLab",
+      "website": "https://www.ideocolab.com",
+      "description": "Global design and innovation consultancy incubator",
+      "type": "Company"
+    },
+    "type": "Fellowship",
+    "description": "A funded 12-week design residency bringing together multidisciplinary designers, technologists, and researchers to prototype human-centered solutions for emerging technology, climate adaptation, and circular economies.",
+    "shortDescription": "Funded 12-week human-centered design and interactive prototyping residency.",
+    "field": [
+      "Product Design",
+      "UX/UI",
+      "UX Research",
+      "Innovation"
+    ],
+    "subfields": [
+      "Interaction Design",
+      "Service Design",
+      "Human-Centered Prototyping",
+      "Design Strategy"
+    ],
+    "location": "Cambridge, MA, USA / Remote",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Designers, interaction specialists, creative technologists, and design researchers",
+      "Portfolio demonstrating user-centered design process and interactive prototypes"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid ($12,000 Fellowship Living Stipend)",
+    "benefits": [
+      "$4,000 monthly living stipend for the 12-week sprint",
+      "Direct 1-on-1 mentorship from IDEO design directors and portfolio partners",
+      "Prototyping equipment and software tooling allowance",
+      "Demo day presentation to global design leaders and corporate venture partners"
+    ],
+    "duration": "12 weeks",
+    "deadline": "2026-12-01",
+    "applicationUrl": "https://www.ideocolab.com/fellowship",
+    "officialSource": "https://www.ideocolab.com",
+    "sourceName": "IDEO CoLab",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "IDEO",
+      "Product Design",
+      "UX/UI",
+      "Fellowship",
+      "Interaction Design",
+      "Design Strategy"
+    ],
+    "requirements": [
+      "Portfolio of 2-3 design case studies",
+      "Personal statement on design philosophy",
+      "Video intro"
+    ],
+    "applicationSteps": [
+      "Online portfolio submission",
+      "Design critique and whiteboard challenge",
+      "Final cohort selection"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-20T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-tech-04",
+    "title": "SANS Cyber Immersion Academy & GIAC Certification Scholarship",
+    "organization": {
+      "id": "org-sans",
+      "name": "SANS Institute",
+      "website": "https://www.sans.org/scholarship-academies",
+      "description": "Global leader in cybersecurity training, research, and GIAC certifications",
+      "type": "Professional Association"
+    },
+    "type": "Scholarship",
+    "description": "A 100% fully funded cybersecurity academy scholarship providing 3 intensive SANS courses and industry-recognized GIAC certifications (GSEC, GCIH, GCFA), direct hands-on lab training, and employer hiring matchmaking.",
+    "shortDescription": "100% funded cybersecurity training scholarship with triple GIAC certifications and employer recruiting.",
+    "field": [
+      "Cybersecurity",
+      "Cloud",
+      "Engineering"
+    ],
+    "subfields": [
+      "Threat Analysis",
+      "Incident Response",
+      "Cloud Security",
+      "GIAC Certification"
+    ],
+    "location": "Worldwide / Remote",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Open to students, career switchers, and early-career IT professionals worldwide",
+      "No prior cybersecurity experience required; aptitude assessment conducted"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "100% Tuition Paid ($30,000+ Value in Coursework & Exams)",
+    "benefits": [
+      "Full tuition coverage for 3 elite SANS courses and GIAC certification exam attempts",
+      "Hands-on access to SANS Cyber Ranges and live packet-analysis environments",
+      "Career coaching, resume clinics, and direct interview placement with partner employers",
+      "Alumni mentorship from certified security analysts"
+    ],
+    "duration": "6 months",
+    "deadline": "2026-11-30",
+    "applicationUrl": "https://www.sans.org/scholarship-academies",
+    "officialSource": "https://www.sans.org",
+    "sourceName": "SANS Institute",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Cybersecurity",
+      "SANS",
+      "Scholarship",
+      "Remote",
+      "Cloud",
+      "Certification"
+    ],
+    "requirements": [
+      "Online application",
+      "SANS Cyber Talent Assessment test",
+      "Short motivation essays"
+    ],
+    "applicationSteps": [
+      "Complete aptitude assessment",
+      "Submit background and career goal responses",
+      "Admissions committee interview"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-10T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-tech-05",
+    "title": "DeepMind AI & Machine Learning Research Fellowship",
+    "organization": {
+      "id": "org-deepmind",
+      "name": "Google DeepMind",
+      "website": "https://deepmind.google/about/scholarships",
+      "description": "World-leading artificial intelligence research and neuroscience lab",
+      "type": "Research Institute"
+    },
+    "type": "Fellowship",
+    "description": "Prestigious fully funded fellowship supporting exceptional graduate and postgraduate researchers in artificial intelligence, reinforcement learning, mechanistic interpretability, and AI safety.",
+    "shortDescription": "Full graduate funding, research allowance, and direct 1-on-1 DeepMind scientist mentorship.",
+    "field": [
+      "AI",
+      "Machine Learning",
+      "Academic Research",
+      "Data Science"
+    ],
+    "subfields": [
+      "Reinforcement Learning",
+      "AI Safety",
+      "Neural Architectures",
+      "Scientific Machine Learning"
+    ],
+    "location": "London, UK",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Students admitted to or pursuing master's or PhD degrees in computer science, machine learning, mathematics, or related computational sciences"
+    ],
+    "educationRequirements": [
+      "Graduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Fully Funded (100% Tuition + £22,000 Annual Living Stipend + Conference Travel)",
+    "benefits": [
+      "Complete payment of university tuition fees throughout degree tenure",
+      "Generous tax-free living stipend (£22,000+ per annum)",
+      "£2,500 annual equipment and conference travel grant",
+      "Personalized 1-on-1 mentorship from Google DeepMind research scientists"
+    ],
+    "duration": "1-3 years",
+    "deadline": "2026-12-15",
+    "applicationUrl": "https://deepmind.google/about/scholarships",
+    "officialSource": "https://deepmind.google",
+    "sourceName": "DeepMind Scholarships",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "DeepMind",
+      "AI",
+      "Machine Learning",
+      "Fellowship",
+      "London",
+      "Research"
+    ],
+    "requirements": [
+      "Academic transcripts and CV",
+      "Research proposal on machine learning or AI alignment",
+      "Two letters of academic reference"
+    ],
+    "applicationSteps": [
+      "Submit fellowship dossier via university partnership office",
+      "Joint DeepMind and faculty panel evaluation",
+      "Fellowship award confirmation"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-08T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-law-03",
+    "title": "Amnesty International Human Rights & Strategic Litigation Fellowship",
+    "organization": {
+      "id": "org-amnesty",
+      "name": "Amnesty International",
+      "website": "https://www.amnesty.org/en/careers",
+      "description": "Global movement campaigning for internationally recognized human rights",
+      "type": "Non-Profit"
+    },
+    "type": "Fellowship",
+    "description": "A 1-year residential and field fellowship for legal scholars, human rights advocates, and policy analysts to work on strategic international litigation, regional fact-finding investigations, and advocacy campaigns.",
+    "shortDescription": "Funded 1-year international legal fellowship investigating human rights abuses and international law governance.",
+    "field": [
+      "Law",
+      "Human Rights",
+      "Public Policy",
+      "International Relations"
+    ],
+    "subfields": [
+      "Strategic Litigation",
+      "International Humanitarian Law",
+      "Human Rights Advocacy",
+      "Policy Fact-Finding"
+    ],
+    "location": "London, UK / Geneva, Switzerland / Remote",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Law graduates, human rights lawyers, or policy professionals with demonstrated commitment to social justice and civil liberties",
+      "Fluent in English; working knowledge of French, Spanish, or Arabic is an asset"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "Postgraduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (£38,000 Annual Fellowship Stipend + Travel Support)",
+    "benefits": [
+      "Full living stipend and pension contribution",
+      "Direct litigation experience before international tribunals and UN treaty bodies",
+      "Funded field fact-finding missions and international advocacy delegations",
+      "Lifelong international human rights lawyer network"
+    ],
+    "duration": "1 year",
+    "deadline": "2026-11-15",
+    "applicationUrl": "https://www.amnesty.org/en/careers",
+    "officialSource": "https://www.amnesty.org",
+    "sourceName": "Amnesty International Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Law",
+      "Human Rights",
+      "Fellowship",
+      "Public Policy",
+      "International Relations",
+      "London"
+    ],
+    "requirements": [
+      "Legal CV",
+      "Human rights writing sample (legal brief or memo)",
+      "Two professional reference letters"
+    ],
+    "applicationSteps": [
+      "Online application with writing sample",
+      "Case study drafting exercise",
+      "Panel interview with legal directors"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-15T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-vol-01",
+    "title": "United Nations Volunteers (UNV) Youth Specialist Placement",
+    "organization": {
+      "id": "org-unv",
+      "name": "United Nations Volunteers (UNV)",
+      "website": "https://www.unv.org",
+      "description": "UN organization that promotes volunteerism to support peace and sustainable development",
+      "type": "International Organization"
+    },
+    "type": "Volunteering",
+    "description": "Serve directly within UN agencies (UNDP, UNICEF, UNHCR, UNEP) on community development, climate resilience, public health outreach, and education initiatives across 130+ countries.",
+    "shortDescription": "Funded UN youth volunteer assignments with living allowance, healthcare, and settlement grants.",
+    "field": [
+      "Social Impact",
+      "International Relations",
+      "Public Policy",
+      "Education"
+    ],
+    "subfields": [
+      "Community Development",
+      "Sustainable Development Goals",
+      "Humanitarian Relief",
+      "Youth Empowerment"
+    ],
+    "location": "Worldwide / Regional Hubs",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Motivated individuals aged 18-29 with demonstrated community leadership and relevant undergraduate study or vocational experience",
+      "Open to citizens of all UN member states"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Funded (Monthly Volunteer Living Allowance + Travel & Insurance)",
+    "benefits": [
+      "Monthly Volunteer Living Allowance (VLA) covering food, accommodation, and personal expenses",
+      "Settlement grant, return airfare, and comprehensive global medical coverage",
+      "Direct operational experience within the United Nations common system",
+      "End-of-assignment resettlement allowance and career transition guidance"
+    ],
+    "duration": "6 to 12 months",
+    "deadline": "2026-12-31",
+    "applicationUrl": "https://app.unv.org",
+    "officialSource": "https://www.unv.org",
+    "sourceName": "UNV Unified Volunteer Platform",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "United Nations",
+      "Volunteering",
+      "Social Impact",
+      "International Relations",
+      "Global"
+    ],
+    "requirements": [
+      "UNV Unified Roster profile",
+      "Academic diplomas and CV",
+      "Language proficiency verification"
+    ],
+    "applicationSteps": [
+      "Create profile on Unified Volunteering Platform",
+      "Apply to specific agency call for assignments",
+      "Interviews conducted by host UN country office"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-12T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-climate-02",
+    "title": "Breakthrough Energy Fellows (Bill Gates Climate Tech Fellowship)",
+    "organization": {
+      "id": "org-breakthrough",
+      "name": "Breakthrough Energy",
+      "website": "https://breakthrough-energy.org/fellows",
+      "description": "Climate technology initiative founded by Bill Gates and global business leaders",
+      "type": "Foundation"
+    },
+    "type": "Fellowship",
+    "description": "Supports early-stage climate innovators, engineers, and scientists developing disruptive zero-carbon technologies across clean energy, manufacturing, agriculture, and carbon removal.",
+    "shortDescription": "Non-dilutive grant funding of up to $500,000 for breakthrough clean tech and climate engineers.",
+    "field": [
+      "Clean Energy",
+      "Climate & Sustainability",
+      "Engineering",
+      "Entrepreneurship"
+    ],
+    "subfields": [
+      "Deep Decarbonization",
+      "Energy Storage",
+      "Carbon Removal",
+      "Climate Tech Commercialization"
+    ],
+    "location": "Boston, MA, USA / Remote",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Innovator Fellows with novel technical solutions capable of reducing greenhouse gas emissions by at least 500 million tons annually at scale",
+      "Open to researchers, PhDs, and technical founders globally"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Grant ($500,000+ Non-Dilutive Research & Salary Grant)",
+    "benefits": [
+      "Full researcher living salary stipend and direct lab prototyping budget",
+      "Access to Breakthrough Energy technical advisors, corporate partners, and venture network",
+      "Curriculum on techno-economic analysis, IP strategy, and commercial scaleup",
+      "No equity taken by Breakthrough Energy"
+    ],
+    "duration": "1 to 2 years",
+    "deadline": "2026-12-10",
+    "applicationUrl": "https://breakthrough-energy.org/fellows",
+    "officialSource": "https://breakthrough-energy.org",
+    "sourceName": "Breakthrough Energy",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Climate",
+      "Clean Energy",
+      "Fellowship",
+      "Grant",
+      "Engineering",
+      "Innovation"
+    ],
+    "requirements": [
+      "Technical concept paper detailing greenhouse gas reduction mechanism",
+      "Techno-economic viability model",
+      "Founder CV and lab research background"
+    ],
+    "applicationSteps": [
+      "Phase 1 online application",
+      "Technical deep-dive evaluation with scientific reviewers",
+      "Final selection committee pitch"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-14T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-climate-03",
+    "title": "International Climate Protection Fellowship (Humboldt Foundation)",
+    "organization": {
+      "id": "org-humboldt",
+      "name": "Alexander von Humboldt Foundation",
+      "website": "https://www.humboldt-foundation.de/en/apply/sponsorship-programmes/international-climate-protection-fellowship",
+      "description": "Prestigious German academic and international research foundation",
+      "type": "Foundation"
+    },
+    "type": "Fellowship",
+    "description": "Enables prospective leaders and postdoctoral researchers from non-European transition and developing countries to conduct a 12-to-24 month climate protection and biodiversity research project in Germany.",
+    "shortDescription": "Prestigious German research fellowship providing €2,760/month living stipend and family allowances.",
+    "field": [
+      "Climate & Sustainability",
+      "Environmental Science",
+      "Academic Research",
+      "Public Policy"
+    ],
+    "subfields": [
+      "Climate Adaptation",
+      "Biodiversity",
+      "Renewable Resource Policy",
+      "Environmental Governance"
+    ],
+    "location": "Berlin & Bonn, Germany",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Citizens of developing or transition countries with demonstrated initial leadership experience in climate protection, biodiversity, or environmental governance"
+    ],
+    "educationRequirements": [
+      "Graduate",
+      "Postgraduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Fully Funded (€2,170 - €2,760 Monthly Fellowship Allowance + Health & Family Support)",
+    "benefits": [
+      "Monthly living allowance of up to €2,760 plus health and liability insurance",
+      "Intensive funded German language course prior to research stay",
+      "Allowances for accompanying family members (spouses and children)",
+      "Extensive Humboldt Foundation alumni network and lifetime re-invitation grants"
+    ],
+    "duration": "12 to 24 months",
+    "deadline": "2027-02-01",
+    "applicationUrl": "https://www.humboldt-foundation.de/en/apply/sponsorship-programmes/international-climate-protection-fellowship",
+    "officialSource": "https://www.humboldt-foundation.de",
+    "sourceName": "Humboldt Foundation",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Climate",
+      "Humboldt Foundation",
+      "Germany",
+      "Fellowship",
+      "Environmental Science",
+      "Research"
+    ],
+    "requirements": [
+      "Project proposal agreed with a German host academic institution",
+      "Letter of host confirmation",
+      "Two expert reference letters"
+    ],
+    "applicationSteps": [
+      "Submit application on Humboldt portal",
+      "Independent peer review",
+      "Selection committee assessment and award notification"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-16T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-health-02",
+    "title": "Wellcome Trust Master’s & Early-Career Health Research Award",
+    "organization": {
+      "id": "org-wellcome",
+      "name": "Wellcome Trust",
+      "website": "https://wellcome.org/grant-funding",
+      "description": "Global charitable foundation supporting biomedical and health sciences research",
+      "type": "Foundation"
+    },
+    "type": "Grant",
+    "description": "Provides non-dilutive research funding of up to £120,000 for early-career health researchers in low- and middle-income countries conducting clinical, epidemiological, and health systems research.",
+    "shortDescription": "Up to £120,000 research award for health researchers focusing on infectious diseases and health equity.",
+    "field": [
+      "Public Health",
+      "Life Sciences",
+      "Academic Research",
+      "Healthcare Administration"
+    ],
+    "subfields": [
+      "Epidemiology",
+      "Infectious Diseases",
+      "Health Systems",
+      "Clinical Diagnostics"
+    ],
+    "location": "Worldwide / Remote",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Nationals of low- or middle-income countries pursuing research projects that improve human health and equity"
+    ],
+    "educationRequirements": [
+      "Graduate",
+      "Postgraduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Grant (Up to £120,000 Research Funding & Salary Support)",
+    "benefits": [
+      "Full researcher salary stipend for up to 30 months",
+      "Direct research materials, laboratory reagent costs, and participant fieldwork expenses",
+      "Conference travel and open-access publication fees",
+      "Mentorship pairing with international senior principal investigators"
+    ],
+    "duration": "30 months",
+    "deadline": "2026-12-01",
+    "applicationUrl": "https://wellcome.org/grant-funding/schemes/early-career-awards",
+    "officialSource": "https://wellcome.org",
+    "sourceName": "Wellcome Trust",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Wellcome Trust",
+      "Public Health",
+      "Life Sciences",
+      "Grant",
+      "Research",
+      "Global Health"
+    ],
+    "requirements": [
+      "Research proposal with clinical / public health justification",
+      "Administering organization support letter",
+      "Curriculum Vitae"
+    ],
+    "applicationSteps": [
+      "Submit preliminary application on Wellcome portal",
+      "Full proposal submission upon invitation",
+      "Peer review and interview panel"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-15T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-health-03",
+    "title": "EMBL International PhD & Postdoctoral Research Placement",
+    "organization": {
+      "id": "org-embl",
+      "name": "European Molecular Biology Laboratory (EMBL)",
+      "website": "https://www.embl.org/about/info/eipp",
+      "description": "Europe's flagship laboratory for the life sciences and molecular biology",
+      "type": "Research Institute"
+    },
+    "type": "Fellowship",
+    "description": "Fully funded doctoral and postdoctoral research fellowships in molecular biology, biotechnology, genomics, and computational structural biology across EMBL sites in Germany, UK, France, and Italy.",
+    "shortDescription": "Fully funded life sciences fellowship with full tuition waiver, living stipend, and lab funding.",
+    "field": [
+      "Life Sciences",
+      "Biotechnology",
+      "Academic Research",
+      "Engineering"
+    ],
+    "subfields": [
+      "Genomics",
+      "Structural Biology",
+      "Bioinformatics",
+      "Cell Biology"
+    ],
+    "location": "Heidelberg, Germany / Cambridge, UK",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Applicants with a university degree in life sciences, biotechnology, chemistry, physics, or computational biology"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "Postgraduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Fully Funded (100% Tuition Waiver + €2,400 Monthly Living Stipend)",
+    "benefits": [
+      "Competitive monthly stipend and comprehensive health insurance",
+      "Access to cutting-edge cryo-electron microscopy and supercomputing infrastructure",
+      "Travel grants for international scientific conferences",
+      "World-class multidisciplinary training and collaborative faculty mentorship"
+    ],
+    "duration": "3.5 to 4 years",
+    "deadline": "2026-11-20",
+    "applicationUrl": "https://www.embl.org/about/info/eipp",
+    "officialSource": "https://www.embl.org",
+    "sourceName": "EMBL International Fellowships",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "EMBL",
+      "Life Sciences",
+      "Biotechnology",
+      "Fellowship",
+      "Germany",
+      "Research"
+    ],
+    "requirements": [
+      "Academic transcripts and degree certificates",
+      "Research motivation letter",
+      "Two academic recommendation letters"
+    ],
+    "applicationSteps": [
+      "Online application via EMBL recruitment portal",
+      "Initial faculty evaluation and shortlisting",
+      "Virtual and on-site interview days in Heidelberg"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-17T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-mkt-02",
+    "title": "HubSpot Digital Marketing & Growth Apprenticeship",
+    "organization": {
+      "id": "org-hubspot-mkt",
+      "name": "HubSpot",
+      "website": "https://www.hubspot.com/careers",
+      "description": "Leading customer relationship management, digital marketing, and sales platform",
+      "type": "Company"
+    },
+    "type": "Programme",
+    "description": "An intensive paid 12-month growth apprenticeship focusing on inbound digital marketing, content strategy, SEO analytics, and multichannel audience acquisition.",
+    "shortDescription": "Paid 12-month digital marketing and growth apprenticeship with HubSpot Inbound certifications.",
+    "field": [
+      "Digital Marketing",
+      "Content Marketing",
+      "Communications",
+      "Business Development"
+    ],
+    "subfields": [
+      "Inbound Marketing",
+      "SEO Analytics",
+      "Audience Growth",
+      "Content Strategy"
+    ],
+    "location": "Dublin, Ireland / Remote",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Aspiring marketers, creative storytellers, or career switchers with strong communication skills and digital curiosity"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid (Full Apprenticeship Salary €36,000/yr + Benefits)",
+    "benefits": [
+      "Competitive annual salary and tuition-free training",
+      "Full remote work equipment allowance",
+      "Funded HubSpot Academy Master Inbound credentials",
+      "Fast-track conversion to permanent full-time Growth Marketing Associate"
+    ],
+    "duration": "12 months",
+    "deadline": "2026-12-10",
+    "applicationUrl": "https://www.hubspot.com/careers",
+    "officialSource": "https://www.hubspot.com/careers",
+    "sourceName": "HubSpot Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "HubSpot",
+      "Digital Marketing",
+      "Content Marketing",
+      "Apprenticeship",
+      "Remote"
+    ],
+    "requirements": [
+      "CV",
+      "Short written marketing pitch or campaign idea"
+    ],
+    "applicationSteps": [
+      "Online application",
+      "Practical content/campaign exercise",
+      "Team conversational interview"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-18T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-fin-03",
+    "title": "Morgan Stanley Sustainable Finance & Impact Investing Fellowship",
+    "organization": {
+      "id": "org-morgan-stanley",
+      "name": "Morgan Stanley Institute for Sustainable Investing",
+      "website": "https://www.morganstanley.com/sustainable-investing",
+      "description": "Global financial services leader driving sustainable capital allocation",
+      "type": "Company"
+    },
+    "type": "Fellowship",
+    "description": "A funded 1-year graduate fellowship working alongside senior investment bankers, ESG analysts, and sustainable finance directors on green bonds, renewable asset financing, and impact metrics.",
+    "shortDescription": "Funded 1-year sustainable finance and ESG investment fellowship in New York and London.",
+    "field": [
+      "Finance",
+      "Investment",
+      "Venture Capital",
+      "Climate & Sustainability"
+    ],
+    "subfields": [
+      "Sustainable Finance",
+      "ESG Asset Valuation",
+      "Impact Investing",
+      "Green Bond Structuring"
+    ],
+    "location": "New York, USA / London, UK",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Graduating seniors or master's students in finance, economics, business, or environmental policy with strong financial modeling skills"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Paid ($85,000 - $105,000 Pro-Rata Salary + Sign-on Bonus)",
+    "benefits": [
+      "Full competitive Wall Street / London investment analyst salary",
+      "1-on-1 executive mentorship from Managing Directors",
+      "Direct exposure to institutional asset managers and ESG portfolios",
+      "Direct pathway to full-time investment banking associate roles"
+    ],
+    "duration": "1 year",
+    "deadline": "2026-11-15",
+    "applicationUrl": "https://www.morganstanley.com/people-opportunities/students-graduates",
+    "officialSource": "https://www.morganstanley.com",
+    "sourceName": "Morgan Stanley Careers",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Morgan Stanley",
+      "Finance",
+      "Investment",
+      "Sustainable Finance",
+      "Fellowship",
+      "New York",
+      "London"
+    ],
+    "requirements": [
+      "CV with financial modeling coursework / experience",
+      "Statement of interest in sustainable finance",
+      "Academic transcript"
+    ],
+    "applicationSteps": [
+      "Online application via Morgan Stanley campus portal",
+      "HireVue on-demand video interview",
+      "Virtual assessment center and financial valuation case"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-12T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-jour-02",
+    "title": "Reuters Institute Journalism Fellowship",
+    "organization": {
+      "id": "org-reuters-institute",
+      "name": "Reuters Institute for the Study of Journalism",
+      "website": "https://reutersinstitute.politics.ox.ac.uk/fellowships",
+      "description": "Part of the University of Oxford, the Reuters Institute is one of the world's leading centres for the study of journalism.",
+      "type": "University"
+    },
+    "type": "Fellowship",
+    "description": "A highly competitive programme bringing together journalists and media professionals from around the world to Oxford University. Fellows spend 4–6 months conducting independent research on journalism, media, and the information environment, attending seminars with global media leaders and publishing original research.",
+    "shortDescription": "Oxford-based journalism research fellowship for mid-career journalists and media professionals from around the world.",
+    "field": ["Journalism", "Media", "Communications", "Academic Research"],
+    "subfields": ["Investigative Journalism", "Digital Media", "Press Freedom", "Media Policy"],
+    "tags": ["journalism", "media", "oxford", "research fellowship", "press freedom", "mid-career"],
+    "location": "Oxford, United Kingdom",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Minimum 5 years professional journalism or media experience",
+      "Strong track record of published or broadcast work",
+      "Applicants from any country welcome",
+      "Both broadcast and print/digital journalists eligible"
+    ],
+    "requirements": ["Portfolio of published/broadcast work", "Research proposal (1,500 words)", "Two referees", "Proof of current media employment"],
+    "deadline": "2027-01-31",
+    "duration": "4-6 months",
+    "stipend": { "amount": 16000, "currency": "GBP", "frequency": "one-time", "notes": "Stipend covers living costs in Oxford; travel grant also available" },
+    "isFunded": true,
+    "applicationUrl": "https://reutersinstitute.politics.ox.ac.uk/fellowships/reuters-institute-journalism-fellows",
+    "applicationSteps": [
+      "Complete online application form",
+      "Submit research proposal",
+      "Provide two professional references",
+      "Shortlisted candidates interviewed by panel"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-15T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-bio-02",
+    "title": "Wellcome Sanger Institute PhD & Research Fellowship",
+    "organization": {
+      "id": "org-wellcome-sanger",
+      "name": "Wellcome Sanger Institute",
+      "website": "https://www.sanger.ac.uk/programmes/education/phd-programme",
+      "description": "One of the world's leading genome research centres, playing a key role in the Human Genome Project and advancing genomics globally.",
+      "type": "Research Institute"
+    },
+    "type": "Fellowship",
+    "description": "The Wellcome Sanger Institute offers fully funded PhD programmes and postdoctoral fellowships in genomics, computational biology, and biotechnology. Research spans cancer genomics, malaria, genetic epidemiology, and single-cell technologies. Fellows work alongside world-class scientists at the Wellcome Genome Campus in Cambridge.",
+    "shortDescription": "Fully funded PhD and postdoctoral research fellowships in genomics and biotechnology at one of the world's top genome centres.",
+    "field": ["Biotechnology", "Life Sciences", "Academic Research", "Engineering"],
+    "subfields": ["Genomics", "Computational Biology", "Cancer Research", "Bioinformatics"],
+    "tags": ["biotechnology", "genomics", "PhD", "postdoc", "cambridge", "wellcome", "life sciences"],
+    "location": "Cambridge, United Kingdom",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "First-class or upper-second-class degree in biological sciences, computing, or related field",
+      "Strong research experience preferred for postdoc positions",
+      "International students welcome",
+      "PhD candidates must apply through specific supervisor project listings"
+    ],
+    "requirements": ["Academic transcripts", "Personal statement", "Two academic references", "Research statement (postdocs)"],
+    "deadline": "2027-02-28",
+    "duration": "3-4 years (PhD) / 2-3 years (postdoc)",
+    "stipend": { "amount": 22000, "currency": "GBP", "frequency": "annual", "notes": "Fully funded PhD including stipend, fees, and research expenses" },
+    "isFunded": true,
+    "applicationUrl": "https://www.sanger.ac.uk/programmes/education/phd-programme",
+    "applicationSteps": [
+      "Browse open PhD projects on the Sanger website",
+      "Contact prospective supervisor",
+      "Submit formal application with transcripts and personal statement",
+      "Interview with research group"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-20T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-agri-02",
+    "title": "FAO Young Professionals Programme",
+    "organization": {
+      "id": "org-fao",
+      "name": "Food and Agriculture Organization of the United Nations",
+      "website": "https://www.fao.org/employment/young-professionals-programme/en",
+      "description": "The UN's lead agency for food security, agricultural development, rural development, and sustainable management of natural resources.",
+      "type": "International Organization"
+    },
+    "type": "Programme",
+    "description": "The FAO Young Professionals Programme recruits early-career professionals to work across FAO's global operations covering food systems, agricultural development, rural livelihoods, fisheries, forestry, and nutrition. YPPs work on policy analysis, field programme implementation, technical support to governments, and data analysis over a two-year fixed-term appointment at FAO HQ in Rome or field offices.",
+    "shortDescription": "Two-year professional placement at the UN's food and agriculture agency, covering food systems, agriculture, and rural development globally.",
+    "field": ["Agriculture", "Environmental Science", "Public Policy", "Social Impact", "International Relations"],
+    "subfields": ["Food Systems", "Agricultural Policy", "Rural Development", "Nutrition", "Food Security"],
+    "tags": ["agriculture", "food security", "UN", "FAO", "Rome", "international development", "young professionals"],
+    "location": "Rome, Italy / Global field offices",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Nationals of FAO member countries (priority given to underrepresented countries)",
+      "Master's degree or equivalent in agriculture, economics, natural sciences, or related field",
+      "Under 32 years of age at time of application",
+      "No prior employment with the UN system"
+    ],
+    "requirements": ["University degree certificate", "Cover letter", "Online application through FAO careers portal", "Language proficiency in one UN language"],
+    "deadline": "2027-03-31",
+    "duration": "2 years",
+    "stipend": { "amount": 58000, "currency": "USD", "frequency": "annual", "notes": "Professional salary according to UN P2 grade with full UN benefits package" },
+    "isFunded": true,
+    "applicationUrl": "https://www.fao.org/employment/young-professionals-programme/en",
+    "applicationSteps": [
+      "Create profile on FAO e-Recruitment portal",
+      "Complete full online application",
+      "Submit supporting documents",
+      "Written assessment and competency-based interview for shortlisted candidates"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-18T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-teach-02",
+    "title": "Teach First Leadership Development Programme",
+    "organization": {
+      "id": "org-teach-first",
+      "name": "Teach First",
+      "website": "https://www.teachfirst.org.uk/our-programme",
+      "description": "UK's largest graduate employer and a leading education charity working to end educational inequality.",
+      "type": "Non-Profit"
+    },
+    "type": "Programme",
+    "description": "Teach First's Leadership Development Programme (LDP) places passionate graduates in low-income schools as fully qualified, salaried teachers for two years. Participants receive a full PGCE qualification, a postgraduate diploma in education and leadership, and ongoing leadership coaching. Teach First alumni become leaders across education, business, policy, and the third sector.",
+    "shortDescription": "Two-year paid teaching and leadership programme in underserved schools, leading to PGCE qualification and a career in education or leadership.",
+    "field": ["Teaching", "Education", "Social Impact", "Leadership"],
+    "subfields": ["Secondary Education", "Primary Education", "Educational Leadership", "STEM Education"],
+    "tags": ["teaching", "education", "PGCE", "graduate", "school", "UK", "leadership", "social impact"],
+    "location": "United Kingdom (various regions)",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "2:1 degree or above (or equivalent)",
+      "Applicants who demonstrate passion for tackling educational inequality",
+      "UK residents eligible to work in the UK",
+      "Degree in a relevant subject for specialist subject teaching"
+    ],
+    "requirements": ["Online application", "Telephone interview", "Assessment centre", "References"],
+    "deadline": "2027-04-30",
+    "duration": "2 years",
+    "stipend": { "amount": 28000, "currency": "GBP", "frequency": "annual", "notes": "Full teaching salary paid by school throughout the programme; PGCE funded" },
+    "isFunded": true,
+    "applicationUrl": "https://www.teachfirst.org.uk/our-programme",
+    "applicationSteps": [
+      "Online application and eligibility check",
+      "Telephone interview",
+      "Selection day (in-person or virtual assessment centre)",
+      "School placement and training begin in September"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-22T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-hr-02",
+    "title": "SHRM Foundation HR Rising Stars Fellowship",
+    "organization": {
+      "id": "org-shrm-foundation",
+      "name": "SHRM Foundation",
+      "website": "https://www.shrm.org/foundation/pages/default.aspx",
+      "description": "The philanthropic arm of SHRM (Society for Human Resource Management), the world's largest HR professional society.",
+      "type": "Foundation"
+    },
+    "type": "Fellowship",
+    "description": "The SHRM Foundation HR Rising Stars Fellowship supports early-career HR professionals with funding, mentorship, professional development access, and networking within the global HR community. Fellows receive a scholarship award, attend the SHRM Annual Conference, access a dedicated mentorship programme with senior HR leaders, and participate in inclusive workplace research projects.",
+    "shortDescription": "Fellowship for early-career HR professionals with funding, mentorship, and access to the global SHRM HR community.",
+    "field": ["Human Resources", "Business", "Social Impact"],
+    "subfields": ["People Operations", "Talent Acquisition", "Diversity & Inclusion", "Workforce Development"],
+    "tags": ["HR", "human resources", "fellowship", "SHRM", "diversity", "people operations", "early career"],
+    "location": "Remote / United States",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Currently enrolled in an HR, business, or related graduate programme OR early in HR career (under 5 years)",
+      "Demonstrated commitment to advancing inclusive workplaces",
+      "SHRM student or professional membership preferred"
+    ],
+    "requirements": ["Online application", "Personal essay", "Academic transcripts or employment verification", "Two recommendations"],
+    "deadline": "2027-02-14",
+    "duration": "1 year",
+    "stipend": { "amount": 5000, "currency": "USD", "frequency": "one-time", "notes": "Fellowship award plus conference access; mentorship and professional development included" },
+    "isFunded": true,
+    "applicationUrl": "https://www.shrm.org/foundation/pages/default.aspx",
+    "applicationSteps": [
+      "Complete online application",
+      "Submit personal statement and supporting documents",
+      "Letters of recommendation submitted directly by referees",
+      "Awards announced at SHRM Annual Conference"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-25T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-rights-02",
+    "title": "Open Society Foundations Human Rights Initiative Fellowship",
+    "organization": {
+      "id": "org-osf",
+      "name": "Open Society Foundations",
+      "website": "https://www.opensocietyfoundations.org/grants",
+      "description": "The world's largest private funder of independent groups working for justice, democratic governance, and human rights.",
+      "type": "Foundation"
+    },
+    "type": "Fellowship",
+    "description": "The Open Society Human Rights Initiative Fellowship supports advocates, lawyers, researchers, and activists working on systemic human rights challenges. Fellows work within OSF-supported initiatives on issues including criminal justice reform, statelessness, freedom of expression, LGBTQI+ rights, and racial justice. Placements are embedded within OSF programmes globally.",
+    "shortDescription": "Funded fellowship for human rights practitioners working on systemic justice, advocacy, and legal reform with Open Society Foundations.",
+    "field": ["Human Rights", "Law", "Governance", "Social Impact", "Public Policy"],
+    "subfields": ["Advocacy", "Criminal Justice Reform", "Freedom of Expression", "International Human Rights Law"],
+    "tags": ["human rights", "fellowship", "open society", "advocacy", "justice", "law", "NGO"],
+    "location": "New York, USA / London, UK / Brussels, Belgium / Various",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Proven track record in human rights work, law, or advocacy",
+      "Minimum 3 years professional experience in the field",
+      "Strong written and spoken English",
+      "Applications accepted globally"
+    ],
+    "requirements": ["CV/Resume", "Cover letter explaining alignment with OSF mission", "Two professional references", "Work samples or portfolio"],
+    "deadline": "2027-01-15",
+    "duration": "1 year",
+    "stipend": { "amount": 72000, "currency": "USD", "frequency": "annual", "notes": "Competitive professional salary with full benefits; varies by location and grade" },
+    "isFunded": true,
+    "applicationUrl": "https://www.opensocietyfoundations.org/grants",
+    "applicationSteps": [
+      "Review current fellowship openings on OSF website",
+      "Submit application through OSF grants portal",
+      "Programme-specific interviews for shortlisted candidates",
+      "Final selection by programme directors"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-28T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-gov-02",
+    "title": "Tony Blair Institute for Global Change Policy Fellowship",
+    "organization": {
+      "id": "org-tbi",
+      "name": "Tony Blair Institute for Global Change",
+      "website": "https://institute.global/careers",
+      "description": "A global policy institute working with political leaders to deliver change that will make a difference to people across the world.",
+      "type": "Non-Profit"
+    },
+    "type": "Fellowship",
+    "description": "The Tony Blair Institute Policy Fellowship embeds talented early-career and mid-career professionals in government advisory roles across Africa, the Middle East, and Southeast Asia. Fellows work directly with heads of government and senior ministers on economic reform, governance, digital transformation, and state delivery. Placements are typically 6–12 months at country offices.",
+    "shortDescription": "Embedded government advisory fellowship placing fellows with heads of state and senior ministers across Africa, the Middle East and Asia.",
+    "field": ["Governance", "Public Policy", "International Relations", "Entrepreneurship", "Technology"],
+    "subfields": ["Government Reform", "Economic Policy", "Digital Government", "Political Economy"],
+    "tags": ["governance", "policy", "government", "Africa", "advisory", "fellowship", "public sector"],
+    "location": "Sub-Saharan Africa / Middle East / Southeast Asia",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Strong academic background in economics, public policy, law, or international relations",
+      "Excellent analytical and communication skills",
+      "Prior experience in government, consulting, finance, or policy strongly preferred",
+      "Willingness to be based in a developing country for the duration"
+    ],
+    "requirements": ["CV/Resume", "Cover letter", "Policy writing sample", "Two professional references"],
+    "deadline": "2027-03-15",
+    "duration": "6-12 months",
+    "stipend": { "amount": 45000, "currency": "USD", "frequency": "annual", "notes": "Competitive salary, accommodation support, and travel covered" },
+    "isFunded": true,
+    "applicationUrl": "https://institute.global/careers",
+    "applicationSteps": [
+      "Apply through TBI careers portal",
+      "Written exercise and case study assessment",
+      "Panel interview with senior team",
+      "Country placement match and onboarding"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-30T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-pm-02",
+    "title": "Reforge Product Management Residency",
+    "organization": {
+      "id": "org-reforge",
+      "name": "Reforge",
+      "website": "https://www.reforge.com/programs/product-management",
+      "description": "Reforge is the premier professional development platform for growth, product, and technology leaders. Built by practitioners, for practitioners.",
+      "type": "Company"
+    },
+    "type": "Programme",
+    "description": "Reforge's Product Management Residency is an intensive cohort-based programme for early-to-mid career PMs looking to level up. Residents work through a structured curriculum covering product strategy, discovery, prioritisation, metrics, and stakeholder communication, guided by senior PMs from top technology companies. The programme includes peer learning, mentor sessions, and live case studies.",
+    "shortDescription": "Intensive cohort-based product management development programme taught by senior PMs from leading technology companies.",
+    "field": ["Product Management", "Technology", "Strategy", "Entrepreneurship"],
+    "subfields": ["Product Strategy", "User Discovery", "Product Analytics", "Roadmapping"],
+    "tags": ["product management", "PM", "product strategy", "career development", "cohort", "technology"],
+    "location": "Remote (Worldwide)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "At least 1 year of product management experience preferred",
+      "Career changers with adjacent backgrounds considered",
+      "Strong interest in building user-centred products",
+      "Application essay required to assess fit"
+    ],
+    "requirements": ["Online application", "Short essay questions", "Professional background overview"],
+    "deadline": "2027-02-28",
+    "duration": "8 weeks per cohort",
+    "stipend": { "amount": 2495, "currency": "USD", "frequency": "one-time", "notes": "Programme fee; employer-sponsored spots and scholarships available for underrepresented applicants" },
+    "isFunded": false,
+    "applicationUrl": "https://www.reforge.com/programs/product-management",
+    "applicationSteps": [
+      "Submit online application",
+      "Complete short essay questions",
+      "Receive admission decision",
+      "Enrol and join cohort Slack community"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-innov-02",
+    "title": "MIT Solve Global Challenges Fellowship",
+    "organization": {
+      "id": "org-mit-solve",
+      "name": "MIT Solve",
+      "website": "https://solve.mit.edu/fellowships",
+      "description": "MIT Solve is a social enterprise with a mission to solve world challenges by connecting innovators with resources through an open innovation marketplace.",
+      "type": "University"
+    },
+    "type": "Fellowship",
+    "description": "MIT Solve's Global Challenges Fellowship provides funding, mentorship, network access, and MIT faculty engagement to innovators and entrepreneurs tackling global problems. Fellows receive up to $10,000 USD in prize funding, a one-year MIT Solve membership with community access, connections to a curated investor network, legal and business support, and participation in the annual MIT Solve Innovation Summit.",
+    "shortDescription": "Funding, mentorship and MIT network access for innovators and early-stage entrepreneurs tackling global challenges.",
+    "field": ["Innovation", "Entrepreneurship", "Social Impact", "Technology"],
+    "subfields": ["Social Innovation", "EdTech", "HealthTech", "ClimateTech", "FinTech for Good"],
+    "tags": ["innovation", "MIT", "social enterprise", "global challenges", "startup", "fellowship", "funding"],
+    "location": "Remote (Global) / Cambridge, MA, USA (Summit)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Innovators, entrepreneurs, or researchers at any stage",
+      "Working on solutions to specific MIT Solve challenge areas",
+      "Open to individuals and teams from any country",
+      "Non-profit, for-profit, and hybrid organisations all eligible"
+    ],
+    "requirements": ["Online Solver application", "2-minute solution video", "Problem and solution narrative", "Impact and financial plan"],
+    "deadline": "2027-03-01",
+    "duration": "1 year",
+    "stipend": { "amount": 10000, "currency": "USD", "frequency": "one-time", "notes": "Prize funding plus additional funding opportunities through Solve Funding Pool" },
+    "isFunded": true,
+    "applicationUrl": "https://solve.mit.edu/fellowships",
+    "applicationSteps": [
+      "Review open challenge areas on MIT Solve website",
+      "Submit Solver application including video pitch",
+      "Judging by MIT faculty, investors, and domain experts",
+      "Selected Solvers announced at MIT Solve Innovation Summit"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
   }
 ] as any;
+

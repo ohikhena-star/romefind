@@ -163,17 +163,17 @@ export const searchOpportunities = (
         
         const inField = (opp.field || []).some((f: string) => {
           const item = f.trim().toLowerCase();
-          return item === target || item.includes(target) || target.includes(item);
+          return item === target || item.includes(target) || (target.length > 5 && item.includes(target.split(' ')[0]));
         });
 
         const inSubfields = (opp.subfields || []).some((s: string) => {
           const item = s.trim().toLowerCase();
-          return item === target || item.includes(target) || target.includes(item);
+          return item === target || item.includes(target);
         });
 
         const inTags = (opp.tags || []).some((t: string) => {
           const item = t.trim().toLowerCase();
-          return item === target || item.includes(target) || target.includes(item);
+          return item === target || item.includes(target);
         });
 
         const inTitle = (opp.title || '').toLowerCase().includes(target);
