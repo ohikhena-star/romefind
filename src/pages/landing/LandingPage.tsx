@@ -34,7 +34,7 @@ export default function LandingPage() {
       title: 'Fellowships & Residencies',
       badge: 'Fully Funded',
       description: 'Prestigious global cohorts with full living stipends, dedicated mentorship, and research freedom.',
-      icon: 'graduation-cap-linear'
+      icon: 'diploma-verified-linear'
     },
     {
       title: 'Internships & Co-ops',
@@ -287,7 +287,7 @@ export default function LandingPage() {
             
             {/* Left Narrative */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-100 dark:bg-surface-850 text-surface-800 dark:text-surface-200 text-xs font-bold uppercase tracking-wider border border-surface-200/80 dark:border-surface-700/80">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-100 dark:bg-surface-850 text-surface-900 dark:text-surface-100 text-xs font-bold uppercase tracking-wider border border-surface-200 dark:border-surface-700">
                 <span className="w-2 h-2 rounded-full bg-rome-500" />
                 <span>Opportunity Discovery & Decision Support</span>
               </div>
@@ -297,7 +297,7 @@ export default function LandingPage() {
                 <span className="text-rome-500">Neither is your path.</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-surface-600 dark:text-surface-300 leading-relaxed max-w-xl">
+              <p className="text-base sm:text-lg text-surface-700 dark:text-surface-300 leading-relaxed max-w-xl">
                 Discover opportunities you might not have found on your own. ROMEfind surfaces high-impact fellowships, internships, grants, research programs, and skill accelerators tailored to what you want to achieve.
               </p>
 
@@ -314,14 +314,14 @@ export default function LandingPage() {
 
                 <button 
                   onClick={() => scrollToSection('how-it-works')}
-                  className="inline-flex items-center justify-center text-sm font-semibold text-surface-600 dark:text-surface-300 hover:text-surface-950 dark:hover:text-white px-5 py-3 h-12 min-h-[48px] rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800/80 transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center text-sm font-semibold text-surface-700 dark:text-surface-300 hover:text-surface-950 dark:hover:text-white px-5 py-3 h-12 min-h-[48px] rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800/80 transition-colors cursor-pointer"
                 >
                   See how it works
                 </button>
               </div>
 
               {/* Key Trust Signals */}
-              <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-surface-500 dark:text-surface-400 font-medium">
+              <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-surface-600 dark:text-surface-400 font-semibold">
                 <span className="flex items-center gap-1.5">
                   <SolarIcon name="check-circle-linear" size={16} className="text-rome-500" />
                   Verified Deadlines & Eligibility
@@ -337,16 +337,16 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Right Interactive Preview Card */}
+            {/* Right Interactive Preview Card (Visual hover only, illustrative) */}
             <div className="lg:col-span-5 w-full">
-              <div className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-7 shadow-xl shadow-surface-950/5 relative overflow-hidden text-left">
+              <div className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-7 shadow-xl shadow-surface-950/5 relative overflow-hidden text-left transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-2xl">
                 {/* Header Tag */}
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 flex items-center justify-center">
                       <SolarIcon name="buildings-2-linear" size={13} />
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-surface-500">
+                    <span className="text-xs font-bold uppercase tracking-wider text-surface-600 dark:text-surface-400">
                       Stanford University
                     </span>
                   </div>
@@ -363,34 +363,34 @@ export default function LandingPage() {
                   <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
                     Fellowship
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-600 dark:text-surface-400">
+                  <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300">
                     Leadership & Public Policy
                   </span>
                 </div>
 
-                <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed mb-4">
+                <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed mb-4">
                   Full tuition, stipend, and leadership development across all graduate degree disciplines at Stanford.
                 </p>
 
                 {/* Structured Metadata (Direct on Card Surface) */}
                 <div className="grid grid-cols-2 gap-2.5 text-xs py-3 border-y border-surface-100 dark:border-surface-800/80 mb-5">
                   <div>
-                    <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Location</span>
-                    <span className="font-semibold text-surface-800 dark:text-surface-200">Stanford, CA, USA</span>
+                    <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold block mb-0.5">Location</span>
+                    <span className="font-semibold text-surface-900 dark:text-surface-100">Stanford, CA, USA</span>
                   </div>
                   <div>
-                    <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Deadline</span>
+                    <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold block mb-0.5">Deadline</span>
                     <span className="font-semibold text-amber-600 dark:text-amber-400">Oct 07, 2026</span>
                   </div>
                   <div className="col-span-2 pt-2 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
-                    <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold">Funding</span>
+                    <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold">Funding</span>
                     <span className="font-semibold text-surface-900 dark:text-surface-100">100% Tuition + Living Stipend</span>
                   </div>
                 </div>
 
                 {/* Decorative Opportunity Preview Footer (Illustrative - does not navigate) */}
                 <div className="flex items-center gap-2">
-                  <div className="w-full py-2.5 px-4 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 text-center text-xs font-semibold flex items-center justify-center gap-1.5 cursor-default select-none border border-surface-200/50 dark:border-surface-700/50">
+                  <div className="w-full py-2.5 px-4 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 text-center text-xs font-semibold flex items-center justify-center gap-1.5 cursor-default select-none border border-surface-200/50 dark:border-surface-700/50">
                     <span>Verified Opportunity Preview</span>
                     <SolarIcon name="check-circle-linear" size={14} className="text-rome-500" />
                   </div>
@@ -413,34 +413,34 @@ export default function LandingPage() {
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 leading-tight">
                 Designed to help you uncover paths you never knew existed.
               </h2>
-              <p className="text-base text-surface-600 dark:text-surface-300 leading-relaxed">
+              <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
                 Most discovery platforms operate like conventional job boards—showing you only the standard roles everyone already knows about.
               </p>
-              <p className="text-base text-surface-600 dark:text-surface-300 leading-relaxed">
+              <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
                 ROMEfind was built on a different principle: that ambitious paths are made possible through non-linear combinations of fellowships, research placements, seed grants, and intensive programmes. We provide the structured clarity and decision support to help you navigate them.
               </p>
             </div>
 
             <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2">
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
                 <span className="text-2xl font-bold text-rome-500">100%</span>
                 <h3 className="font-bold text-base text-surface-950 dark:text-white">Curated & Verified</h3>
-                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400">All opportunities are vetted for genuine funding and authentic application links.</p>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">All opportunities are vetted for genuine funding and authentic application links.</p>
               </div>
-              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2">
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
                 <span className="text-2xl font-bold text-rome-500">Global</span>
                 <h3 className="font-bold text-base text-surface-950 dark:text-white">Worldwide Scope</h3>
-                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400">Opportunities spanning the US, UK, Europe, Africa, Asia, and remote worldwide.</p>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">Opportunities spanning the US, UK, Europe, Africa, Asia, and remote worldwide.</p>
               </div>
-              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2">
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
                 <span className="text-2xl font-bold text-rome-500">Smart</span>
                 <h3 className="font-bold text-base text-surface-950 dark:text-white">Side-by-Side Compare</h3>
-                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400">Evaluate duration, stipends, and requirements side-by-side before applying.</p>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">Evaluate duration, stipends, and requirements side-by-side before applying.</p>
               </div>
-              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2">
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
                 <span className="text-2xl font-bold text-rome-500">Private</span>
                 <h3 className="font-bold text-base text-surface-950 dark:text-white">Personal Workspace</h3>
-                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400">Track deadlines, checklists, and outcomes in one focused command center.</p>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">Track deadlines, checklists, and outcomes in one focused command center.</p>
               </div>
             </div>
           </div>
@@ -457,7 +457,7 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
               Find possibilities across different paths.
             </h2>
-            <p className="text-base text-surface-600 dark:text-surface-300 leading-relaxed">
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
               There are more opportunities and career trajectories available than people usually discover. Explore curated formats structured for high growth.
             </p>
           </div>
@@ -466,23 +466,23 @@ export default function LandingPage() {
             {pathways.map((path, idx) => (
               <div 
                 key={idx}
-                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:shadow-card-hover md:hover:border-surface-300 dark:md:hover:border-surface-700 text-left flex flex-col justify-between"
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:shadow-card-hover md:hover:border-surface-300 dark:md:hover:border-surface-700 text-left flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-200 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 flex items-center justify-center border border-surface-200/60 dark:border-surface-700/60 transition-colors md:group-hover:border-surface-300 dark:md:group-hover:border-surface-600">
                       <SolarIcon name={path.icon} size={20} />
                     </div>
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400">
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300">
                       {path.badge}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-surface-950 dark:text-white mb-2">
+                  <h3 className="text-lg font-bold text-surface-950 dark:text-white mb-2 transition-colors">
                     {path.title}
                   </h3>
 
-                  <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">
+                  <p className="text-sm text-surface-600 dark:text-surface-300 leading-relaxed">
                     {path.description}
                   </p>
                 </div>
@@ -492,7 +492,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── Section 2: Don't Just Find Opportunities. Understand Them ─── */}
+      {/* ─── Section 2: Opportunity Discovery & Decision Support (Pillars) ─── */}
       <section className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-left max-w-2xl mb-12">
@@ -502,7 +502,7 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
               Don’t just find opportunities. Understand them.
             </h2>
-            <p className="text-base text-surface-600 dark:text-surface-300 leading-relaxed">
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
               Every opportunity in ROMEfind is broken down into structured, actionable intelligence before you invest your time applying.
             </p>
           </div>
@@ -511,15 +511,15 @@ export default function LandingPage() {
             {pillars.map((pillar, idx) => (
               <div 
                 key={idx}
-                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 text-left space-y-3 shadow-xs"
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 text-left space-y-3 shadow-xs transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover group"
               >
-                <div className="w-10 h-10 rounded-xl bg-rome-50 dark:bg-rome-950/50 text-rome-600 dark:text-rome-400 flex items-center justify-center border border-rome-200/60 dark:border-rome-800/60">
+                <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 flex items-center justify-center border border-surface-200/60 dark:border-surface-700/60 transition-colors md:group-hover:border-rome-200 dark:md:group-hover:border-rome-800 md:group-hover:text-rome-600 dark:md:group-hover:text-rome-400">
                   <SolarIcon name={pillar.icon} size={20} />
                 </div>
                 <h3 className="text-base font-bold text-surface-950 dark:text-white">
                   {pillar.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400 leading-relaxed">
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">
                   {pillar.description}
                 </p>
               </div>
@@ -538,7 +538,7 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
               Explore. Compare. Prepare. Track.
             </h2>
-            <p className="text-base text-surface-600 dark:text-surface-300 leading-relaxed">
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
               From initial spark to accepted offer, navigate every step of your trajectory with confidence.
             </p>
           </div>
@@ -547,15 +547,15 @@ export default function LandingPage() {
             {workflowSteps.map((step, idx) => (
               <div 
                 key={idx}
-                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 text-left space-y-3 relative overflow-hidden"
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 text-left space-y-3 relative overflow-hidden transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover group"
               >
-                <span className="text-3xl font-black text-surface-200 dark:text-surface-800 block">
+                <span className="text-3xl font-black text-surface-300 dark:text-surface-700 block transition-colors md:group-hover:text-rome-500">
                   {step.step}
                 </span>
                 <h3 className="text-lg font-bold text-surface-950 dark:text-white">
                   {step.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400 leading-relaxed">
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">
                   {step.description}
                 </p>
               </div>
@@ -574,7 +574,7 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
               Everything you need to know.
             </h2>
-            <p className="text-base text-surface-600 dark:text-surface-300 leading-relaxed">
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
               Answers to common questions about opportunity curation, matching, and tracking on ROMEfind.
             </p>
           </div>
@@ -585,18 +585,18 @@ export default function LandingPage() {
               return (
                 <div 
                   key={idx}
-                  className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 overflow-hidden shadow-2xs transition-colors"
+                  className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 overflow-hidden shadow-2xs transition-all duration-200 md:hover:border-surface-300 dark:md:hover:border-surface-700"
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-base sm:text-lg text-surface-950 dark:text-white cursor-pointer"
+                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-base sm:text-lg text-surface-950 dark:text-white cursor-pointer hover:text-rome-600 dark:hover:text-rome-400 transition-colors"
                     aria-expanded={isOpen}
                   >
                     <span>{faq.q}</span>
                     <SolarIcon 
                       name={isOpen ? "alt-arrow-up-linear" : "alt-arrow-down-linear"} 
                       size={18} 
-                      className="shrink-0 text-surface-400"
+                      className="shrink-0 text-surface-500"
                     />
                   </button>
                   {isOpen && (

@@ -56,7 +56,7 @@ export const INTENT_PATHWAYS = [
   { id: 'find-work', label: 'Find work', icon: 'case-linear', description: 'Jobs, internships, contract and remote positions' },
   { id: 'build-experience', label: 'Build experience', icon: 'cup-star-linear', description: 'Fellowships, apprenticeships, and hands-on programmes' },
   { id: 'get-funded', label: 'Get funded', icon: 'dollar-minimalistic-linear', description: 'Grants, equity-free funding, and scholarships' },
-  { id: 'study', label: 'Study somewhere new', icon: 'graduation-cap-linear', description: 'Master’s degrees, university exchange, and academic programmes' },
+  { id: 'study', label: 'Study somewhere new', icon: 'diploma-verified-linear', description: 'Master’s degrees, university exchange, and academic programmes' },
   { id: 'build-portfolio', label: 'Build my portfolio', icon: 'layers-minimalistic-linear', description: 'Competitions, open-source, and project residencies' },
   { id: 'research', label: 'Get into research', icon: 'test-tube-linear', description: 'Scientific, academic, policy and market research' },
   { id: 'start-something', label: 'Start something', icon: 'rocket-linear', description: 'Accelerators, incubators, founder grants, and pitch competitions' },

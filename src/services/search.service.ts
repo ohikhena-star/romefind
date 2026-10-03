@@ -20,6 +20,15 @@ const INTENT_MAPPINGS: Record<string, string[]> = {
   'virtual assistant': ['administration', 'executive assistance', 'virtual assistant', 'remote assistance'],
   'accountant': ['accounting', 'audit', 'tax', 'bookkeeping', 'finance'],
   'marketer': ['digital marketing', 'content marketing', 'seo', 'social media', 'growth marketing'],
+  'event': ['conference/event', 'conference', 'summit', 'networking', 'expo', 'workshop', 'career fair'],
+  'events': ['conference/event', 'conference', 'summit', 'networking', 'expo', 'workshop', 'career fair'],
+  'networking': ['conference/event', 'networking', 'meetup', 'community', 'conference', 'expo', 'summit'],
+  'conference': ['conference/event', 'conference', 'summit', 'symposium', 'expo', 'research'],
+  'conferences': ['conference/event', 'conference', 'summit', 'symposium', 'expo', 'research'],
+  'career fair': ['conference/event', 'career fair', 'recruiting', 'expo', 'internship', 'job'],
+  'workshop': ['conference/event', 'workshop', 'masterclass', 'training', 'programme'],
+  'workshops': ['conference/event', 'workshop', 'masterclass', 'training', 'programme'],
+  'hackathon': ['conference/event', 'competition', 'hackathon', 'open-source', 'bounty'],
 };
 
 // Sourcing Gap In-Memory / Local Storage Tracker

@@ -1741,5 +1741,725 @@ export const opportunities: Opportunity[] = [
     "createdAt": "2026-09-01T00:00:00.000Z",
     "updatedAt": "2026-10-01T00:00:00.000Z",
     "isFeatured": false
+  },
+  {
+    "id": "opp-event-01",
+    "title": "AfroTech Global Conference & Executive Networking Expo",
+    "organization": {
+      "id": "org-afrotech",
+      "name": "AfroTech",
+      "website": "https://afrotechconference.com",
+      "description": "The largest multicultural tech conference and career community in the world",
+      "type": "Professional Association"
+    },
+    "type": "Conference/Event",
+    "description": "Connect with over 20,000 tech professionals, founders, and recruiters. Features dedicated recruiting expos with 150+ leading technology employers, executive leadership tracks, and technical innovation workshops.",
+    "shortDescription": "Global tech career expo, executive networking summit, and founder pitch competition.",
+    "field": [
+      "Technology & Computing",
+      "Software Engineering",
+      "AI",
+      "Entrepreneurship"
+    ],
+    "subfields": [
+      "Career Fair",
+      "Executive Networking",
+      "Recruiting",
+      "Engineering Leadership"
+    ],
+    "location": "Austin, TX, USA / Hybrid (Virtual Access)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Open to students, software engineers, product managers, designers, and tech founders globally",
+      "Student & Early Career scholarship applications open to all accredited institutions"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Funded Student Scholarships & Registration Subsidies",
+    "benefits": [
+      "Direct recruiting sessions with hiring managers from 150+ tech scaleups and enterprise leaders",
+      "Full registration fee waiver and travel grants for selected student scholarship recipients",
+      "1-on-1 resume reviews, portfolio clinics, and engineering interview prep",
+      "Access to private executive networking lounges and investor mixers"
+    ],
+    "duration": "4 days",
+    "deadline": "2026-11-15",
+    "applicationUrl": "https://afrotechconference.com",
+    "officialSource": "https://afrotechconference.com",
+    "sourceName": "AfroTech",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "AfroTech",
+      "Conference",
+      "Career Fair",
+      "Networking",
+      "Software Engineering",
+      "Recruiting"
+    ],
+    "requirements": [
+      "Online registration profile",
+      "CV / Portfolio for recruiting database",
+      "Student ID for scholarship applicants"
+    ],
+    "applicationSteps": [
+      "Select registration track (Student, General, or Executive)",
+      "Upload CV to recruiter talent network",
+      "Book 1-on-1 networking slots via attendee portal"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-15T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-event-02",
+    "title": "NeurIPS Global AI Research Conference & Affinity Workshops",
+    "organization": {
+      "id": "org-neurips",
+      "name": "NeurIPS Foundation",
+      "website": "https://neurips.cc",
+      "description": "Premier annual international conference on Neural Information Processing Systems",
+      "type": "Research Institute"
+    },
+    "type": "Conference/Event",
+    "description": "The world's foremost conference on machine learning and computational neuroscience. Includes keynotes from top pioneers, accepted oral paper presentations, and specialized affinity workshops (Black in AI, LatinX in AI, Women in ML, Queer in AI).",
+    "shortDescription": "Flagship international machine learning conference with fully funded travel and registration grants.",
+    "field": [
+      "AI",
+      "Machine Learning",
+      "Data Science",
+      "Academic Research"
+    ],
+    "subfields": [
+      "Deep Learning",
+      "Affinity Workshops",
+      "Computer Vision",
+      "Natural Language Processing"
+    ],
+    "location": "Vancouver, Canada & Remote (Worldwide Virtual)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Researchers, graduate students, undergraduates, and practitioners working in machine learning, statistics, and related disciplines",
+      "Travel grants prioritized for authors of accepted papers and participants from historically underrepresented regions"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Funded (Full Registration Waiver + Travel Stipend for Grant Recipients)",
+    "benefits": [
+      "Full conference registration fee waiver and up to $2,500 travel support for D&I scholars",
+      "Direct access to research scientists and hiring directors from DeepMind, OpenAI, FAIR, and Anthropic",
+      "Mentorship roundtables pairing junior researchers with senior faculty",
+      "Access to all oral sessions, poster presentations, and tutorial recordings"
+    ],
+    "duration": "6 days",
+    "deadline": "2026-10-30",
+    "applicationUrl": "https://neurips.cc/Conferences/2026",
+    "officialSource": "https://neurips.cc",
+    "sourceName": "NeurIPS Official",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "NeurIPS",
+      "AI",
+      "Machine Learning",
+      "Research",
+      "Conference",
+      "Grant"
+    ],
+    "requirements": [
+      "Conference registration or Grant application form",
+      "Statement of interest and CV",
+      "Letter of recommendation (for student travel grants)"
+    ],
+    "applicationSteps": [
+      "Submit D&I travel grant application",
+      "Register virtual or in-person ticket",
+      "Access workshop schedule"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-event-03",
+    "title": "Figma Config Global Product Design & Systems Summit",
+    "organization": {
+      "id": "org-figma",
+      "name": "Figma",
+      "website": "https://config.figma.com",
+      "description": "Global design and product creation platform",
+      "type": "Company"
+    },
+    "type": "Conference/Event",
+    "description": "The premier annual global conference for product designers, design engineers, creative directors, and UX leaders. Discover the latest design system architectures, UI prototyping techniques, and AI-assisted design workflows.",
+    "shortDescription": "Global product design and systems conference with 100% free virtual attendance.",
+    "field": [
+      "Product Design",
+      "UX/UI",
+      "Design Systems",
+      "Product Management"
+    ],
+    "subfields": [
+      "Interaction Design",
+      "Design Engineering",
+      "Prototyping",
+      "Design Leadership"
+    ],
+    "location": "San Francisco, CA, USA & Remote (Worldwide)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Open to product designers, frontend engineers, design students, and product creators worldwide",
+      "Virtual streaming pass is 100% free and open to everyone"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Free (100% Free Virtual Registration & Student Subsidies)",
+    "benefits": [
+      "Free global streaming access to 50+ interactive design keynotes and masterclasses",
+      "Hands-on design systems and variable token workshops",
+      "Community breakout rooms and portfolio clinics with industry leaders",
+      "Live Q&A with Figma product and engineering directors"
+    ],
+    "duration": "2 days",
+    "deadline": "2026-12-01",
+    "applicationUrl": "https://config.figma.com",
+    "officialSource": "https://config.figma.com",
+    "sourceName": "Figma Config",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Figma",
+      "Design",
+      "Product Design",
+      "UX/UI",
+      "Design Systems",
+      "Conference"
+    ],
+    "requirements": [
+      "Online registration form"
+    ],
+    "applicationSteps": [
+      "Register for free virtual streaming pass",
+      "Select workshop tracks",
+      "Join the official Config community Discord"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-20T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-event-04",
+    "title": "MIT Solve Global Innovation Summit & Pitch Challenge",
+    "organization": {
+      "id": "org-mit-solve",
+      "name": "MIT Solve",
+      "website": "https://solve.mit.edu",
+      "description": "Massachusetts Institute of Technology social innovation and venture catalyst",
+      "type": "University"
+    },
+    "type": "Conference/Event",
+    "description": "An annual flagship gathering at MIT connecting social entrepreneurs, climate innovators, and tech builders with philanthropic funders, impact investors, and research collaborators.",
+    "shortDescription": "Social entrepreneurship and climate innovation summit with over $1M in challenge prize funding.",
+    "field": [
+      "Social Impact",
+      "Climate & Sustainability",
+      "Clean Energy",
+      "Entrepreneurship"
+    ],
+    "subfields": [
+      "Venture Pitching",
+      "Cross-Sector Partnerships",
+      "Social Innovation",
+      "Impact Grants"
+    ],
+    "location": "Cambridge, MA, USA & Virtual",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Social entrepreneurs, researchers, students, and early-stage innovators addressing global climate, education, health, and economic prosperity challenges"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Funded (Over $1,000,000 in Non-Dilutive Challenge Grants & Travel Support)",
+    "benefits": [
+      "Pitch live to a panel of philanthropic donors, venture capitalists, and NGO executives",
+      "Fully sponsored travel and accommodation for finalist teams presenting at MIT",
+      "9-month structured mentorship and corporate partnership accelerator access",
+      "Global media coverage across MIT publications and international press"
+    ],
+    "duration": "3 days",
+    "deadline": "2026-11-20",
+    "applicationUrl": "https://solve.mit.edu/events",
+    "officialSource": "https://solve.mit.edu",
+    "sourceName": "MIT Solve",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "MIT",
+      "Social Impact",
+      "Climate",
+      "Innovation",
+      "Grant",
+      "Conference"
+    ],
+    "requirements": [
+      "Challenge solution submission or attendee registration",
+      "Executive summary of innovation",
+      "Team background information"
+    ],
+    "applicationSteps": [
+      "Submit challenge proposal via MIT Solve portal",
+      "Expert judge panel review",
+      "Invitation to pitch at Cambridge flagship summit"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-10T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-event-05",
+    "title": "Grace Hopper Celebration & Technical Career Fair",
+    "organization": {
+      "id": "org-anitab",
+      "name": "AnitaB.org",
+      "website": "https://ghc.anitab.org",
+      "description": "Global non-profit organization promoting diversity, equity, and inclusion in computing",
+      "type": "Non-Profit"
+    },
+    "type": "Conference/Event",
+    "description": "The world's largest gathering of women and non-binary technologists. Features world-class technical keynotes, an expansive career fair with 200+ employers, and structured student-to-professional mentorship sessions.",
+    "shortDescription": "World's largest computing conference and career fair with comprehensive student travel scholarships.",
+    "field": [
+      "Software Engineering",
+      "Technology & Computing",
+      "Cybersecurity",
+      "Data Science"
+    ],
+    "subfields": [
+      "Career Fair",
+      "Technical Workshops",
+      "Mentorship",
+      "DEI in Tech"
+    ],
+    "location": "Philadelphia, PA, USA / Hybrid",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Open to undergraduate students, graduate students, researchers, and technology professionals",
+      "Scholarships available for students enrolled in accredited computer science and STEM degree programmes"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "PhD"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Funded Student Scholarships (Full Travel, Hotel & Registration)",
+    "benefits": [
+      "Direct on-site and virtual interviews with hiring teams from Google, Apple, Microsoft, Amazon, and 200+ companies",
+      "Full AnitaB.org Student Scholar award covering round-trip flights, hotel, and conference badge",
+      "1-on-1 resume reviews and technical mock interviews with senior engineers",
+      "Lifelong access to global alumni directory and community mentorship cohorts"
+    ],
+    "duration": "4 days",
+    "deadline": "2026-10-25",
+    "applicationUrl": "https://ghc.anitab.org",
+    "officialSource": "https://ghc.anitab.org",
+    "sourceName": "AnitaB.org GHC",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "Grace Hopper",
+      "Career Fair",
+      "Software Engineering",
+      "Diversity",
+      "Recruiting",
+      "Conference"
+    ],
+    "requirements": [
+      "CV / Resume",
+      "Academic transcript (for scholarship track)",
+      "Short essay on career goals in technology"
+    ],
+    "applicationSteps": [
+      "Submit Student Scholar or general registration",
+      "Upload CV to GHC Resume Database for employers",
+      "Pre-schedule technical interviews"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-event-06",
+    "title": "London Tech Week & Emerging Founders Summit",
+    "organization": {
+      "id": "org-informa-tech",
+      "name": "Informa Tech & London & Partners",
+      "website": "https://londontechweek.com",
+      "description": "Europe's premier technology and startup ecosystem festival",
+      "type": "Company"
+    },
+    "type": "Conference/Event",
+    "description": "A week-long innovation festival bringing together 45,000 attendees, 5,000 startup founders, and global venture capitalists. Discover early-stage investment trends, participate in founder-investor matchmaking, and explore cross-border expansion.",
+    "shortDescription": "Europe's premier tech festival with curated founder-investor matchmaking and scaleup clinics.",
+    "field": [
+      "Entrepreneurship",
+      "Startups",
+      "Venture Capital",
+      "Software Engineering"
+    ],
+    "subfields": [
+      "Founder-Investor Matchmaking",
+      "Scaleup Masterclasses",
+      "Angel Demo Days",
+      "Fintech"
+    ],
+    "location": "London, UK",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Founders, university researchers, tech innovators, and ecosystem builders",
+      "Subsidized tickets available for early-stage startups and university incubators"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Free Early-Stage Founder Passes & University Subsidies",
+    "benefits": [
+      "Pre-scheduled 1-on-1 pitch meetings with European and UK venture capital partners",
+      "Free exhibition demo booths for university-affiliated and pre-seed startups",
+      "Masterclasses on fundraising governance, UK/EU talent visas, and international expansion",
+      "Networking access to private evening mixers across London's leading innovation hubs"
+    ],
+    "duration": "5 days",
+    "deadline": "2026-12-15",
+    "applicationUrl": "https://londontechweek.com",
+    "officialSource": "https://londontechweek.com",
+    "sourceName": "London Tech Week",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "London",
+      "Startups",
+      "Venture Capital",
+      "Networking",
+      "UK",
+      "Conference"
+    ],
+    "requirements": [
+      "Delegate registration form",
+      "Company or university affiliation overview (for pitch tracks)"
+    ],
+    "applicationSteps": [
+      "Register online for general badge or founder pass",
+      "Apply for Venture Matchmaking programme",
+      "Receive personalized schedule of investor meetings"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-18T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-event-07",
+    "title": "Kigali Global Innovation & YouthConnekt Summit",
+    "organization": {
+      "id": "org-undp-rwanda",
+      "name": "UNDP & Republic of Rwanda",
+      "website": "https://youthconnektafrica.org",
+      "description": "Pan-African youth empowerment and digital economy platform",
+      "type": "International Organization"
+    },
+    "type": "Conference/Event",
+    "description": "The largest gathering of young innovators, tech entrepreneurs, policymakers, and civic leaders in Africa. Focuses on scaling digital public infrastructure, green entrepreneurship, and intra-African trade opportunities.",
+    "shortDescription": "Pan-African innovation and policy summit with fully funded delegate sponsorship.",
+    "field": [
+      "Social Impact",
+      "Entrepreneurship",
+      "Public Policy",
+      "International Relations"
+    ],
+    "subfields": [
+      "Digital Economy",
+      "Youth Empowerment",
+      "Pan-African Trade",
+      "Policy Roundtables"
+    ],
+    "location": "Kigali, Rwanda & Remote (Worldwide)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Young leaders, entrepreneurs, and innovators aged 18-35 from Africa and the global diaspora",
+      "Travel and visa sponsorship available for competitively selected innovation champions"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Funded (Full Flights, Accommodation & Visa Support for Selected Delegates)",
+    "benefits": [
+      "Fully sponsored travel, luxury accommodation, and local transport in Kigali for 150+ selected youth leaders",
+      "Pitch for the YouthConnekt Africa Innovation Prize ($10,000 to $50,000 in grant capital)",
+      "Direct roundtables with African heads of state, UN leaders, and international development bank executives",
+      "Access to the Pan-African entrepreneur directory and bilateral trade networks"
+    ],
+    "duration": "3 days",
+    "deadline": "2026-11-10",
+    "applicationUrl": "https://youthconnektafrica.org",
+    "officialSource": "https://youthconnektafrica.org",
+    "sourceName": "YouthConnekt Africa",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "UNDP",
+      "Rwanda",
+      "Kigali",
+      "Africa",
+      "Innovation",
+      "Grant",
+      "Conference"
+    ],
+    "requirements": [
+      "Online delegate application",
+      "Innovation project description or community initiative outline",
+      "Passport copy for visa letter"
+    ],
+    "applicationSteps": [
+      "Submit online delegate application",
+      "Review by national UNDP country office committee",
+      "Issuance of official invitation letter and flight ticket"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-05T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-event-08",
+    "title": "DAAD Global Academic Research & Fellowship Fair",
+    "organization": {
+      "id": "org-daad",
+      "name": "German Academic Exchange Service (DAAD)",
+      "website": "https://www.daad.de/en",
+      "description": "The world's largest funding organization for international academic exchange",
+      "type": "Government"
+    },
+    "type": "Conference/Event",
+    "description": "An interactive global virtual fair connecting prospective master's, PhD, and postdoctoral researchers with admissions directors and research group leaders from 50+ German universities and Max Planck / Helmholtz institutes.",
+    "shortDescription": "Virtual research fair offering direct guidance on €1,300/mo German fellowships and PhD grants.",
+    "field": [
+      "Academic Research",
+      "Engineering",
+      "Life Sciences",
+      "International Relations"
+    ],
+    "subfields": [
+      "PhD Opportunities",
+      "Research Grants",
+      "Postgraduate Funding",
+      "University Admissions"
+    ],
+    "location": "Remote (Worldwide Virtual Fair)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Undergraduate seniors, master's graduates, and prospective PhD researchers worldwide seeking funded study and research placements in Germany"
+    ],
+    "educationRequirements": [
+      "Undergraduate",
+      "Graduate",
+      "Postgraduate"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Free (100% Free Virtual Registration & Application Advice)",
+    "benefits": [
+      "Direct 1-on-1 virtual chat rooms with professors and admissions officers from top German universities",
+      "Step-by-step masterclasses on winning DAAD monthly living stipends (€934 - €1,300/mo) and health insurance grants",
+      "Guidance on German language immersion funding, student visa pathways, and post-study work options",
+      "Downloadable research proposal writing templates and institutional directories"
+    ],
+    "duration": "1 day",
+    "deadline": "2026-11-05",
+    "applicationUrl": "https://www.daad.de/en/study-and-research-in-germany/virtual-fair",
+    "officialSource": "https://www.daad.de",
+    "sourceName": "DAAD Germany",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "DAAD",
+      "Germany",
+      "Research",
+      "Scholarship",
+      "Fellowship",
+      "Virtual Fair",
+      "Conference"
+    ],
+    "requirements": [
+      "Free online registration form"
+    ],
+    "applicationSteps": [
+      "Register for virtual fair portal",
+      "Upload CV to virtual booth directory",
+      "Schedule live video chats with university representatives"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-12T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
+  },
+  {
+    "id": "opp-event-09",
+    "title": "ETHGlobal Hackathon & Developer Summit",
+    "organization": {
+      "id": "org-ethglobal",
+      "name": "ETHGlobal",
+      "website": "https://ethglobal.com",
+      "description": "Global developer community and hackathon organization for open-source and decentralized protocols",
+      "type": "Non-Profit"
+    },
+    "type": "Conference/Event",
+    "description": "Join 2,000+ developers, distributed systems engineers, and open-source contributors for a high-energy 36-hour hackathon, technical workshops, and mentor office hours. Build prototypes and compete for over $500,000 in ecosystem bounties.",
+    "shortDescription": "Global open-source hackathon and developer summit with $500,000+ in bounties and travel grants.",
+    "field": [
+      "Software Engineering",
+      "Full Stack",
+      "Cybersecurity",
+      "DevOps"
+    ],
+    "subfields": [
+      "Open Source",
+      "Smart Contracts",
+      "Distributed Systems",
+      "Hackathon"
+    ],
+    "location": "Worldwide / Remote & London, UK",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Software engineers, UI designers, technical writers, and student developers of all experience levels",
+      "Free admission for all accepted hackathon participants"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Intermediate",
+    "funding": "Funded ($500,000+ in Bounties & Builder Travel Grants)",
+    "benefits": [
+      "Direct code mentorship and architectural reviews from core protocol engineers and open-source maintainers",
+      "Compete for track prizes and sponsor bounties totaling over $500,000 in cash and token grants",
+      "Top projects fast-tracked for venture accelerator interviews and seed grant programmes",
+      "Builder travel stipends available for demonstrated open-source contributors"
+    ],
+    "duration": "3 days",
+    "deadline": "2026-11-28",
+    "applicationUrl": "https://ethglobal.com/events",
+    "officialSource": "https://ethglobal.com",
+    "sourceName": "ETHGlobal",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "ETHGlobal",
+      "Hackathon",
+      "Open Source",
+      "Software Engineering",
+      "Conference"
+    ],
+    "requirements": [
+      "Developer application profile",
+      "GitHub profile or technical project portfolio link"
+    ],
+    "applicationSteps": [
+      "Submit hacker application with GitHub portfolio",
+      "Receive acceptance notification and Discord invite",
+      "Form team and participate in hackathon and sponsor workshops"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-14T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": true
+  },
+  {
+    "id": "opp-event-10",
+    "title": "PMI Global Operations & Project Management Summit",
+    "organization": {
+      "id": "org-pmi-summit",
+      "name": "Project Management Institute (PMI)",
+      "website": "https://www.pmi.org/global-summit",
+      "description": "Global professional organization for project management and agile practitioners",
+      "type": "Professional Association"
+    },
+    "type": "Conference/Event",
+    "description": "The premier annual convention for project leaders, operations managers, and PMO executives worldwide. Features 100+ educational sessions on agile transformations, AI in project governance, and an exclusive operations recruiting expo.",
+    "shortDescription": "Premier operations and project management convention with career recruiting fair.",
+    "field": [
+      "Project Management",
+      "Operations",
+      "Strategy",
+      "Business Development"
+    ],
+    "subfields": [
+      "Agile Delivery",
+      "PMO Leadership",
+      "Career Networking",
+      "PMP / CAPM Credential Sessions"
+    ],
+    "location": "Los Angeles, CA, USA & Virtual",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Project coordinators, operations leads, scrum masters, and students pursuing management careers",
+      "Subsidized student and early-career registration tiers available"
+    ],
+    "educationRequirements": [
+      "Any"
+    ],
+    "experienceRequirements": "Beginner",
+    "funding": "Student & Early Career Subsidies Available",
+    "benefits": [
+      "Earn up to 20 Professional Development Units (PDUs) toward PMP, CAPM, and PMI-ACP certifications",
+      "1-on-1 career speed-mentoring with enterprise PMO directors from Fortune 500 organizations",
+      "Exclusive access to career pavilion connecting certified project managers with hiring companies",
+      "Full on-demand library access to keynote recordings and operational toolkits"
+    ],
+    "duration": "4 days",
+    "deadline": "2026-12-05",
+    "applicationUrl": "https://www.pmi.org/global-summit",
+    "officialSource": "https://www.pmi.org",
+    "sourceName": "PMI Global",
+    "lastVerified": "2026-10-01T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "tags": [
+      "PMI",
+      "Project Management",
+      "Operations",
+      "Career Fair",
+      "Agile",
+      "Conference"
+    ],
+    "requirements": [
+      "Registration form",
+      "PMI Member ID or Student ID (for discount rates)"
+    ],
+    "applicationSteps": [
+      "Register online for in-person or virtual pass",
+      "Select certified track workshops",
+      "Book recruiter meetings in the PMI Career Hub"
+    ],
+    "status": "open",
+    "createdAt": "2026-09-16T00:00:00.000Z",
+    "updatedAt": "2026-10-01T00:00:00.000Z",
+    "isFeatured": false
   }
 ] as any;
