@@ -16,8 +16,8 @@ export interface TabsProps {
 
 export const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onChange, className }) => {
   return (
-    <div className={cn("border-b border-surface-200 dark:border-surface-800", className)}>
-      <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
+    <div className={cn("border-b border-surface-200 dark:border-surface-800 w-full overflow-hidden", className)}>
+      <nav className="-mb-px flex space-x-4 sm:space-x-6 overflow-x-auto scrollbar-none pb-0.5" aria-label="Tabs">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (

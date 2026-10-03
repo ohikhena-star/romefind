@@ -235,51 +235,79 @@ export default function ComparePage() {
             </table>
           </div>
 
-          {/* Mobile Stacked View */}
-          <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pb-8 gap-4">
+          {/* Mobile Comparison View (Clean Stacked & Scannable) */}
+          <div className="md:hidden flex flex-col gap-4 mb-10 w-full">
             {compareOpps.map((opp: Opportunity) => (
-              <div key={opp.id} className="min-w-[85vw] snap-center bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-xl p-5 flex flex-col shadow-card">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <p className="text-xs font-semibold text-rome-600 mb-1">
+              <div
+                key={opp.id}
+                className="w-full bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl p-5 flex flex-col gap-4 shadow-card"
+              >
+                <div className="flex justify-between items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-rome-600 dark:text-rome-400 mb-0.5 truncate">
                       {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
                     </p>
-                    <h3 className="text-base font-bold text-surface-900 dark:text-surface-50">{opp.title}</h3>
+                    <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 leading-snug">
+                      {opp.title}
+                    </h3>
                   </div>
-                  <button onClick={() => removeFromCompare(opp.id)} className="p-1.5 bg-surface-100 rounded-md text-surface-500">
+                  <button
+                    onClick={() => removeFromCompare(opp.id)}
+                    className="p-1.5 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-500 hover:text-red-500 shrink-0 cursor-pointer"
+                    aria-label={`Remove ${opp.title} from comparison`}
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                
-                <div className="space-y-4 flex-1 text-sm border-t border-surface-100 dark:border-surface-800 pt-4">
-                  <div className="bg-surface-50 dark:bg-surface-900/40 p-3 rounded-lg border border-surface-200 dark:border-surface-800/60">
-                    <span className="text-surface-500 text-xs font-medium block mb-0.5">Value / Funding</span>
-                    <span className="text-sm font-bold text-surface-900 dark:text-surface-100">{opp.funding || 'Unfunded / Not specified'}</span>
+
+                <div className="space-y-3 text-xs border-t border-surface-100 dark:border-surface-800 pt-3">
+                  <div className="bg-surface-50 dark:bg-surface-850/60 p-3 rounded-xl border border-surface-200/60 dark:border-surface-700/60 flex items-center justify-between">
+                    <span className="text-surface-500 font-medium">Value / Funding</span>
+                    <span className="font-bold text-surface-900 dark:text-surface-100 text-right">
+                      {opp.funding || 'Unfunded / Not specified'}
+                    </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-surface-500 text-xs font-medium">Type</span>
-                    <Tag label={opp.type} />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="p-2.5 rounded-lg bg-surface-50 dark:bg-surface-850/40 border border-surface-100 dark:border-surface-800">
+                      <span className="text-surface-400 block mb-0.5">Type</span>
+                      <span className="font-semibold text-surface-800 dark:text-surface-200 truncate block">
+                        {opp.type}
+                      </span>
+                    </div>
+                    <div className="p-2.5 rounded-lg bg-surface-50 dark:bg-surface-850/40 border border-surface-100 dark:border-surface-800">
+                      <span className="text-surface-400 block mb-0.5">Deadline</span>
+                      {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : <span className="font-semibold text-surface-600">Rolling</span>}
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-surface-500 text-xs font-medium">Deadline</span>
-                    {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'No deadline'}
-                  </div>
+
                   <div>
-                    <span className="text-surface-500 text-xs font-medium block mb-1">Location</span>
-                    <p className="text-xs font-medium text-surface-800 dark:text-surface-200">{opp.location} ({opp.remoteStatus})</p>
+                    <span className="text-surface-500 font-medium block mb-1">Location & Modality</span>
+                    <p className="font-medium text-surface-800 dark:text-surface-200 leading-relaxed">
+                      {opp.location} <span className="text-surface-500">({opp.remoteStatus})</span>
+                    </p>
                   </div>
-                  <div>
-                    <span className="text-surface-500 text-xs font-medium block mb-1">Key Requirements</span>
-                    <ul className="list-disc pl-4 space-y-1 text-xs text-surface-700 dark:text-surface-300">
-                      {opp.requirements?.slice(0, 3).map((req: string, i: number) => (
-                        <li key={i}>{req}</li>
-                      ))}
-                    </ul>
-                  </div>
+
+                  {opp.requirements && opp.requirements.length > 0 && (
+                    <div>
+                      <span className="text-surface-500 font-medium block mb-1">Key Requirements</span>
+                      <ul className="list-disc pl-4 space-y-1 text-surface-700 dark:text-surface-300">
+                        {opp.requirements.slice(0, 3).map((req: string, i: number) => (
+                          <li key={i}>{req}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
-                <Button variant="default" size="default" className="w-full h-11 min-h-[44px] text-sm font-semibold mt-6" onClick={() => navigate(`/opportunity/${opp.id}`)}>
-                  View Details
+                <Button
+                  variant="default"
+                  size="default"
+                  className="w-full h-11 min-h-[44px] text-sm font-semibold justify-center"
+                  onClick={() => navigate(`/opportunity/${opp.id}`)}
+                >
+                  <span>View Details</span>
+                  <SolarIcon name="alt-arrow-right-linear" size={16} />
                 </Button>
               </div>
             ))}
@@ -309,7 +337,7 @@ export default function ComparePage() {
             Available Opportunities to Compare
           </h2>
 
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none">
             {allTypes.map((type) => (
               <button
                 key={type}

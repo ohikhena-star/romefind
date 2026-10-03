@@ -37,17 +37,20 @@ export default function ExplorePage() {
   
   const [selectedTypes, setSelectedTypes] = useState<OpportunityType[]>(() => {
     const typeParam = searchParams.get('type');
-    return typeParam ? [typeParam as OpportunityType] : [];
+    if (!typeParam) return [];
+    return typeParam.split(',').map(s => s.trim()).filter(Boolean) as OpportunityType[];
   });
   
   const [selectedFields, setSelectedFields] = useState<string[]>(() => {
     const fieldParam = searchParams.get('field');
-    return fieldParam ? [fieldParam] : [];
+    if (!fieldParam) return [];
+    return fieldParam.split(',').map(s => s.trim()).filter(Boolean);
   });
   
   const [selectedLocations, setSelectedLocations] = useState<string[]>(() => {
     const locParam = searchParams.get('location');
-    return locParam ? [locParam] : [];
+    if (!locParam) return [];
+    return locParam.split(',').map(s => s.trim()).filter(Boolean);
   });
   
   const [fundedOnly, setFundedOnly] = useState<boolean>(() => {
@@ -68,21 +71,21 @@ export default function ExplorePage() {
 
     const typeParam = searchParams.get('type');
     if (typeParam) {
-      setSelectedTypes([typeParam as OpportunityType]);
+      setSelectedTypes(typeParam.split(',').map(s => s.trim()).filter(Boolean) as OpportunityType[]);
     } else {
       setSelectedTypes([]);
     }
 
     const fieldParam = searchParams.get('field');
     if (fieldParam) {
-      setSelectedFields([fieldParam]);
+      setSelectedFields(fieldParam.split(',').map(s => s.trim()).filter(Boolean));
     } else {
       setSelectedFields([]);
     }
 
     const locParam = searchParams.get('location');
     if (locParam) {
-      setSelectedLocations([locParam]);
+      setSelectedLocations(locParam.split(',').map(s => s.trim()).filter(Boolean));
     } else {
       setSelectedLocations([]);
     }
@@ -114,17 +117,17 @@ export default function ExplorePage() {
     }
     
     if (updates.types !== undefined) {
-      if (updates.types.length > 0) newParams.set('type', updates.types[0]);
+      if (updates.types.length > 0) newParams.set('type', updates.types.join(','));
       else newParams.delete('type');
     }
 
     if (updates.fields !== undefined) {
-      if (updates.fields.length > 0) newParams.set('field', updates.fields[0]);
+      if (updates.fields.length > 0) newParams.set('field', updates.fields.join(','));
       else newParams.delete('field');
     }
 
     if (updates.locations !== undefined) {
-      if (updates.locations.length > 0) newParams.set('location', updates.locations[0]);
+      if (updates.locations.length > 0) newParams.set('location', updates.locations.join(','));
       else newParams.delete('location');
     }
 

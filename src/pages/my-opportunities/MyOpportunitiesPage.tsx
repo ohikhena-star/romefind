@@ -91,10 +91,10 @@ export default function MyOpportunitiesPage() {
   }));
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6 animate-in fade-in">
+    <div className="w-full max-w-7xl mx-auto flex flex-col gap-6 py-4 md:py-8 animate-in fade-in">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">My Opportunities</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-surface-950 dark:text-surface-50">My Opportunities</h1>
           <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">
             Track, prepare, and manage all your active applications in one command center.
           </p>
@@ -114,7 +114,7 @@ export default function MyOpportunitiesPage() {
 
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 w-full">
         {filteredApps.map((app: TrackedApplication) => {
           const opp = getOpportunity(app.opportunityId);
           if (!opp) return null;
@@ -136,7 +136,7 @@ export default function MyOpportunitiesPage() {
           return (
             <div 
               key={app.id} 
-              className={`bg-white dark:bg-surface-900 rounded-xl p-6 shadow-card hover:shadow-card-hover transition-all flex flex-col gap-4 border border-surface-200 dark:border-surface-800`}
+              className={`w-full bg-white dark:bg-surface-900 rounded-2xl p-5 sm:p-6 shadow-card hover:shadow-card-hover transition-all flex flex-col gap-4 border border-surface-200 dark:border-surface-800`}
             >
               <div className="flex justify-between items-start gap-2">
                 <div>

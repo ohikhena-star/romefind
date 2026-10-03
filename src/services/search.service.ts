@@ -1,4 +1,4 @@
-import { Opportunity, SearchFilters, SearchResult, UserProfile, UserPreferences, EducationLevel, ExperienceLevel } from '@/types/models';
+import { Opportunity, SearchFilters, SearchResult, UserProfile, UserPreferences, EducationLevel, ExperienceLevel, RemoteStatus } from '@/types/models';
 import { calculateRelevanceScore } from './personalization.service';
 
 // Human-centered intent mapping table for broad search interpretation
@@ -61,6 +61,42 @@ export const getSourcingGaps = (): SourcingGap[] => {
   }
 };
 
+// Geographic & Regional Taxonomy Mapping
+const REGION_TERMS_MAP: Record<string, string[]> = {
+  'nigeria': ['nigeria', 'lagos', 'abuja'],
+  'kenya': ['kenya', 'nairobi'],
+  'south africa': ['south africa', 'johannesburg', 'cape town'],
+  'ghana': ['ghana', 'accra'],
+  'rwanda': ['rwanda', 'kigali'],
+  'africa': ['africa', 'sub-saharan africa', 'nigeria', 'ghana', 'kenya', 'south africa', 'rwanda', 'lagos', 'johannesburg', 'nairobi', 'accra', 'kigali', 'cairo', 'brazzaville'],
+  'united kingdom': ['united kingdom', 'uk', 'london', 'oxford', 'cambridge', 'edinburgh', 'manchester'],
+  'uk': ['united kingdom', 'uk', 'london', 'oxford', 'cambridge', 'edinburgh', 'manchester'],
+  'united states': ['united states', 'usa', 'us', 'new york', 'san francisco', 'washington', 'boston', 'california', 'stanford', 'cambridge, ma'],
+  'north america': ['united states', 'usa', 'us', 'canada', 'toronto', 'vancouver', 'mexico'],
+  'canada': ['canada', 'toronto', 'vancouver', 'montreal', 'ottawa'],
+  'france': ['france', 'paris'],
+  'germany': ['germany', 'berlin', 'munich'],
+  'spain': ['spain', 'madrid', 'barcelona'],
+  'switzerland': ['switzerland', 'geneva', 'zurich'],
+  'sweden': ['sweden', 'stockholm'],
+  'ireland': ['ireland', 'dublin'],
+  'netherlands': ['netherlands', 'amsterdam'],
+  'europe': ['europe', 'emea', 'united kingdom', 'uk', 'london', 'oxford', 'france', 'paris', 'germany', 'berlin', 'spain', 'madrid', 'switzerland', 'geneva', 'sweden', 'stockholm', 'ireland', 'dublin', 'netherlands', 'amsterdam'],
+  'asia': ['asia', 'singapore', 'japan', 'tokyo', 'india', 'delhi', 'mumbai', 'bangalore', 'hong kong', 'china', 'manila'],
+  'india': ['india', 'delhi', 'mumbai', 'bangalore'],
+  'singapore': ['singapore'],
+  'japan': ['japan', 'tokyo'],
+  'australia': ['australia', 'sydney', 'melbourne'],
+  'oceania': ['australia', 'new zealand', 'oceania'],
+  'latin america & caribbean': ['latin america', 'latam', 'brazil', 'peru', 'argentina', 'colombia', 'caribbean'],
+  'brazil': ['brazil', 'sao paulo', 'rio'],
+  'middle east': ['middle east', 'dubai', 'uae', 'saudi arabia', 'cairo', 'doha', 'qatar'],
+  'remote': ['remote', 'worldwide', 'all time zones'],
+  'remote (worldwide)': ['remote', 'worldwide', 'all time zones', 'flexible'],
+  'global / anywhere': ['global', 'worldwide', 'anywhere', 'all countries', 'remote'],
+  'worldwide': ['global', 'worldwide', 'anywhere', 'all countries', 'remote'],
+};
+
 export const searchOpportunities = (
   query: string,
   opportunities: Opportunity[],
@@ -108,15 +144,76 @@ export const searchOpportunities = (
       }
     }
 
-    // 2. Filters
+    // 2. Types Filter
     if (filters.types?.length && !filters.types.includes(opp.type)) return false;
     
-    if (filters.fields?.length && !opp.field?.some((field: string) => filters.fields!.includes(field))) return false;
+    // 3. Field of Focus Filter
+    if (filters.fields?.length) {
+      const matchField = filters.fields.some((selectedField: string) => {
+        const target = selectedField.trim().toLowerCase();
+        
+        const inField = (opp.field || []).some((f: string) => {
+          const item = f.trim().toLowerCase();
+          return item === target || item.includes(target) || target.includes(item);
+        });
+
+        const inSubfields = (opp.subfields || []).some((s: string) => {
+          const item = s.trim().toLowerCase();
+          return item === target || item.includes(target) || target.includes(item);
+        });
+
+        const inTags = (opp.tags || []).some((t: string) => {
+          const item = t.trim().toLowerCase();
+          return item === target || item.includes(target) || target.includes(item);
+        });
+
+        const inTitle = (opp.title || '').toLowerCase().includes(target);
+
+        return inField || inSubfields || inTags || inTitle;
+      });
+
+      if (!matchField) return false;
+    }
     
+    // 4. Location Filter (with Regional Hierarchy)
     if (filters.locations?.length) {
-      const locationMatch = filters.locations.some((loc: string) => 
-        opp.location?.toLowerCase().includes(loc.toLowerCase())
-      );
+      const locationMatch = filters.locations.some((selectedLoc: string) => {
+        const cleanLoc = selectedLoc.trim().toLowerCase();
+
+        // If filtering for Remote
+        if (cleanLoc === 'remote' || cleanLoc === 'remote (worldwide)') {
+          return (
+            opp.remoteStatus === RemoteStatus.Remote ||
+            opp.remoteStatus === RemoteStatus.Flexible ||
+            (opp.location || '').toLowerCase().includes('remote')
+          );
+        }
+
+        // If filtering for Global / Anywhere / Worldwide
+        if (cleanLoc === 'global / anywhere' || cleanLoc === 'worldwide' || cleanLoc === 'anywhere') {
+          return (
+            (opp.location || '').toLowerCase().includes('global') ||
+            (opp.location || '').toLowerCase().includes('worldwide') ||
+            (opp.location || '').toLowerCase().includes('remote') ||
+            opp.remoteStatus === RemoteStatus.Remote
+          );
+        }
+
+        // Specific regional or country matching
+        const mappedTerms = REGION_TERMS_MAP[cleanLoc] || [cleanLoc];
+        const oppLoc = (opp.location || '').toLowerCase();
+        
+        const hasDirectMatch = mappedTerms.some((term) => oppLoc.includes(term));
+        if (hasDirectMatch) return true;
+
+        // Also check if opportunity is global/worldwide open to all
+        if (oppLoc.includes('worldwide') || oppLoc.includes('all countries') || oppLoc.includes('global (all')) {
+          return true;
+        }
+
+        return false;
+      });
+
       if (!locationMatch) return false;
     }
 
