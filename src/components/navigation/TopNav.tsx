@@ -20,6 +20,7 @@ const TopNav = () => {
   const { theme, toggleTheme, searchOpen, toggleSearch } = useUiStore();
   const { notifications } = useNotificationStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,14 +32,34 @@ const TopNav = () => {
     navigate('/');
   };
 
-  const navLinks = [
+  const desktopNavLinks = [
     { to: '/discover', label: 'Discover', icon: 'compass-linear' },
     { to: '/recommendations', label: 'For You', icon: 'magic-stick-linear' },
     { to: '/explore', label: 'Explore', icon: 'magnifer-linear' },
+    { to: '/searches', label: 'Searches', icon: 'graph-up-linear' },
+    { to: '/my-opportunities', label: 'My Opportunities', icon: 'case-linear' },
     { to: '/compare', label: 'Compare', icon: 'scale-linear' },
-    { to: '/my-opportunities', label: 'My Opportunities', icon: 'bookmark-linear' },
     { to: '/learn', label: 'Learn', icon: 'book-2-linear' },
   ];
+
+  const mobileNavLinks = [
+    { to: '/discover', label: 'Discover', icon: 'compass-linear' },
+    { to: '/recommendations', label: 'For You', icon: 'magic-stick-linear' },
+    { to: '/explore', label: 'Explore', icon: 'magnifer-linear' },
+    { to: '/searches', label: 'Searches', icon: 'graph-up-linear' },
+    { to: '/my-opportunities', label: 'My Opportunities', icon: 'case-linear' },
+    { to: '/compare', label: 'Compare', icon: 'scale-linear' },
+    { to: '/learn', label: 'Learn', icon: 'book-2-linear' },
+    { to: '/notifications', label: 'Notifications', icon: 'bell-linear', badge: unreadCount },
+    { to: '/profile', label: 'Profile Settings', icon: 'user-rounded-linear' },
+  ];
+
+  const confirmLogout = () => {
+    setShowLogoutConfirm(false);
+    setMobileMenuOpen(false);
+    logout();
+    navigate('/');
+  };
 
   return (
     <>
@@ -54,7 +75,7 @@ const TopNav = () => {
           {/* Center Links (Auth only) */}
           {isAuthenticated && (
             <nav role="navigation" aria-label="Main navigation" className="flex items-center gap-1.5 bg-surface-100 dark:bg-surface-800/60 p-1 rounded-2xl border border-surface-200/80 dark:border-surface-800">
-              {navLinks.map((link) => {
+              {desktopNavLinks.map((link) => {
                 let linkId = undefined;
                 if (link.to === '/explore') linkId = 'nav-explore';
                 if (link.to === '/my-opportunities') linkId = 'nav-my-opps';
@@ -89,6 +110,7 @@ const TopNav = () => {
                 id="nav-search"
                 onClick={toggleSearch}
                 className="hidden lg:flex items-center gap-3 px-3.5 py-1.5 rounded-xl bg-surface-100 dark:bg-surface-800/80 border border-surface-200 dark:border-surface-700/80 text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 hover:border-surface-300 transition-all text-xs cursor-pointer group shadow-xs"
+                title="Search opportunities (⌘K)"
               >
                 <SolarIcon name="magnifer-linear" size={14} className="group-hover:text-rome-500 transition-colors" />
                 <span>Search opportunities...</span>
@@ -102,6 +124,7 @@ const TopNav = () => {
               onClick={toggleTheme}
               className="p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
               aria-label="Toggle theme"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={18} /> : <SolarIcon name="moon-linear" size={18} />}
             </button>
@@ -112,6 +135,7 @@ const TopNav = () => {
                   onClick={toggleSearch}
                   className="lg:hidden p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
                   aria-label="Search"
+                  title="Search opportunities"
                 >
                   <SolarIcon name="magnifer-linear" size={18} />
                 </button>
@@ -119,6 +143,7 @@ const TopNav = () => {
                   to="/notifications"
                   className="p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors relative cursor-pointer"
                   aria-label="Notifications"
+                  title="Notifications"
                 >
                   <SolarIcon name="bell-linear" size={18} />
                   {unreadCount > 0 && (
@@ -154,7 +179,7 @@ const TopNav = () => {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="my-1 bg-surface-100 dark:bg-surface-800" />
                     <DropdownMenuItem 
-                      onClick={handleLogout}
+                      onClick={() => setShowLogoutConfirm(true)}
                       className="rounded-xl px-3 py-2 text-xs font-semibold text-red-600 dark:text-red-400 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer flex items-center gap-2.5"
                     >
                       <SolarIcon name="logout-2-linear" size={14} />
@@ -194,19 +219,37 @@ const TopNav = () => {
           {/* Right Mobile Header Actions */}
           <div className="flex items-center gap-1">
             {isAuthenticated && (
-              <button
-                onClick={toggleSearch}
-                className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
-                aria-label="Search opportunities"
-              >
-                <SolarIcon name="magnifer-linear" size={20} />
-              </button>
+              <>
+                <button
+                  onClick={toggleSearch}
+                  className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
+                  aria-label="Search opportunities"
+                  title="Search"
+                >
+                  <SolarIcon name="magnifer-linear" size={20} />
+                </button>
+
+                <Link
+                  to="/notifications"
+                  className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors relative cursor-pointer"
+                  aria-label="Notifications"
+                  title="Notifications"
+                >
+                  <SolarIcon name="bell-linear" size={20} />
+                  {unreadCount > 0 && (
+                    <span aria-live="polite" className="absolute top-1.5 right-1.5 min-w-[16px] h-[16px] px-1 bg-rome-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-surface-900 animate-in zoom-in">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+              </>
             )}
 
             <button
               onClick={toggleTheme}
               className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
               aria-label="Toggle theme"
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
             >
               {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={20} /> : <SolarIcon name="moon-linear" size={20} />}
             </button>
@@ -243,7 +286,7 @@ const TopNav = () => {
 
             {/* Navigation Destinations */}
             <nav className="space-y-1">
-              {navLinks.map((link) => {
+              {mobileNavLinks.map((link) => {
                 const isActive = location.pathname === link.to;
                 return (
                   <Link
@@ -251,37 +294,30 @@ const TopNav = () => {
                     to={link.to}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors min-h-[44px]",
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors min-h-[44px]",
                       isActive
                         ? "bg-rome-50 dark:bg-rome-950 text-rome-600 dark:text-rome-400 border border-rome-200/60 dark:border-rome-800"
                         : "text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800"
                     )}
                   >
-                    <SolarIcon name={link.icon} size={18} className={isActive ? "text-rome-500" : "text-surface-400"} />
-                    <span>{link.label}</span>
+                    <div className="flex items-center gap-3">
+                      <SolarIcon name={link.icon} size={18} className={isActive ? "text-rome-500" : "text-surface-400"} />
+                      <span>{link.label}</span>
+                    </div>
+                    {link.badge !== undefined && link.badge > 0 && (
+                      <span className="px-2 py-0.5 rounded-full bg-rome-500 text-white text-xs font-bold">
+                        {link.badge}
+                      </span>
+                    )}
                   </Link>
                 );
               })}
-
-              <Link
-                to="/profile"
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors min-h-[44px]",
-                  location.pathname === '/profile'
-                    ? "bg-rome-50 dark:bg-rome-950 text-rome-600 dark:text-rome-400 border border-rome-200/60 dark:border-rome-800"
-                    : "text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800"
-                )}
-              >
-                <SolarIcon name="user-rounded-linear" size={18} className="text-surface-400" />
-                <span>Profile Settings</span>
-              </Link>
             </nav>
 
             {/* Logout Action */}
             <div className="pt-2 border-t border-surface-100 dark:border-surface-800">
               <button
-                onClick={handleLogout}
+                onClick={() => setShowLogoutConfirm(true)}
                 className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer min-h-[44px]"
               >
                 <SolarIcon name="logout-2-linear" size={18} />
@@ -291,6 +327,44 @@ const TopNav = () => {
           </div>
         )}
       </header>
+
+      {/* Logout Confirmation Dialog */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div 
+            className="bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4 animate-in zoom-in-95 duration-200"
+            role="alertdialog"
+            aria-labelledby="logout-title"
+            aria-describedby="logout-desc"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto">
+              <SolarIcon name="logout-2-linear" size={24} />
+            </div>
+            <div className="text-center space-y-1.5">
+              <h3 id="logout-title" className="text-lg font-bold text-surface-900 dark:text-white">
+                Sign out of ROMEfind?
+              </h3>
+              <p id="logout-desc" className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed">
+                Your saved opportunities and tracking checklists will be saved. You can sign back in at any time.
+              </p>
+            </div>
+            <div className="flex gap-2.5 pt-2">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 h-11 min-h-[44px] rounded-xl border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 font-semibold text-sm hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="flex-1 h-11 min-h-[44px] rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm transition-colors shadow-xs"
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {searchOpen && <SearchOverlay onClose={toggleSearch} />}
     </>

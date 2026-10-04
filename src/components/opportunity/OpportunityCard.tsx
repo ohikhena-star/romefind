@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { SolarIcon } from '@/components/ui/SolarIcon';
-import { Opportunity, SearchResult } from '@/types/models';
+import { Opportunity, SearchResult, RemoteStatus } from '@/types/models';
 import { Button, DeadlineIndicator } from '@/components/ui';
 import { useApplicationStore } from '@/store/applicationStore';
 
@@ -96,6 +96,10 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
   const primaryField = opportunity.field?.[0] || 'General';
 
+  const displayLocation = opportunity.remoteStatus === RemoteStatus.Remote
+    ? 'Remote'
+    : (opportunity.location || 'Global');
+
   return (
     <article
       id={id}
@@ -105,7 +109,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleCardClick(); }}
       className={cn(
         "flex flex-col h-full relative group cursor-pointer transition-all duration-200 text-left",
-        "rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-5 sm:p-6",
+        "rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-4 sm:p-5",
         "hover:border-surface-300 dark:hover:border-surface-700 hover:shadow-card-hover",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rome-500 focus-visible:ring-offset-2",
         isComparing && "ring-2 ring-rome-500/80 bg-rome-50/20 dark:bg-rome-950/20 border-rome-300 dark:border-rome-700",
@@ -113,7 +117,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
       )}
     >
       {/* ─── 1. Header: Organization (Left) & Sibling Save/Compare Actions (Right) ─── */}
-      <div className="flex items-center justify-between gap-3 mb-2.5">
+      <div className="flex items-center justify-between gap-2 mb-2">
         <div className="min-w-0 flex items-center gap-2">
           <div className="w-6 h-6 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 flex items-center justify-center shrink-0">
             <SolarIcon name="buildings-2-linear" size={13} />
@@ -165,72 +169,72 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
       {/* ─── 2. Title & Type/Field Badges ─── */}
       <h3 className={cn(
-        "font-bold text-surface-950 dark:text-white leading-snug mb-2.5 line-clamp-2 group-hover:text-rome-600 dark:group-hover:text-rome-400 transition-colors",
-        compact ? "text-base" : "text-lg"
+        "font-bold text-surface-950 dark:text-white leading-snug mb-2 line-clamp-2 group-hover:text-rome-600 dark:group-hover:text-rome-400 transition-colors",
+        compact ? "text-sm sm:text-base" : "text-base sm:text-lg"
       )}>
         {opportunity.title}
       </h3>
 
-      <div className="flex flex-wrap items-center gap-1.5 mb-3">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
+      <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
           {opportunity.type}
         </span>
         {primaryField && (
-          <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-600 dark:text-surface-400">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-600 dark:text-surface-400">
             {primaryField}
           </span>
         )}
       </div>
 
       {/* ─── 3. Description ─── */}
-      <p className="text-sm text-surface-600 dark:text-surface-400 mb-4 line-clamp-2 leading-relaxed">
+      <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400 mb-3 line-clamp-2 leading-relaxed">
         {opportunity.shortDescription || opportunity.description}
       </p>
 
-      {/* ─── 4. Structured Metadata: Location, Deadline, Funding (Direct on Card Surface) ─── */}
-      <div className="grid grid-cols-2 gap-3 text-xs py-3 border-y border-surface-100 dark:border-surface-800/80 mb-4">
+      {/* ─── 4. Structured Metadata: Location, Deadline, Funding ─── */}
+      <div className="grid grid-cols-2 gap-2 text-xs py-2.5 border-y border-surface-100 dark:border-surface-800/80 mb-3">
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Location</span>
-          <span className="font-semibold text-surface-800 dark:text-surface-200 truncate block text-xs sm:text-sm" title={opportunity.location}>
-            {opportunity.location || 'Remote · Worldwide'}
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Location</span>
+          <span className="font-semibold text-surface-800 dark:text-surface-200 truncate block text-xs" title={opportunity.location}>
+            {displayLocation}
           </span>
         </div>
 
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Deadline</span>
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Deadline</span>
           {opportunity.deadline ? (
             <DeadlineIndicator deadline={opportunity.deadline} />
           ) : (
-            <span className="font-semibold text-surface-700 dark:text-surface-300 text-xs sm:text-sm">Rolling</span>
+            <span className="font-semibold text-surface-700 dark:text-surface-300 text-xs">Rolling</span>
           )}
         </div>
 
         {opportunity.funding && (
-          <div className="col-span-2 pt-2 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
-            <span className="text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold">Funding</span>
-            <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[240px] text-xs sm:text-sm" title={opportunity.funding}>
+          <div className="col-span-2 pt-1.5 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
+            <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold">Funding</span>
+            <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[200px] text-xs" title={opportunity.funding}>
               {opportunity.funding}
             </span>
           </div>
         )}
       </div>
 
-      {/* ─── 5. Contextual "Why this is here" & Matching Inspector ─── */}
+      {/* ─── 5. Contextual Fit & Matching Inspector ─── */}
       {relevanceScore !== undefined && (
-        <div className="mb-4">
+        <div className="mb-3">
           <div 
             onClick={(e) => {
               e.stopPropagation();
               setInspectorOpen(!inspectorOpen);
             }}
-            className="flex items-center justify-between gap-2 text-xs sm:text-sm text-surface-600 dark:text-surface-400 bg-surface-50/70 dark:bg-surface-800/40 p-2.5 rounded-xl border border-surface-200/60 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700 transition-colors cursor-pointer"
+            className="flex items-center justify-between gap-2 text-xs text-surface-600 dark:text-surface-400 bg-surface-50/70 dark:bg-surface-800/40 p-2 rounded-xl border border-surface-200/60 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700 transition-colors cursor-pointer"
             title="Click to toggle Matching Inspector breakdown"
           >
             <div className="flex items-center gap-2 min-w-0">
               <span className={cn(
-                "px-2 py-0.5 rounded-md text-xs font-bold shrink-0",
+                "px-1.5 py-0.5 rounded text-[11px] font-bold shrink-0",
                 relevanceScore >= 75
-                  ? "bg-rome-100 dark:bg-surface-800 text-rome-700 dark:text-rome-300 border border-transparent dark:border-surface-700"
+                  ? "bg-rome-100 dark:bg-surface-800 text-rome-700 dark:text-rome-300"
                   : "bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300"
               )}>
                 {relevanceScore}% Fit
