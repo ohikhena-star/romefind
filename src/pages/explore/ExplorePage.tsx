@@ -258,11 +258,11 @@ export default function ExplorePage() {
           className={cn(
             "w-full md:w-64 flex-shrink-0",
             showMobileFilters 
-              ? "fixed inset-y-0 right-0 z-50 w-full max-w-xs sm:max-w-sm bg-white dark:bg-surface-900 p-6 overflow-y-auto shadow-2xl border-l border-surface-200 dark:border-surface-800 animate-in slide-in-from-right duration-200 flex flex-col justify-between" 
+              ? "fixed inset-y-0 right-0 z-50 w-full max-w-[320px] sm:max-w-sm bg-white dark:bg-surface-900 p-4 sm:p-6 overflow-y-auto shadow-2xl border-l border-surface-200 dark:border-surface-800 animate-in slide-in-from-right duration-200 flex flex-col justify-between" 
               : "hidden md:block"
           )}
         >
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             {/* Filter Header */}
             <div className="flex items-center justify-between pb-3 border-b border-surface-200 dark:border-surface-800">
               <h2 className="font-bold text-base text-surface-900 dark:text-surface-50">Filters</h2>
@@ -288,7 +288,7 @@ export default function ExplorePage() {
 
             {/* Type Filter */}
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2 block">
                 Opportunity Type
               </span>
               <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by opportunity type">
@@ -307,10 +307,10 @@ export default function ExplorePage() {
 
             {/* Conditions (Funded, Remote) */}
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2 block">
                 Conditions & Funding
               </span>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 <label className="flex items-center gap-3 text-sm text-surface-700 dark:text-surface-300 cursor-pointer min-h-[40px] p-2 rounded-xl hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors">
                   <input 
                     type="checkbox"
@@ -321,7 +321,7 @@ export default function ExplorePage() {
                     }}
                     className="w-4 h-4 rounded border-surface-300 text-rome-500 focus:ring-rome-500 cursor-pointer"
                   />
-                  <span className="font-medium">Funded / Paid Only</span>
+                  <span className="font-medium text-xs sm:text-sm">Funded / Paid Only</span>
                 </label>
                 <label className="flex items-center gap-3 text-sm text-surface-700 dark:text-surface-300 cursor-pointer min-h-[40px] p-2 rounded-xl hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors">
                   <input 
@@ -333,17 +333,17 @@ export default function ExplorePage() {
                     }}
                     className="w-4 h-4 rounded border-surface-300 text-rome-500 focus:ring-rome-500 cursor-pointer"
                   />
-                  <span className="font-medium">Remote / Flexible Only</span>
+                  <span className="font-medium text-xs sm:text-sm">Remote / Flexible Only</span>
                 </label>
               </div>
             </div>
 
             {/* Fields */}
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2 block">
                 Field of Focus
               </span>
-              <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
+              <div className="flex flex-wrap gap-1.5 max-h-52 overflow-y-auto pr-1">
                 {FIELDS.map((field: string) => (
                   <Chip
                     key={field}
@@ -359,10 +359,10 @@ export default function ExplorePage() {
 
             {/* Locations */}
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2.5 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-surface-500 mb-2 block">
                 Location
               </span>
-              <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+              <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto pr-1">
                 {LOCATIONS.map((loc: string) => (
                   <Chip
                     key={loc}
@@ -379,7 +379,7 @@ export default function ExplorePage() {
 
           {/* Mobile Drawer Bottom Action */}
           {showMobileFilters && (
-            <div className="mt-8 pt-4 border-t border-surface-200 dark:border-surface-800 flex gap-2.5">
+            <div className="mt-6 pt-4 border-t border-surface-200 dark:border-surface-800 flex gap-2.5">
               <Button
                 variant="outline"
                 size="default"
@@ -426,11 +426,11 @@ export default function ExplorePage() {
             </select>
           </div>
 
-          {/* Active Filter Chips with Self-Contained Horizontal Scroll Container */}
+          {/* Active Filter Chips */}
           {activeFiltersCount > 0 && (
-            <div className="mb-6 p-3 bg-surface-50 dark:bg-surface-850/60 rounded-xl border border-surface-200 dark:border-surface-800 w-full overflow-hidden">
-              <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-0.5">
-                <span className="text-xs font-semibold text-surface-500 shrink-0">Active:</span>
+            <div className="mb-6 p-2.5 sm:p-3 bg-surface-50 dark:bg-surface-850/60 rounded-xl border border-surface-200 dark:border-surface-800 w-full">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="text-xs font-semibold text-surface-500 shrink-0 mr-1">Active:</span>
                 {selectedTypes.map((t: OpportunityType) => (
                   <Chip key={t} label={t} selected onRemove={() => toggleType(t)} size="sm" className="bg-surface-900 dark:bg-white text-white dark:text-surface-900 shrink-0" />
                 ))}
@@ -448,7 +448,7 @@ export default function ExplorePage() {
                 )}
                 <button 
                   onClick={clearAllFilters}
-                  className="text-xs text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 ml-auto font-semibold shrink-0 pl-2 cursor-pointer"
+                  className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline ml-1 cursor-pointer py-1 px-1.5"
                 >
                   Clear all
                 </button>

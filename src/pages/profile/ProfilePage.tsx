@@ -104,7 +104,7 @@ export default function ProfilePage() {
         fundingPreference: user.preferences.fundingPreference ?? true,
       });
     }
-  }, [user?.profile, user?.preferences]);
+  }, [user?.profile, user?.preferences, user?.profileImage]);
 
   if (!user) return <ProfileSkeleton />;
 
@@ -583,11 +583,26 @@ export default function ProfilePage() {
                 onClick={() => {
                   const { resetTour } = useUIStore.getState();
                   resetTour();
+                  navigate('/discover');
                 }}
                 className="text-xs font-semibold h-9 px-3"
               >
                 Take tour again
               </Button>
+            </div>
+
+            <div className="flex items-center justify-between py-2.5 border-b border-surface-100 dark:border-surface-800 mb-3">
+              <div>
+                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">Support & Help</span>
+                <span className="text-xs text-surface-400">Questions, feedback or report an issue</span>
+              </div>
+              <a
+                href="mailto:support@romefind.com?subject=ROMEfind%20Support%20Request"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+              >
+                <span>Get Help</span>
+                <Globe size={13} />
+              </a>
             </div>
 
             <div className="pt-2">

@@ -161,18 +161,22 @@ export const searchOpportunities = (
       const matchField = filters.fields.some((selectedField: string) => {
         const target = selectedField.trim().toLowerCase();
         
-        const inField = (opp.field || []).some((f: string) => {
-          const item = f.trim().toLowerCase();
-          return item === target || item.includes(target) || (target.length > 5 && item.includes(target.split(' ')[0]));
+        const oppFields = Array.isArray(opp.field) ? opp.field : (typeof opp.field === 'string' ? [opp.field] : []);
+        const oppSubfields = Array.isArray(opp.subfields) ? opp.subfields : (typeof opp.subfields === 'string' ? [opp.subfields] : []);
+        const oppTags = Array.isArray(opp.tags) ? opp.tags : (typeof opp.tags === 'string' ? [opp.tags] : []);
+
+        const inField = oppFields.some((f: string) => {
+          const item = (f || '').trim().toLowerCase();
+          return item === target || item.includes(target) || target.includes(item);
         });
 
-        const inSubfields = (opp.subfields || []).some((s: string) => {
-          const item = s.trim().toLowerCase();
-          return item === target || item.includes(target);
+        const inSubfields = oppSubfields.some((s: string) => {
+          const item = (s || '').trim().toLowerCase();
+          return item === target || item.includes(target) || target.includes(item);
         });
 
-        const inTags = (opp.tags || []).some((t: string) => {
-          const item = t.trim().toLowerCase();
+        const inTags = oppTags.some((t: string) => {
+          const item = (t || '').trim().toLowerCase();
           return item === target || item.includes(target);
         });
 

@@ -104,3 +104,15 @@ apiRouter.post('/admin/submissions/:id/approve', authenticateToken, requireAdmin
 apiRouter.post('/admin/submissions/:id/reject', authenticateToken, requireAdmin, adminController.rejectSubmission);
 apiRouter.put('/admin/opportunities/:id', authenticateToken, requireAdmin, adminController.updateAdminOpportunity);
 apiRouter.get('/admin/audit-logs', authenticateToken, requireAdmin, adminController.getAuditLogs);
+
+// ── Admin Dashboard Endpoints ────────────────────────────────────────────────
+apiRouter.get('/admin/overview', authenticateToken, requireAdmin, adminController.getAdminOverview);
+apiRouter.get('/admin/users', authenticateToken, requireAdmin, adminController.getAdminUsers);
+apiRouter.get('/admin/opportunities/quality', authenticateToken, requireAdmin, adminController.getOpportunityQuality);
+apiRouter.get('/admin/opportunities', authenticateToken, requireAdmin, adminController.getAdminOpportunities);
+apiRouter.get('/admin/fields', authenticateToken, requireAdmin, adminController.getAdminFields);
+apiRouter.get('/admin/analytics', authenticateToken, requireAdmin, adminController.getAdminAnalytics);
+apiRouter.get('/admin/reviews', authenticateToken, requireAdmin, adminController.getAdminReviews);
+apiRouter.get('/admin/reports', authenticateToken, requireAdmin, adminController.getAdminReports);
+apiRouter.patch('/admin/reports/:id', authenticateToken, requireAdmin, adminController.updateReportStatus);
+apiRouter.get('/admin/system-health', authenticateToken, requireAdmin, adminController.getSystemHealth);

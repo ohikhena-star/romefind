@@ -118,13 +118,22 @@ export const useAuthStore = create<AuthState>()(
         set({ user: updatedUser });
 
         try {
-          await api.updateProfile({
+          const res = await api.updateProfile({
             profileImage: updatedUser.profileImage,
             profile: updatedUser.profile,
             preferences: updatedUser.preferences,
             onboardingCompleted: updatedUser.onboardingCompleted,
             onboardingStep: updatedUser.profile?.onboardingStep || updatedUser.onboardingStep
           });
+          if (res) {
+            set((state) => ({
+              user: state.user ? {
+                ...state.user,
+                profileImage: res.profileImage !== undefined ? res.profileImage : state.user.profileImage,
+                onboardingCompleted: res.onboardingCompleted !== undefined ? res.onboardingCompleted : state.user.onboardingCompleted,
+              } : null
+            }));
+          }
         } catch (error) {
           console.warn('Failed to persist profile update to backend', error);
         }

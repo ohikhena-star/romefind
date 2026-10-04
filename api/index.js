@@ -32107,6 +32107,7 @@ async function register(req, res) {
       email: user.email,
       name: displayName,
       role: user.role,
+      profileImage: user.profileImage || "",
       onboardingCompleted: user.onboardingCompleted,
       profile: {
         name: displayName,
@@ -32184,6 +32185,7 @@ async function login(req, res) {
       email: user.email,
       name: displayName,
       role: user.role,
+      profileImage: user.profileImage || "",
       onboardingCompleted: user.onboardingCompleted,
       profile: {
         name: displayName,
@@ -32241,6 +32243,7 @@ async function getMe(req, res) {
       email: user.email,
       name: displayName,
       role: user.role,
+      profileImage: user.profileImage || "",
       onboardingCompleted: user.onboardingCompleted,
       profile: {
         name: displayName,
@@ -32379,6 +32382,7 @@ async function getProfile(req, res) {
         id: user.id,
         email: user.email,
         name: displayName,
+        profileImage: user.profileImage || "",
         profile: {
           name: displayName,
           email: user.email,
@@ -32414,7 +32418,7 @@ async function getProfile(req, res) {
 async function updateProfile(req, res) {
   try {
     const userId = req.user.id;
-    const { profile, preferences, onboardingCompleted, onboardingStep, bio, skills, interests, goals, education, experience, currentStatus, location, country } = req.body;
+    const { profile, preferences, onboardingCompleted, onboardingStep, bio, skills, interests, goals, education, experience, currentStatus, location, country, profileImage } = req.body;
     const rawBio = bio !== void 0 ? bio : profile?.bio;
     if (typeof rawBio === "string" && rawBio.length > 2e3) {
       res.status(400).json({ success: false, message: "Bio must be 2,000 characters or fewer" });
@@ -32453,6 +32457,7 @@ async function updateProfile(req, res) {
     }
     const updatedLocation = location !== void 0 ? location : profile?.location !== void 0 ? profile.location : currentUser.location;
     const updatedCountry = country !== void 0 ? country : profile?.country !== void 0 ? profile.country : currentUser.country;
+    const updatedProfileImage = profileImage !== void 0 ? profileImage : profile?.profileImage !== void 0 ? profile.profileImage : currentUser.profileImage;
     const updatedBio = bio !== void 0 ? bio : profile?.bio !== void 0 ? profile.bio : currentUser.profile?.bio;
     const updatedStatus = currentStatus !== void 0 ? currentStatus : profile?.currentStatus !== void 0 ? profile.currentStatus : currentUser.profile?.currentStatus;
     const updatedSkills = skills !== void 0 ? stringifyJsonField(skills) : profile?.skills !== void 0 ? stringifyJsonField(profile.skills) : currentUser.profile?.skills || "[]";
@@ -32482,6 +32487,7 @@ async function updateProfile(req, res) {
         lastName,
         location: updatedLocation,
         country: updatedCountry,
+        profileImage: updatedProfileImage,
         onboardingCompleted: onboardingCompleted !== void 0 ? Boolean(onboardingCompleted) : currentUser.onboardingCompleted,
         onboardingStep: updatedStep,
         profile: {
@@ -32529,6 +32535,7 @@ async function updateProfile(req, res) {
         id: updated.id,
         email: updated.email,
         name: displayName,
+        profileImage: updated.profileImage || "",
         onboardingCompleted: updated.onboardingCompleted,
         profile: {
           name: displayName,
@@ -38163,6 +38170,55 @@ var getMySubmissions = async (req, res, next) => {
 };
 
 // server/src/modules/admin/admin.controller.ts
+var CANONICAL_FIELDS = [
+  "Customer Experience",
+  "Customer Success",
+  "UX Research",
+  "Project Management",
+  "Operations",
+  "Business Development",
+  "Strategy",
+  "Human Resources",
+  "Finance",
+  "Investment",
+  "Fintech",
+  "Venture Capital",
+  "Software Engineering",
+  "Cloud",
+  "Cybersecurity",
+  "AI",
+  "Machine Learning",
+  "Data Science",
+  "Engineering",
+  "Product Design",
+  "UX/UI",
+  "Product Management",
+  "Digital Marketing",
+  "Content Marketing",
+  "Communications",
+  "Journalism",
+  "Media",
+  "Climate & Sustainability",
+  "Clean Energy",
+  "Life Sciences",
+  "Biotechnology",
+  "Environmental Science",
+  "Agriculture",
+  "Public Health",
+  "Healthcare Administration",
+  "Education",
+  "Teaching",
+  "Academic Research",
+  "Law",
+  "Human Rights",
+  "Public Policy",
+  "Governance",
+  "International Relations",
+  "Social Impact",
+  "Entrepreneurship",
+  "Startups",
+  "Innovation"
+];
 var getAdminMetrics = async (req, res, next) => {
   try {
     const [
@@ -38210,10 +38266,7 @@ var getPendingSubmissions = async (req, res, next) => {
       createdAt: s.createdAt,
       opportunityData: JSON.parse(s.opportunityData)
     }));
-    res.json({
-      success: true,
-      data: parsed
-    });
+    res.json({ success: true, data: parsed });
   } catch (error) {
     next(error);
   }
@@ -38269,11 +38322,7 @@ var approveSubmission = async (req, res, next) => {
         reviewNotes: `Approved and published as opportunity ${createdOpp.id}`
       }
     });
-    res.json({
-      success: true,
-      message: "Submission approved and published",
-      data: createdOpp
-    });
+    res.json({ success: true, message: "Submission approved and published", data: createdOpp });
   } catch (error) {
     next(error);
   }
@@ -38293,11 +38342,7 @@ var rejectSubmission = async (req, res, next) => {
         reviewNotes: reason || "Does not meet verification and trust criteria"
       }
     });
-    res.json({
-      success: true,
-      message: "Submission rejected",
-      data: updated
-    });
+    res.json({ success: true, message: "Submission rejected", data: updated });
   } catch (error) {
     next(error);
   }
@@ -38312,22 +38357,12 @@ var updateAdminOpportunity = async (req, res, next) => {
     }
     if (updateData.deadline && updateData.deadline !== current.deadline) {
       await prisma.opportunityChangeHistory.create({
-        data: {
-          opportunityId: id,
-          fieldChanged: "deadline",
-          oldValue: current.deadline,
-          newValue: updateData.deadline
-        }
+        data: { opportunityId: id, fieldChanged: "deadline", oldValue: current.deadline, newValue: updateData.deadline }
       });
     }
     if (updateData.status && updateData.status !== current.status) {
       await prisma.opportunityChangeHistory.create({
-        data: {
-          opportunityId: id,
-          fieldChanged: "status",
-          oldValue: current.status,
-          newValue: updateData.status
-        }
+        data: { opportunityId: id, fieldChanged: "status", oldValue: current.status, newValue: updateData.status }
       });
     }
     const payload = { ...updateData };
@@ -38342,11 +38377,7 @@ var updateAdminOpportunity = async (req, res, next) => {
       data: payload,
       include: { organization: true }
     });
-    res.json({
-      success: true,
-      message: "Opportunity updated successfully",
-      data: formatOpportunityResponse(updated)
-    });
+    res.json({ success: true, message: "Opportunity updated successfully", data: formatOpportunityResponse(updated) });
   } catch (error) {
     next(error);
   }
@@ -38354,17 +38385,483 @@ var updateAdminOpportunity = async (req, res, next) => {
 var getAuditLogs = async (req, res, next) => {
   try {
     const changes = await prisma.opportunityChangeHistory.findMany({
-      include: {
-        opportunity: {
-          select: { id: true, title: true }
-        }
-      },
+      include: { opportunity: { select: { id: true, title: true } } },
       orderBy: { detectedAt: "desc" },
       take: 50
     });
+    res.json({ success: true, data: changes });
+  } catch (error) {
+    next(error);
+  }
+};
+var getAdminOverview = async (req, res, next) => {
+  try {
+    const now = /* @__PURE__ */ new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1e3);
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1e3);
+    const fourteenDaysFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1e3);
+    const todayStr = now.toISOString().split("T")[0];
+    const in14DaysStr = fourteenDaysFromNow.toISOString().split("T")[0];
+    const [
+      totalUsers,
+      newUsersLast7Days,
+      newUsersLast30Days,
+      onboardedUsers,
+      totalOpportunities,
+      activeOpportunities,
+      expiredOpportunities,
+      needsReviewOpportunities,
+      pendingVerification,
+      totalSaves,
+      totalTracked,
+      submittedApplications,
+      acceptedApplications,
+      totalCommunityAdvice,
+      pendingReports,
+      behaviourSignalCount,
+      pendingSubmissions
+    ] = await Promise.all([
+      prisma.user.count(),
+      prisma.user.count({ where: { createdAt: { gte: sevenDaysAgo } } }),
+      prisma.user.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.user.count({ where: { onboardingCompleted: true } }),
+      prisma.opportunity.count(),
+      prisma.opportunity.count({ where: { status: "OPEN" } }),
+      prisma.opportunity.count({ where: { status: "EXPIRED" } }),
+      prisma.opportunity.count({ where: { verificationStatus: "NEEDS_REVIEW" } }),
+      prisma.opportunity.count({ where: { verificationStatus: "PENDING" } }),
+      prisma.savedOpportunity.count(),
+      prisma.trackedApplication.count(),
+      prisma.trackedApplication.count({ where: { status: "SUBMITTED" } }),
+      prisma.trackedApplication.count({ where: { status: "ACCEPTED" } }),
+      prisma.communityAdvice.count(),
+      prisma.opportunityReport.count({ where: { status: "PENDING" } }),
+      prisma.behaviourSignal.count(),
+      prisma.providerSubmission.count({ where: { status: "PENDING" } })
+    ]);
+    const expiringIn14Days = await prisma.opportunity.count({
+      where: {
+        status: "OPEN",
+        deadline: { not: null, gte: todayStr, lte: in14DaysStr }
+      }
+    });
+    const onboardingRate = totalUsers > 0 ? Math.round(onboardedUsers / totalUsers * 100) : 0;
     res.json({
       success: true,
-      data: changes
+      data: {
+        users: { totalUsers, newUsersLast7Days, newUsersLast30Days, onboardedUsers, onboardingRate },
+        opportunities: { totalOpportunities, activeOpportunities, expiredOpportunities, expiringIn14Days, needsReviewOpportunities, pendingVerification },
+        engagement: { totalSaves, totalTracked, submittedApplications, acceptedApplications, totalCommunityAdvice, pendingReports, pendingSubmissions },
+        instrumentation: {
+          behaviourSignalCount,
+          eventTrackingActive: false,
+          note: "BehaviourSignal.create() is not called anywhere in the current server codebase. Views, searches, CTR, view\u2192save rate, and active-user metrics require server-side event instrumentation before they can be displayed."
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getAdminUsers = async (req, res, next) => {
+  try {
+    const { search = "", page = "1", limit = "20", onboarded, role } = req.query;
+    const pageNum = Math.max(1, parseInt(page, 10));
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10)));
+    const offset = (pageNum - 1) * limitNum;
+    const where = {};
+    if (search) {
+      where.OR = [
+        { email: { contains: search, mode: "insensitive" } },
+        { firstName: { contains: search, mode: "insensitive" } },
+        { lastName: { contains: search, mode: "insensitive" } }
+      ];
+    }
+    if (onboarded === "true") where.onboardingCompleted = true;
+    if (onboarded === "false") where.onboardingCompleted = false;
+    if (role) where.role = role;
+    const [total, users] = await Promise.all([
+      prisma.user.count({ where }),
+      prisma.user.findMany({
+        where,
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true,
+          onboardingCompleted: true,
+          createdAt: true,
+          updatedAt: true,
+          profile: {
+            select: {
+              completeness: true,
+              currentStatus: true,
+              experienceLevel: true,
+              interests: true
+            }
+          }
+        },
+        orderBy: { createdAt: "desc" },
+        skip: offset,
+        take: limitNum
+      })
+    ]);
+    const formatted = users.map((u) => {
+      let interests = [];
+      try {
+        interests = u.profile?.interests ? JSON.parse(u.profile.interests) : [];
+      } catch {
+      }
+      return {
+        ...u,
+        profile: u.profile ? { ...u.profile, interests } : null
+      };
+    });
+    res.json({
+      success: true,
+      data: formatted,
+      pagination: { total, page: pageNum, limit: limitNum, hasMore: offset + limitNum < total }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getAdminOpportunities = async (req, res, next) => {
+  try {
+    const { search = "", page = "1", limit = "20", status, type, verificationStatus } = req.query;
+    const pageNum = Math.max(1, parseInt(page, 10));
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10)));
+    const offset = (pageNum - 1) * limitNum;
+    const where = {};
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { organization: { name: { contains: search, mode: "insensitive" } } }
+      ];
+    }
+    if (status) where.status = status;
+    if (type) where.opportunityType = type;
+    if (verificationStatus) where.verificationStatus = verificationStatus;
+    const [total, opportunities] = await Promise.all([
+      prisma.opportunity.count({ where }),
+      prisma.opportunity.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          opportunityType: true,
+          field: true,
+          location: true,
+          deadline: true,
+          status: true,
+          verificationStatus: true,
+          isFeatured: true,
+          applicationUrl: true,
+          createdAt: true,
+          updatedAt: true,
+          organization: { select: { id: true, name: true } }
+        },
+        orderBy: { createdAt: "desc" },
+        skip: offset,
+        take: limitNum
+      })
+    ]);
+    const formatted = opportunities.map((o) => {
+      let fields = [];
+      try {
+        fields = JSON.parse(o.field || "[]");
+      } catch {
+      }
+      return {
+        ...o,
+        field: fields,
+        missingUrl: !o.applicationUrl,
+        missingDeadline: !o.deadline,
+        missingField: fields.length === 0
+      };
+    });
+    res.json({
+      success: true,
+      data: formatted,
+      pagination: { total, page: pageNum, limit: limitNum, hasMore: offset + limitNum < total }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getOpportunityQuality = async (req, res, next) => {
+  try {
+    const today = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+    const [missingUrl, missingDeadline, needsReview, expiredStillOpen] = await Promise.all([
+      prisma.opportunity.findMany({
+        where: { applicationUrl: "" },
+        select: { id: true, title: true, status: true, verificationStatus: true }
+      }),
+      prisma.opportunity.findMany({
+        where: { deadline: null },
+        select: { id: true, title: true, status: true, verificationStatus: true }
+      }),
+      prisma.opportunity.findMany({
+        where: { verificationStatus: "NEEDS_REVIEW" },
+        select: { id: true, title: true, status: true, deadline: true }
+      }),
+      prisma.opportunity.findMany({
+        where: { status: "OPEN", deadline: { not: null, lt: today } },
+        select: { id: true, title: true, deadline: true, status: true }
+      })
+    ]);
+    const allOpps = await prisma.opportunity.findMany({ select: { id: true, title: true, field: true, status: true } });
+    const missingField = allOpps.filter((o) => {
+      try {
+        return JSON.parse(o.field || "[]").length === 0;
+      } catch {
+        return true;
+      }
+    });
+    const allIssueIds = /* @__PURE__ */ new Set([
+      ...missingUrl.map((o) => o.id),
+      ...missingDeadline.map((o) => o.id),
+      ...missingField.map((o) => o.id),
+      ...expiredStillOpen.map((o) => o.id),
+      ...needsReview.map((o) => o.id)
+    ]);
+    res.json({
+      success: true,
+      data: {
+        summary: {
+          total: allIssueIds.size,
+          missingUrl: missingUrl.length,
+          missingDeadline: missingDeadline.length,
+          missingField: missingField.length,
+          expiredStillOpen: expiredStillOpen.length,
+          needsReview: needsReview.length
+        },
+        missingUrl,
+        missingDeadline,
+        missingField,
+        expiredStillOpen,
+        needsReview
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getAdminFields = async (req, res, next) => {
+  try {
+    const allOpps = await prisma.opportunity.findMany({
+      select: { id: true, field: true, status: true, opportunityType: true }
+    });
+    const fieldResults = await Promise.all(CANONICAL_FIELDS.map(async (fieldName) => {
+      const matching = allOpps.filter((o) => {
+        try {
+          const fields = JSON.parse(o.field || "[]");
+          return fields.includes(fieldName);
+        } catch {
+          return false;
+        }
+      });
+      const totalCount = matching.length;
+      const activeCount = matching.filter((o) => o.status === "OPEN").length;
+      const types = [...new Set(matching.map((o) => o.opportunityType))];
+      const saves = await prisma.savedOpportunity.count({
+        where: { opportunity: { field: { contains: fieldName } } }
+      });
+      let coverage;
+      if (activeCount >= 3) coverage = "Healthy";
+      else if (activeCount >= 1) coverage = "Limited";
+      else if (totalCount > 0) coverage = "Very Limited";
+      else coverage = "Zero";
+      return { fieldName, totalCount, activeCount, saves, types, coverage };
+    }));
+    const order = { Zero: 0, "Very Limited": 1, Limited: 2, Healthy: 3 };
+    fieldResults.sort((a, b) => order[a.coverage] - order[b.coverage]);
+    res.json({ success: true, data: fieldResults });
+  } catch (error) {
+    next(error);
+  }
+};
+var getAdminAnalytics = async (req, res, next) => {
+  try {
+    const now = /* @__PURE__ */ new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1e3);
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1e3);
+    const [
+      totalSaves,
+      savesLast7Days,
+      savesLast30Days,
+      totalTracked,
+      trackedLast7Days,
+      trackedLast30Days,
+      totalTasks,
+      completedTasks,
+      applicationStatuses,
+      adviceByOutcome,
+      reportsByReason
+    ] = await Promise.all([
+      prisma.savedOpportunity.count(),
+      prisma.savedOpportunity.count({ where: { createdAt: { gte: sevenDaysAgo } } }),
+      prisma.savedOpportunity.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.trackedApplication.count(),
+      prisma.trackedApplication.count({ where: { createdAt: { gte: sevenDaysAgo } } }),
+      prisma.trackedApplication.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.applicationTask.count(),
+      prisma.applicationTask.count({ where: { completed: true } }),
+      prisma.trackedApplication.groupBy({ by: ["status"], _count: { id: true } }),
+      prisma.communityAdvice.groupBy({ by: ["outcomeStatus"], _count: { id: true } }),
+      prisma.opportunityReport.groupBy({ by: ["reason"], _count: { id: true } })
+    ]);
+    const taskCompletionRate = totalTasks > 0 ? Math.round(completedTasks / totalTasks * 100) : null;
+    const statusMap = Object.fromEntries(
+      applicationStatuses.map((s) => [s.status, s._count.id])
+    );
+    const adviceMap = Object.fromEntries(
+      adviceByOutcome.map((a) => [a.outcomeStatus ?? "Unknown", a._count.id])
+    );
+    const reportMap = Object.fromEntries(
+      reportsByReason.map((r) => [r.reason, r._count.id])
+    );
+    res.json({
+      success: true,
+      data: {
+        saves: { total: totalSaves, last7Days: savesLast7Days, last30Days: savesLast30Days },
+        tracked: { total: totalTracked, last7Days: trackedLast7Days, last30Days: trackedLast30Days },
+        applicationsByStatus: statusMap,
+        tasks: { total: totalTasks, completed: completedTasks, completionRate: taskCompletionRate },
+        communityAdviceByOutcome: adviceMap,
+        reportsByReason: reportMap,
+        // Not available — no event instrumentation
+        unavailable: {
+          views: null,
+          searches: null,
+          ctaClickThroughRate: null,
+          viewToSaveRate: null,
+          viewToTrackRate: null,
+          activeUsers: null,
+          note: "These metrics require BehaviourSignal event instrumentation, which is not currently active."
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getAdminReviews = async (req, res, next) => {
+  try {
+    const { page = "1", limit = "20", search = "" } = req.query;
+    const pageNum = Math.max(1, parseInt(page, 10));
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10)));
+    const offset = (pageNum - 1) * limitNum;
+    const where = {};
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { content: { contains: search, mode: "insensitive" } },
+        { authorName: { contains: search, mode: "insensitive" } }
+      ];
+    }
+    const [total, reviews] = await Promise.all([
+      prisma.communityAdvice.count({ where }),
+      prisma.communityAdvice.findMany({
+        where,
+        include: {
+          opportunity: { select: { id: true, title: true } },
+          user: { select: { id: true, email: true } }
+        },
+        orderBy: { createdAt: "desc" },
+        skip: offset,
+        take: limitNum
+      })
+    ]);
+    res.json({
+      success: true,
+      data: reviews,
+      pagination: { total, page: pageNum, limit: limitNum, hasMore: offset + limitNum < total }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getAdminReports = async (req, res, next) => {
+  try {
+    const { page = "1", limit = "20", status } = req.query;
+    const pageNum = Math.max(1, parseInt(page, 10));
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10)));
+    const offset = (pageNum - 1) * limitNum;
+    const where = {};
+    if (status) where.status = status;
+    const [total, reports] = await Promise.all([
+      prisma.opportunityReport.count({ where }),
+      prisma.opportunityReport.findMany({
+        where,
+        include: {
+          opportunity: { select: { id: true, title: true } },
+          user: { select: { id: true, email: true } }
+        },
+        orderBy: { createdAt: "desc" },
+        skip: offset,
+        take: limitNum
+      })
+    ]);
+    res.json({
+      success: true,
+      data: reports,
+      pagination: { total, page: pageNum, limit: limitNum, hasMore: offset + limitNum < total }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var updateReportStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const allowed = ["REVIEWED", "RESOLVED", "DISMISSED"];
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ success: false, message: `Invalid status. Must be one of: ${allowed.join(", ")}` });
+    }
+    const report = await prisma.opportunityReport.findUnique({ where: { id } });
+    if (!report) {
+      return res.status(404).json({ success: false, message: "Report not found" });
+    }
+    const updated = await prisma.opportunityReport.update({
+      where: { id },
+      data: { status }
+    });
+    res.json({ success: true, data: updated });
+  } catch (error) {
+    next(error);
+  }
+};
+var getSystemHealth = async (req, res, next) => {
+  try {
+    let dbStatus = { status: "ok", message: "Connected" };
+    let dbUserCount = 0;
+    try {
+      dbUserCount = await prisma.user.count();
+    } catch (dbErr) {
+      dbStatus = { status: "error", message: dbErr?.message || "Database connection failed" };
+    }
+    const [activeOpps, expiredOpps, needsReviewOpps, behaviourSignalCount] = await Promise.all([
+      prisma.opportunity.count({ where: { status: "OPEN" } }).catch(() => -1),
+      prisma.opportunity.count({ where: { status: "EXPIRED" } }).catch(() => -1),
+      prisma.opportunity.count({ where: { verificationStatus: "NEEDS_REVIEW" } }).catch(() => -1),
+      prisma.behaviourSignal.count().catch(() => 0)
+    ]);
+    res.json({
+      success: true,
+      data: {
+        api: { status: "ok", timestamp: (/* @__PURE__ */ new Date()).toISOString() },
+        database: dbStatus,
+        opportunities: { active: activeOpps, expired: expiredOpps, needsReview: needsReviewOpps },
+        eventInstrumentation: {
+          status: "not_active",
+          behaviourSignalCount,
+          note: "BehaviourSignal.create() is not called anywhere in the server codebase. Event tracking must be implemented before analytics can populate."
+        },
+        version: "1.0.0"
+      }
     });
   } catch (error) {
     next(error);
@@ -38433,6 +38930,16 @@ apiRouter.post("/admin/submissions/:id/approve", authenticateToken, requireAdmin
 apiRouter.post("/admin/submissions/:id/reject", authenticateToken, requireAdmin, rejectSubmission);
 apiRouter.put("/admin/opportunities/:id", authenticateToken, requireAdmin, updateAdminOpportunity);
 apiRouter.get("/admin/audit-logs", authenticateToken, requireAdmin, getAuditLogs);
+apiRouter.get("/admin/overview", authenticateToken, requireAdmin, getAdminOverview);
+apiRouter.get("/admin/users", authenticateToken, requireAdmin, getAdminUsers);
+apiRouter.get("/admin/opportunities/quality", authenticateToken, requireAdmin, getOpportunityQuality);
+apiRouter.get("/admin/opportunities", authenticateToken, requireAdmin, getAdminOpportunities);
+apiRouter.get("/admin/fields", authenticateToken, requireAdmin, getAdminFields);
+apiRouter.get("/admin/analytics", authenticateToken, requireAdmin, getAdminAnalytics);
+apiRouter.get("/admin/reviews", authenticateToken, requireAdmin, getAdminReviews);
+apiRouter.get("/admin/reports", authenticateToken, requireAdmin, getAdminReports);
+apiRouter.patch("/admin/reports/:id", authenticateToken, requireAdmin, updateReportStatus);
+apiRouter.get("/admin/system-health", authenticateToken, requireAdmin, getSystemHealth);
 
 // server/src/middleware/error.middleware.ts
 function errorHandler(err, _req, res, _next) {

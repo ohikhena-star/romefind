@@ -331,6 +331,71 @@ class ApiClient {
   async deleteAllNotifications() {
     return this.request<any>('/notifications', { method: 'DELETE' });
   }
+
+  // ── Admin Dashboard ────────────────────────────────
+  async getAdminMetrics() {
+    return this.request<any>('/admin/metrics');
+  }
+
+  async getAdminOverview() {
+    return this.request<any>('/admin/overview');
+  }
+
+  async getAdminUsers(params: { search?: string; page?: number; limit?: number; onboarded?: string; role?: string } = {}) {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== '') query.append(k, String(v)); });
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return this.request<any>(`/admin/users${qs}`);
+  }
+
+  async getAdminOpportunities(params: { search?: string; page?: number; limit?: number; status?: string; type?: string; verificationStatus?: string } = {}) {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== '') query.append(k, String(v)); });
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return this.request<any>(`/admin/opportunities${qs}`);
+  }
+
+  async getAdminOpportunityQuality() {
+    return this.request<any>('/admin/opportunities/quality');
+  }
+
+  async getAdminFields() {
+    return this.request<any>('/admin/fields');
+  }
+
+  async getAdminAnalytics() {
+    return this.request<any>('/admin/analytics');
+  }
+
+  async getAdminReviews(params: { page?: number; search?: string } = {}) {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== '') query.append(k, String(v)); });
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return this.request<any>(`/admin/reviews${qs}`);
+  }
+
+  async getAdminReports(params: { status?: string; page?: number } = {}) {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== '') query.append(k, String(v)); });
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return this.request<any>(`/admin/reports${qs}`);
+  }
+
+  async updateAdminReport(id: string, status: string) {
+    return this.request<any>(`/admin/reports/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+  }
+
+  async getAdminSystemHealth() {
+    return this.request<any>('/admin/system-health');
+  }
+
+  async getAdminSubmissions() {
+    return this.request<any>('/admin/submissions');
+  }
+
+  async getAdminAuditLogs() {
+    return this.request<any>('/admin/audit-logs');
+  }
 }
 
 export const api = new ApiClient();

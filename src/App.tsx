@@ -11,6 +11,10 @@ import PublicLayout from '@/layouts/PublicLayout';
 import AuthLayout from '@/layouts/AuthLayout';
 import AppLayout from '@/layouts/AppLayout';
 import OnboardingLayout from '@/layouts/OnboardingLayout';
+import AdminLayout from '@/layouts/AdminLayout';
+
+// Admin Guard
+import AdminGuard from '@/components/admin/AdminGuard';
 
 // Pages
 import LandingPage from '@/pages/landing/LandingPage';
@@ -33,6 +37,15 @@ import LearnPage from '@/pages/learn/LearnPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import NotificationsPage from '@/pages/notifications/NotificationsPage';
 import SearchesPage from '@/pages/searches/SearchesPage';
+
+// Admin Pages
+import AdminOverviewPage from '@/pages/admin/AdminOverviewPage';
+import AdminUsersPage from '@/pages/admin/AdminUsersPage';
+import AdminOpportunitiesPage from '@/pages/admin/AdminOpportunitiesPage';
+import AdminFieldsPage from '@/pages/admin/AdminFieldsPage';
+import AdminAnalyticsPage from '@/pages/admin/AdminAnalyticsPage';
+import AdminReviewsPage from '@/pages/admin/AdminReviewsPage';
+import AdminSystemHealthPage from '@/pages/admin/AdminSystemHealthPage';
 
 import { DashboardSkeleton } from '@/components/ui/composite-skeletons';
 
@@ -149,6 +162,18 @@ export default function App() {
       </Route>
 
       
+      {/* Admin Routes — protected by AdminGuard (role === 'ADMIN' only) */}
+      <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
+        <Route index element={<Navigate to="/admin/overview" replace />} />
+        <Route path="overview" element={<AdminOverviewPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="opportunities" element={<AdminOpportunitiesPage />} />
+        <Route path="fields" element={<AdminFieldsPage />} />
+        <Route path="analytics" element={<AdminAnalyticsPage />} />
+        <Route path="reviews" element={<AdminReviewsPage />} />
+        <Route path="health" element={<AdminSystemHealthPage />} />
+      </Route>
+
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

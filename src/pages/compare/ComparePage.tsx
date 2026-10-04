@@ -7,7 +7,7 @@ import { getAlternativeDiscoveries } from '@/services/personalization.service';
 import { Button, Tag, DeadlineIndicator, Badge, SolarIcon } from '@/components/ui';
 import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
 import { X, ArrowRight, Lightbulb, Plus, Sparkles, DollarSign } from 'lucide-react';
-import { Opportunity, AlternativeDiscovery } from '@/types/models';
+import { Opportunity, AlternativeDiscovery, RemoteStatus } from '@/types/models';
 
 export default function ComparePage() {
   const navigate = useNavigate();
@@ -235,101 +235,73 @@ export default function ComparePage() {
             </table>
           </div>
 
-          {/* Mobile Comparison View (Clean, Structured, Scannable Cards) */}
-          <div className="md:hidden flex flex-col w-full space-y-4 mb-8">
-            <div className="flex items-center justify-between px-1 mb-1">
+          {/* Mobile Comparison View (Clean, Concise, Scannable Decision Cards) */}
+          <div className="md:hidden flex flex-col w-full space-y-3 mb-8">
+            <div className="flex items-center justify-between px-1">
               <span className="text-xs font-bold uppercase tracking-wider text-surface-500">
-                Comparing {compareOpps.length} Opportunities
-              </span>
-              <span className="text-xs text-rome-600 dark:text-rome-400 font-medium">
-                Tap card to view details
+                Comparing ({compareOpps.length})
               </span>
             </div>
 
-            {compareOpps.map((opp: Opportunity, idx: number) => (
+            {compareOpps.map((opp: Opportunity) => (
               <div 
                 key={opp.id} 
-                className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-5 shadow-xs relative space-y-4"
+                className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-xs space-y-3"
               >
-                {/* Header Row */}
-                <div className="flex justify-between items-start gap-3">
+                {/* Header Row: Org + Title + Remove */}
+                <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="w-5 h-5 rounded-full bg-rome-100 dark:bg-rome-900/60 text-rome-600 dark:text-rome-400 text-xs font-bold flex items-center justify-center">
-                        {idx + 1}
-                      </span>
-                      <p className="text-xs font-semibold text-rome-600 dark:text-rome-400 truncate">
-                        {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
-                      </p>
-                    </div>
-                    <h3 className="text-base font-bold text-surface-950 dark:text-white leading-snug">
+                    <p className="text-xs font-semibold text-surface-500 dark:text-surface-400 truncate uppercase tracking-wider">
+                      {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
+                    </p>
+                    <h3 className="text-sm sm:text-base font-bold text-surface-950 dark:text-white leading-snug line-clamp-2 mt-0.5">
                       {opp.title}
                     </h3>
                   </div>
                   <button
                     onClick={() => removeFromCompare(opp.id)}
-                    className="w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0 cursor-pointer"
+                    className="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0 cursor-pointer"
                     aria-label={`Remove ${opp.title} from comparison`}
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                {/* Badges */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <Tag label={opp.type} />
-                  {opp.funding ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-100 border border-surface-200 dark:border-surface-700">
-                      <DollarSign className="w-3 h-3 text-surface-400" />
-                      {opp.funding}
-                    </span>
-                  ) : (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-surface-100 dark:bg-surface-800 text-surface-500">
-                      Unfunded
-                    </span>
-                  )}
-                </div>
-
-                {/* Key Attributes Grid */}
-                <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-surface-100 dark:border-surface-800/80 text-xs">
-                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
-                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Deadline</span>
+                {/* Core Decision Signals */}
+                <div className="space-y-1.5 text-xs py-2 border-y border-surface-100 dark:border-surface-800/80">
+                  <div className="flex items-center justify-between">
+                    <span className="text-surface-400">Type</span>
+                    <span className="font-semibold text-surface-900 dark:text-white">{opp.type}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-surface-400">Deadline</span>
                     <span className="font-semibold text-surface-900 dark:text-white">
                       {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'Rolling'}
                     </span>
                   </div>
-
-                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
-                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Duration</span>
-                    <span className="font-semibold text-surface-900 dark:text-white truncate block">
-                      {opp.duration || 'Flexible'}
+                  <div className="flex items-center justify-between">
+                    <span className="text-surface-400">Location</span>
+                    <span className="font-semibold text-surface-900 dark:text-white truncate max-w-[60%] text-right">
+                      {opp.remoteStatus === RemoteStatus.Remote ? 'Remote (Worldwide)' : (opp.location || 'Global')}
                     </span>
                   </div>
-
-                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
-                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Location</span>
-                    <span className="font-semibold text-surface-900 dark:text-white truncate block">
-                      {opp.location} {opp.remoteStatus ? `(${opp.remoteStatus})` : ''}
-                    </span>
-                  </div>
-
-                  <div className="bg-surface-50 dark:bg-surface-800/50 p-2.5 rounded-xl">
-                    <span className="text-surface-400 font-medium block text-[11px] mb-0.5">Eligibility</span>
-                    <span className="font-semibold text-surface-900 dark:text-white truncate block">
-                      {opp.experienceRequirements || 'All Levels'}
-                    </span>
-                  </div>
+                  {opp.funding && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-surface-400">Funding</span>
+                      <span className="font-semibold text-surface-900 dark:text-white truncate max-w-[60%] text-right">
+                        {opp.funding}
+                      </span>
+                    </div>
+                  )}
+                  {opp.experienceRequirements && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-surface-400">Eligibility</span>
+                      <span className="font-semibold text-surface-900 dark:text-white">
+                        {opp.experienceRequirements}
+                      </span>
+                    </div>
+                  )}
                 </div>
-
-                {/* Benefits / Requirements snippet */}
-                {opp.benefits && opp.benefits.length > 0 && (
-                  <div className="text-xs pt-1">
-                    <span className="text-surface-500 font-medium block mb-1">Key Perks:</span>
-                    <p className="text-surface-700 dark:text-surface-300 line-clamp-2">
-                      {opp.benefits.join(' • ')}
-                    </p>
-                  </div>
-                )}
 
                 {/* Action CTA */}
                 <Button

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useProfileStore } from '@/store/profileStore';
+import { useUIStore } from '@/store/uiStore';
 import { Button, Input, Chip, CountrySelector } from '@/components/ui';
 import { FIELDS } from '@/utils/constants';
 import { cn } from '@/utils/cn';
@@ -98,6 +99,7 @@ const OnboardingFlow: React.FC = () => {
       });
 
       updateProfile(updatedProfile as any);
+      useUIStore.setState({ hasSeenProductTour: false, tourOpen: false, tourStep: 0 });
       navigate('/discover');
     } finally {
       setIsSaving(false);
@@ -110,17 +112,14 @@ const OnboardingFlow: React.FC = () => {
     switch(step) {
       case 0:
         return (
-          <div className="animate-in fade-in slide-in-from-bottom-8 duration-500 text-center max-w-lg mx-auto flex flex-col items-center justify-center h-[50vh]">
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-500 text-center max-w-lg mx-auto flex flex-col items-center justify-center min-h-[50vh] px-4 py-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-4 text-surface-950 dark:text-white">
               Hey, I'm ROMEfind.
             </h1>
-            <h2 className="text-2xl md:text-3xl font-medium mb-6 text-surface-700 dark:text-surface-300">
-              Let's figure out what's possible for you.
-            </h2>
-            <p className="text-surface-500 dark:text-surface-400 mb-10 text-lg">
+            <p className="text-surface-600 dark:text-surface-300 mb-10 text-base sm:text-lg leading-relaxed max-w-md mx-auto">
               Tell me a little about where you are, where you're headed, and what you're hoping to find. You can always change this later.
             </p>
-            <Button size="lg" onClick={next} className="w-48 text-base font-medium mx-auto">Let's start</Button>
+            <Button size="lg" onClick={next} className="w-full sm:w-48 text-base font-semibold mx-auto h-12 min-h-[48px]">Let's start</Button>
           </div>
         );
       

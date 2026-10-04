@@ -182,6 +182,7 @@ export interface UserPreferences {
 
 export interface User {
   id: string;
+  role?: string;
   profile: UserProfile;
   preferences: UserPreferences;
   profileImage?: string;
