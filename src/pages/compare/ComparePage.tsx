@@ -320,14 +320,74 @@ export default function ComparePage() {
             })}
           </div>
         </>
+      ) : compareOpps.length === 1 ? (
+        /* 1 Opportunity Selected - Show first card + Invite second slot */
+        <div className="mb-10 bg-white dark:bg-surface-900 border border-rome-200 dark:border-rome-900/60 rounded-2xl p-4 sm:p-6 shadow-sm">
+          <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-surface-100 dark:border-surface-800">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-rome-500 animate-pulse" />
+              <h2 className="text-sm sm:text-base font-bold text-surface-900 dark:text-surface-100">
+                1 of 2 Opportunities Selected
+              </h2>
+            </div>
+            <span className="text-xs text-surface-500 dark:text-surface-400">
+              Select 1 more below to compare
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Slot 1: Selected Opportunity */}
+            {compareOpps.map((opp: Opportunity) => {
+              const orgName = typeof opp.organization === 'object' ? opp.organization.name : opp.organization;
+              return (
+                <div key={opp.id} className="p-3.5 bg-surface-50 dark:bg-surface-800/60 rounded-xl border border-surface-200 dark:border-surface-700 flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[10px] font-bold text-rome-600 dark:text-rome-400 uppercase tracking-wider block">
+                      {orgName}
+                    </span>
+                    <h3 className="text-sm font-bold text-surface-900 dark:text-white truncate">
+                      {opp.title}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1 text-xs text-surface-500">
+                      <span>{opp.type}</span>
+                      <span>•</span>
+                      <span>{opp.remoteStatus === RemoteStatus.Remote ? 'Remote' : (opp.location || 'Global')}</span>
+                      {opp.funding && (
+                        <>
+                          <span>•</span>
+                          <span className="font-semibold text-surface-800 dark:text-surface-200">{opp.funding}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeFromCompare(opp.id)}
+                    className="p-1.5 text-surface-400 hover:text-red-500 hover:bg-surface-200 dark:hover:bg-surface-700 rounded-lg transition-colors shrink-0"
+                    title="Remove from comparison"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              );
+            })}
+
+            {/* Slot 2: Placeholder Invitation */}
+            <div className="p-4 rounded-xl border-2 border-dashed border-surface-200 dark:border-surface-700 flex items-center justify-center text-center">
+              <p className="text-xs font-medium text-surface-500 dark:text-surface-400">
+                Tap <strong className="text-rome-600 dark:text-rome-400">+ Add to Compare</strong> on any opportunity below to complete comparison
+              </p>
+            </div>
+          </div>
+        </div>
       ) : (
+        /* 0 Opportunities Selected */
         <div className="bg-surface-50 dark:bg-surface-900/50 border border-surface-200 dark:border-surface-800 rounded-2xl p-6 sm:p-8 mb-10 text-center">
           <div className="max-w-md mx-auto space-y-3">
             <span className="inline-flex p-3 rounded-2xl bg-rome-100 dark:bg-rome-900/40 text-rome-600 dark:text-rome-400">
               <SolarIcon name="transfer-horizontal-linear" size={32} />
             </span>
             <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50">
-              {compareOpps.length === 1 ? 'Select 1 more opportunity to compare' : 'Select opportunities to compare side-by-side'}
+              Select opportunities to compare side-by-side
             </h2>
             <p className="text-sm text-surface-600 dark:text-surface-400">
               Click <strong className="text-rome-600 dark:text-rome-400">+ Add to Compare</strong> on any 2 to 4 opportunities below to evaluate deadlines, funding, and eligibility.
@@ -361,7 +421,7 @@ export default function ComparePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {availableOpps.slice(0, 9).map((opp: Opportunity) => {
             const isComparing = comparisons.includes(opp.id);
             return (
@@ -369,6 +429,8 @@ export default function ComparePage() {
                 <OpportunityCard
                   opportunity={opp}
                   showCompareButton={true}
+                  primaryAction="compare"
+                  compact={true}
                   isComparing={isComparing}
                   onToggleCompare={() => {
                     if (isComparing) {
@@ -389,6 +451,41 @@ export default function ComparePage() {
           })}
         </div>
       </div>
+
+      {/* Sticky Mobile Comparison Dock */}
+      {comparisons.length > 0 && (
+        <div className="md:hidden fixed bottom-4 inset-x-4 z-40 bg-surface-900/95 dark:bg-surface-800/95 text-white p-3 rounded-2xl shadow-elevated backdrop-blur-md border border-surface-700/80 flex items-center justify-between gap-3 animate-in slide-in-from-bottom-4">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-rome-400 animate-pulse shrink-0" />
+              <p className="text-xs font-bold truncate">
+                {comparisons.length} of 4 selected to compare
+              </p>
+            </div>
+            <p className="text-[11px] text-surface-400 truncate">
+              {comparisons.length < 2 ? 'Select 1 more to compare' : 'Ready to compare side-by-side'}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            {comparisons.length >= 2 && (
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="px-3 py-1.5 rounded-xl bg-rome-500 hover:bg-rome-600 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+              >
+                View Comparison ↑
+              </button>
+            )}
+            <button
+              onClick={() => comparisons.forEach(id => removeFromCompare(id))}
+              className="p-1.5 rounded-xl text-surface-400 hover:text-white transition-colors cursor-pointer"
+              title="Clear all"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Alternative Paths Discovery Section */}
       {alternatives.length > 0 && (

@@ -22,6 +22,7 @@ export interface OpportunityCardProps {
   onUnsave?: (id: string) => void;
   onToggleCompare?: (id: string) => void;
   onClick?: (id: string) => void;
+  primaryAction?: 'view' | 'compare';
   className?: string;
 }
 
@@ -33,6 +34,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
   matchSignals,
   showDebugSignals = false,
   compact = false,
+  primaryAction = 'view',
   showSaveButton = true,
   showCompareButton = true,
   isSaved: propIsSaved,
@@ -186,10 +188,12 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         )}
       </div>
 
-      {/* ─── 3. Description ─── */}
-      <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400 mb-3 line-clamp-2 leading-relaxed">
-        {opportunity.shortDescription || opportunity.description}
-      </p>
+      {/* ─── 3. Description (Omitted in compact mode) ─── */}
+      {!compact && (
+        <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-400 mb-3 line-clamp-2 leading-relaxed">
+          {opportunity.shortDescription || opportunity.description}
+        </p>
+      )}
 
       {/* ─── 4. Structured Metadata: Location, Deadline, Funding ─── */}
       <div className="grid grid-cols-2 gap-2 text-xs py-2.5 border-y border-surface-100 dark:border-surface-800/80 mb-3">
@@ -317,23 +321,50 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         </div>
       )}
 
-      {/* ─── 6. Single Primary Action Button ─── */}
+      {/* ─── 6. Action Button (Compare Mode vs Standard View Mode) ─── */}
       <div 
         id={id ? "tour-actions" : undefined}
         className="mt-auto pt-2 flex items-center w-full"
       >
-        <Button 
-          variant="default"
-          size="default"
-          className="w-full text-sm font-semibold justify-center h-11 min-h-[44px]"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleCardClick();
-          }}
-        >
-          <span>View opportunity</span>
-          <SolarIcon name="alt-arrow-right-linear" size={15} />
-        </Button>
+        {primaryAction === 'compare' ? (
+          <div className="flex items-center justify-between gap-2 w-full" onClick={(e) => e.stopPropagation()}>
+            <Button 
+              variant={isComparing ? "outline" : "default"}
+              size="default"
+              className={cn(
+                "flex-1 text-xs font-bold justify-center h-10 min-h-[40px] transition-all",
+                isComparing 
+                  ? "border-rome-500 text-rome-600 dark:text-rome-400 bg-rome-50 dark:bg-rome-950/60 shadow-2xs" 
+                  : "bg-rome-500 hover:bg-rome-600 text-white shadow-xs"
+              )}
+              onClick={handleCompareToggle}
+            >
+              <SolarIcon name={isComparing ? "check-circle-linear" : "add-circle-linear"} size={16} />
+              <span>{isComparing ? "In Comparison" : "+ Add to Compare"}</span>
+            </Button>
+
+            <button
+              onClick={handleCardClick}
+              className="px-2.5 py-2 text-xs font-semibold text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-white transition-colors cursor-pointer"
+              title="View full opportunity details"
+            >
+              Details ↗
+            </button>
+          </div>
+        ) : (
+          <Button 
+            variant="default"
+            size="default"
+            className="w-full text-sm font-semibold justify-center h-11 min-h-[44px]"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
+          >
+            <span>View opportunity</span>
+            <SolarIcon name="alt-arrow-right-linear" size={15} />
+          </Button>
+        )}
       </div>
     </article>
   );
