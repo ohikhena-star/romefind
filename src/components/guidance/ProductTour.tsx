@@ -9,6 +9,7 @@ import { cn } from '@/utils/cn';
 interface TourStepDef {
   id: string;
   targetSelector?: string;
+  mobileTargetSelector?: string;
   title: string;
   description: string;
   route?: string;
@@ -42,6 +43,7 @@ const TOUR_STEPS: TourStepDef[] = [
   {
     id: 'explore',
     targetSelector: '#nav-explore',
+    mobileTargetSelector: '#mobile-nav-explore',
     title: 'Explore Catalog',
     description: "Intentionally browse all opportunities by taxonomy, eligibility, deadline urgency, and stipend levels.",
     route: '/discover',
@@ -58,8 +60,18 @@ const TOUR_STEPS: TourStepDef[] = [
   {
     id: 'workspace',
     targetSelector: '#nav-my-opps',
+    mobileTargetSelector: '#mobile-nav-my-opps',
     title: 'Track & Prepare',
     description: "Manage checklist milestones, draft essays, and track deadlines in your personal workspace.",
+    route: '/discover',
+    preferredPlacement: 'bottom'
+  },
+  {
+    id: 'learn',
+    targetSelector: '#nav-learn',
+    mobileTargetSelector: '#mobile-nav-learn',
+    title: 'Learn & Upskill',
+    description: "Access curated guides, playbooks, and preparation resources for applications.",
     route: '/discover',
     preferredPlacement: 'bottom'
   }
@@ -69,7 +81,7 @@ export const ProductTour: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, user, isLoading: authLoading } = useAuthStore();
-  const { tourOpen, tourStep, endTour, nextTourStep, prevTourStep, setTourStep } = useUiStore();
+  const { tourOpen, tourStep, endTour, nextTourStep, prevTourStep, setTourStep, setMobileMenuOpen } = useUiStore();
   
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ top: number; left: number; placement: 'top' | 'bottom' | 'center' }>({
@@ -84,6 +96,15 @@ export const ProductTour: React.FC = () => {
 
   // STRICT RULE: Tour is authenticated-only. If auth is loading or user is not logged in, NEVER show.
   const isUserAuthenticated = !authLoading && isAuthenticated && Boolean(user);
+
+  // When reaching a mobile nav step, automatically open the mobile navigation drawer
+  useEffect(() => {
+    if (!tourOpen || !isUserAuthenticated) return;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isMobile && currentStep.mobileTargetSelector) {
+      setMobileMenuOpen(true);
+    }
+  }, [tourOpen, isUserAuthenticated, tourStep, currentStep.mobileTargetSelector, setMobileMenuOpen]);
 
   // Navigate to target route if needed
   useEffect(() => {
@@ -101,7 +122,12 @@ export const ProductTour: React.FC = () => {
     }
 
     const updatePosition = () => {
-      if (!currentStep.targetSelector) {
+      const isMobile = window.innerWidth < 768;
+      const targetSelector = isMobile && currentStep.mobileTargetSelector 
+        ? currentStep.mobileTargetSelector 
+        : currentStep.targetSelector;
+
+      if (!targetSelector) {
         setTargetRect(null);
         setTooltipPos({
           top: Math.max(80, window.innerHeight / 2 - 120),
@@ -111,13 +137,12 @@ export const ProductTour: React.FC = () => {
         return;
       }
 
-      // Try desktop selector or mobile fallback
-      let el = document.querySelector(currentStep.targetSelector);
-      if (!el && currentStep.targetSelector === '#nav-explore') {
-        el = document.querySelector('#nav-explore-mobile') || document.querySelector('a[href="/explore"]');
-      }
-      if (!el && currentStep.targetSelector === '#nav-my-opps') {
-        el = document.querySelector('#nav-my-opps-mobile') || document.querySelector('a[href="/my-opportunities"]');
+      // Try resolved selector or fallbacks
+      let el = document.querySelector(targetSelector);
+      if (!el && isMobile && currentStep.mobileTargetSelector) {
+        // Retry opening mobile menu if it was somehow closed
+        setMobileMenuOpen(true);
+        el = document.querySelector(currentStep.mobileTargetSelector);
       }
       if (!el && currentStep.targetSelector === '#home-search') {
         el = document.querySelector('#nav-search') || document.querySelector('form[role="search"]');
@@ -132,7 +157,6 @@ export const ProductTour: React.FC = () => {
           el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        const isMobile = window.innerWidth < 640;
         const tooltipWidth = isMobile ? Math.min(window.innerWidth - 32, 380) : 360;
         const tooltipHeight = 210;
 
@@ -201,7 +225,7 @@ export const ProductTour: React.FC = () => {
       window.removeEventListener('scroll', updatePosition);
       clearTimeout(timer);
     };
-  }, [tourOpen, isUserAuthenticated, tourStep, currentStep.targetSelector, location.pathname]);
+  }, [tourOpen, isUserAuthenticated, tourStep, currentStep.targetSelector, currentStep.mobileTargetSelector, location.pathname]);
 
   if (!tourOpen || !isUserAuthenticated) return null;
 

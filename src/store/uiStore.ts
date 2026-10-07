@@ -6,6 +6,7 @@ interface UIState {
   sidebarOpen: boolean;
   onboardingStep: number; // 0-4, 0=not started, 4=complete
   searchOpen: boolean;
+  mobileMenuOpen: boolean;
   hasSeenProductTour: boolean;
   tourOpen: boolean;
   tourStep: number; // 0 to 6
@@ -18,6 +19,7 @@ interface UIState {
   setOnboardingStep: (step: number) => void;
   toggleSearch: () => void;
   setSearchOpen: (open: boolean) => void;
+  setMobileMenuOpen: (open: boolean) => void;
   startTour: () => void;
   endTour: () => void;
   setTourStep: (step: number) => void;
@@ -54,6 +56,7 @@ export const useUIStore = create<UIState>()(
       sidebarOpen: false,
       onboardingStep: 0,
       searchOpen: false,
+      mobileMenuOpen: false,
       hasSeenProductTour: false,
       tourOpen: false,
       tourStep: 0,
@@ -90,12 +93,16 @@ export const useUIStore = create<UIState>()(
         set({ searchOpen: open });
       },
 
+      setMobileMenuOpen: (open: boolean) => {
+        set({ mobileMenuOpen: open });
+      },
+
       startTour: () => {
         set({ tourOpen: true, tourStep: 0 });
       },
 
       endTour: () => {
-        set({ tourOpen: false, hasSeenProductTour: true });
+        set({ tourOpen: false, hasSeenProductTour: true, mobileMenuOpen: false });
       },
 
       setTourStep: (step: number) => {

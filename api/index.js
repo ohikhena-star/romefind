@@ -37150,63 +37150,66 @@ var RecommendationEngine = class {
    * Calculates relevance score (0-100) and human-readable match reasons
    */
   static calculateRelevance(userProfile, opp, rejectedTypes = /* @__PURE__ */ new Set()) {
-    let score = 50;
+    let score = 0;
     const reasons = [];
-    const userSkills = parseJsonArray(userProfile?.skills).map((s) => s.toLowerCase());
-    const userInterests = parseJsonArray(userProfile?.interests).map((i) => i.toLowerCase());
-    const userGoals = parseJsonArray(userProfile?.goals).map((g) => g.toLowerCase());
-    const userTypePrefs = parseJsonArray(userProfile?.opportunityPreferences).map((t) => t.toLowerCase());
-    const userRemotePrefs = parseJsonArray(userProfile?.remotePreferences).map((r) => r.toLowerCase());
-    const userLocations = parseJsonArray(userProfile?.locationPreferences).map((l) => l.toLowerCase());
-    const oppFields = parseJsonArray(opp.field).map((f) => f.toLowerCase());
-    const oppSubfields = parseJsonArray(opp.subfields).map((s) => s.toLowerCase());
-    const oppTags = parseJsonArray(opp.tags).map((t) => t.toLowerCase());
-    const oppType = opp.opportunityType?.toLowerCase() || "";
-    const oppRemote = opp.remoteStatus?.toLowerCase() || "";
-    const oppLocation = opp.location?.toLowerCase() || "";
-    const oppDesc = (opp.description + " " + (opp.shortDescription || "")).toLowerCase();
-    if (userTypePrefs.length > 0) {
-      if (userTypePrefs.includes(oppType)) {
-        score += 15;
-        reasons.push(`Matches your preferred format (${opp.opportunityType})`);
-      }
-    }
+    const userSkills = parseJsonArray(userProfile?.skills).map((s) => s.toLowerCase().trim()).filter(Boolean);
+    const userInterests = parseJsonArray(userProfile?.interests).map((i) => i.toLowerCase().trim()).filter(Boolean);
+    const userTypePrefs = parseJsonArray(userProfile?.opportunityPreferences).map((t) => t.toLowerCase().trim()).filter(Boolean);
+    const userRemotePrefs = parseJsonArray(userProfile?.remotePreferences).map((r) => r.toLowerCase().trim()).filter(Boolean);
+    const userLocations = parseJsonArray(userProfile?.locationPreferences).map((l) => l.toLowerCase().trim()).filter(Boolean);
+    const oppTitle = (opp.title || "").toLowerCase().trim();
+    const oppFields = parseJsonArray(opp.field).map((f) => f.toLowerCase().trim()).filter(Boolean);
+    const oppSubfields = parseJsonArray(opp.subfields).map((s) => s.toLowerCase().trim()).filter(Boolean);
+    const oppTags = parseJsonArray(opp.tags).map((t) => t.toLowerCase().trim()).filter(Boolean);
+    const oppType = (opp.opportunityType || "").toLowerCase().trim();
+    const oppRemote = (opp.remoteStatus || "").toLowerCase().trim();
+    const oppLocation = (opp.location || "").toLowerCase().trim();
     const matchingInterests = userInterests.filter(
-      (interest) => oppFields.some((f) => f.includes(interest) || interest.includes(f)) || oppSubfields.some((s) => s.includes(interest) || interest.includes(s)) || oppTags.some((t) => t.includes(interest) || interest.includes(t)) || oppDesc.includes(interest)
+      (interest) => oppFields.some((f) => f === interest || f.includes(interest) || interest.includes(f)) || oppSubfields.some((s) => s === interest || s.includes(interest) || interest.includes(s)) || oppTags.some((t) => t === interest || t.includes(interest) || interest.includes(t)) || oppTitle.includes(interest)
     );
-    if (matchingInterests.length > 0) {
-      const boost = Math.min(20, matchingInterests.length * 7);
+    const titleMatchesInterest = userInterests.some((interest) => oppTitle.includes(interest));
+    const titleMatchesSkill = userSkills.some((skill) => oppTitle.includes(skill));
+    if (matchingInterests.length > 0 || titleMatchesInterest) {
+      const boost = Math.min(40, matchingInterests.length * 15 + (titleMatchesInterest ? 10 : 0));
       score += boost;
-      const topInterest = matchingInterests[0];
+      const topInterest = matchingInterests[0] || userInterests[0];
       reasons.push(`Aligned with your interest in ${topInterest.charAt(0).toUpperCase() + topInterest.slice(1)}`);
     }
     const matchingSkills = userSkills.filter(
-      (skill) => oppDesc.includes(skill) || oppTags.some((t) => t.includes(skill) || skill.includes(t)) || oppSubfields.some((s) => s.includes(skill) || skill.includes(s))
+      (skill) => oppTitle.includes(skill) || oppTags.some((t) => t === skill || t.includes(skill) || skill.includes(t)) || oppSubfields.some((s) => s === skill || s.includes(skill) || skill.includes(s))
     );
-    if (matchingSkills.length > 0) {
-      const boost = Math.min(20, matchingSkills.length * 6);
+    if (matchingSkills.length > 0 || titleMatchesSkill) {
+      const boost = Math.min(25, matchingSkills.length * 8 + (titleMatchesSkill ? 8 : 0));
       score += boost;
-      reasons.push(`Fits your skills in ${matchingSkills.slice(0, 2).join(" & ")}`);
+      reasons.push(`Fits your skills in ${(matchingSkills[0] || userSkills[0]).toUpperCase()}`);
+    }
+    const hasUserDomainPrefs = userInterests.length > 0;
+    const hasDomainAlignment = matchingInterests.length > 0 || matchingSkills.length > 0 || titleMatchesInterest || titleMatchesSkill;
+    if (hasUserDomainPrefs && !hasDomainAlignment) {
+      score -= 30;
+    }
+    if (userTypePrefs.length > 0) {
+      if (userTypePrefs.includes(oppType)) {
+        score += 15;
+        if (hasDomainAlignment) reasons.push(`Matches your preferred format (${opp.opportunityType})`);
+      }
+    } else {
+      score += 5;
     }
     if (userRemotePrefs.length > 0) {
       if (userRemotePrefs.includes(oppRemote) || oppRemote === "flexible" || oppRemote === "remote") {
         score += 8;
-        if (oppRemote === "remote") {
+        if (hasDomainAlignment && oppRemote === "remote") {
           reasons.push("Fully remote opportunity");
-        } else if (oppRemote === "hybrid") {
-          reasons.push("Flexible hybrid arrangement");
         }
       }
     }
     if (userLocations.some((l) => oppLocation.includes(l) || l === "global" || oppLocation.includes("global"))) {
-      score += 7;
-      if (oppLocation.toLowerCase().includes("global")) {
-        reasons.push("Open to global applicants");
-      }
+      score += 5;
     }
     if (userProfile?.fundingPreferences && (opp.fundingType === "Fully-Funded" || opp.fundingType === "Stipend" || opp.fundingType === "Prize")) {
-      score += 10;
-      reasons.push("Provides full funding or living stipend");
+      score += 5;
+      if (hasDomainAlignment) reasons.push("Provides full funding or stipend");
     }
     if (userProfile?.experienceLevel && opp.experienceRequirements) {
       if (userProfile.experienceLevel.toLowerCase() === opp.experienceRequirements.toLowerCase()) {
@@ -37214,16 +37217,15 @@ var RecommendationEngine = class {
       }
     }
     if (rejectedTypes.has(oppType)) {
-      score -= 15;
+      score -= 20;
     }
-    score = Math.max(25, Math.min(99, Math.round(score)));
-    if (reasons.length === 0) {
-      reasons.push("High overall compatibility with your profile");
-      if (opp.isFeatured) {
-        reasons.push("Curated featured opportunity of the week");
-      }
-    }
-    return { score, reasons: reasons.slice(0, 3) };
+    const finalScore = Math.max(0, Math.min(100, Math.round(score)));
+    const isRelevant = hasUserDomainPrefs ? hasDomainAlignment && finalScore >= 45 : finalScore >= 40;
+    return {
+      score: finalScore,
+      reasons: reasons.slice(0, 3),
+      isRelevant
+    };
   }
   /**
    * Generates personalized opportunities for a user
@@ -37249,16 +37251,17 @@ var RecommendationEngine = class {
       }
     });
     const scored = allOpps.map((opp) => {
-      const { score, reasons } = this.calculateRelevance(user?.profile, opp);
+      const { score, reasons, isRelevant } = this.calculateRelevance(user?.profile, opp);
       return {
         opportunity: {
           ...formatOpportunityResponse(opp),
           isSaved: savedIds.has(opp.id)
         },
         relevanceScore: score,
-        relevanceReasons: reasons
+        relevanceReasons: reasons,
+        isRelevant
       };
-    });
+    }).filter((item) => item.isRelevant);
     scored.sort((a, b) => b.relevanceScore - a.relevanceScore);
     return scored.slice(0, limit);
   }

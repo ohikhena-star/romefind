@@ -235,86 +235,89 @@ export default function ComparePage() {
             </table>
           </div>
 
-          {/* Mobile Comparison View (Clean, Concise, Scannable Decision Cards) */}
-          <div className="md:hidden flex flex-col w-full space-y-3 mb-8">
+          {/* Mobile Comparison View (Ultra-Compact & Scannable Mobile Comparison Cards) */}
+          <div className="md:hidden flex flex-col w-full space-y-2.5 mb-8">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-surface-500">
-                Comparing ({compareOpps.length})
+              <span className="text-[11px] font-bold uppercase tracking-wider text-surface-400 dark:text-surface-500">
+                Comparing {compareOpps.length} opportunities
               </span>
             </div>
 
-            {compareOpps.map((opp: Opportunity) => (
-              <div 
-                key={opp.id} 
-                className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-xs space-y-3"
-              >
-                {/* Header Row: Org + Title + Remove */}
-                <div className="flex justify-between items-start gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-semibold text-surface-500 dark:text-surface-400 truncate uppercase tracking-wider">
-                      {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
-                    </p>
-                    <h3 className="text-sm sm:text-base font-bold text-surface-950 dark:text-white leading-snug line-clamp-2 mt-0.5">
-                      {opp.title}
-                    </h3>
-                  </div>
-                  <button
-                    onClick={() => removeFromCompare(opp.id)}
-                    className="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0 cursor-pointer"
-                    aria-label={`Remove ${opp.title} from comparison`}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+            {compareOpps.map((opp: Opportunity) => {
+              // Determine one concise useful comparison signal
+              const comparisonSignal = opp.funding && opp.funding.toLowerCase() !== 'unfunded'
+                ? { label: 'Funding', value: opp.funding }
+                : opp.duration
+                  ? { label: 'Duration', value: opp.duration }
+                  : opp.experienceRequirements
+                    ? { label: 'Eligibility', value: opp.experienceRequirements }
+                    : { label: 'Format', value: opp.type };
 
-                {/* Core Decision Signals */}
-                <div className="space-y-1.5 text-xs py-2 border-y border-surface-100 dark:border-surface-800/80">
-                  <div className="flex items-center justify-between">
-                    <span className="text-surface-400">Type</span>
-                    <span className="font-semibold text-surface-900 dark:text-white">{opp.type}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-surface-400">Deadline</span>
-                    <span className="font-semibold text-surface-900 dark:text-white">
-                      {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'Rolling'}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-surface-400">Location</span>
-                    <span className="font-semibold text-surface-900 dark:text-white truncate max-w-[60%] text-right">
-                      {opp.remoteStatus === RemoteStatus.Remote ? 'Remote (Worldwide)' : (opp.location || 'Global')}
-                    </span>
-                  </div>
-                  {opp.funding && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-surface-400">Funding</span>
-                      <span className="font-semibold text-surface-900 dark:text-white truncate max-w-[60%] text-right">
-                        {opp.funding}
-                      </span>
-                    </div>
-                  )}
-                  {opp.experienceRequirements && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-surface-400">Eligibility</span>
-                      <span className="font-semibold text-surface-900 dark:text-white">
-                        {opp.experienceRequirements}
-                      </span>
-                    </div>
-                  )}
-                </div>
+              const orgName = typeof opp.organization === 'object' ? opp.organization.name : opp.organization;
 
-                {/* Action CTA */}
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="w-full justify-center h-10 min-h-[40px] text-xs font-bold"
-                  onClick={() => navigate(`/opportunity/${opp.id}`)}
+              return (
+                <div 
+                  key={opp.id} 
+                  className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-3.5 shadow-2xs space-y-2.5"
                 >
-                  <span>View Details</span>
-                  <SolarIcon name="alt-arrow-right-linear" size={15} />
-                </Button>
-              </div>
-            ))}
+                  {/* Row 1: Org + Title + Remove */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] font-semibold text-rome-600 dark:text-rome-400 uppercase tracking-wider truncate">
+                        {orgName}
+                      </p>
+                      <h3 className="text-sm font-bold text-surface-950 dark:text-white truncate">
+                        {opp.title}
+                      </h3>
+                    </div>
+                    <button
+                      onClick={() => removeFromCompare(opp.id)}
+                      className="p-1 text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-md transition-colors shrink-0"
+                      aria-label={`Remove ${opp.title} from comparison`}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Row 2: Core parameters in a concise scannable grid */}
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-1 py-2 px-2.5 bg-surface-50 dark:bg-surface-800/50 rounded-lg text-xs">
+                    <div>
+                      <span className="text-surface-400 text-[11px] block">Type</span>
+                      <span className="font-semibold text-surface-900 dark:text-white truncate block">{opp.type}</span>
+                    </div>
+                    <div>
+                      <span className="text-surface-400 text-[11px] block">Deadline</span>
+                      <span className="font-semibold text-surface-900 dark:text-white truncate block">
+                        {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'Rolling'}
+                      </span>
+                    </div>
+                    <div className="pt-1">
+                      <span className="text-surface-400 text-[11px] block">Location</span>
+                      <span className="font-semibold text-surface-900 dark:text-white truncate block">
+                        {opp.remoteStatus === RemoteStatus.Remote ? 'Remote' : (opp.location || 'Global')}
+                      </span>
+                    </div>
+                    <div className="pt-1">
+                      <span className="text-surface-400 text-[11px] block">{comparisonSignal.label}</span>
+                      <span className="font-semibold text-rome-600 dark:text-rome-400 truncate block">
+                        {comparisonSignal.value}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Action */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-center h-8 text-xs font-semibold"
+                    onClick={() => navigate(`/opportunity/${opp.id}`)}
+                  >
+                    <span>View Details</span>
+                    <SolarIcon name="alt-arrow-right-linear" size={13} />
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </>
       ) : (

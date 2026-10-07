@@ -17,9 +17,8 @@ import SearchOverlay from './SearchOverlay';
 
 const TopNav = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
-  const { theme, toggleTheme, searchOpen, toggleSearch } = useUiStore();
+  const { theme, toggleTheme, searchOpen, toggleSearch, mobileMenuOpen, setMobileMenuOpen } = useUiStore();
   const { notifications } = useNotificationStore();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -79,6 +78,7 @@ const TopNav = () => {
                 let linkId = undefined;
                 if (link.to === '/explore') linkId = 'nav-explore';
                 if (link.to === '/my-opportunities') linkId = 'nav-my-opps';
+                if (link.to === '/learn') linkId = 'nav-learn';
 
                 return (
                   <NavLink
@@ -256,6 +256,7 @@ const TopNav = () => {
 
             {isAuthenticated && (
               <button
+                id="mobile-menu-toggle"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
                 aria-label="Toggle mobile menu"
@@ -288,9 +289,15 @@ const TopNav = () => {
             <nav className="space-y-1">
               {mobileNavLinks.map((link) => {
                 const isActive = location.pathname === link.to;
+                let mobileLinkId = undefined;
+                if (link.to === '/explore') mobileLinkId = 'mobile-nav-explore';
+                if (link.to === '/my-opportunities') mobileLinkId = 'mobile-nav-my-opps';
+                if (link.to === '/learn') mobileLinkId = 'mobile-nav-learn';
+
                 return (
                   <Link
                     key={link.to}
+                    id={mobileLinkId}
                     to={link.to}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(

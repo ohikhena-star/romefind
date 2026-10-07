@@ -27,14 +27,26 @@ const DOMAIN_CLUSTERS: Record<string, string[]> = {
   research_academic: ['research', 'scientific research', 'academic', 'laboratory', 'clinical research', 'grant writing', 'field research', 'publications', 'scholarships', 'phd']
 };
 
-// Check if an item matches a specific domain cluster
+// Check if an item matches a specific domain cluster using exact or word-boundary matches
 const getMatchedClusters = (tokens: string[]): string[] => {
   const matched: string[] = [];
-  const normalized = tokens.map(t => t.toLowerCase().trim());
+  const normalized = tokens.map(t => t.toLowerCase().trim()).filter(Boolean);
 
   for (const [clusterKey, keywords] of Object.entries(DOMAIN_CLUSTERS)) {
     const hasMatch = normalized.some(norm => 
-      keywords.some(kw => norm === kw || (norm.length > 3 && kw.includes(norm)) || (kw.length > 3 && norm.includes(kw)))
+      keywords.some(kw => {
+        if (norm === kw) return true;
+        // Exact word boundary match for multi-word or compound terms (prevent partial string collisions)
+        if (kw.length >= 4 && norm.includes(kw)) {
+          const regex = new RegExp(`\\b${kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+          return regex.test(norm);
+        }
+        if (norm.length >= 4 && kw.includes(norm)) {
+          const regex = new RegExp(`\\b${norm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+          return regex.test(kw);
+        }
+        return false;
+      })
     );
     if (hasMatch) {
       matched.push(clusterKey);
@@ -57,14 +69,15 @@ export const calculateRelevanceScore = (
 
   // Collect user attributes
   const rawUserInterests = [...(profile.interests || []), ...(preferences.fields || [])];
-  const userInterestsLower = rawUserInterests.map(i => i.toLowerCase().trim());
-  const userSkillsLower = (profile.skills || []).map(s => s.toLowerCase().trim());
-  const userGoals = [...(profile.goals || []), ...(preferences.goals || [])].map(g => g.toLowerCase().trim());
+  const userInterestsLower = rawUserInterests.map(i => i.toLowerCase().trim()).filter(Boolean);
+  const userSkillsLower = (profile.skills || []).map(s => s.toLowerCase().trim()).filter(Boolean);
+  const userGoals = [...(profile.goals || []), ...(preferences.goals || [])].map(g => g.toLowerCase().trim()).filter(Boolean);
 
   // Collect opportunity attributes
-  const oppFieldsLower = (opportunity.field || []).map(f => f.toLowerCase().trim());
-  const oppSubfieldsLower = (opportunity.subfields || []).map(s => s.toLowerCase().trim());
-  const oppTagsLower = (opportunity.tags || []).map(t => t.toLowerCase().trim());
+  const oppTitleLower = (opportunity.title || '').toLowerCase().trim();
+  const oppFieldsLower = (opportunity.field || []).map(f => f.toLowerCase().trim()).filter(Boolean);
+  const oppSubfieldsLower = (opportunity.subfields || []).map(s => s.toLowerCase().trim()).filter(Boolean);
+  const oppTagsLower = (opportunity.tags || []).map(t => t.toLowerCase().trim()).filter(Boolean);
   const oppAllTerms = [...oppFieldsLower, ...oppSubfieldsLower, ...oppTagsLower];
 
   // Detect domain clusters
@@ -72,24 +85,43 @@ export const calculateRelevanceScore = (
   const oppClusters = getMatchedClusters(oppAllTerms);
   const commonClusters = userClusters.filter(c => oppClusters.includes(c));
 
-  // ─── 1. Field & Domain Match (0 - 35 points) ───────────────────────────
+  // Check title alignment with user's fields or skills
+  const titleMatchesInterest = userInterestsLower.some(interest => {
+    if (oppTitleLower.includes(interest)) return true;
+    const regex = new RegExp(`\\b${interest.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    return regex.test(oppTitleLower);
+  });
+  const titleMatchesSkill = userSkillsLower.some(skill => {
+    if (oppTitleLower.includes(skill)) return true;
+    const regex = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    return regex.test(oppTitleLower);
+  });
+
+  // ─── 1. Field & Domain Match (0 - 40 points) ───────────────────────────
   let fieldMatchScore = 0;
   let interestMatch = false;
 
-  // Direct exact field match
-  const directFieldMatches = oppFieldsLower.filter(f => userInterestsLower.includes(f));
-  if (directFieldMatches.length > 0) {
+  // Direct exact or boundary field match
+  const directFieldMatches = oppFieldsLower.filter(f => 
+    userInterestsLower.some(u => u === f || f.includes(u) || u.includes(f))
+  );
+
+  if (directFieldMatches.length > 0 || titleMatchesInterest) {
     interestMatch = true;
-    fieldMatchScore += Math.min(25, directFieldMatches.length * 15);
-    const capitalized = directFieldMatches.map(f => f.charAt(0).toUpperCase() + f.slice(1));
-    reasons.push(`Direct alignment with your interest in ${capitalized.join(' & ')}`);
+    fieldMatchScore += directFieldMatches.length > 0 ? Math.min(30, directFieldMatches.length * 15 + 15) : 25;
+    if (directFieldMatches.length > 0) {
+      const capitalized = directFieldMatches.map(f => f.charAt(0).toUpperCase() + f.slice(1));
+      reasons.push(`Direct alignment with your interest in ${capitalized.join(' & ')}`);
+    } else if (titleMatchesInterest) {
+      reasons.push(`Role directly matches your target focus`);
+    }
   }
 
-  // Domain cluster semantic match (e.g. UX/Product Design or Public Health)
+  // Domain cluster semantic match
   if (commonClusters.length > 0) {
     interestMatch = true;
     fieldMatchScore = Math.max(fieldMatchScore, 25);
-    if (!reasons.some(r => r.includes('alignment with your interest'))) {
+    if (!reasons.some(r => r.includes('alignment with your interest') || r.includes('target focus'))) {
       const clusterNames: Record<string, string> = {
         business_operations: 'Business & Operations',
         finance_accounting: 'Finance & Accounting',
@@ -118,60 +150,69 @@ export const calculateRelevanceScore = (
       userSkillsLower.some(skill => skill === tag || (skill.length > 3 && tag.includes(skill)) || (tag.length > 3 && skill.includes(tag)))
     );
 
-    if (directSkillMatches.length > 0) {
+    if (directSkillMatches.length > 0 || titleMatchesSkill) {
       skillMatch = true;
-      skillMatchScore = Math.min(10, directSkillMatches.length * 5);
+      skillMatchScore = Math.min(15, (directSkillMatches.length * 5) + (titleMatchesSkill ? 8 : 0));
       fieldMatchScore += skillMatchScore;
-      const matchedSkill = directSkillMatches[0];
+      const matchedSkill = directSkillMatches[0] || userSkillsLower[0];
       reasons.push(`Direct match for your skill in ${matchedSkill.charAt(0).toUpperCase() + matchedSkill.slice(1)}`);
     }
   }
 
-  score += Math.min(35, fieldMatchScore);
+  score += Math.min(40, fieldMatchScore);
 
-  // ─── 2. Goal / Intent Match (0 - 25 points) ────────────────────────────
+  // ─── STRICT DOMAIN GATEKEEPER ──────────────────────────────────────────
+  // If the user has explicitly selected interests/fields, the opportunity MUST have
+  // domain relevance, skill relevance, or title relevance. Otherwise apply severe penalty.
+  const hasUserDomainPrefs = userInterestsLower.length > 0;
+  const hasDomainRelevance = interestMatch || skillMatch || titleMatchesInterest || titleMatchesSkill;
+  if (hasUserDomainPrefs && !hasDomainRelevance) {
+    score -= 30; // Severe penalty: unrelated disciplines will never rank as recommended
+  }
+
+  // ─── 2. Goal / Intent Match (0 - 20 points) ────────────────────────────
   let goalMatchScore = 0;
   let goalMatch = false;
 
   for (const goal of userGoals) {
-    // Check type-related intent in goal
+    // Check type-related intent in goal ONLY if domain is relevant
     if (goal.includes('internship') && opportunity.type === OpportunityType.Internship) {
-      goalMatchScore += 15;
+      goalMatchScore += 12;
       goalMatch = true;
-      reasons.push('Fulfills your goal to secure an internship');
+      if (hasDomainRelevance) reasons.push('Fulfills your goal to secure an internship');
       break;
     } else if (goal.includes('fellowship') && opportunity.type === OpportunityType.Fellowship) {
-      goalMatchScore += 15;
+      goalMatchScore += 12;
       goalMatch = true;
-      reasons.push('Directly matches your goal for a fellowship programme');
+      if (hasDomainRelevance) reasons.push('Directly matches your goal for a fellowship programme');
       break;
     } else if (goal.includes('job') && opportunity.type === OpportunityType.Job) {
-      goalMatchScore += 15;
+      goalMatchScore += 12;
       goalMatch = true;
-      reasons.push('Fulfills your goal to find a job / full-time role');
+      if (hasDomainRelevance) reasons.push('Fulfills your goal to find a job / full-time role');
       break;
     } else if (goal.includes('grant') && opportunity.type === OpportunityType.Grant) {
-      goalMatchScore += 15;
+      goalMatchScore += 12;
       goalMatch = true;
-      reasons.push('Matches your goal to secure project/research funding');
+      if (hasDomainRelevance) reasons.push('Matches your goal to secure project/research funding');
       break;
     } else if (goal.includes('research') && (opportunity.type === OpportunityType.Research || oppClusters.includes('research_academic'))) {
-      goalMatchScore += 15;
+      goalMatchScore += 12;
       goalMatch = true;
-      reasons.push('Directly supports your research goals');
+      if (hasDomainRelevance) reasons.push('Directly supports your research goals');
       break;
     }
     
     // Check remote intent in goal
     if (goal.includes('remote') && opportunity.remoteStatus === RemoteStatus.Remote) {
-      goalMatchScore += 10;
+      goalMatchScore += 8;
       goalMatch = true;
-      reasons.push('Aligns with your goal for remote opportunities');
+      if (hasDomainRelevance) reasons.push('Aligns with your goal for remote opportunities');
       break;
     }
   }
 
-  score += Math.min(25, goalMatchScore);
+  score += Math.min(20, goalMatchScore);
 
   // ─── 3. Opportunity Type Preference (0 - 15 points) ────────────────────
   let typeMatchScore = 0;
@@ -181,12 +222,11 @@ export const calculateRelevanceScore = (
       typeMatch = true;
       typeMatchScore = 15;
       score += 15;
-      if (!reasons.some(r => r.includes(opportunity.type))) {
+      if (hasDomainRelevance && !reasons.some(r => r.includes(opportunity.type))) {
         reasons.push(`Preferred opportunity type: ${opportunity.type}`);
       }
     }
   } else {
-    // Neutral if no preference specified
     typeMatchScore = 5;
     score += 5;
   }
@@ -206,7 +246,6 @@ export const calculateRelevanceScore = (
   if (eduReqs.includes(EducationLevel.Any)) {
     eligibilityScore += 5;
   } else if (eduReqs.includes(EducationLevel.PhD) && !isPhdOrGrad) {
-    // Severe penalty if requires PhD and user is not graduate/PhD
     eligibilityScore -= 20;
     eligibilityMatch = false;
   } else if (eduReqs.includes(EducationLevel.Graduate) && isBeginnerOrStudent && !isPhdOrGrad) {
@@ -216,7 +255,7 @@ export const calculateRelevanceScore = (
     eligibilityScore += 8;
   }
 
-  // Experience level check - infer from number of work experience entries
+  // Experience level check
   const expCount = (profile.experience || []).length;
   const userExp: ExperienceLevel = expCount === 0
     ? ExperienceLevel.Beginner
@@ -228,13 +267,10 @@ export const calculateRelevanceScore = (
   if (oppExp) {
     if (userExp === oppExp) {
       eligibilityScore += 7;
-      reasons.push(`Targeted at your experience level (${oppExp})`);
+      if (hasDomainRelevance) reasons.push(`Targeted at your experience level (${oppExp})`);
     } else if (userExp === ExperienceLevel.Beginner && (oppExp === ExperienceLevel.Advanced || oppExp === ExperienceLevel.Expert)) {
-      // Junior user applying for Senior/Expert role
       eligibilityScore -= 15;
       experienceMatch = false;
-    } else if (userExp === ExperienceLevel.Intermediate && oppExp === ExperienceLevel.Beginner) {
-      eligibilityScore += 4;
     } else {
       eligibilityScore += 4;
     }
@@ -255,15 +291,15 @@ export const calculateRelevanceScore = (
   if (opportunity.remoteStatus === RemoteStatus.Remote && userPrefersRemote) {
     locationScore += 10;
     locationMatch = true;
-    if (!reasons.some(r => r.includes('remote'))) {
+    if (hasDomainRelevance && !reasons.some(r => r.includes('remote'))) {
       reasons.push('100% remote work modality');
     }
   } else if (profile.location && opportunity.location.toLowerCase().includes(profile.location.toLowerCase())) {
     locationScore += 8;
     locationMatch = true;
-    reasons.push(`Located in ${profile.location}`);
+    if (hasDomainRelevance) reasons.push(`Located in ${profile.location}`);
   } else if (opportunity.location.toLowerCase().includes('global')) {
-    locationScore += 6;
+    locationScore += 5;
     locationMatch = true;
   } else if (!userPrefersRemote && opportunity.remoteStatus === RemoteStatus.InPerson) {
     locationScore += 5;
@@ -278,9 +314,9 @@ export const calculateRelevanceScore = (
   if (preferences.fundingPreference) {
     if (isFunded) {
       fundingScore += 5;
-      reasons.push('Fully funded with stipend / financial support');
+      if (hasDomainRelevance) reasons.push('Fully funded with stipend / financial support');
     } else {
-      score -= 10; // Penalize unfunded if user explicitly demanded funding
+      score -= 8;
     }
   } else if (isFunded) {
     fundingScore += 3;
@@ -294,7 +330,7 @@ export const calculateRelevanceScore = (
 
   return {
     score: finalScore,
-    reasons: uniqueReasons.length > 0 ? uniqueReasons : ['General career development opportunity'],
+    reasons: uniqueReasons.length > 0 ? uniqueReasons : ['Verified opportunity matching your parameters'],
     matchSignals: {
       interestMatch,
       goalMatch,
@@ -316,7 +352,7 @@ export const calculateRelevanceScore = (
 
 /**
  * Filter and return only personalized recommendations that meet a high relevance threshold.
- * Prevents forced filling of slots with irrelevant listings.
+ * Strict Quality Over Quantity: Only genuine domain/role matches are returned.
  */
 export const getPersonalizedRecommendations = (
   opportunities: Opportunity[],
@@ -324,6 +360,10 @@ export const getPersonalizedRecommendations = (
   preferences: UserPreferences,
   limit: number = 10
 ): SearchResult[] => {
+  const userInterests = [...(profile.interests || []), ...(preferences.fields || [])]
+    .map(i => i.toLowerCase().trim())
+    .filter(Boolean);
+
   // Score all opportunities
   const scored = opportunities.map((opp: Opportunity) => {
     const { score, reasons, matchSignals } = calculateRelevanceScore(opp, profile, preferences);
@@ -336,48 +376,25 @@ export const getPersonalizedRecommendations = (
   });
 
   // Strict Threshold:
+  // Must achieve a solid score (>= 48) AND satisfy genuine domain/skill alignment when user has declared preferences.
+  // Never surface unrelated roles merely because they match "Remote" or "Job".
   const highQuality = scored.filter(item => {
-    if (item.relevanceScore < 45) return false;
+    if (item.relevanceScore < 48) return false;
     const signals = item.matchSignals;
     if (!signals) return false;
-    return signals.interestMatch || signals.goalMatch || signals.skillMatch;
+
+    if (userInterests.length > 0) {
+      return signals.interestMatch || signals.skillMatch;
+    }
+    return signals.interestMatch || signals.skillMatch || signals.goalMatch;
   });
 
-  // Sort descending by score initially
+  // Sort strictly descending by relevance score
   const sorted = highQuality.sort((a, b) => b.relevanceScore - a.relevanceScore);
-  
-  // Introduce Field Diversity (Round-Robin by Field)
-  const finalRecommendations: SearchResult[] = [];
-  const selectedFields = new Map<string, number>();
 
-  let index = 0;
-  while (finalRecommendations.length < limit && sorted.length > 0) {
-    if (index >= sorted.length) index = 0;
-
-    const current = sorted[index];
-    const primaryField = current.opportunity.field?.[0] || 'Unknown';
-    const fieldCount = selectedFields.get(primaryField) || 0;
-
-    // Allow maximum 2 from the same primary field unless we run out of options
-    if (fieldCount < 2 || sorted.length === 1) {
-      finalRecommendations.push(current);
-      selectedFields.set(primaryField, fieldCount + 1);
-      sorted.splice(index, 1); // Remove from pool
-    } else {
-      // If we've already selected 2 from this field, try to find another field
-      const hasOtherFields = sorted.some(s => (s.opportunity.field?.[0] || 'Unknown') !== primaryField);
-      if (!hasOtherFields) {
-        // If no other fields remain, just take it
-        finalRecommendations.push(current);
-        selectedFields.set(primaryField, fieldCount + 1);
-        sorted.splice(index, 1);
-      } else {
-        index++;
-      }
-    }
-  }
-
-  return finalRecommendations;
+  // Return only the genuinely relevant opportunities up to limit.
+  // Do NOT artificially pull in unrelated fields if fewer matches exist!
+  return sorted.slice(0, limit);
 };
 
 /**
