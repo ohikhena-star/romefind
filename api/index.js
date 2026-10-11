@@ -30817,12 +30817,24 @@ var import_morgan = __toESM(require_morgan());
 // server/src/config/index.ts
 var import_dotenv = __toESM(require_main());
 import_dotenv.default.config();
+var nodeEnv = process.env.NODE_ENV || "development";
+var isProd = nodeEnv === "production";
+var rawJwtSecret = process.env.JWT_SECRET?.trim();
+if (isProd && !rawJwtSecret) {
+  throw new Error("FATAL: JWT_SECRET environment variable is required and cannot be empty in production mode.");
+}
+var jwtSecret = rawJwtSecret || (isProd ? "" : "romefind-super-secret-jwt-key-change-in-production-2026");
+var rawExpiresIn = process.env.JWT_EXPIRES_IN?.trim() || "7d";
+var validExpiresPattern = /^(\d+([smhdwy]?))$/i;
+var jwtExpiresIn = validExpiresPattern.test(rawExpiresIn) ? rawExpiresIn : "7d";
+var defaultCorsOrigin = isProd ? "https://romefind.vercel.app" : "http://localhost:5173";
+var corsOrigin = process.env.CORS_ORIGIN?.trim() || defaultCorsOrigin;
 var config = {
   port: parseInt(process.env.PORT || "4000", 10),
-  nodeEnv: process.env.NODE_ENV || "development",
-  jwtSecret: process.env.JWT_SECRET || "romefind-super-secret-jwt-key-change-in-production-2026",
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
-  corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  nodeEnv,
+  jwtSecret,
+  jwtExpiresIn,
+  corsOrigin,
   databaseUrl: process.env.DATABASE_URL || "file:./dev.db"
 };
 

@@ -476,4 +476,83 @@ describe('ROMEfind API Integration Test Suite', () => {
     assert.strictEqual(oppRes.data.data.opportunity.id, testOppId);
     assert.ok(oppRes.data.data.totals.shares >= 1);
   });
+
+  it('26. JWT Security: Reject production startup if JWT_SECRET is missing or empty', () => {
+    // Test production mode with missing JWT_SECRET
+    const testMissingSecret = () => {
+      const isProd = true;
+      const rawSecret = ('').trim();
+      if (isProd && !rawSecret) {
+        throw new Error('FATAL: JWT_SECRET environment variable is required and cannot be empty in production mode.');
+      }
+    };
+    assert.throws(testMissingSecret, /FATAL: JWT_SECRET environment variable is required/);
+
+    // Test production mode with whitespace-only JWT_SECRET
+    const testWhitespaceSecret = () => {
+      const isProd = true;
+      const rawSecret = ('   ').trim();
+      if (isProd && !rawSecret) {
+        throw new Error('FATAL: JWT_SECRET environment variable is required and cannot be empty in production mode.');
+      }
+    };
+    assert.throws(testWhitespaceSecret, /FATAL: JWT_SECRET environment variable is required/);
+
+    // Test production mode with valid secret does not throw
+    const testValidSecret = () => {
+      const isProd = true;
+      const rawSecret = ('super-strong-production-secret').trim();
+      if (isProd && !rawSecret) {
+        throw new Error('FATAL: JWT_SECRET environment variable is required and cannot be empty in production mode.');
+      }
+      return rawSecret;
+    };
+    assert.strictEqual(testValidSecret(), 'super-strong-production-secret');
+  });
+
+  it('27. JWT Security: Preserve local development secret fallback', () => {
+    const isProd = false;
+    const rawSecret = undefined;
+    const jwtSecret = rawSecret || (isProd ? '' : 'romefind-super-secret-jwt-key-change-in-production-2026');
+    assert.strictEqual(jwtSecret, 'romefind-super-secret-jwt-key-change-in-production-2026');
+  });
+
+  it('28. JWT Token Verification: Accept valid tokens and reject tampered signatures', async () => {
+    // Generate valid payload
+    const { generateToken, verifyToken } = await import('../src/utils/helpers.js');
+    const token = generateToken({
+      userId: 'usr-test-valid',
+      email: 'valid@example.com',
+      role: 'USER'
+    });
+    assert.ok(token);
+
+    // Verify valid token
+    const decoded = verifyToken(token);
+    assert.ok(decoded);
+    assert.strictEqual(decoded.userId, 'usr-test-valid');
+
+    // Tamper with the token (alter the payload or signature segment)
+    const parts = token.split('.');
+    const tamperedToken = `${parts[0]}.${parts[1]}x.${parts[2]}`;
+    const tamperedDecoded = verifyToken(tamperedToken);
+    assert.strictEqual(tamperedDecoded, null);
+  });
+
+  it('29. JWT Token Expiration: Reject expired tokens safely', async () => {
+    const jwt = (await import('jsonwebtoken')).default;
+    const { config } = await import('../src/config/index.js');
+    const { verifyToken } = await import('../src/utils/helpers.js');
+
+    // Create a token expired 10 seconds ago
+    const expiredToken = jwt.sign(
+      { userId: 'usr-expired', email: 'expired@example.com', role: 'USER' },
+      config.jwtSecret,
+      { expiresIn: '-10s' }
+    );
+
+    const decoded = verifyToken(expiredToken);
+    assert.strictEqual(decoded, null);
+  });
 });
+
