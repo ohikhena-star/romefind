@@ -19,7 +19,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <div className={cn("relative w-full", className)}>
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-surface-400">
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-surface-400">
           <Search className="h-4 w-4" />
         </div>
         <input
@@ -28,7 +28,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
-          className="block w-full rounded-lg border border-surface-300 bg-white py-2 pl-10 pr-10 text-sm shadow-sm placeholder:text-surface-400 focus:border-rome-500 focus:outline-none focus:ring-1 focus:ring-rome-500 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-100 dark:placeholder:text-surface-500 transition-colors"
+          className="block w-full h-11 min-h-[44px] rounded-xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 py-2.5 pl-10 pr-10 text-sm text-surface-900 dark:text-surface-100 shadow-xs placeholder:text-surface-400 focus:border-rome-500 focus:outline-none focus:ring-2 focus:ring-rome-500/50 transition-all"
           {...props}
         />
         {value && onClear && (

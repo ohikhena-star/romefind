@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
 import { searchOpportunities, sortByRelevance } from '@/services/search.service';
 import { Chip, OpportunityList, EmptyState, Button, OpportunityGridSkeleton } from '@/components/ui';
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { SolarIcon } from '@/components/ui/SolarIcon';
 import { categories } from '@/data/categories';
 import { OpportunityType, RemoteStatus, Opportunity, SearchResult } from '@/types/models';
@@ -238,7 +239,7 @@ export default function ExplorePage() {
               aria-expanded={filtersOpen}
               aria-controls="filter-panel"
               className={cn(
-                "h-11 min-h-[44px] px-4 rounded-xl border text-sm font-semibold flex items-center gap-2 transition-all shrink-0 shadow-xs",
+                "h-11 min-h-[44px] px-3.5 sm:px-4 rounded-xl border text-xs sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 transition-all shrink-0 shadow-xs cursor-pointer",
                 filtersOpen || activeFiltersCount > 0
                   ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 border-surface-900 dark:border-white"
                   : "bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700"
@@ -258,13 +259,13 @@ export default function ExplorePage() {
               )}
             </button>
 
-            {/* ── Filter panel (popover) ────────────────────────────────── */}
+            {/* ── Desktop Filter panel (popover) ────────────────────────────────── */}
             {filtersOpen && (
               <div
                 id="filter-panel"
                 role="dialog"
                 aria-label="Filter opportunities"
-                className="absolute right-0 top-[calc(100%+8px)] z-50 w-[min(560px,calc(100vw-2rem))] bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 shadow-elevated p-5 animate-in fade-in slide-in-from-top-2 duration-150"
+                className="hidden sm:block absolute right-0 top-[calc(100%+8px)] z-50 w-[min(560px,calc(100vw-2rem))] bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 shadow-elevated p-5 animate-in fade-in slide-in-from-top-2 duration-150"
               >
                 {/* Panel header */}
                 <div className="flex items-center justify-between mb-4">
@@ -405,18 +406,156 @@ export default function ExplorePage() {
             )}
           </div>
 
-          {/* Sort — desktop only, minimal */}
-          <select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value)}
-            aria-label="Sort opportunities"
-            className="hidden sm:block h-11 min-h-[44px] px-3 bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 text-xs font-semibold text-surface-700 dark:text-surface-300 rounded-xl outline-none focus:ring-2 focus:ring-rome-500/50 shadow-xs shrink-0 cursor-pointer"
-          >
-            <option value="relevance">Relevance</option>
-            <option value="deadline">Deadline</option>
-            <option value="newest">Newest</option>
-          </select>
+          {/* Sort — mobile and desktop consistent trigger */}
+          <div className="flex items-center gap-1.5 h-11 min-h-[44px] px-2.5 sm:px-3 bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-xl shadow-xs shrink-0">
+            <SolarIcon name="sort-from-bottom-to-top-linear" size={14} className="text-surface-400 shrink-0 hidden sm:block" />
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              aria-label="Sort opportunities"
+              className="bg-transparent border-none focus:ring-0 text-xs font-semibold text-surface-700 dark:text-surface-300 outline-none cursor-pointer pr-1"
+            >
+              <option value="relevance">Relevance</option>
+              <option value="deadline">Deadline</option>
+              <option value="newest">Newest</option>
+            </select>
+          </div>
         </div>
+
+        {/* ── Mobile Filter Drawer (Sheet on bottom/right) ────────────────── */}
+        <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <SheetContent side="bottom" className="sm:hidden max-h-[85vh] rounded-t-3xl p-5 overflow-y-auto bg-white dark:bg-surface-900 border-t border-surface-200 dark:border-surface-800">
+            <div className="flex items-center justify-between pb-3 border-b border-surface-100 dark:border-surface-800 mb-4">
+              <div>
+                <SheetTitle className="text-base font-bold text-surface-950 dark:text-white">Filter opportunities</SheetTitle>
+                <SheetDescription className="text-xs text-surface-500 dark:text-surface-400">Refine by type, focus area, location, or funding</SheetDescription>
+              </div>
+              {activeFiltersCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => clearAllFilters()}
+                  className="text-xs font-bold text-rome-600 dark:text-rome-400 hover:underline px-2 py-1 min-h-[36px]"
+                >
+                  Clear all ({activeFiltersCount})
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-5 pb-6">
+              {/* Type */}
+              <FilterSection label="Opportunity type">
+                <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by type">
+                  {Object.values(OpportunityType).map((type: OpportunityType) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => toggleType(type)}
+                      aria-pressed={selectedTypes.includes(type)}
+                      className={cn(
+                        "px-3 py-2 rounded-xl text-xs font-semibold transition-colors border cursor-pointer min-h-[38px]",
+                        selectedTypes.includes(type)
+                          ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 border-transparent"
+                          : "bg-surface-50 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700"
+                      )}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </FilterSection>
+
+              {/* Conditions */}
+              <FilterSection label="Conditions">
+                <div className="flex flex-wrap gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => { setFundedOnly(!fundedOnly); updateUrlParams({ funded: !fundedOnly }); }}
+                    aria-pressed={fundedOnly}
+                    className={cn(
+                      "px-3 py-2 rounded-xl text-xs font-semibold transition-colors border cursor-pointer min-h-[38px]",
+                      fundedOnly
+                        ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 border-transparent"
+                        : "bg-surface-50 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700"
+                    )}
+                  >
+                    Funded / Paid
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setRemoteOnly(!remoteOnly); updateUrlParams({ remote: !remoteOnly }); }}
+                    aria-pressed={remoteOnly}
+                    className={cn(
+                      "px-3 py-2 rounded-xl text-xs font-semibold transition-colors border cursor-pointer min-h-[38px]",
+                      remoteOnly
+                        ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 border-transparent"
+                        : "bg-surface-50 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700"
+                    )}
+                  >
+                    Remote / Flexible
+                  </button>
+                </div>
+              </FilterSection>
+
+              {/* Field */}
+              <FilterSection label="Field of focus">
+                <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
+                  {FIELDS.map((field: string) => (
+                    <button
+                      key={field}
+                      type="button"
+                      onClick={() => toggleField(field)}
+                      aria-pressed={selectedFields.includes(field)}
+                      className={cn(
+                        "px-3 py-2 rounded-xl text-xs font-medium transition-colors border cursor-pointer min-h-[38px]",
+                        selectedFields.includes(field)
+                          ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 border-transparent"
+                          : "bg-surface-50 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700"
+                      )}
+                    >
+                      {field}
+                    </button>
+                  ))}
+                </div>
+              </FilterSection>
+
+              {/* Location */}
+              <FilterSection label="Location">
+                <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto pr-1">
+                  {LOCATIONS.map((loc: string) => (
+                    <button
+                      key={loc}
+                      type="button"
+                      onClick={() => toggleLocation(loc)}
+                      aria-pressed={selectedLocations.includes(loc)}
+                      className={cn(
+                        "px-3 py-2 rounded-xl text-xs font-medium transition-colors border cursor-pointer min-h-[38px]",
+                        selectedLocations.includes(loc)
+                          ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900 border-transparent"
+                          : "bg-surface-50 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700"
+                      )}
+                    >
+                      {loc}
+                    </button>
+                  ))}
+                </div>
+              </FilterSection>
+            </div>
+
+            {/* Mobile Sheet Apply Footer */}
+            <div className="sticky bottom-0 pt-3 pb-2 bg-white dark:bg-surface-900 border-t border-surface-100 dark:border-surface-800">
+              <Button
+                variant="default"
+                size="default"
+                className="w-full h-12 justify-center bg-rome-500 hover:bg-rome-600 text-white font-semibold text-sm rounded-xl min-h-[48px]"
+                onClick={() => setFiltersOpen(false)}
+              >
+                {isFiltering
+                  ? `Show ${results.length} result${results.length !== 1 ? 's' : ''}`
+                  : `Browse all ${opportunities.length} opportunities`}
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
 
         {/* Active filter chips — only shown when filters are active */}
         {activeFiltersCount > 0 && (
@@ -438,29 +577,12 @@ export default function ExplorePage() {
             )}
             <button
               onClick={clearAllFilters}
-              className="text-xs text-surface-500 hover:text-surface-800 dark:hover:text-surface-200 transition-colors px-1 py-1 cursor-pointer"
+              className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline transition-colors px-2 py-1 cursor-pointer min-h-[32px] inline-flex items-center"
             >
               Clear all
             </button>
           </div>
         )}
-
-        {/* Sort — mobile only */}
-        <div className="sm:hidden flex items-center justify-end">
-          <label className="flex items-center gap-2 text-xs text-surface-500">
-            <SolarIcon name="sort-from-bottom-to-top-linear" size={14} />
-            <select
-              value={sortBy}
-              onChange={e => setSortBy(e.target.value)}
-              aria-label="Sort opportunities"
-              className="bg-transparent border-none focus:ring-0 text-xs font-semibold text-surface-700 dark:text-surface-300 cursor-pointer"
-            >
-              <option value="relevance">Relevance</option>
-              <option value="deadline">Deadline</option>
-              <option value="newest">Newest</option>
-            </select>
-          </label>
-        </div>
       </div>
 
       {/* ─── 3. Goal category pills — shown when not actively searching ─── */}

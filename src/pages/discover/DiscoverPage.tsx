@@ -147,16 +147,16 @@ export default function DiscoverPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search opportunities by title, field, skill, or organization..."
+              placeholder="Search by title, field, or organisation…"
               aria-label="Search opportunities"
-              className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-xs sm:text-sm rounded-xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-rome-500/50 focus:border-rome-500 transition-all shadow-xs min-h-[44px]"
+              className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm rounded-xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-rome-500/50 focus:border-rome-500 transition-all shadow-xs min-h-[44px]"
             />
           </div>
           <Button
             type="submit"
             variant="default"
             size="default"
-            className="h-11 min-h-[44px] px-4 sm:px-5 rounded-xl bg-rome-500 hover:bg-rome-600 text-white font-semibold text-xs sm:text-sm shrink-0 shadow-xs"
+            className="h-11 min-h-[44px] px-4 sm:px-5 rounded-xl bg-rome-500 hover:bg-rome-600 text-white font-semibold text-sm shrink-0 shadow-xs"
           >
             <span>Search</span>
             <SolarIcon name="alt-arrow-right-linear" size={15} />
@@ -168,7 +168,7 @@ export default function DiscoverPage() {
           <span className="text-xs text-surface-400 font-medium mr-0.5">Quick filters:</span>
           <button
             type="button"
-            onClick={() => navigate('/explore?remote=Remote')}
+            onClick={() => navigate('/explore?remote=true')}
             className="px-2.5 py-1 rounded-lg bg-surface-100 dark:bg-surface-800/80 hover:bg-surface-200 dark:hover:bg-surface-700 text-surface-700 dark:text-surface-300 transition-colors cursor-pointer border border-surface-200/60 dark:border-surface-700 text-xs min-h-[28px]"
           >
             Remote Only

@@ -76,7 +76,7 @@ const OnboardingFlow: React.FC = () => {
         name: name.trim() || 'Explorer',
         location,
         country: location,
-        bio: 'Exploring transformative opportunities.',
+        bio: user?.profile?.bio || '',
         interests: interests,
         goals: goals,
         currentStatus: experience,

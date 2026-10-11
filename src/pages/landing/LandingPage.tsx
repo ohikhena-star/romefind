@@ -240,7 +240,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white dark:bg-surface-950 text-surface-900 dark:text-surface-50 font-sans selection:bg-rome-500 selection:text-white transition-colors">
       {/* ─── Public Navigation Bar ─── */}
       <header className="sticky top-0 z-40 bg-white/90 dark:bg-surface-950/90 backdrop-blur-md border-b border-surface-200/80 dark:border-surface-800/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1 group" aria-label="ROMEfind home">
             <span className="text-2xl font-bold tracking-tight text-rome-500">ROME</span>
             <span className="text-2xl font-bold tracking-tight text-surface-950 dark:text-white">find</span>
@@ -440,9 +440,12 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Right Interactive Preview Card (Visual hover only, illustrative) */}
+            {/* Right Interactive Preview Card (Connected to real opportunity) */}
             <div className="lg:col-span-5 w-full">
-              <div className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-7 shadow-xl shadow-surface-950/5 relative overflow-hidden text-left transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-2xl">
+              <div 
+                onClick={() => handleOpenPreview('opp-deepmind-01')}
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-7 shadow-xl shadow-surface-950/5 relative overflow-hidden text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-rome-300 dark:hover:border-rome-700 hover:shadow-2xl cursor-pointer group"
+              >
                 {/* Header Tag */}
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2">
@@ -450,7 +453,7 @@ export default function LandingPage() {
                       <SolarIcon name="buildings-2-linear" size={13} />
                     </div>
                     <span className="text-xs font-bold uppercase tracking-wider text-surface-600 dark:text-surface-400">
-                      Stanford University
+                      Google DeepMind
                     </span>
                   </div>
                   <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/80">
@@ -458,8 +461,8 @@ export default function LandingPage() {
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-surface-950 dark:text-white leading-snug mb-2">
-                  Knight-Hennessy Scholars Program
+                <h3 className="text-xl font-bold text-surface-950 dark:text-white leading-snug mb-2 group-hover:text-rome-600 dark:group-hover:text-rome-400 transition-colors">
+                  DeepMind AI &amp; Machine Learning Research Fellowship
                 </h3>
 
                 <div className="flex flex-wrap items-center gap-1.5 mb-4">
@@ -467,36 +470,43 @@ export default function LandingPage() {
                     Fellowship
                   </span>
                   <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300">
-                    Leadership & Public Policy
+                    AI &amp; Machine Learning
                   </span>
                 </div>
 
                 <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed mb-4">
-                  Full tuition, stipend, and leadership development across all graduate degree disciplines at Stanford.
+                  Full graduate funding, research allowance, and direct 1-on-1 DeepMind scientist mentorship in London.
                 </p>
 
                 {/* Structured Metadata (Direct on Card Surface) */}
                 <div className="grid grid-cols-2 gap-2.5 text-xs py-3 border-y border-surface-100 dark:border-surface-800/80 mb-5">
                   <div>
                     <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold block mb-0.5">Location</span>
-                    <span className="font-semibold text-surface-900 dark:text-surface-100">Stanford, CA, USA</span>
+                    <span className="font-semibold text-surface-900 dark:text-surface-100">London, UK (Hybrid)</span>
                   </div>
                   <div>
                     <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold block mb-0.5">Deadline</span>
-                    <span className="font-semibold text-amber-600 dark:text-amber-400">Oct 07, 2026</span>
+                    <span className="font-semibold text-amber-600 dark:text-amber-400">Dec 15, 2026</span>
                   </div>
                   <div className="col-span-2 pt-2 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
                     <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold">Funding</span>
-                    <span className="font-semibold text-surface-900 dark:text-surface-100">100% Tuition + Living Stipend</span>
+                    <span className="font-semibold text-surface-900 dark:text-surface-100">100% Tuition + £22k Stipend</span>
                   </div>
                 </div>
 
-                {/* Decorative Opportunity Preview Footer (Illustrative - does not navigate) */}
+                {/* Interactive Opportunity Preview Button */}
                 <div className="flex items-center gap-2">
-                  <div className="w-full py-2.5 px-4 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 text-center text-xs font-semibold flex items-center justify-center gap-1.5 cursor-default select-none border border-surface-200/50 dark:border-surface-700/50">
-                    <span>Verified Opportunity Preview</span>
-                    <SolarIcon name="check-circle-linear" size={14} className="text-rome-500" />
-                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenPreview('opp-deepmind-01');
+                    }}
+                    className="w-full py-2.5 px-4 rounded-xl bg-rome-50 dark:bg-rome-950/40 text-rome-600 dark:text-rome-400 hover:bg-rome-100 dark:hover:bg-rome-900/60 text-center text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-rome-200/60 dark:border-rome-800/60"
+                  >
+                    <span>View opportunity preview</span>
+                    <SolarIcon name="alt-arrow-right-linear" size={14} />
+                  </button>
                 </div>
               </div>
             </div>

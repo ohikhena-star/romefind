@@ -13,11 +13,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
-import SearchOverlay from './SearchOverlay';
 
 const TopNav = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
-  const { theme, toggleTheme, searchOpen, toggleSearch, mobileMenuOpen, setMobileMenuOpen } = useUiStore();
+  const { theme, toggleTheme, mobileMenuOpen, setMobileMenuOpen } = useUiStore();
   const { notifications } = useNotificationStore();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
@@ -105,21 +104,6 @@ const TopNav = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
-            {isAuthenticated && (
-              <button
-                id="nav-search"
-                onClick={toggleSearch}
-                className="hidden lg:flex items-center gap-3 px-3.5 py-1.5 rounded-xl bg-surface-100 dark:bg-surface-800/80 border border-surface-200 dark:border-surface-700/80 text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 hover:border-surface-300 transition-all text-xs cursor-pointer group shadow-xs"
-                title="Search opportunities (⌘K)"
-              >
-                <SolarIcon name="magnifer-linear" size={14} className="group-hover:text-rome-500 transition-colors" />
-                <span>Search opportunities...</span>
-                <kbd className="px-1.5 py-0.5 rounded-md bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 text-[10px] font-mono font-bold text-surface-500 shadow-2xs">
-                  ⌘K
-                </kbd>
-              </button>
-            )}
-
             <button
               onClick={toggleTheme}
               className="p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
@@ -131,14 +115,6 @@ const TopNav = () => {
 
             {isAuthenticated ? (
               <>
-                <button
-                  onClick={toggleSearch}
-                  className="lg:hidden p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
-                  aria-label="Search"
-                  title="Search opportunities"
-                >
-                  <SolarIcon name="magnifer-linear" size={18} />
-                </button>
                 <Link
                   to="/notifications"
                   className="p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors relative cursor-pointer"
@@ -220,14 +196,6 @@ const TopNav = () => {
           <div className="flex items-center gap-1">
             {isAuthenticated && (
               <>
-                <button
-                  onClick={toggleSearch}
-                  className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
-                  aria-label="Search opportunities"
-                  title="Search"
-                >
-                  <SolarIcon name="magnifer-linear" size={20} />
-                </button>
 
                 <Link
                   to="/notifications"
@@ -372,8 +340,6 @@ const TopNav = () => {
           </div>
         </div>
       )}
-
-      {searchOpen && <SearchOverlay onClose={toggleSearch} />}
     </>
   );
 };

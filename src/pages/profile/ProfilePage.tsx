@@ -328,7 +328,13 @@ export default function ProfilePage() {
             ) : (
               <div className="space-y-3">
                 <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed">
-                  {localProfile.bio || <span className="text-surface-400 italic">No bio yet. Click Edit Profile to add one.</span>}
+                  {localProfile.bio?.trim() ? (
+                    localProfile.bio
+                  ) : (
+                    <span className="text-surface-400 dark:text-surface-500 italic">
+                      Add a short bio to introduce yourself.
+                    </span>
+                  )}
                 </p>
                 <div className="grid grid-cols-2 gap-2 pt-2">
                   {localProfile.experienceLevel && (
