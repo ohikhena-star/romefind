@@ -32029,6 +32029,13 @@ var adviceRateLimiter = rate_limit_default({
   legacyHeaders: false,
   message: { success: false, message: "Too many submissions. Please try again later." }
 });
+var eventIngestLimiter = rate_limit_default({
+  windowMs: 60 * 1e3,
+  max: 200,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { success: false, message: "Too many tracking events. Please slow down." }
+});
 
 // server/src/modules/auth/auth.controller.ts
 async function register(req, res) {
@@ -32148,7 +32155,7 @@ async function register(req, res) {
 async function login(req, res) {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
+    if (!email || typeof email !== "string" || !email.trim() || !password || typeof password !== "string" || !password.trim()) {
       res.status(400).json({
         success: false,
         message: "Email and password are required"
@@ -36933,6 +36940,22 @@ var unsaveOpportunity = async (req, res, next) => {
     next(error);
   }
 };
+var getSavedOpportunities = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const saved = await prisma.savedOpportunity.findMany({
+      where: { userId },
+      select: { opportunityId: true },
+      orderBy: { createdAt: "desc" }
+    });
+    res.json({
+      success: true,
+      data: saved.map((s) => s.opportunityId)
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 var rejectOpportunity = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -38871,6 +38894,201 @@ var getSystemHealth = async (req, res, next) => {
   }
 };
 
+// server/src/modules/analytics/analytics.controller.ts
+var GUEST_USER_ID = "usr-guest-anonymous";
+var VALID_EVENT_TYPES = /* @__PURE__ */ new Set([
+  "share_action",
+  "shared_link_visit",
+  "application_link_clicked"
+]);
+var VALID_SHARE_METHODS = /* @__PURE__ */ new Set(["copy_link", "whatsapp", "twitter", "native"]);
+var ingestEvent = async (req, res, next) => {
+  try {
+    const { eventType, opportunityId, metadata } = req.body;
+    if (!eventType || !VALID_EVENT_TYPES.has(eventType)) {
+      res.status(400).json({
+        success: false,
+        message: `Invalid eventType. Must be one of: ${[...VALID_EVENT_TYPES].join(", ")}`
+      });
+      return;
+    }
+    if (eventType === "share_action" && metadata?.shareMethod && !VALID_SHARE_METHODS.has(metadata.shareMethod)) {
+      res.status(400).json({
+        success: false,
+        message: `Invalid shareMethod. Must be one of: ${[...VALID_SHARE_METHODS].join(", ")}`
+      });
+      return;
+    }
+    if (opportunityId) {
+      const opp = await prisma.opportunity.findUnique({
+        where: { id: opportunityId },
+        select: { id: true }
+      });
+      if (!opp) {
+        res.json({ success: true, recorded: false, reason: "opportunity_not_found" });
+        return;
+      }
+    }
+    const userId = req.user?.id ?? GUEST_USER_ID;
+    await prisma.behaviourSignal.create({
+      data: {
+        userId,
+        opportunityId: opportunityId ?? null,
+        eventType,
+        metadata: JSON.stringify(metadata ?? {})
+      }
+    });
+    res.json({ success: true, recorded: true });
+  } catch (error) {
+    console.error("[analytics] ingestEvent error:", error);
+    res.json({ success: true, recorded: false, reason: "internal_error" });
+  }
+};
+
+// server/src/modules/analytics/analytics.admin.controller.ts
+function getDateRangeFilter(range) {
+  const now = /* @__PURE__ */ new Date();
+  switch (range) {
+    case "7d":
+      return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1e3);
+    case "30d":
+      return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1e3);
+    case "90d":
+      return new Date(now.getTime() - 90 * 24 * 60 * 60 * 1e3);
+    default:
+      return null;
+  }
+}
+var getShareAnalytics = async (req, res, next) => {
+  try {
+    const range = ["7d", "30d", "90d", "all"].includes(req.query.range) ? req.query.range : "30d";
+    const since = getDateRangeFilter(range);
+    const dateFilter = since ? { createdAt: { gte: since } } : {};
+    const EVENT_TYPES = ["share_action", "shared_link_visit", "application_link_clicked"];
+    const [totalShares, totalVisits, totalAppClicks] = await Promise.all([
+      prisma.behaviourSignal.count({ where: { eventType: "share_action", ...dateFilter } }),
+      prisma.behaviourSignal.count({ where: { eventType: "shared_link_visit", ...dateFilter } }),
+      prisma.behaviourSignal.count({ where: { eventType: "application_link_clicked", ...dateFilter } })
+    ]);
+    const shareEvents = await prisma.behaviourSignal.findMany({
+      where: { eventType: "share_action", opportunityId: { not: null }, ...dateFilter },
+      select: { opportunityId: true, metadata: true }
+    });
+    const sharesByMethod = {};
+    for (const ev of shareEvents) {
+      try {
+        const meta = JSON.parse(ev.metadata ?? "{}");
+        const method = meta.shareMethod ?? "unknown";
+        sharesByMethod[method] = (sharesByMethod[method] ?? 0) + 1;
+      } catch {
+      }
+    }
+    const sharesByOpportunity = await prisma.behaviourSignal.groupBy({
+      by: ["opportunityId"],
+      where: { eventType: "share_action", opportunityId: { not: null }, ...dateFilter },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+      take: 10
+    });
+    const clicksByOpportunity = await prisma.behaviourSignal.groupBy({
+      by: ["opportunityId"],
+      where: { eventType: "application_link_clicked", opportunityId: { not: null }, ...dateFilter },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+      take: 10
+    });
+    const topShareOppIds = sharesByOpportunity.map((r) => r.opportunityId);
+    const topClickOppIds = clicksByOpportunity.map((r) => r.opportunityId);
+    const allOppIds = [.../* @__PURE__ */ new Set([...topShareOppIds, ...topClickOppIds])];
+    const opportunities = allOppIds.length > 0 ? await prisma.opportunity.findMany({
+      where: { id: { in: allOppIds } },
+      select: { id: true, title: true, organization: { select: { name: true } } }
+    }) : [];
+    const oppById = Object.fromEntries(opportunities.map((o) => [o.id, o]));
+    const topShared = sharesByOpportunity.map((r) => ({
+      opportunityId: r.opportunityId,
+      title: oppById[r.opportunityId]?.title ?? "Unknown",
+      organization: oppById[r.opportunityId]?.organization?.name ?? "",
+      count: r._count.id
+    }));
+    const topClicked = clicksByOpportunity.map((r) => ({
+      opportunityId: r.opportunityId,
+      title: oppById[r.opportunityId]?.title ?? "Unknown",
+      organization: oppById[r.opportunityId]?.organization?.name ?? "",
+      count: r._count.id
+    }));
+    const firstEvent = await prisma.behaviourSignal.findFirst({
+      where: { eventType: { in: EVENT_TYPES } },
+      orderBy: { createdAt: "asc" },
+      select: { createdAt: true }
+    });
+    res.json({
+      success: true,
+      data: {
+        range,
+        totals: {
+          shares: totalShares,
+          sharedLinkVisits: totalVisits,
+          applicationLinkClicks: totalAppClicks
+        },
+        sharesByMethod,
+        topShared,
+        topClicked,
+        collectionStartedAt: firstEvent?.createdAt ?? null
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+var getOpportunityShareAnalytics = async (req, res, next) => {
+  try {
+    const { opportunityId } = req.params;
+    const range = ["7d", "30d", "90d", "all"].includes(req.query.range) ? req.query.range : "30d";
+    const since = getDateRangeFilter(range);
+    const dateFilter = since ? { createdAt: { gte: since } } : {};
+    const where = { opportunityId, ...dateFilter };
+    const opp = await prisma.opportunity.findUnique({
+      where: { id: opportunityId },
+      select: { id: true, title: true, organization: { select: { name: true } } }
+    });
+    if (!opp) {
+      res.status(404).json({ success: false, message: "Opportunity not found" });
+      return;
+    }
+    const [shares, visits, clicks, views] = await Promise.all([
+      prisma.behaviourSignal.count({ where: { ...where, eventType: "share_action" } }),
+      prisma.behaviourSignal.count({ where: { ...where, eventType: "shared_link_visit" } }),
+      prisma.behaviourSignal.count({ where: { ...where, eventType: "application_link_clicked" } }),
+      prisma.behaviourSignal.count({ where: { ...where, eventType: "opportunity_viewed" } })
+    ]);
+    const shareEvents = await prisma.behaviourSignal.findMany({
+      where: { ...where, eventType: "share_action" },
+      select: { metadata: true }
+    });
+    const sharesByMethod = {};
+    for (const ev of shareEvents) {
+      try {
+        const meta = JSON.parse(ev.metadata ?? "{}");
+        const method = meta.shareMethod ?? "unknown";
+        sharesByMethod[method] = (sharesByMethod[method] ?? 0) + 1;
+      } catch {
+      }
+    }
+    res.json({
+      success: true,
+      data: {
+        opportunity: { id: opp.id, title: opp.title, organization: opp.organization?.name ?? "" },
+        range,
+        totals: { shares, sharedLinkVisits: visits, applicationLinkClicks: clicks, views },
+        sharesByMethod
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // server/src/routes.ts
 var apiRouter = (0, import_express.Router)();
 apiRouter.get("/health", (req, res) => {
@@ -38893,6 +39111,7 @@ apiRouter.get("/profiles/:userId", getProfileByUserId);
 apiRouter.get("/organizations", getOrganizations);
 apiRouter.get("/organizations/:id", getOrganizationById);
 apiRouter.get("/opportunities", optionalAuth, getOpportunities);
+apiRouter.get("/opportunities/saved", authenticateToken, getSavedOpportunities);
 apiRouter.get("/opportunities/:id", optionalAuth, getOpportunityById);
 apiRouter.get("/opportunities/:id/related", getRelatedOpportunities);
 apiRouter.post("/opportunities/:id/save", authenticateToken, saveOpportunity);
@@ -38943,6 +39162,9 @@ apiRouter.get("/admin/reviews", authenticateToken, requireAdmin, getAdminReviews
 apiRouter.get("/admin/reports", authenticateToken, requireAdmin, getAdminReports);
 apiRouter.patch("/admin/reports/:id", authenticateToken, requireAdmin, updateReportStatus);
 apiRouter.get("/admin/system-health", authenticateToken, requireAdmin, getSystemHealth);
+apiRouter.post("/analytics/event", optionalAuth, eventIngestLimiter, ingestEvent);
+apiRouter.get("/admin/analytics/share", authenticateToken, requireAdmin, getShareAnalytics);
+apiRouter.get("/admin/analytics/share/:opportunityId", authenticateToken, requireAdmin, getOpportunityShareAnalytics);
 
 // server/src/middleware/error.middleware.ts
 function errorHandler(err, _req, res, _next) {

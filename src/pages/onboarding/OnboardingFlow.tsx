@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useProfileStore } from '@/store/profileStore';
 import { useUIStore } from '@/store/uiStore';
+import { executePendingAction } from '@/utils/pendingAction';
 import { Button, Input, Chip, CountrySelector } from '@/components/ui';
 import { FIELDS } from '@/utils/constants';
 import { cn } from '@/utils/cn';
@@ -100,7 +101,13 @@ const OnboardingFlow: React.FC = () => {
 
       updateProfile(updatedProfile as any);
       useUIStore.setState({ hasSeenProductTour: false, tourOpen: false, tourStep: 0 });
-      navigate('/discover');
+
+      const resumed = await executePendingAction();
+      if (resumed?.executed) {
+        navigate(resumed.returnUrl);
+      } else {
+        navigate('/discover');
+      }
     } finally {
       setIsSaving(false);
     }

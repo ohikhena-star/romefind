@@ -4,10 +4,10 @@ import { useApplicationStore } from '@/store/applicationStore';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
 import { getAlternativeDiscoveries } from '@/services/personalization.service';
-import { Button, Tag, DeadlineIndicator, Badge, SolarIcon } from '@/components/ui';
+import { Button, Tag, DeadlineIndicator, SolarIcon } from '@/components/ui';
 import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
-import { X, ArrowRight, Lightbulb, Plus, Sparkles, DollarSign } from 'lucide-react';
 import { Opportunity, AlternativeDiscovery, RemoteStatus } from '@/types/models';
+import { cn } from '@/utils/cn';
 
 export default function ComparePage() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function ComparePage() {
   }, [comparisons, opportunities]);
 
   const uniqueTypes = useMemo(() => Array.from(new Set(compareOpps.map(o => o.type))), [compareOpps]);
-  
+
   const alternatives: AlternativeDiscovery[] = useMemo(() => {
     if (!user?.profile || !user?.preferences || uniqueTypes.length === 0) return [];
     return uniqueTypes.flatMap(type => getAlternativeDiscoveries(type, opportunities, user.profile, user.preferences));
@@ -38,133 +38,87 @@ export default function ComparePage() {
   const allTypes = useMemo(() => ['All', 'Fellowship', 'Scholarship', 'Internship', 'Research', 'Grant', 'Competition', 'Programme'], []);
 
   return (
-    <div className="w-full py-8 md:py-12 animate-in fade-in">
-      {/* Header */}
-      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="w-full py-6 md:py-10 animate-in fade-in">
+      {/* ─── Header & Comparison Status ─── */}
+      <header className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-200 dark:border-surface-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1.5 rounded-lg bg-rome-100 dark:bg-rome-900/40 text-rome-600 dark:text-rome-400">
-              <SolarIcon name="transfer-horizontal-linear" size={20} />
+            <span className="p-1.5 rounded-lg bg-rome-50 dark:bg-rome-950/40 text-rome-600 dark:text-rome-400 border border-rome-200/60 dark:border-rome-900/40">
+              <SolarIcon name="scale-linear" size={18} />
             </span>
-            <h1 className="text-2xl md:text-3xl font-bold text-surface-950 dark:text-surface-50">
-              Path & Opportunity Comparison
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-surface-950 dark:text-surface-50">
+              Compare Opportunities
             </h1>
           </div>
-          <p className="text-sm text-surface-500">
-            Compare duration, funding, commitments, and requirements to choose your best next step ({comparisons.length}/4 selected).
+          <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400">
+            Evaluate funding, deadlines, location, and requirements side-by-side ({compareOpps.length}/4 selected).
           </p>
         </div>
 
-        {comparisons.length > 0 && (
-          <div className="flex items-center gap-2">
+        {compareOpps.length > 0 && (
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <Button
               variant="outline"
               size="sm"
+              className="text-xs font-semibold h-9 px-3 rounded-xl border-surface-200 dark:border-surface-700"
               onClick={() => comparisons.forEach(id => removeFromCompare(id))}
             >
               Clear Comparison
             </Button>
           </div>
         )}
-      </div>
+      </header>
 
-      {/* When 2+ opportunities are selected: Full Comparison Table */}
+      {/* ─── Side-by-Side Comparison Section (When 2+ selected) ─── */}
       {compareOpps.length >= 2 ? (
-        <>
-          {/* Desktop Table View */}
-          <div className="hidden md:block overflow-x-auto pb-8 relative">
-            <table className="w-full min-w-[800px] border-collapse bg-white dark:bg-surface-950 rounded-xl overflow-hidden shadow-card border border-surface-200 dark:border-surface-800">
+        <section aria-label="Comparison Table" className="mb-12">
+          {/* Desktop Matrix View */}
+          <div className="hidden md:block overflow-x-auto pb-4">
+            <table className="w-full min-w-[760px] border-collapse bg-white dark:bg-surface-900 rounded-2xl overflow-hidden shadow-xs border border-surface-200 dark:border-surface-800 text-left">
               <thead>
-                <tr>
-                  <th className="p-6 border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 text-left w-52 align-bottom">
-                    <span className="text-xs font-bold uppercase tracking-wider text-surface-500">Parameters</span>
+                <tr className="border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-850/60">
+                  <th scope="col" className="p-5 text-xs font-bold uppercase tracking-wider text-surface-500 w-48 align-bottom">
+                    Attributes
                   </th>
-                  {compareOpps.map((opp: Opportunity) => (
-                    <th key={opp.id} className="p-6 border-b border-surface-200 dark:border-surface-800 align-top min-w-[280px] w-[300px] bg-surface-50 dark:bg-surface-900 relative group">
-                      <div className="flex justify-between items-start gap-3 mb-2">
-                        <div className="text-left">
-                          <p className="text-xs font-semibold text-rome-600 dark:text-rome-400 mb-1">
-                            {typeof opp.organization === 'object' ? opp.organization.name : opp.organization}
-                          </p>
-                          <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 line-clamp-2">{opp.title}</h3>
-                          
-                          {/* Prominent Value Badge in Header */}
-                          <div className="mt-2.5">
-                            {opp.funding ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-100 border border-surface-200 dark:border-surface-700">
-                                <DollarSign className="w-3.5 h-3.5 text-surface-400" />
-                                {opp.funding}
-                              </span>
-                            ) : (
-                              <span className="inline-block px-2 py-0.5 rounded text-xs text-surface-500 bg-surface-100 dark:bg-surface-800">
-                                Unfunded / Self-supported
-                              </span>
-                            )}
+                  {compareOpps.map((opp: Opportunity) => {
+                    const orgName = typeof opp.organization === 'object' ? opp.organization.name : opp.organization;
+                    return (
+                      <th key={opp.id} scope="col" className="p-5 align-top min-w-[260px] w-1/3 border-l border-surface-200/80 dark:border-surface-800 relative">
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="min-w-0 pr-2">
+                            <p className="text-xs font-semibold text-surface-500 dark:text-surface-400 truncate uppercase tracking-wider">
+                              {orgName}
+                            </p>
+                            <h2 className="text-base font-bold text-surface-950 dark:text-white line-clamp-2 leading-snug mt-0.5">
+                              {opp.title}
+                            </h2>
                           </div>
+                          <button
+                            onClick={() => removeFromCompare(opp.id)}
+                            className="p-1.5 rounded-lg text-surface-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0 cursor-pointer"
+                            aria-label={`Remove ${opp.title} from comparison`}
+                            title="Remove"
+                          >
+                            <SolarIcon name="close-circle-linear" size={18} />
+                          </button>
                         </div>
-                        <button 
-                          onClick={() => removeFromCompare(opp.id)}
-                          className="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0 cursor-pointer"
-                          aria-label="Remove from comparison"
-                          title="Remove"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </th>
-                  ))}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-surface-100 dark:divide-surface-800/50 text-sm">
-                {/* Financial Value Row - Highlighted */}
-                <tr className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-bold text-surface-900 dark:text-surface-100">
-                    Financial Value & Stipend
-                  </td>
+              <tbody className="divide-y divide-surface-100 dark:divide-surface-800 text-xs sm:text-sm">
+                {/* 1. Type & Field */}
+                <tr>
+                  <th scope="row" className="p-4 pl-5 font-semibold text-surface-600 dark:text-surface-400">
+                    Category & Field
+                  </th>
                   {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-4">
-                      {opp.funding ? (
-                        <div className="space-y-1">
-                          <span className="text-base font-bold text-surface-900 dark:text-surface-100 block">
-                            {opp.funding}
-                          </span>
-                          <span className="text-xs text-surface-500">Includes direct funding / stipend</span>
-                        </div>
-                      ) : (
-                        <span className="text-surface-400 font-medium">Unfunded / Not specified</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-
-                {/* Benefits & Support Package */}
-                <tr className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400  align-top pt-4">
-                    Benefits & Perks
-                  </td>
-                  {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-4 align-top">
-                      {opp.benefits && opp.benefits.length > 0 ? (
-                        <ul className="list-disc pl-4 space-y-1 text-xs text-surface-700 dark:text-surface-300">
-                          {opp.benefits.map((benefit: string, idx: number) => (
-                            <li key={idx}>{benefit}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <span className="text-xs text-surface-400 italic">No extra perks listed</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-
-                <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Type & Fields</td>
-                  {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-4">
+                    <td key={opp.id} className="p-4 border-l border-surface-100 dark:border-surface-800">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <Tag label={opp.type} />
-                        {opp.field?.map((f: string, i: number) => (
-                          <span key={i} className="text-xs px-2 py-0.5 rounded bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400">
+                        {opp.field?.slice(0, 2).map((f: string, i: number) => (
+                          <span key={i} className="text-xs px-2 py-0.5 rounded-md bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400">
                             {f}
                           </span>
                         ))}
@@ -173,60 +127,100 @@ export default function ComparePage() {
                   ))}
                 </tr>
 
-                <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Deadline</td>
+                {/* 2. Funding / Stipend */}
+                <tr className="bg-surface-50/50 dark:bg-surface-850/20">
+                  <th scope="row" className="p-4 pl-5 font-semibold text-surface-600 dark:text-surface-400">
+                    Funding / Value
+                  </th>
                   {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-4">
-                      {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'No deadline'}
+                    <td key={opp.id} className="p-4 border-l border-surface-100 dark:border-surface-800">
+                      {opp.funding ? (
+                        <span className="font-semibold text-emerald-700 dark:text-emerald-400 text-xs sm:text-sm">
+                          {opp.funding}
+                        </span>
+                      ) : (
+                        <span className="text-surface-400 text-xs">Unfunded / Not specified</span>
+                      )}
                     </td>
                   ))}
                 </tr>
 
-                <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Duration & Setup</td>
-                  {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-4">
-                      <div className="font-medium text-surface-900 dark:text-surface-100">{opp.duration || 'Flexible'}</div>
-                      <div className="text-xs text-surface-500 mt-0.5">{opp.location} • {opp.remoteStatus}</div>
-                    </td>
-                  ))}
-                </tr>
-
-                <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400 ">Eligibility Level</td>
-                  {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-4">
-                      <div className="text-xs font-medium text-surface-800 dark:text-surface-200">
-                        {opp.educationRequirements?.join(', ') || 'Any Education'}
-                      </div>
-                      <div className="text-[11px] text-surface-500 mt-0.5">
-                        Experience: {opp.experienceRequirements || 'All Levels'}
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-
-                <tr className="hover:bg-surface-50/50 dark:hover:bg-surface-900/20 transition-colors">
-                  <td className="p-4 pl-6 font-semibold text-surface-600 dark:text-surface-400  align-top pt-5">Key Requirements</td>
-                  {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-4 align-top">
-                      <ul className="list-disc pl-4 space-y-1.5 text-xs text-surface-700 dark:text-surface-300">
-                        {opp.requirements?.slice(0, 3).map((req: string, i: number) => (
-                          <li key={i}>{req}</li>
-                        ))}
-                        {(opp.requirements?.length || 0) > 3 && (
-                          <li className="text-surface-400 list-none text-xs mt-1 italic">+{(opp.requirements?.length || 0) - 3} more</li>
-                        )}
-                      </ul>
-                    </td>
-                  ))}
-                </tr>
+                {/* 3. Deadline */}
                 <tr>
-                  <td className="p-4 border-b-0"></td>
+                  <th scope="row" className="p-4 pl-5 font-semibold text-surface-600 dark:text-surface-400">
+                    Deadline
+                  </th>
                   {compareOpps.map((opp: Opportunity) => (
-                    <td key={opp.id} className="p-6 border-b-0">
-                      <Button variant="default" size="default" className="w-full h-11 min-h-[44px] text-sm font-semibold" onClick={() => navigate(`/opportunity/${opp.id}`)}>
-                        View Details
+                    <td key={opp.id} className="p-4 border-l border-surface-100 dark:border-surface-800">
+                      {opp.deadline ? (
+                        <DeadlineIndicator deadline={opp.deadline} />
+                      ) : (
+                        <span className="text-surface-600 dark:text-surface-400 text-xs">Rolling / Ongoing</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+
+                {/* 4. Format & Location */}
+                <tr className="bg-surface-50/50 dark:bg-surface-850/20">
+                  <th scope="row" className="p-4 pl-5 font-semibold text-surface-600 dark:text-surface-400">
+                    Location & Work Setup
+                  </th>
+                  {compareOpps.map((opp: Opportunity) => (
+                    <td key={opp.id} className="p-4 border-l border-surface-100 dark:border-surface-800">
+                      <div className="font-medium text-surface-900 dark:text-surface-100 text-xs">
+                        {opp.remoteStatus === RemoteStatus.Remote ? 'Remote' : (opp.location || 'Global / Flexible')}
+                      </div>
+                      <div className="text-xs text-surface-500 mt-0.5">
+                        Duration: {opp.duration || 'Flexible'}
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+
+                {/* 5. Requirements & Eligibility */}
+                <tr>
+                  <th scope="row" className="p-4 pl-5 font-semibold text-surface-600 dark:text-surface-400 align-top pt-4">
+                    Eligibility & Requirements
+                  </th>
+                  {compareOpps.map((opp: Opportunity) => (
+                    <td key={opp.id} className="p-4 align-top border-l border-surface-100 dark:border-surface-800">
+                      <div className="space-y-2 text-xs">
+                        {opp.educationRequirements && opp.educationRequirements.length > 0 && (
+                          <p className="text-surface-700 dark:text-surface-300">
+                            <strong>Education:</strong> {opp.educationRequirements.join(', ')}
+                          </p>
+                        )}
+                        {opp.experienceRequirements && (
+                          <p className="text-surface-700 dark:text-surface-300">
+                            <strong>Experience:</strong> {opp.experienceRequirements}
+                          </p>
+                        )}
+                        {opp.requirements && opp.requirements.length > 0 && (
+                          <ul className="list-disc pl-4 space-y-1 text-surface-600 dark:text-surface-400">
+                            {opp.requirements.slice(0, 2).map((req: string, i: number) => (
+                              <li key={i}>{req}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+
+                {/* 6. Action Row */}
+                <tr className="bg-surface-50 dark:bg-surface-850/50">
+                  <td className="p-4"></td>
+                  {compareOpps.map((opp: Opportunity) => (
+                    <td key={opp.id} className="p-4 border-l border-surface-200/80 dark:border-surface-800">
+                      <Button
+                        variant="default"
+                        size="default"
+                        className="w-full h-11 min-h-[44px] text-xs sm:text-sm font-semibold rounded-xl bg-rome-500 hover:bg-rome-600 text-white shadow-xs"
+                        onClick={() => navigate(`/opportunity/${opp.id}`)}
+                      >
+                        <span>View Opportunity</span>
+                        <SolarIcon name="alt-arrow-right-linear" size={14} />
                       </Button>
                     </td>
                   ))}
@@ -235,185 +229,169 @@ export default function ComparePage() {
             </table>
           </div>
 
-          {/* Mobile Comparison View (Ultra-Compact & Scannable Mobile Comparison Cards) */}
-          <div className="md:hidden flex flex-col w-full space-y-2.5 mb-8">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-surface-400 dark:text-surface-500">
-                Comparing {compareOpps.length} opportunities
-              </span>
-            </div>
+          {/* Mobile Stacked Card View */}
+          <div className="md:hidden flex flex-col w-full space-y-4">
+            <p className="text-xs font-semibold text-surface-500 uppercase tracking-wider px-1">
+              Comparing {compareOpps.length} opportunities side-by-side
+            </p>
 
             {compareOpps.map((opp: Opportunity) => {
-              // Determine one concise useful comparison signal
-              const comparisonSignal = opp.funding && opp.funding.toLowerCase() !== 'unfunded'
-                ? { label: 'Funding', value: opp.funding }
-                : opp.duration
-                  ? { label: 'Duration', value: opp.duration }
-                  : opp.experienceRequirements
-                    ? { label: 'Eligibility', value: opp.experienceRequirements }
-                    : { label: 'Format', value: opp.type };
-
               const orgName = typeof opp.organization === 'object' ? opp.organization.name : opp.organization;
-
               return (
-                <div 
-                  key={opp.id} 
-                  className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-3.5 shadow-2xs space-y-2.5"
+                <article
+                  key={opp.id}
+                  className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-xs space-y-3"
                 >
-                  {/* Row 1: Org + Title + Remove */}
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start justify-between gap-2 border-b border-surface-100 dark:border-surface-800 pb-3">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[11px] font-semibold text-rome-600 dark:text-rome-400 uppercase tracking-wider truncate">
+                      <span className="text-xs font-semibold text-surface-500 uppercase tracking-wider truncate block">
                         {orgName}
-                      </p>
-                      <h3 className="text-sm font-bold text-surface-950 dark:text-white truncate">
+                      </span>
+                      <h2 className="text-sm font-bold text-surface-950 dark:text-white line-clamp-2 mt-0.5">
                         {opp.title}
-                      </h3>
+                      </h2>
                     </div>
                     <button
                       onClick={() => removeFromCompare(opp.id)}
-                      className="p-1 text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-md transition-colors shrink-0"
+                      className="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0"
                       aria-label={`Remove ${opp.title} from comparison`}
                     >
-                      <X className="w-4 h-4" />
+                      <SolarIcon name="close-circle-linear" size={18} />
                     </button>
                   </div>
 
-                  {/* Row 2: Core parameters in a concise scannable grid */}
-                  <div className="grid grid-cols-2 gap-x-2 gap-y-1 py-2 px-2.5 bg-surface-50 dark:bg-surface-800/50 rounded-lg text-xs">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <span className="text-surface-400 text-[11px] block">Type</span>
+                      <span className="text-surface-400 block">Category</span>
                       <span className="font-semibold text-surface-900 dark:text-white truncate block">{opp.type}</span>
                     </div>
                     <div>
-                      <span className="text-surface-400 text-[11px] block">Deadline</span>
+                      <span className="text-surface-400 block">Funding</span>
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-400 truncate block">
+                        {opp.funding || 'Unfunded'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-surface-400 block">Deadline</span>
                       <span className="font-semibold text-surface-900 dark:text-white truncate block">
                         {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'Rolling'}
                       </span>
                     </div>
-                    <div className="pt-1">
-                      <span className="text-surface-400 text-[11px] block">Location</span>
+                    <div>
+                      <span className="text-surface-400 block">Location</span>
                       <span className="font-semibold text-surface-900 dark:text-white truncate block">
                         {opp.remoteStatus === RemoteStatus.Remote ? 'Remote' : (opp.location || 'Global')}
                       </span>
                     </div>
-                    <div className="pt-1">
-                      <span className="text-surface-400 text-[11px] block">{comparisonSignal.label}</span>
-                      <span className="font-semibold text-rome-600 dark:text-rome-400 truncate block">
-                        {comparisonSignal.value}
-                      </span>
-                    </div>
                   </div>
 
-                  {/* Row 3: Action */}
                   <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-center h-8 text-xs font-semibold"
+                    variant="default"
+                    size="default"
+                    className="w-full justify-center h-11 min-h-[44px] text-xs font-semibold rounded-xl bg-rome-500 hover:bg-rome-600 text-white"
                     onClick={() => navigate(`/opportunity/${opp.id}`)}
                   >
-                    <span>View Details</span>
-                    <SolarIcon name="alt-arrow-right-linear" size={13} />
+                    <span>View Opportunity</span>
+                    <SolarIcon name="alt-arrow-right-linear" size={14} />
                   </Button>
-                </div>
+                </article>
               );
             })}
           </div>
-        </>
+        </section>
       ) : compareOpps.length === 1 ? (
-        /* 1 Opportunity Selected - Show first card + Invite second slot */
-        <div className="mb-10 bg-white dark:bg-surface-900 border border-rome-200 dark:border-rome-900/60 rounded-2xl p-4 sm:p-6 shadow-sm">
-          <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-surface-100 dark:border-surface-800">
+        /* ─── 1 Opportunity Selected State (Prompt for 2nd) ─── */
+        <div className="mb-10 bg-surface-50 dark:bg-surface-900 border border-rome-200/80 dark:border-rome-900/60 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-surface-200/80 dark:border-surface-800">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-rome-500 animate-pulse" />
               <h2 className="text-sm sm:text-base font-bold text-surface-900 dark:text-surface-100">
-                1 of 2 Opportunities Selected
+                1 of 2 opportunities selected
               </h2>
             </div>
-            <span className="text-xs text-surface-500 dark:text-surface-400">
-              Select 1 more below to compare
+            <span className="text-xs text-surface-500">
+              Select 1 more opportunity below to unlock comparison
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Slot 1: Selected Opportunity */}
             {compareOpps.map((opp: Opportunity) => {
               const orgName = typeof opp.organization === 'object' ? opp.organization.name : opp.organization;
               return (
-                <div key={opp.id} className="p-3.5 bg-surface-50 dark:bg-surface-800/60 rounded-xl border border-surface-200 dark:border-surface-700 flex items-start justify-between gap-3">
+                <div key={opp.id} className="p-4 bg-white dark:bg-surface-850 rounded-xl border border-surface-200 dark:border-surface-700 flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <span className="text-[10px] font-bold text-rome-600 dark:text-rome-400 uppercase tracking-wider block">
+                    <span className="text-xs font-semibold text-surface-500 uppercase tracking-wider block">
                       {orgName}
                     </span>
                     <h3 className="text-sm font-bold text-surface-900 dark:text-white truncate">
                       {opp.title}
                     </h3>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-surface-500">
+                    <div className="flex items-center gap-2 mt-1.5 text-xs text-surface-500">
                       <span>{opp.type}</span>
                       <span>•</span>
-                      <span>{opp.remoteStatus === RemoteStatus.Remote ? 'Remote' : (opp.location || 'Global')}</span>
-                      {opp.funding && (
-                        <>
-                          <span>•</span>
-                          <span className="font-semibold text-surface-800 dark:text-surface-200">{opp.funding}</span>
-                        </>
-                      )}
+                      <span>{opp.funding || 'Unfunded'}</span>
                     </div>
                   </div>
                   <button
                     onClick={() => removeFromCompare(opp.id)}
-                    className="p-1.5 text-surface-400 hover:text-red-500 hover:bg-surface-200 dark:hover:bg-surface-700 rounded-lg transition-colors shrink-0"
+                    className="p-1.5 text-surface-400 hover:text-red-500 rounded-lg transition-colors shrink-0"
                     title="Remove from comparison"
                   >
-                    <X className="w-4 h-4" />
+                    <SolarIcon name="close-circle-linear" size={18} />
                   </button>
                 </div>
               );
             })}
 
-            {/* Slot 2: Placeholder Invitation */}
+            {/* Second Slot Invitation */}
             <div className="p-4 rounded-xl border-2 border-dashed border-surface-200 dark:border-surface-700 flex items-center justify-center text-center">
-              <p className="text-xs font-medium text-surface-500 dark:text-surface-400">
-                Tap <strong className="text-rome-600 dark:text-rome-400">+ Add to Compare</strong> on any opportunity below to complete comparison
+              <p className="text-xs font-medium text-surface-500">
+                Click <strong className="text-rome-600 dark:text-rome-400">+ Add to Compare</strong> on an opportunity below
               </p>
             </div>
           </div>
         </div>
       ) : (
-        /* 0 Opportunities Selected */
-        <div className="bg-surface-50 dark:bg-surface-900/50 border border-surface-200 dark:border-surface-800 rounded-2xl p-6 sm:p-8 mb-10 text-center">
+        /* ─── 0 Selected Empty State ─── */
+        <div className="bg-surface-50 dark:bg-surface-900/40 border border-surface-200 dark:border-surface-800 rounded-2xl p-8 sm:p-10 mb-10 text-center">
           <div className="max-w-md mx-auto space-y-3">
-            <span className="inline-flex p-3 rounded-2xl bg-rome-100 dark:bg-rome-900/40 text-rome-600 dark:text-rome-400">
-              <SolarIcon name="transfer-horizontal-linear" size={32} />
+            <span className="inline-flex p-3 rounded-2xl bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300">
+              <SolarIcon name="scale-linear" size={28} />
             </span>
-            <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50">
-              Select opportunities to compare side-by-side
+            <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-50">
+              No opportunities selected to compare
             </h2>
-            <p className="text-sm text-surface-600 dark:text-surface-400">
-              Click <strong className="text-rome-600 dark:text-rome-400">+ Add to Compare</strong> on any 2 to 4 opportunities below to evaluate deadlines, funding, and eligibility.
+            <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 leading-relaxed">
+              Add 2 to 4 opportunities from the list below to compare funding packages, deadlines, and eligibility side-by-side.
             </p>
           </div>
         </div>
       )}
 
-      {/* Quick Add Opportunities Catalog */}
-      <div className="mt-10">
+      {/* ─── Available Opportunities to Compare ─── */}
+      <section className="mt-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-          <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-rome-500" />
-            Available Opportunities to Compare
-          </h2>
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-50">
+              Available Opportunities to Add
+            </h2>
+            <p className="text-xs text-surface-500">
+              Browse options and add to your active comparison dock.
+            </p>
+          </div>
 
+          {/* Category Filter Chips */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none">
             {allTypes.map((type) => (
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                className={cn(
+                  "px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer min-h-[32px]",
                   filterType === type
-                    ? 'bg-rome-500 text-white'
-                    : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 hover:bg-surface-200'
-                }`}
+                    ? "bg-surface-900 dark:bg-white text-white dark:text-surface-900"
+                    : "bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-200 dark:hover:bg-surface-700 border border-surface-200/60 dark:border-surface-700"
+                )}
               >
                 {type}
               </button>
@@ -450,72 +428,39 @@ export default function ComparePage() {
             );
           })}
         </div>
-      </div>
+      </section>
 
-      {/* Sticky Mobile Comparison Dock */}
-      {comparisons.length > 0 && (
-        <div className="md:hidden fixed bottom-4 inset-x-4 z-40 bg-surface-900/95 dark:bg-surface-800/95 text-white p-3 rounded-2xl shadow-elevated backdrop-blur-md border border-surface-700/80 flex items-center justify-between gap-3 animate-in slide-in-from-bottom-4">
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-rome-400 animate-pulse shrink-0" />
-              <p className="text-xs font-bold truncate">
-                {comparisons.length} of 4 selected to compare
-              </p>
-            </div>
-            <p className="text-[11px] text-surface-400 truncate">
-              {comparisons.length < 2 ? 'Select 1 more to compare' : 'Ready to compare side-by-side'}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1.5 shrink-0">
-            {comparisons.length >= 2 && (
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="px-3 py-1.5 rounded-xl bg-rome-500 hover:bg-rome-600 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-              >
-                View Comparison ↑
-              </button>
-            )}
-            <button
-              onClick={() => comparisons.forEach(id => removeFromCompare(id))}
-              className="p-1.5 rounded-xl text-surface-400 hover:text-white transition-colors cursor-pointer"
-              title="Clear all"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Alternative Paths Discovery Section */}
+      {/* ─── Alternative Pathways Section ─── */}
       {alternatives.length > 0 && (
-        <div className="mt-14 pt-10 border-t border-surface-200 dark:border-surface-800">
-          <div className="flex items-center gap-2 mb-6">
-            <Lightbulb className="w-5 h-5 text-rome-500" />
-            <h2 className="text-2xl font-bold text-surface-900 dark:text-surface-50">
-              Alternative Pathways you might have overlooked
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <aside aria-label="Alternative pathways" className="mt-14 pt-8 border-t border-surface-200 dark:border-surface-800">
+          <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-1 flex items-center gap-2">
+            <SolarIcon name="magic-stick-linear" size={18} className="text-rome-500" />
+            Alternative Pathways
+          </h2>
+          <p className="text-xs text-surface-500 mb-6">
+            Parallel formats that advance the same goals.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {alternatives.slice(0, 4).map((alt: AlternativeDiscovery, i: number) => (
-              <div 
-                key={i} 
-                className="group bg-rome-50/50 dark:bg-rome-950/20 border border-rome-200 dark:border-rome-900/40 rounded-xl p-6 cursor-pointer hover:shadow-card-hover transition-all"
+              <div
+                key={i}
+                className="group bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl p-5 cursor-pointer hover:border-rome-300 dark:hover:border-rome-700 hover:shadow-card transition-all"
                 onClick={() => navigate(`/explore?type=${encodeURIComponent(alt.alternativeType)}`)}
               >
-                <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-2">
-                  Consider <span className="text-rome-600 dark:text-rome-400">{alt.alternativeType}</span> instead of {alt.sourceType}
+                <h3 className="text-base font-bold text-surface-900 dark:text-surface-50 mb-1.5 group-hover:text-rome-600 transition-colors">
+                  Consider {alt.alternativeType} instead of {alt.sourceType}
                 </h3>
-                <p className="text-sm text-surface-600 dark:text-surface-300 mb-4 leading-relaxed">
+                <p className="text-xs text-surface-600 dark:text-surface-300 mb-3 leading-relaxed">
                   {alt.reason}
                 </p>
-                <span className="text-xs font-bold text-rome-600 dark:text-rome-400 flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Explore {alt.alternativeType} ({alt.count} matching) <ArrowRight className="w-3.5 h-3.5" />
+                <span className="text-xs font-semibold text-rome-600 dark:text-rome-400 flex items-center gap-1 group-hover:gap-1.5 transition-all">
+                  Explore {alt.alternativeType} ({alt.count} available)
+                  <SolarIcon name="alt-arrow-right-linear" size={13} />
                 </span>
               </div>
             ))}
           </div>
-        </div>
+        </aside>
       )}
     </div>
   );

@@ -1,17 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useUiStore } from '@/store/uiStore';
+import { useOpportunityStore } from '@/store/opportunityStore';
+import { useApplicationStore } from '@/store/applicationStore';
 import { Button } from '@/components/ui/Button';
 import { SolarIcon } from '@/components/ui/SolarIcon';
+import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
+import { OpportunityPreviewModal } from '@/components/opportunity/OpportunityPreviewModal';
+import { ContextualSignupModal, ContextualPromptType } from '@/components/auth/ContextualSignupModal';
+import { Opportunity } from '@/types/models';
 import { cn } from '@/utils/cn';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { theme, toggleTheme } = useUiStore();
+  const { opportunities, fetchOpportunities, isLoading: storeLoading } = useOpportunityStore();
+  const { isSaved, saveOpportunity, unsaveOpportunity } = useApplicationStore();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Featured Opportunities & Discovery State
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  // Contextual Signup Prompt State
+  const [contextualPrompt, setContextualPrompt] = useState<{
+    isOpen: boolean;
+    type: ContextualPromptType;
+    opportunityId?: string;
+  }>({
+    isOpen: false,
+    type: 'save'
+  });
+
+  const loadFeatured = async () => {
+    try {
+      setIsFetching(true);
+      setFetchError(null);
+      await fetchOpportunities();
+    } catch (err: any) {
+      setFetchError('Unable to load latest opportunities at this moment.');
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!opportunities || opportunities.length === 0) {
+      loadFeatured();
+    }
+  }, []);
+
+  const featuredOpportunities = useMemo(() => {
+    if (!opportunities || opportunities.length === 0) return [];
+    const now = new Date();
+    const openCandidates = opportunities.filter((opp) => {
+      if (!opp.id || !opp.title) return false;
+      if (opp.status && opp.status !== 'open') return false;
+      if (opp.deadline) {
+        const d = new Date(opp.deadline);
+        if (!isNaN(d.getTime()) && d < now) return false;
+      }
+      return true;
+    });
+
+    const sorted = [...openCandidates].sort((a, b) => {
+      if (a.isFeatured && !b.isFeatured) return -1;
+      if (!a.isFeatured && b.isFeatured) return 1;
+      if (a.verificationStatus === 'Verified' && b.verificationStatus !== 'Verified') return -1;
+      if (a.verificationStatus !== 'Verified' && b.verificationStatus === 'Verified') return 1;
+      return a.title.localeCompare(b.title);
+    });
+
+    return sorted.slice(0, 6);
+  }, [opportunities]);
+
+  const handleOpenPreview = (opportunityId: string) => {
+    const opp = opportunities.find(o => o.id === opportunityId);
+    if (opp) {
+      setSelectedOpportunity(opp);
+      setPreviewOpen(true);
+    }
+  };
+
+  const handleSaveAttempt = (opportunityId: string) => {
+    if (!isAuthenticated) {
+      setContextualPrompt({
+        isOpen: true,
+        type: 'save',
+        opportunityId
+      });
+      return;
+    }
+    if (isSaved(opportunityId)) {
+      unsaveOpportunity(opportunityId);
+    } else {
+      saveOpportunity(opportunityId);
+    }
+  };
+
+  const handleTrackAttempt = (opportunityId: string) => {
+    if (!isAuthenticated) {
+      setContextualPrompt({
+        isOpen: true,
+        type: 'track',
+        opportunityId
+      });
+      return;
+    }
+    navigate(`/my-opportunities/${opportunityId}/workspace`);
+  };
 
   const handleCtaClick = () => {
     if (isAuthenticated) {
@@ -402,6 +505,121 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── Real Featured Opportunities: Opportunities worth exploring ─── */}
+      <section id="featured-opportunities" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 text-left">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rome-50 dark:bg-rome-950/40 border border-rome-200/60 dark:border-rome-800/40 text-rome-600 dark:text-rome-400 text-xs font-semibold">
+                <SolarIcon name="magic-stick-linear" size={13} />
+                <span>Verified Listings</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 leading-tight">
+                Opportunities worth exploring
+              </h2>
+              <p className="text-sm sm:text-base text-surface-600 dark:text-surface-300 leading-relaxed max-w-2xl">
+                Discover opportunities that could be your next big step.
+              </p>
+            </div>
+
+            <Link
+              to="/explore"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-rome-600 dark:text-rome-400 hover:text-rome-700 dark:hover:text-rome-300 transition-colors shrink-0 group py-1"
+            >
+              <span>Explore all opportunities</span>
+              <SolarIcon name="arrow-right-linear" size={16} className="transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          {/* Loading Skeleton State */}
+          {(isFetching || storeLoading) && featuredOpportunities.length === 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-64 rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-5 animate-pulse space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div className="h-5 w-24 bg-surface-100 dark:bg-surface-800 rounded-full" />
+                    <div className="h-5 w-16 bg-surface-100 dark:bg-surface-800 rounded-full" />
+                  </div>
+                  <div className="h-6 w-3/4 bg-surface-100 dark:bg-surface-800 rounded-md" />
+                  <div className="h-4 w-1/2 bg-surface-100 dark:bg-surface-800 rounded-md" />
+                  <div className="space-y-2 pt-2">
+                    <div className="h-3 w-full bg-surface-100 dark:bg-surface-800 rounded-md" />
+                    <div className="h-3 w-4/5 bg-surface-100 dark:bg-surface-800 rounded-md" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Error State with Retry Button */}
+          {fetchError && featuredOpportunities.length === 0 && (
+            <div className="p-8 rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-center max-w-lg mx-auto space-y-3">
+              <SolarIcon name="danger-circle-linear" size={32} className="text-surface-400 mx-auto" />
+              <h3 className="text-base font-bold text-surface-900 dark:text-surface-100">Unable to load opportunities</h3>
+              <p className="text-xs text-surface-500 dark:text-surface-400">{fetchError}</p>
+              <Button
+                variant="outline"
+                size="default"
+                onClick={loadFeatured}
+                className="text-xs font-semibold rounded-xl"
+              >
+                Retry
+              </Button>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isFetching && !storeLoading && !fetchError && featuredOpportunities.length === 0 && (
+            <div className="p-8 rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 text-center max-w-lg mx-auto space-y-3">
+              <SolarIcon name="magnifer-linear" size={32} className="text-surface-400 mx-auto" />
+              <h3 className="text-base font-bold text-surface-900 dark:text-surface-100">No open opportunities right now</h3>
+              <p className="text-xs text-surface-500 dark:text-surface-400">
+                New verified opportunities are added continuously. Check back soon or browse all listings.
+              </p>
+              <Link to="/explore">
+                <Button variant="default" size="default" className="bg-rome-500 hover:bg-rome-600 text-white text-xs font-semibold rounded-xl">
+                  Browse Catalog
+                </Button>
+              </Link>
+            </div>
+          )}
+
+          {/* Grid of Real Opportunities */}
+          {featuredOpportunities.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredOpportunities.map((opp) => (
+                <OpportunityCard
+                  key={opp.id}
+                  opportunity={opp}
+                  showSaveButton={true}
+                  showCompareButton={false}
+                  onSave={handleSaveAttempt}
+                  onClick={(id) => handleOpenPreview(id)}
+                  className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Bottom Explore CTA Button */}
+          {featuredOpportunities.length > 0 && (
+            <div className="mt-10 text-center">
+              <Link to="/explore">
+                <Button
+                  variant="outline"
+                  size="default"
+                  className="h-11 px-6 rounded-xl font-semibold text-xs sm:text-sm text-surface-800 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800"
+                >
+                  <span>Explore all opportunities</span>
+                  <SolarIcon name="alt-arrow-right-linear" size={16} />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* ─── Section: About (In-Page Section) ─── */}
       <section id="about" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -656,6 +874,25 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+
+      {/* ─── Opportunity Preview Modal ─── */}
+      <OpportunityPreviewModal
+        isOpen={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        opportunity={selectedOpportunity}
+        isSaved={selectedOpportunity ? isSaved(selectedOpportunity.id) : false}
+        onSaveAttempt={handleSaveAttempt}
+        onTrackAttempt={handleTrackAttempt}
+      />
+
+      {/* ─── Contextual Signup Prompt Modal ─── */}
+      <ContextualSignupModal
+        isOpen={contextualPrompt.isOpen}
+        onClose={() => setContextualPrompt(prev => ({ ...prev, isOpen: false }))}
+        type={contextualPrompt.type}
+        opportunityId={contextualPrompt.opportunityId}
+        returnUrl={contextualPrompt.opportunityId ? `/opportunity/${contextualPrompt.opportunityId}` : '/discover'}
+      />
     </div>
   );
 }

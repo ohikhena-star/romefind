@@ -182,23 +182,6 @@
   .text-gradient {
     @apply bg-gradient-to-r from-rome-500 to-rome-600 bg-clip-text text-transparent;
   }
-
-  /* Editorial Redesign Utilities */
-  .bg-editorial-cream {
-    background-color: #F5EFE6;
-  }
-
-  .text-editorial-burgundy {
-    color: #702443;
-  }
-
-  .text-editorial-ink {
-    color: #242321;
-  }
-
-  .border-editorial-ink {
-    border-color: rgba(36, 35, 33, 0.12);
-  }
 }
 
 @layer utilities {

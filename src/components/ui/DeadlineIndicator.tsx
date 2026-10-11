@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar } from 'lucide-react';
+import { SolarIcon } from '@/components/ui/SolarIcon';
 import { cn } from '@/utils/cn';
 import { getDeadlineUrgency, daysUntil, formatDateShort } from '@/utils/format';
 
@@ -31,7 +31,7 @@ export const DeadlineIndicator: React.FC<DeadlineIndicatorProps> = ({ deadline, 
 
   return (
     <div className={cn("flex items-center text-xs", colorClasses, className)}>
-      <Calendar className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
+      <SolarIcon name="calendar-linear" size={14} className="mr-1.5 flex-shrink-0" />
       <span>{text}</span>
     </div>
   );

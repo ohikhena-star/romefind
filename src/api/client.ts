@@ -401,6 +401,33 @@ class ApiClient {
   async getAdminAuditLogs() {
     return this.request<any>('/admin/audit-logs');
   }
+
+  // ── Analytics Methods ───────────────────────────────────────────────────
+
+  /**
+   * Fire-and-forget event tracking. Never throws to the caller.
+   */
+  async trackEvent(eventType: string, opportunityId?: string, metadata?: Record<string, unknown>): Promise<void> {
+    try {
+      await this.request<any>('/analytics/event', {
+        method: 'POST',
+        body: JSON.stringify({ eventType, opportunityId, metadata })
+      });
+    } catch (e) {
+      // Intentionally swallowed — analytics tracking failures must not block UX
+      console.warn('[analytics] trackEvent silent failure:', e);
+    }
+  }
+
+  async getAdminShareAnalytics(params: { range?: '7d' | '30d' | '90d' | 'all' } = {}) {
+    const qs = params.range ? `?range=${encodeURIComponent(params.range)}` : '';
+    return this.request<any>(`/admin/analytics/share${qs}`);
+  }
+
+  async getAdminOpportunityShareAnalytics(opportunityId: string, params: { range?: '7d' | '30d' | '90d' | 'all' } = {}) {
+    const qs = params.range ? `?range=${encodeURIComponent(params.range)}` : '';
+    return this.request<any>(`/admin/analytics/share/${encodeURIComponent(opportunityId)}${qs}`);
+  }
 }
 
 export const api = new ApiClient();

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
 import { useApplicationStore } from '@/store/applicationStore';
@@ -8,11 +8,10 @@ import { api } from '@/api/client';
 import { Button, Tag, DeadlineIndicator, MatchIndicator, Badge, EmptyState } from '@/components/ui';
 import { OpportunityDetailSkeleton } from '@/components/ui/composite-skeletons';
 import { OpportunityCard } from '@/components/opportunity';
-import { OPPORTUNITY_TYPE_COLORS } from '@/utils/constants';
-import { MapPin, Globe, DollarSign, Calendar, ExternalLink, CheckCircle2, AlertCircle, Bookmark, BookmarkCheck, ArrowLeft, ShieldCheck, Share2, Trash2 } from 'lucide-react';
-import { Opportunity } from '@/types/models';
+import { Opportunity, RemoteStatus } from '@/types/models';
 import { generateOpportunityTasks } from '@/utils/opportunityTasks';
 import { SolarIcon } from '@/components/ui/SolarIcon';
+import { ContextualSignupModal, ContextualPromptType } from '@/components/auth/ContextualSignupModal';
 import { cn } from '@/utils/cn';
 
 export default function OpportunityDetailPage() {
@@ -20,10 +19,26 @@ export default function OpportunityDetailPage() {
   const navigate = useNavigate();
   const { getOpportunityById, opportunities, isLoading } = useOpportunityStore();
   const { user, isAuthenticated } = useAuthStore();
-  const { isSaved, saveOpportunity, unsaveOpportunity, addToCompare, removeFromCompare, comparisons, createApplication, trackedApplications, toggleTask } = useApplicationStore();
+  const {
+    isSaved,
+    saveOpportunity,
+    unsaveOpportunity,
+    addToCompare,
+    removeFromCompare,
+    comparisons,
+    createApplication,
+    trackedApplications,
+    toggleTask
+  } = useApplicationStore();
 
   const [showShareModal, setShowShareModal] = useState(false);
   const [copyToast, setCopyToast] = useState(false);
+
+  // Contextual signup prompt
+  const [contextualPrompt, setContextualPrompt] = useState<{
+    isOpen: boolean;
+    type: ContextualPromptType;
+  }>({ isOpen: false, type: 'save' });
 
   // Report modal state
   const [showReportModal, setShowReportModal] = useState(false);
@@ -44,7 +59,7 @@ export default function OpportunityDetailPage() {
   const [adviceLoading, setAdviceLoading] = useState(false);
 
   // Delete advice state
-  const [deleteTarget, setDeleteTarget] = useState<any>(null); // the advice object being deleted
+  const [deleteTarget, setDeleteTarget] = useState<any>(null);
   const [deleteReason, setDeleteReason] = useState('');
   const [deleteOtherText, setDeleteOtherText] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -57,6 +72,23 @@ export default function OpportunityDetailPage() {
     'Other',
   ];
 
+  const location = useLocation();
+  const trackedVisitRef = useRef(false);
+
+  // Track shared link visits (?ref=share)
+  useEffect(() => {
+    if (!id || trackedVisitRef.current) return;
+    const params = new URLSearchParams(location.search);
+    if (params.get('ref') === 'share') {
+      trackedVisitRef.current = true;
+      api.trackEvent('shared_link_visit', id, { source: 'share_link' });
+      // Clean url without reload
+      params.delete('ref');
+      const cleanSearch = params.toString() ? `?${params.toString()}` : '';
+      window.history.replaceState(null, '', `${window.location.pathname}${cleanSearch}${window.location.hash}`);
+    }
+  }, [id, location.search]);
+
   useEffect(() => {
     if (!id) return;
     const fetchAdvice = () => {
@@ -67,7 +99,6 @@ export default function OpportunityDetailPage() {
         .catch(() => {});
     };
     fetchAdvice();
-    // Poll every 30s so other users' new posts appear without a manual refresh
     const interval = setInterval(fetchAdvice, 30000);
     return () => clearInterval(interval);
   }, [id]);
@@ -100,11 +131,9 @@ export default function OpportunityDetailPage() {
         title: adviceTitle,
         content: adviceContent
       });
-      // Optimistically prepend the new advice, then re-fetch to confirm
       if (newAdvice && newAdvice.id) {
         setAdviceList(prev => [newAdvice, ...prev]);
       }
-      // Re-fetch full list so any other user's posts also appear
       api.getOpportunityAdvice(id).then(fresh => {
         if (Array.isArray(fresh)) setAdviceList(fresh);
       }).catch(() => {});
@@ -137,7 +166,7 @@ export default function OpportunityDetailPage() {
   };
 
   const opportunity = useMemo(() => getOpportunityById(id || ''), [id, getOpportunityById]);
-  
+
   const relevance = useMemo(() => {
     if (!isAuthenticated || !user?.profile || !user?.preferences || !opportunity) return null;
     return calculateRelevanceScore(opportunity, user.profile, user.preferences);
@@ -157,11 +186,11 @@ export default function OpportunityDetailPage() {
   if (!opportunity) {
     return (
       <div className="flex h-screen items-center justify-center p-8">
-        <EmptyState 
-          title="Opportunity not found" 
+        <EmptyState
+          title="Opportunity not found"
           description="The opportunity you're looking for may have been removed or updated."
-          actionLabel="Back to Explore" 
-          onAction={() => navigate('/explore')} 
+          actionLabel="Back to Explore"
+          onAction={() => navigate('/explore')}
         />
       </div>
     );
@@ -210,483 +239,639 @@ export default function OpportunityDetailPage() {
   };
 
   const handleStartApplication = () => {
+    if (!isAuthenticated) {
+      setContextualPrompt({ isOpen: true, type: 'track' });
+      return;
+    }
     if (!app) {
       createApplication(opportunity.id, opportunity);
     }
     navigate(`/my-opportunities/${opportunity.id}/workspace`);
   };
 
+  const hasValidAppUrl = Boolean(opportunity.applicationUrl && opportunity.applicationUrl.trim() !== '');
+
+  const displayLocation = opportunity.remoteStatus === RemoteStatus.Remote
+    ? 'Remote'
+    : (opportunity.location || 'Global / Flexible');
+
   return (
-    <div className="relative min-h-screen pb-24 lg:pb-12 bg-white dark:bg-surface-950">
-      {/* Top Back Nav */}
-      <div className="w-full pt-6 pb-2">
-        <button 
+    <div className="relative min-h-screen pb-28 lg:pb-16 bg-white dark:bg-surface-950">
+      {/* ─── Breadcrumb / Back Navigation ─── */}
+      <div className="w-full pt-4 pb-3">
+        <button
           onClick={() => navigate(-1)}
           aria-label="Back to opportunities"
-          className="flex items-center gap-1.5 text-xs font-semibold text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 transition-colors py-1 cursor-pointer"
         >
-          <ArrowLeft size={14} />
-          <span>Back</span>
+          <SolarIcon name="alt-arrow-left-linear" size={14} />
+          <span>Back to discovery</span>
         </button>
       </div>
 
-      {/* Hero Section */}
-      <main>
-      <div className="bg-surface-50 dark:bg-surface-900/50 border-b border-surface-200 dark:border-surface-800">
-        <div className="w-full py-8 lg:py-12 flex flex-col lg:flex-row gap-12">
-          <div className="flex-1 space-y-5">
-            <div className="flex flex-wrap items-center gap-2">
-              <Tag label={opportunity.type} />
-              {opportunity.verificationStatus && (
-                <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 flex items-center gap-1">
-                  <ShieldCheck size={12} />
-                  Verified Source
-                </Badge>
-              )}
-            </div>
+      <main className="w-full">
+        {/* ─── Header & Primary Summary ─── */}
+        <section className="border-b border-surface-200 dark:border-surface-800 pb-8 pt-2">
+          <div className="flex flex-col lg:flex-row items-start justify-between gap-8 lg:gap-12">
             
-            <div className="space-y-1.5">
-              {orgWebsite ? (
-                <a 
-                  href={orgWebsite} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  aria-label="Opens in new tab"
-                  className="text-sm font-semibold text-rome-600 dark:text-rome-400 hover:underline inline-flex items-center gap-1"
-                >
-                  {orgName} <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              ) : (
-                <span className="text-sm font-semibold text-surface-500">{orgName}</span>
-              )}
-              <h1 className="text-3xl md:text-4xl font-bold text-surface-900 dark:text-surface-50 leading-tight">
-                {opportunity.title}
-              </h1>
-            </div>
-            
-            <p className="text-base md:text-lg text-surface-600 dark:text-surface-300 max-w-3xl leading-relaxed">
-              {opportunity.description}
-            </p>
+            {/* Left Column: Opportunity Identity */}
+            <div className="flex-1 space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Tag label={opportunity.type} />
+                {opportunity.verificationStatus && (
+                  <Badge variant="secondary" className="bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 flex items-center gap-1 text-xs">
+                    <SolarIcon name="verified-check-linear" size={13} />
+                    Verified by ROMEfind
+                  </Badge>
+                )}
+                {opportunity.lastVerified && (
+                  <span className="text-xs text-surface-400">
+                    Verified {new Date(opportunity.lastVerified).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
+                  </span>
+                )}
+              </div>
 
-            <div className="flex flex-wrap gap-1.5 pt-2">
-              {opportunity.field.map((f: string) => (
-                <span key={f} className="px-2.5 py-1 rounded-full text-xs font-medium bg-surface-200/70 dark:bg-surface-800 text-surface-700 dark:text-surface-300">
-                  {f}
-                </span>
-              ))}
-            </div>
-          </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-surface-500">
+                    Offered by
+                  </span>
+                  {orgWebsite ? (
+                    <a
+                      href={orgWebsite}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${orgName} official website (opens in new tab)`}
+                      className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline inline-flex items-center gap-1"
+                    >
+                      {orgName} <SolarIcon name="arrow-right-up-linear" size={11} />
+                    </a>
+                  ) : (
+                    <span className="text-xs font-semibold text-surface-800 dark:text-surface-200">{orgName}</span>
+                  )}
+                </div>
 
-          {/* Action Card Desktop */}
-          <div className="hidden lg:block w-[360px] flex-shrink-0">
-            <div className="sticky top-24 bg-white dark:bg-surface-900 rounded-2xl p-6 border border-surface-200 dark:border-surface-800 shadow-card">
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  {opportunity.deadline && (
-                    <div className="flex items-start gap-3">
-                      <Calendar className="w-5 h-5 text-surface-400 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-semibold text-surface-500 mb-0.5 uppercase tracking-wider">Deadline</p>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-surface-950 dark:text-white leading-tight tracking-tight">
+                  {opportunity.title}
+                </h1>
+              </div>
+
+              {/* High-level summary text */}
+              <p className="text-sm sm:text-base text-surface-600 dark:text-surface-300 leading-relaxed max-w-3xl">
+                {opportunity.shortDescription || opportunity.description}
+              </p>
+
+              {/* Fields & Tags */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                {opportunity.field.map((f: string) => (
+                  <span key={f} className="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100 dark:bg-surface-800/80 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Desktop Action Panel */}
+            <div className="w-full lg:w-80 flex-shrink-0">
+              <div className="bg-surface-50 dark:bg-surface-900 rounded-2xl p-5 sm:p-6 border border-surface-200 dark:border-surface-800 shadow-xs space-y-5">
+                
+                {/* Essential Quick Facts */}
+                <div className="space-y-3.5 text-xs">
+                  <div>
+                    <span className="text-surface-400 dark:text-surface-500 uppercase tracking-wider font-semibold block mb-1">
+                      Deadline
+                    </span>
+                    {opportunity.deadline ? (
+                      <div className="font-semibold text-surface-900 dark:text-surface-100">
                         <DeadlineIndicator deadline={opportunity.deadline} />
                       </div>
-                    </div>
-                  )}
-                  {opportunity.location && (
-                    <div className="flex items-start gap-3">
-                      <MapPin className="w-5 h-5 text-surface-400 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-semibold text-surface-500 mb-0.5 uppercase tracking-wider">Location</p>
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">{opportunity.location}</p>
-                      </div>
-                    </div>
-                  )}
-                  {opportunity.remoteStatus && (
-                    <div className="flex items-start gap-3">
-                      <Globe className="w-5 h-5 text-surface-400 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-semibold text-surface-500 mb-0.5 uppercase tracking-wider">Work Setup</p>
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">{opportunity.remoteStatus}</p>
-                      </div>
-                    </div>
-                  )}
+                    ) : (
+                      <span className="font-semibold text-surface-800 dark:text-surface-200">Rolling / Ongoing</span>
+                    )}
+                  </div>
+
+                  <div>
+                    <span className="text-surface-400 dark:text-surface-500 uppercase tracking-wider font-semibold block mb-1">
+                      Location & Format
+                    </span>
+                    <span className="font-semibold text-surface-800 dark:text-surface-200 block text-xs">
+                      {displayLocation} {opportunity.remoteStatus ? `(${opportunity.remoteStatus})` : ''}
+                    </span>
+                  </div>
+
                   {opportunity.funding && (
-                    <div className="flex items-start gap-3">
-                      <DollarSign className="w-5 h-5 text-surface-400 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-semibold text-surface-500 mb-0.5 uppercase tracking-wider">Funding & Benefits</p>
-                        <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{opportunity.funding}</p>
-                      </div>
+                    <div>
+                      <span className="text-surface-400 dark:text-surface-500 uppercase tracking-wider font-semibold block mb-1">
+                        Funding / Award
+                      </span>
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-400 block text-xs">
+                        {opportunity.funding}
+                      </span>
+                    </div>
+                  )}
+
+                  {opportunity.duration && (
+                    <div>
+                      <span className="text-surface-400 dark:text-surface-500 uppercase tracking-wider font-semibold block mb-1">
+                        Duration
+                      </span>
+                      <span className="font-semibold text-surface-800 dark:text-surface-200 block text-xs">
+                        {opportunity.duration}
+                      </span>
                     </div>
                   )}
                 </div>
 
-                <div className="pt-6 border-t border-surface-100 dark:border-surface-800 flex flex-col gap-3">
-                  <Button 
-                    variant="default" 
-                    className="w-full"
-                    size="lg"
-                    onClick={() => window.open(opportunity.applicationUrl, '_blank', 'noopener noreferrer')}
-                    aria-label={`Apply to ${opportunity.title}`}
-                  >
-                    Apply on Official Site
-                    <ExternalLink size={16} className="ml-2" />
-                  </Button>
-                  
-                  <Button 
-                    variant="secondary"
-                    className="w-full"
+                {/* Primary Actions */}
+                <div className="pt-4 border-t border-surface-200/80 dark:border-surface-800 flex flex-col gap-2.5">
+                  {hasValidAppUrl ? (
+                    <Button
+                      variant="default"
+                      size="default"
+                      className="w-full h-11 min-h-[44px] justify-center bg-rome-500 hover:bg-rome-600 text-white font-semibold text-sm rounded-xl shadow-xs"
+                      onClick={() => {
+                        api.trackEvent('application_link_clicked', opportunity.id, { url: opportunity.applicationUrl });
+                        window.open(opportunity.applicationUrl, '_blank', 'noopener noreferrer');
+                      }}
+                      aria-label={`Apply to ${opportunity.title} on official site (opens in new tab)`}
+                    >
+                      <span>Apply on Official Site</span>
+                      <SolarIcon name="arrow-right-up-linear" size={15} />
+                    </Button>
+                  ) : (
+                    <div className="p-3 bg-surface-100 dark:bg-surface-800/60 rounded-xl text-center text-xs text-surface-500 dark:text-surface-400">
+                      Direct application link is currently rolling or handled directly by the host institution.
+                    </div>
+                  )}
+
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="w-full h-11 min-h-[44px] justify-center text-xs font-semibold rounded-xl"
                     onClick={handleStartApplication}
                   >
-                    Track in Workspace
+                    <span>Track in My Opportunities</span>
+                    <SolarIcon name="alt-arrow-right-linear" size={14} />
                   </Button>
 
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="default"
-                      className="flex-1 justify-center gap-1.5 text-sm font-semibold h-11 min-h-[44px]"
-                      onClick={() => saved ? unsaveOpportunity(opportunity.id) : saveOpportunity(opportunity.id)}
-                      aria-label={saved ? 'Remove from saved' : 'Save opportunity'}
-                    >
-                      {saved ? <BookmarkCheck className="w-4 h-4 text-rome-500" /> : <Bookmark className="w-4 h-4" />}
-                      <span>{saved ? 'Saved' : 'Save'}</span>
-                    </Button>
-                    <Button 
-                      variant={isComparing ? 'secondary' : 'outline'}
-                      size="default"
-                      className="flex-1 justify-center text-sm font-semibold h-11 min-h-[44px]"
-                      onClick={() => isComparing ? removeFromCompare(opportunity.id) : addToCompare(opportunity.id)}
-                    >
-                      {isComparing ? 'Comparing ✓' : '+ Compare'}
-                    </Button>
+                  {/* Sibling Save, Compare, Share actions */}
+                  <div className="flex items-center gap-2 pt-1">
                     <Button
                       variant="outline"
                       size="default"
-                      className="w-11 h-11 min-w-[44px] min-h-[44px] p-0 flex items-center justify-center"
-                      onClick={() => setShowShareModal(true)}
-                      title="Share Opportunity"
-                      aria-label="Share Opportunity"
+                      className={cn(
+                        "flex-1 justify-center gap-1.5 text-xs font-semibold h-10 min-h-[40px] rounded-xl",
+                        saved && "text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/20"
+                      )}
+                      onClick={() => {
+                        if (saved) {
+                          unsaveOpportunity(opportunity.id);
+                        } else {
+                          if (!isAuthenticated) {
+                            setContextualPrompt({ isOpen: true, type: 'save' });
+                            return;
+                          }
+                          saveOpportunity(opportunity.id);
+                        }
+                      }}
+                      aria-label={saved ? 'Remove from saved items' : 'Save opportunity'}
                     >
-                      <Share2 className="w-4 h-4" />
+                      <SolarIcon name={saved ? "heart-bold" : "heart-linear"} size={16} />
+                      <span>{saved ? 'Saved' : 'Save'}</span>
+                    </Button>
+
+                    <Button
+                      variant={isComparing ? 'secondary' : 'outline'}
+                      size="default"
+                      className="flex-1 justify-center text-xs font-semibold h-10 min-h-[40px] rounded-xl"
+                      onClick={() => isComparing ? removeFromCompare(opportunity.id) : addToCompare(opportunity.id)}
+                      aria-label={isComparing ? 'Remove from compare' : 'Add to compare'}
+                    >
+                      <SolarIcon name="scale-linear" size={15} />
+                      <span>{isComparing ? 'Comparing' : 'Compare'}</span>
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      size="default"
+                      className="w-10 h-10 min-w-[40px] min-h-[40px] p-0 flex items-center justify-center rounded-xl"
+                      onClick={() => setShowShareModal(true)}
+                      title="Share opportunity"
+                      aria-label="Share opportunity"
+                    >
+                      <SolarIcon name="share-linear" size={16} />
                     </Button>
                   </div>
 
                   <button
                     onClick={() => setShowReportModal(true)}
-                    className="text-[11px] text-surface-400 hover:text-red-500 dark:hover:text-red-400 transition-colors flex items-center justify-center gap-1 mt-1 cursor-pointer"
+                    className="text-xs text-surface-400 hover:text-red-500 dark:hover:text-red-400 transition-colors flex items-center justify-center gap-1 pt-1 cursor-pointer"
                   >
-                    <AlertCircle size={12} />
-                    <span>Report inaccurate info or broken link</span>
+                    <SolarIcon name="danger-circle-linear" size={13} />
+                    <span>Report issue or outdated info</span>
                   </button>
                 </div>
               </div>
             </div>
+
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Body */}
-      <div className="w-full py-10">
-        <div className="max-w-3xl space-y-10">
+        {/* ─── Detailed Content Grid ─── */}
+        <div className="py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
           
-          {/* Personalized Relevance Section */}
-          {isAuthenticated && relevance && (
-            <section className="bg-rome-50/70 dark:bg-rome-950/20 rounded-2xl p-6 sm:p-8 border border-rome-200 dark:border-rome-900/40">
-              <h2 className="text-xl font-bold mb-3 text-surface-900 dark:text-surface-50">
-                Why this is relevant to you
-              </h2>
-              <MatchIndicator score={relevance.score} reasons={relevance.reasons} />
-            </section>
-          )}
+          <div className="lg:col-span-2 space-y-10">
+            {/* 1. Personalized Relevance (if logged in) */}
+            {isAuthenticated && relevance && (
+              <section className="bg-rome-50/60 dark:bg-rome-950/20 rounded-2xl p-5 sm:p-6 border border-rome-200/80 dark:border-rome-900/40 space-y-3">
+                <h2 className="text-base sm:text-lg font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                  <SolarIcon name="magic-stick-linear" size={18} className="text-rome-500" />
+                  Why this matches your profile
+                </h2>
+                <MatchIndicator score={relevance.score} reasons={relevance.reasons} />
+              </section>
+            )}
 
-          {/* Preparation & Application Checklist */}
-          {isAuthenticated && (
-            <section className="bg-white dark:bg-surface-900 rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-surface-200 dark:border-surface-800 shadow-xs space-y-4">
+            {/* 2. Full Description */}
+            <section className="space-y-3">
+              <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-100">
+                About this opportunity
+              </h2>
+              <div className="prose dark:prose-invert max-w-none text-sm sm:text-base text-surface-700 dark:text-surface-300 leading-relaxed space-y-4">
+                <p>{opportunity.description}</p>
+              </div>
+            </section>
+
+            {/* 3. Who is eligible */}
+            {opportunity.eligibility && opportunity.eligibility.length > 0 && (
+              <section className="space-y-3">
+                <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                  <SolarIcon name="user-check-rounded-linear" size={18} className="text-rome-500" />
+                  Eligibility criteria
+                </h2>
+                <ul className="space-y-2.5">
+                  {opportunity.eligibility.map((item: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-3 text-sm text-surface-700 dark:text-surface-300">
+                      <SolarIcon name="check-circle-linear" size={16} className="text-rome-500 shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* 4. Requirements & Materials */}
+            {opportunity.requirements && opportunity.requirements.length > 0 && (
+              <section className="space-y-3">
+                <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                  <SolarIcon name="file-text-linear" size={18} className="text-rome-500" />
+                  Required application materials
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {opportunity.requirements.map((req: string, idx: number) => (
+                    <div key={idx} className="flex items-start gap-2.5 p-3.5 rounded-xl bg-surface-50 dark:bg-surface-900/60 border border-surface-200/80 dark:border-surface-800">
+                      <SolarIcon name="checklist-minimalistic-linear" size={16} className="text-surface-500 shrink-0 mt-0.5" />
+                      <p className="text-xs sm:text-sm text-surface-800 dark:text-surface-200 font-medium leading-snug">{req}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 5. What is offered (Benefits & Funding) */}
+            {opportunity.benefits && opportunity.benefits.length > 0 && (
+              <section className="space-y-3">
+                <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                  <SolarIcon name="cup-star-linear" size={18} className="text-rome-500" />
+                  What the program provides
+                </h2>
+                <ul className="space-y-2.5">
+                  {opportunity.benefits.map((benefit: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-3 text-sm text-surface-700 dark:text-surface-300">
+                      <SolarIcon name="star-linear" size={16} className="text-rome-500 shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* 6. Application Steps */}
+            {opportunity.applicationSteps && opportunity.applicationSteps.length > 0 && (
+              <section className="space-y-3">
+                <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                  <SolarIcon name="sort-from-bottom-to-top-linear" size={18} className="text-rome-500" />
+                  How to apply
+                </h2>
+                <ol className="space-y-3">
+                  {opportunity.applicationSteps.map((step: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-3.5 text-sm text-surface-700 dark:text-surface-300">
+                      <span className="w-6 h-6 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                        {idx + 1}
+                      </span>
+                      <span className="leading-relaxed pt-0.5">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+
+            {/* 7. Preparation Checklist (Interactive Workspace Preview) */}
+            {isAuthenticated && (
+              <section className="bg-white dark:bg-surface-900 rounded-2xl p-5 sm:p-6 border border-surface-200 dark:border-surface-800 shadow-xs space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base sm:text-lg font-bold text-surface-950 dark:text-surface-50 flex items-center gap-2">
+                      <SolarIcon name="checklist-minimalistic-linear" size={18} className="text-rome-500" />
+                      Preparation Checklist
+                    </h2>
+                    <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">
+                      Check off items as you prepare. Changes automatically sync to your workspace.
+                    </p>
+                  </div>
+                  <span className="text-xs font-bold text-surface-700 dark:text-surface-300 bg-surface-100 dark:bg-surface-800 px-2.5 py-1 rounded-lg border border-surface-200 dark:border-surface-700 self-start sm:self-auto">
+                    {completedCount} of {totalCount} completed
+                  </span>
+                </div>
+
+                <div className="w-full bg-surface-100 dark:bg-surface-800 h-1.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-rome-500 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2 pt-1">
+                  {tasks.map((task) => (
+                    <div
+                      key={task.id}
+                      onClick={() => handleToggleTask(task.id)}
+                      className={cn(
+                        "flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer min-h-[44px]",
+                        task.completed
+                          ? "bg-surface-50/80 dark:bg-surface-800/40 border-surface-200 dark:border-surface-800/80 opacity-75"
+                          : "bg-white dark:bg-surface-900 border-surface-200 dark:border-surface-700 hover:border-rome-400 shadow-2xs"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-5 h-5 rounded-md flex items-center justify-center border text-xs font-bold transition-colors mt-0.5 shrink-0",
+                        task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-800"
+                      )}>
+                        {task.completed && "✓"}
+                      </div>
+                      <span className={cn(
+                        "text-xs sm:text-sm leading-relaxed font-medium",
+                        task.completed
+                          ? "line-through text-surface-400 dark:text-surface-500"
+                          : "text-surface-900 dark:text-surface-100"
+                      )}>
+                        {task.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-2 flex items-center justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleStartApplication}
+                    className="text-xs font-semibold h-9 px-3.5 rounded-xl"
+                  >
+                    <span>Open in Workspace</span>
+                    <SolarIcon name="alt-arrow-right-linear" size={13} />
+                  </Button>
+                </div>
+              </section>
+            )}
+
+            {/* 8. Candidate Reviews & Insights */}
+            <section className="pt-8 border-t border-surface-200 dark:border-surface-800 space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <SolarIcon name="checklist-minimalistic-linear" size={18} className="text-rome-500" />
-                    <h2 className="text-xl font-bold text-surface-950 dark:text-surface-50">
-                      Preparation & Application Checklist
-                    </h2>
-                  </div>
-                  <p className="text-xs text-surface-500 dark:text-surface-400 mt-1">
-                    Requirements and materials tailored directly to this {opportunity.type.toLowerCase()}.
+                  <h2 className="text-xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                    Applicant Reviews & Outcomes
+                  </h2>
+                  <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">
+                    Real outcomes and application tips shared by fellow candidates.
                   </p>
                 </div>
-                
-                <span className="text-xs font-bold text-surface-700 dark:text-surface-300 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full border border-surface-200 dark:border-surface-700 self-start sm:self-auto">
-                  {completedCount} of {totalCount} ready
-                </span>
-              </div>
-
-              <div className="w-full bg-surface-100 dark:bg-surface-800 h-2 rounded-full overflow-hidden">
-                <div 
-                  className="bg-rome-500 h-full rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 pt-1">
-                {tasks.map((task) => (
-                  <div 
-                    key={task.id}
-                    onClick={() => handleToggleTask(task.id)}
-                    className={cn(
-                      "flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer min-h-[44px]",
-                      task.completed
-                        ? "bg-surface-50/80 dark:bg-surface-800/40 border-surface-200 dark:border-surface-800/80 opacity-80"
-                        : "bg-white dark:bg-surface-900 border-surface-200 dark:border-surface-700 hover:border-rome-400 shadow-2xs"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-5 h-5 rounded-lg flex items-center justify-center border text-xs font-bold transition-colors mt-0.5 shrink-0",
-                      task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-800"
-                    )}>
-                      {task.completed && "✓"}
-                    </div>
-                    <span className={cn(
-                      "text-sm leading-relaxed font-medium",
-                      task.completed 
-                        ? "line-through text-surface-400 dark:text-surface-500" 
-                        : "text-surface-900 dark:text-surface-100"
-                    )}>
-                      {task.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-surface-100 dark:border-surface-800 text-xs text-surface-500">
-                <span>Progress automatically persists in your workspace.</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleStartApplication}
-                  className="text-xs font-semibold h-9 px-3.5"
+                <button
+                  onClick={() => setShowAdviceModal(true)}
+                  className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-rome-500 hover:bg-rome-600 text-white shadow-xs transition-colors self-start sm:self-auto cursor-pointer"
                 >
-                  <span>Open Workspace</span>
-                  <SolarIcon name="alt-arrow-right-linear" size={13} />
-                </Button>
+                  + Post Review / Outcome
+                </button>
               </div>
-            </section>
-          )}
 
-          {/* Benefits */}
-          {opportunity.benefits && opportunity.benefits.length > 0 && (
-            <section>
-              <h2 className="text-xl font-bold mb-4 text-surface-900 dark:text-surface-100">What you get</h2>
-              <ul className="space-y-2.5">
-                {opportunity.benefits.map((benefit: string, idx: number) => (
-                  <li key={idx} className="flex gap-3 text-sm text-surface-700 dark:text-surface-300">
-                    <CheckCircle2 className="w-4 h-4 text-rome-500 flex-shrink-0 mt-0.5" />
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Eligibility */}
-          {opportunity.eligibility && opportunity.eligibility.length > 0 && (
-            <section>
-              <h2 className="text-xl font-bold mb-4 text-surface-900 dark:text-surface-100">Who can apply</h2>
-              <ul className="space-y-2.5">
-                {opportunity.eligibility.map((item: string, idx: number) => (
-                  <li key={idx} className="flex gap-3 text-sm text-surface-700 dark:text-surface-300">
-                    <div className="w-1.5 h-1.5 rounded-full bg-rome-500 mt-2 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Requirements */}
-          {opportunity.requirements && opportunity.requirements.length > 0 && (
-            <section>
-              <h2 className="text-xl font-bold mb-4 text-surface-900 dark:text-surface-100">What you'll need</h2>
-              <div className="space-y-3">
-                {opportunity.requirements.map((req: string, idx: number) => (
-                  <div key={idx} className="flex items-start gap-3 p-3.5 rounded-lg bg-surface-50 dark:bg-surface-900/60 border border-surface-100 dark:border-surface-800">
-                    {isAuthenticated && user?.profile ? (
-                      idx % 2 === 0 ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                      ) : (
-                        <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                      )
-                    ) : (
-                      <div className="w-1.5 h-1.5 rounded-full bg-surface-400 mt-2 flex-shrink-0" />
-                    )}
-                    <p className="text-sm text-surface-800 dark:text-surface-200 font-medium">{req}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Application Steps */}
-          {opportunity.applicationSteps && opportunity.applicationSteps.length > 0 && (
-            <section>
-              <h2 className="text-xl font-bold mb-4 text-surface-900 dark:text-surface-100">Application Process</h2>
-              <ol className="space-y-3">
-                {opportunity.applicationSteps.map((step: string, idx: number) => (
-                  <li key={idx} className="flex gap-3 text-sm text-surface-700 dark:text-surface-300">
-                    <span className="w-6 h-6 rounded-full bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-100 font-bold text-xs flex items-center justify-center flex-shrink-0">
-                      {idx + 1}
-                    </span>
-                    <span className="pt-0.5">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )}
-
-          {/* Source & Verification */}
-          <section className="pt-8 border-t border-surface-200 dark:border-surface-800">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-surface-500">Official Verification & Transparency</h2>
-              <button 
-                onClick={() => setShowReportModal(true)}
-                className="text-xs text-surface-500 hover:text-red-500 transition-colors inline-flex items-center gap-1"
-              >
-                <AlertCircle className="w-3.5 h-3.5" /> Report Issue
-              </button>
-            </div>
-            <div className="flex flex-wrap items-center gap-4 bg-surface-50 dark:bg-surface-900 p-4 rounded-xl border border-surface-200 dark:border-surface-800">
-              <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                {opportunity.verificationStatus || 'Verified'}
-              </Badge>
-              <span className="text-xs text-surface-500">
-                Source: <strong className="text-surface-800 dark:text-surface-200">{opportunity.sourceName || orgName}</strong>
-              </span>
-              <a 
-                href={opportunity.officialSource} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                aria-label="Opens in new tab"
-                className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline ml-auto inline-flex items-center gap-1"
-              >
-                Official Page <ExternalLink size={12} />
-              </a>
-            </div>
-          </section>
-
-          {/* Candidate Reviews & Applicant Outcomes */}
-          <section className="pt-8 border-t border-surface-200 dark:border-surface-800 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h2 className="text-2xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
-                  <span>Applicant Reviews & Decision Outcomes</span>
-                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-rome-100 dark:bg-rome-900/50 text-rome-700 dark:text-rome-300">
-                    Candidate Experiences
-                  </span>
-                </h2>
-                <p className="text-xs text-surface-500 dark:text-surface-400 mt-1">
-                  Read why candidates were accepted or rejected, interview questions, and lessons learned.
-                </p>
-              </div>
-              <button
-                onClick={() => setShowAdviceModal(true)}
-                className="text-xs font-bold px-4 py-2 rounded-xl bg-rome-500 hover:bg-rome-600 text-white shadow-xs transition-colors self-start sm:self-auto cursor-pointer"
-              >
-                + Post Your Review / Outcome
-              </button>
-            </div>
-
-            {/* Candidate Experience Cards - Only rendered when actual reviews exist */}
-            {adviceList.length === 0 ? (
-              <div className="p-8 rounded-2xl bg-surface-50 dark:bg-surface-900/50 border border-surface-200 dark:border-surface-800 text-center space-y-3">
-                <p className="text-sm font-semibold text-surface-700 dark:text-surface-300">
-                  No applicant reviews or outcome notes posted for this opportunity yet.
-                </p>
-                <p className="text-xs text-surface-500 dark:text-surface-400 max-w-md mx-auto">
-                  Have you applied, interviewed, or received an offer for this program? Share your insights to help the community prepare.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-5">
-                {adviceList.map((adv) => (
-                  <div key={adv.id} className="p-6 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-surface-100 dark:border-surface-800">
-                      <div className="flex items-center gap-2">
-                        <span className={cn(
-                          "inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border",
-                          adv.outcomeStatus === 'Accepted'
-                            ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
-                            : adv.outcomeStatus === 'Rejected'
-                            ? "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800"
-                            : "bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-800"
-                        )}>
-                          {adv.outcomeStatus === 'Accepted' ? '🟢 ACCEPTED' : adv.outcomeStatus === 'Rejected' ? '🔴 REJECTED' : '🟡 INTERVIEWED'}
+              {adviceList.length === 0 ? (
+                <div className="p-6 rounded-2xl bg-surface-50 dark:bg-surface-900/50 border border-surface-200 dark:border-surface-800 text-center space-y-1.5">
+                  <p className="text-xs sm:text-sm font-semibold text-surface-700 dark:text-surface-300">
+                    No applicant reviews posted for this opportunity yet.
+                  </p>
+                  <p className="text-xs text-surface-500 dark:text-surface-400 max-w-sm mx-auto">
+                    Have you applied or interviewed here? Share your outcome to guide future applicants.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {adviceList.map((adv) => (
+                    <div key={adv.id} className="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-surface-100 dark:border-surface-800">
+                        <div className="flex items-center gap-2">
+                          <span className={cn(
+                            "inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-md border",
+                            adv.outcomeStatus === 'Accepted'
+                              ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
+                              : adv.outcomeStatus === 'Rejected'
+                              ? "bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border-surface-200 dark:border-surface-700"
+                              : "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                          )}>
+                            {adv.outcomeStatus}
+                          </span>
+                          <span className="text-xs text-surface-500">
+                            {adv.authorName} {adv.authorRole ? `(${adv.authorRole})` : ''}
+                          </span>
+                        </div>
+                        <span className="text-xs font-medium text-rome-600 dark:text-rome-400">
+                          {adv.adviceType || 'Insight'}
                         </span>
-                        <span className="text-xs font-medium text-surface-500 dark:text-surface-400">
-                          by {adv.authorName} {adv.authorRole ? `(${adv.authorRole})` : ''}
-                        </span>
+                        {user && adv.userId === user.id && (
+                          <button
+                            onClick={() => { setDeleteTarget(adv); setDeleteReason(''); setDeleteOtherText(''); }}
+                            className="ml-auto p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                            title="Remove my review"
+                          >
+                            <SolarIcon name="trash-bin-minimalistic-linear" size={14} />
+                          </button>
+                        )}
                       </div>
-                      <span className="text-xs font-semibold text-rome-600 dark:text-rome-400">
-                        {adv.adviceType || 'Applicant Insight'}
-                      </span>
-                      {/* Delete button — only visible to the author */}
-                      {user && adv.userId === user.id && (
-                        <button
-                          onClick={() => { setDeleteTarget(adv); setDeleteReason(''); setDeleteOtherText(''); }}
-                          className="ml-auto p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
-                          title="Remove my review"
-                        >
-                          <Trash2 size={13} />
-                        </button>
+
+                      {adv.title && (
+                        <h3 className="text-sm font-bold text-surface-900 dark:text-surface-100">{adv.title}</h3>
                       )}
+                      <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">{adv.content}</p>
                     </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
 
-                    {adv.title && (
-                      <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100 mt-1">{adv.title}</h4>
-                    )}
-
-                    <p className="text-sm text-surface-600 dark:text-surface-300 leading-relaxed">{adv.content}</p>
-                  </div>
-                ))}
+          {/* Sidebar / Additional Context Information */}
+          <div className="space-y-6">
+            {/* Source Verification Card */}
+            <div className="bg-surface-50 dark:bg-surface-900 rounded-2xl p-5 border border-surface-200 dark:border-surface-800 space-y-3">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-surface-500">
+                Verification & Source
+              </h2>
+              <div className="text-xs space-y-2 text-surface-600 dark:text-surface-400">
+                <p>
+                  Original provider: <strong className="text-surface-900 dark:text-surface-100">{opportunity.sourceName || orgName}</strong>
+                </p>
+                {opportunity.officialSource && (
+                  <p>
+                    Official URL: <a href={opportunity.officialSource} target="_blank" rel="noopener noreferrer" className="text-rome-600 dark:text-rome-400 hover:underline">View original announcement ↗</a>
+                  </p>
+                )}
               </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      {/* ─── Related Opportunities Section ─── */}
+      {relatedOpportunities.length > 0 && (
+        <aside aria-label="Similar opportunities" className="mt-12 pt-8 border-t border-surface-200 dark:border-surface-800">
+          <h2 className="text-xl font-bold mb-6 text-surface-900 dark:text-surface-100">
+            Similar opportunities to explore
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {relatedOpportunities.map((opp: Opportunity) => (
+              <OpportunityCard
+                key={opp.id}
+                opportunity={opp}
+                compact
+                showSaveButton
+                isSaved={isSaved(opp.id)}
+                onSave={() => saveOpportunity(opp.id)}
+                onUnsave={() => unsaveOpportunity(opp.id)}
+                onClick={() => navigate(`/opportunity/${opp.id}`)}
+              />
+            ))}
+          </div>
+        </aside>
+      )}
+
+      {/* ─── Mobile Bottom Floating Action Bar ─── */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-surface-900/95 backdrop-blur-md border-t border-surface-200 dark:border-surface-800 p-3 shadow-elevated z-40">
+        <div className="flex items-center gap-2 max-w-md mx-auto">
+          <Button
+            variant="outline"
+            size="default"
+            className={cn(
+              "w-11 h-11 min-w-[44px] min-h-[44px] p-0 flex items-center justify-center rounded-xl",
+              saved && "text-rose-600 dark:text-rose-400 border-rose-200 bg-rose-50/50"
             )}
-          </section>
+            onClick={() => {
+              if (saved) {
+                unsaveOpportunity(opportunity.id);
+              } else {
+                if (!isAuthenticated) {
+                  setContextualPrompt({ isOpen: true, type: 'save' });
+                  return;
+                }
+                saveOpportunity(opportunity.id);
+              }
+            }}
+            aria-label={saved ? 'Remove from saved' : 'Save opportunity'}
+          >
+            <SolarIcon name={saved ? "heart-bold" : "heart-linear"} size={18} />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="default"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] p-0 flex items-center justify-center rounded-xl"
+            onClick={() => setShowShareModal(true)}
+            aria-label="Share opportunity"
+          >
+            <SolarIcon name="share-linear" size={17} />
+          </Button>
+
+          {hasValidAppUrl ? (
+            <Button
+              variant="default"
+              size="default"
+              className="flex-1 justify-center text-xs sm:text-sm font-semibold h-11 min-h-[44px] rounded-xl bg-rome-500 hover:bg-rome-600 text-white shadow-xs"
+              onClick={() => {
+                api.trackEvent('application_link_clicked', opportunity.id, { url: opportunity.applicationUrl });
+                window.open(opportunity.applicationUrl, '_blank', 'noopener noreferrer');
+              }}
+              aria-label={`Apply to ${opportunity.title}`}
+            >
+              <span>Apply on Official Site</span>
+              <SolarIcon name="arrow-right-up-linear" size={15} />
+            </Button>
+          ) : (
+            <Button
+              variant="default"
+              size="default"
+              className="flex-1 justify-center text-xs sm:text-sm font-semibold h-11 min-h-[44px] rounded-xl bg-rome-500 hover:bg-rome-600 text-white shadow-xs"
+              onClick={handleStartApplication}
+            >
+              <span>Track in Workspace</span>
+            </Button>
+          )}
         </div>
       </div>
 
       {/* Share Modal */}
       {showShareModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
           <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-5">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Share Opportunity</h3>
-              <button onClick={() => setShowShareModal(false)} className="text-surface-400 hover:text-surface-700">✕</button>
+              <h3 className="text-base font-bold text-surface-900 dark:text-surface-100">Share Opportunity</h3>
+              <button onClick={() => setShowShareModal(false)} className="text-surface-400 hover:text-surface-700 p-1">✕</button>
             </div>
             <p className="text-xs text-surface-500">
-              Share "{opportunity.title}" with fellow researchers, students, and peers.
+              Share "{opportunity.title}" with fellow applicants and peers.
             </p>
             <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
+                  const shareUrl = `${window.location.origin}/opportunities/${opportunity.id}?ref=share`;
+                  api.trackEvent('share_action', opportunity.id, { shareMethod: 'copy_link' });
+                  navigator.clipboard.writeText(shareUrl);
                   setCopyToast(true);
                   setTimeout(() => setCopyToast(false), 2500);
                 }}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer"
               >
-                <span className="text-base font-bold">🔗</span>
+                <SolarIcon name="link-linear" size={20} />
                 <span className="text-xs font-semibold">Copy Link</span>
               </button>
               <button
-                onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out this opportunity: ${opportunity.title} on ROMEfind - ${window.location.href}`)}`, '_blank')}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                onClick={() => {
+                  const shareUrl = `${window.location.origin}/opportunities/${opportunity.id}?ref=share`;
+                  api.trackEvent('share_action', opportunity.id, { shareMethod: 'whatsapp' });
+                  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out this opportunity: ${opportunity.title} on ROMEfind - ${shareUrl}`)}`, '_blank');
+                }}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer"
               >
-                <span className="text-base">💬</span>
+                <SolarIcon name="chat-round-linear" size={20} />
                 <span className="text-xs font-semibold">WhatsApp</span>
               </button>
               <button
-                onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Found this great opportunity: ${opportunity.title}`)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                onClick={() => {
+                  const shareUrl = `${window.location.origin}/opportunities/${opportunity.id}?ref=share`;
+                  api.trackEvent('share_action', opportunity.id, { shareMethod: 'twitter' });
+                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Found this great opportunity: ${opportunity.title}`)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+                }}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer"
               >
-                <span className="text-base">𝕏</span>
+                <SolarIcon name="share-circle-linear" size={20} />
                 <span className="text-xs font-semibold">Twitter/X</span>
               </button>
             </div>
@@ -701,25 +886,25 @@ export default function OpportunityDetailPage() {
 
       {/* Report Issue Modal */}
       {showReportModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
           <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Report an Issue</h3>
-              <button onClick={() => setShowReportModal(false)} className="text-surface-400 hover:text-surface-700">✕</button>
+              <h3 className="text-base font-bold text-surface-900 dark:text-surface-100">Report an Issue</h3>
+              <button onClick={() => setShowReportModal(false)} className="text-surface-400 hover:text-surface-700 p-1">✕</button>
             </div>
             {reportSuccess ? (
               <div className="text-center py-6 space-y-2">
-                <p className="text-emerald-600 font-bold">✓ Thank you for reporting.</p>
-                <p className="text-xs text-surface-500">Our verification editors have queued this opportunity for re-checking.</p>
+                <p className="text-emerald-600 font-bold text-sm">✓ Thank you for reporting.</p>
+                <p className="text-xs text-surface-500">Our verification editors have queued this opportunity for review.</p>
                 <Button variant="outline" size="sm" onClick={() => { setShowReportModal(false); setReportSuccess(false); }}>Close</Button>
               </div>
             ) : (
               <form onSubmit={handleReportSubmit} className="space-y-3">
-                <label className="block text-xs font-bold text-surface-700 dark:text-surface-300">Reason</label>
+                <label className="block text-xs font-semibold text-surface-700 dark:text-surface-300">Reason</label>
                 <select
                   value={reportReason}
                   onChange={(e) => setReportReason(e.target.value)}
-                  className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                  className="w-full text-xs p-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 outline-none"
                 >
                   <option value="link_broken">Broken / inaccessible application link</option>
                   <option value="closed">Deadline passed / programme closed</option>
@@ -731,9 +916,9 @@ export default function OpportunityDetailPage() {
                   onChange={(e) => setReportDetails(e.target.value)}
                   placeholder="Additional context (optional)..."
                   rows={3}
-                  className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                  className="w-full text-xs p-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 outline-none"
                 />
-                <Button type="submit" variant="default" className="w-full" size="sm" disabled={reportLoading}>
+                <Button type="submit" variant="default" className="w-full h-10" size="sm" disabled={reportLoading}>
                   {reportLoading ? 'Submitting...' : 'Submit Report'}
                 </Button>
               </form>
@@ -744,11 +929,11 @@ export default function OpportunityDetailPage() {
 
       {/* Share Advice Modal */}
       {showAdviceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
           <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Contribute Application Advice</h3>
-              <button onClick={() => setShowAdviceModal(false)} className="text-surface-400 hover:text-surface-700">✕</button>
+              <h3 className="text-base font-bold text-surface-900 dark:text-surface-100">Contribute Application Advice</h3>
+              <button onClick={() => setShowAdviceModal(false)} className="text-surface-400 hover:text-surface-700 p-1">✕</button>
             </div>
             <form onSubmit={handleAdviceSubmit} className="space-y-3">
               <input
@@ -756,20 +941,20 @@ export default function OpportunityDetailPage() {
                 placeholder="Your Name (or Anonymous)"
                 value={adviceAuthorName}
                 onChange={(e) => setAdviceAuthorName(e.target.value)}
-                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                className="w-full text-xs p-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 outline-none"
               />
               <input
                 type="text"
                 placeholder="Your Role / Background (e.g. 2025 Fellow, MSc Applicant)"
                 value={adviceAuthorRole}
                 onChange={(e) => setAdviceAuthorRole(e.target.value)}
-                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                className="w-full text-xs p-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 outline-none"
               />
               <div className="grid grid-cols-2 gap-2">
                 <select
                   value={adviceType}
                   onChange={(e) => setAdviceType(e.target.value)}
-                  className="w-full text-xs p-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                  className="w-full text-xs p-2 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 outline-none"
                 >
                   <option value="General">General Advice</option>
                   <option value="Interview">Interview Tips</option>
@@ -780,7 +965,7 @@ export default function OpportunityDetailPage() {
                 <select
                   value={adviceOutcome}
                   onChange={(e) => setAdviceOutcome(e.target.value)}
-                  className="w-full text-xs p-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                  className="w-full text-xs p-2 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 outline-none"
                 >
                   <option value="Accepted">Accepted</option>
                   <option value="Applied">Applied</option>
@@ -794,7 +979,7 @@ export default function OpportunityDetailPage() {
                 value={adviceTitle}
                 onChange={(e) => setAdviceTitle(e.target.value)}
                 required
-                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 font-semibold"
+                className="w-full text-xs p-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 font-semibold outline-none"
               />
               <textarea
                 placeholder="Detailed tips for prospective applicants..."
@@ -802,9 +987,9 @@ export default function OpportunityDetailPage() {
                 onChange={(e) => setAdviceContent(e.target.value)}
                 required
                 rows={4}
-                className="w-full text-xs p-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800"
+                className="w-full text-xs p-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 outline-none"
               />
-              <Button type="submit" variant="default" className="w-full" size="sm" disabled={adviceLoading}>
+              <Button type="submit" variant="default" className="w-full h-10" size="sm" disabled={adviceLoading}>
                 {adviceLoading ? 'Publishing...' : 'Publish Community Advice'}
               </Button>
             </form>
@@ -812,31 +997,28 @@ export default function OpportunityDetailPage() {
         </div>
       )}
 
-      {/* Related Opportunities */}
-      </main>
-      {/* Delete Advice Modal — "Why are you removing this?" */}
+      {/* Delete Advice Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 dark:border-surface-800 space-y-4">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">Remove your review?</h3>
-                <p className="text-xs text-surface-500 mt-1">Please let us know why you're removing this — your feedback helps us improve the community.</p>
+                <h3 className="text-base font-bold text-surface-900 dark:text-surface-100">Remove your review?</h3>
+                <p className="text-xs text-surface-500 mt-0.5">Please let us know why you're removing this.</p>
               </div>
-              <button onClick={() => setDeleteTarget(null)} className="text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 ml-4 flex-shrink-0">✕</button>
+              <button onClick={() => setDeleteTarget(null)} className="text-surface-400 hover:text-surface-700 p-1">✕</button>
             </div>
 
-            {/* Reason options */}
             <div className="space-y-2">
               {DELETE_REASONS.map(reason => (
                 <button
                   key={reason}
                   onClick={() => { setDeleteReason(reason); setDeleteOtherText(''); }}
                   className={cn(
-                    'w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all',
+                    'w-full text-left px-3.5 py-2.5 rounded-xl border text-xs font-medium transition-all cursor-pointer',
                     deleteReason === reason
                       ? 'border-red-400 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300'
-                      : 'border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:border-surface-300 dark:hover:border-surface-600'
+                      : 'border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:border-surface-300'
                   )}
                 >
                   {deleteReason === reason ? '● ' : '○ '}{reason}
@@ -844,12 +1026,10 @@ export default function OpportunityDetailPage() {
               ))}
             </div>
 
-            {/* "Other" text field — slides in when Other is selected */}
             {deleteReason === 'Other' && (
-              <div className="animate-in fade-in slide-in-from-top-2 duration-200">
-                <label className="block text-xs font-medium text-surface-600 dark:text-surface-400 mb-1.5">Tell us why</label>
+              <div className="animate-in fade-in slide-in-from-top-1 duration-150">
                 <textarea
-                  className="w-full px-3 py-2.5 rounded-lg border border-surface-300 dark:border-surface-700 bg-transparent text-sm text-surface-900 dark:text-surface-100 focus:ring-2 focus:ring-red-400 outline-none resize-none"
+                  className="w-full px-3 py-2 rounded-xl border border-surface-300 dark:border-surface-700 bg-transparent text-xs text-surface-900 dark:text-surface-100 outline-none"
                   rows={2}
                   value={deleteOtherText}
                   onChange={e => setDeleteOtherText(e.target.value)}
@@ -860,80 +1040,36 @@ export default function OpportunityDetailPage() {
             )}
 
             <div className="flex gap-2 pt-1">
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setDeleteTarget(null)}
-                className="flex-1 px-4 py-2 rounded-xl border border-surface-200 dark:border-surface-700 text-sm font-medium text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                className="flex-1"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
                 onClick={handleDeleteAdvice}
                 disabled={!deleteReason || (deleteReason === 'Other' && !deleteOtherText.trim()) || deleteLoading}
-                className="flex-1 px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold transition-colors"
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
               >
                 {deleteLoading ? 'Removing…' : 'Remove Review'}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       )}
 
-      {relatedOpportunities.length > 0 && (
-        <div className="bg-surface-50 dark:bg-surface-900/30 border-t border-surface-200 dark:border-surface-800 py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold mb-6 text-surface-900 dark:text-surface-100">You might also explore</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedOpportunities.map((opp: Opportunity) => (
-                <OpportunityCard 
-                  key={opp.id} 
-                  opportunity={opp} 
-                  compact 
-                  showSaveButton
-                  isSaved={isSaved(opp.id)}
-                  onSave={() => saveOpportunity(opp.id)}
-                  onUnsave={() => unsaveOpportunity(opp.id)}
-                  onClick={() => navigate(`/opportunity/${opp.id}`)}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Sticky Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-surface-900 border-t border-surface-200 dark:border-surface-800 p-3.5 shadow-elevated z-50">
-        <div className="flex items-center gap-2.5 max-w-md mx-auto">
-          <Button 
-            variant="outline" 
-            size="default"
-            className="w-12 h-12 min-w-[48px] min-h-[48px] p-0 flex items-center justify-center rounded-xl"
-            onClick={() => saved ? unsaveOpportunity(opportunity.id) : saveOpportunity(opportunity.id)}
-            aria-label={saved ? 'Remove from saved' : 'Save opportunity'}
-          >
-            {saved ? <BookmarkCheck className="w-5 h-5 text-rome-500" /> : <Bookmark className="w-5 h-5" />}
-          </Button>
-          <Button
-            variant="outline"
-            size="default"
-            className="w-12 h-12 min-w-[48px] min-h-[48px] p-0 flex items-center justify-center rounded-xl"
-            onClick={() => setShowShareModal(true)}
-            aria-label="Share opportunity"
-          >
-            <Share2 className="w-5 h-5" />
-          </Button>
-          <Button 
-            variant="default" 
-            size="default"
-            className="flex-1 justify-center text-sm sm:text-base font-semibold h-12 min-h-[48px] rounded-xl"
-            onClick={() => window.open(opportunity.applicationUrl, '_blank', 'noopener noreferrer')}
-            aria-label={`Apply to ${opportunity.title}`}
-          >
-            <span>Apply on Official Site</span>
-            <ExternalLink size={16} className="ml-2" />
-          </Button>
-        </div>
-      </div>
+      {/* ─── Contextual Signup Prompt Modal ─── */}
+      <ContextualSignupModal
+        isOpen={contextualPrompt.isOpen}
+        onClose={() => setContextualPrompt(prev => ({ ...prev, isOpen: false }))}
+        type={contextualPrompt.type}
+        opportunityId={opportunity.id}
+        returnUrl={`/opportunity/${opportunity.id}`}
+      />
     </div>
   );
 }
-

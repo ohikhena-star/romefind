@@ -198,14 +198,14 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
       {/* ─── 4. Structured Metadata: Location, Deadline, Funding ─── */}
       <div className="grid grid-cols-2 gap-2 text-xs py-2.5 border-y border-surface-100 dark:border-surface-800/80 mb-3">
         <div>
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Location</span>
+          <span className="text-xs uppercase tracking-wider text-surface-400 dark:text-surface-500 font-medium block mb-0.5">Location</span>
           <span className="font-semibold text-surface-800 dark:text-surface-200 truncate block text-xs" title={opportunity.location}>
             {displayLocation}
           </span>
         </div>
 
         <div>
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold block mb-0.5">Deadline</span>
+          <span className="text-xs uppercase tracking-wider text-surface-400 dark:text-surface-500 font-medium block mb-0.5">Deadline</span>
           {opportunity.deadline ? (
             <DeadlineIndicator deadline={opportunity.deadline} />
           ) : (
@@ -215,7 +215,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
         {opportunity.funding && (
           <div className="col-span-2 pt-1.5 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
-            <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-surface-400 dark:text-surface-500 font-semibold">Funding</span>
+            <span className="text-xs uppercase tracking-wider text-surface-400 dark:text-surface-500 font-medium">Funding</span>
             <span className="font-semibold text-surface-900 dark:text-surface-100 truncate max-w-[200px] text-xs" title={opportunity.funding}>
               {opportunity.funding}
             </span>
@@ -236,7 +236,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
           >
             <div className="flex items-center gap-2 min-w-0">
               <span className={cn(
-                "px-1.5 py-0.5 rounded text-[11px] font-bold shrink-0",
+                "px-1.5 py-0.5 rounded text-xs font-bold shrink-0",
                 relevanceScore >= 75
                   ? "bg-rome-100 dark:bg-surface-800 text-rome-700 dark:text-rome-300"
                   : "bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300"
@@ -247,7 +247,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
                 {relevanceReasons?.[0] || 'Selected based on your criteria'}
               </p>
             </div>
-            <span className="text-[11px] font-semibold text-rome-600 dark:text-rome-400 hover:underline shrink-0 flex items-center gap-0.5">
+            <span className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline shrink-0 flex items-center gap-0.5">
               <span>{inspectorOpen ? 'Hide' : 'Inspect'}</span>
               <SolarIcon name={inspectorOpen ? "alt-arrow-up-linear" : "alt-arrow-down-linear"} size={12} />
             </span>
@@ -259,7 +259,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
               onClick={(e) => e.stopPropagation()}
               className="mt-2 p-3 rounded-xl bg-surface-100/80 dark:bg-surface-800/80 border border-surface-200 dark:border-surface-700 text-xs space-y-1.5 animate-in fade-in duration-150"
             >
-              <div className="flex items-center justify-between pb-1.5 border-b border-surface-200/60 dark:border-surface-700/60 text-[11px] font-bold text-surface-700 dark:text-surface-300">
+              <div className="flex items-center justify-between pb-1.5 border-b border-surface-200/60 dark:border-surface-700/60 text-xs font-bold text-surface-700 dark:text-surface-300">
                 <span className="flex items-center gap-1">
                   <SolarIcon name="magnifer-linear" size={12} className="text-rome-500" />
                   Matching Signals Inspector
@@ -269,37 +269,37 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
               {matchSignals ? (
                 <>
-                  <div className="flex justify-between items-center text-[11px]">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="text-surface-600 dark:text-surface-400">Field & Interest:</span>
                     <span className={matchSignals.interestMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
                       {matchSignals.interestMatch ? `✓ Match (+${matchSignals.fieldMatchScore || 20})` : '—'}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-[11px]">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="text-surface-600 dark:text-surface-400">Skill Alignment:</span>
                     <span className={matchSignals.skillMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
                       {matchSignals.skillMatch ? `✓ Overlap (+${matchSignals.skillMatchScore || 20})` : '—'}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-[11px]">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="text-surface-600 dark:text-surface-400">Goal Alignment:</span>
                     <span className={matchSignals.goalMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
                       {matchSignals.goalMatch ? `✓ Match (+${matchSignals.goalMatchScore || 15})` : '—'}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-[11px]">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="text-surface-600 dark:text-surface-400">Opportunity Type:</span>
                     <span className={matchSignals.typeMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
                       {matchSignals.typeMatch ? `✓ Preferred (+${matchSignals.typeMatchScore || 15})` : 'Neutral'}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-[11px]">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="text-surface-600 dark:text-surface-400">Eligibility & Experience:</span>
                     <span className={matchSignals.eligibilityMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-amber-500"}>
                       {matchSignals.eligibilityMatch ? `✓ Verified (+${matchSignals.eligibilityScore || 10})` : 'Open'}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-[11px]">
+                  <div className="flex justify-between items-center text-xs">
                     <span className="text-surface-600 dark:text-surface-400">Location & Modality:</span>
                     <span className={matchSignals.locationMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
                       {matchSignals.locationMatch ? `✓ Preferred (+${matchSignals.locationScore || 10})` : 'Global'}
@@ -307,7 +307,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
                   </div>
                 </>
               ) : (
-                <div className="space-y-1 text-[11px] text-surface-600 dark:text-surface-400">
+                <div className="space-y-1 text-xs text-surface-600 dark:text-surface-400">
                   {relevanceReasons?.map((reason, idx) => (
                     <div key={idx} className="flex items-start gap-1.5">
                       <span className="text-rome-500 font-bold">•</span>

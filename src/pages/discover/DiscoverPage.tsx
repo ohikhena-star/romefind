@@ -165,7 +165,7 @@ export default function DiscoverPage() {
 
         {/* Quick 1-Tap Discovery Filters */}
         <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-xs">
-          <span className="text-surface-400 text-[11px] sm:text-xs font-medium mr-0.5">Quick filters:</span>
+          <span className="text-xs text-surface-400 font-medium mr-0.5">Quick filters:</span>
           <button
             type="button"
             onClick={() => navigate('/explore?remote=Remote')}

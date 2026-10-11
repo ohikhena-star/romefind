@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { executePendingAction } from '@/utils/pendingAction';
 import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
@@ -35,6 +36,11 @@ const LoginPage = () => {
       // Check if user has already completed onboarding
       const currentUser = useAuthStore.getState().user;
       if (currentUser && currentUser.onboardingCompleted) {
+        const resumed = await executePendingAction();
+        if (resumed?.executed) {
+          navigate(resumed.returnUrl);
+          return;
+        }
         navigate(from || '/discover');
       } else {
         navigate('/onboarding');

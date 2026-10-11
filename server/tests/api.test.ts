@@ -394,4 +394,86 @@ describe('ROMEfind API Integration Test Suite', () => {
     assert.strictEqual(userASavedRes.status, 200);
     assert.ok(userASavedRes.data.data.includes(testOppId));
   });
+
+  it('21. Analytics: Ingest valid share action event anonymously', async () => {
+    const res = await jsonFetch(`${baseUrl}/analytics/event`, {
+      method: 'POST',
+      body: {
+        eventType: 'share_action',
+        opportunityId: testOppId,
+        metadata: { shareMethod: 'copy_link' }
+      },
+      noAuth: true
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.success, true);
+    assert.strictEqual(res.data.recorded, true);
+  });
+
+  it('22. Analytics: Reject invalid eventType with 400', async () => {
+    const res = await jsonFetch(`${baseUrl}/analytics/event`, {
+      method: 'POST',
+      body: {
+        eventType: 'fake_event_type',
+        opportunityId: testOppId
+      },
+      noAuth: true
+    });
+    assert.strictEqual(res.status, 400);
+    assert.strictEqual(res.data.success, false);
+  });
+
+  it('23. Analytics: Ingest shared_link_visit and application_link_clicked events', async () => {
+    const visitRes = await jsonFetch(`${baseUrl}/analytics/event`, {
+      method: 'POST',
+      body: {
+        eventType: 'shared_link_visit',
+        opportunityId: testOppId,
+        metadata: { source: 'share_link' }
+      },
+      noAuth: true
+    });
+    assert.strictEqual(visitRes.status, 200);
+    assert.strictEqual(visitRes.data.recorded, true);
+
+    const clickRes = await jsonFetch(`${baseUrl}/analytics/event`, {
+      method: 'POST',
+      body: {
+        eventType: 'application_link_clicked',
+        opportunityId: testOppId,
+        metadata: { url: 'https://example.com/apply' }
+      }
+    });
+    assert.strictEqual(clickRes.status, 200);
+    assert.strictEqual(clickRes.data.recorded, true);
+  });
+
+  it('24. Admin Analytics: Share analytics endpoint requires admin role', async () => {
+    // Regular user request -> 403
+    const forbiddenRes = await jsonFetch(`${baseUrl}/admin/analytics/share`);
+    assert.strictEqual(forbiddenRes.status, 403);
+
+    // Admin request -> 200
+    const adminRes = await jsonFetch(`${baseUrl}/admin/analytics/share?range=30d`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(adminRes.status, 200);
+    assert.strictEqual(adminRes.data.success, true);
+    assert.ok(adminRes.data.data.totals);
+    assert.ok(typeof adminRes.data.data.totals.shares === 'number');
+    assert.ok(typeof adminRes.data.data.totals.sharedLinkVisits === 'number');
+    assert.ok(typeof adminRes.data.data.totals.applicationLinkClicks === 'number');
+    assert.ok(Array.isArray(adminRes.data.data.topShared));
+    assert.ok(Array.isArray(adminRes.data.data.topClicked));
+  });
+
+  it('25. Admin Analytics: Opportunity-specific share analytics endpoint', async () => {
+    const oppRes = await jsonFetch(`${baseUrl}/admin/analytics/share/${testOppId}?range=all`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(oppRes.status, 200);
+    assert.strictEqual(oppRes.data.success, true);
+    assert.strictEqual(oppRes.data.data.opportunity.id, testOppId);
+    assert.ok(oppRes.data.data.totals.shares >= 1);
+  });
 });

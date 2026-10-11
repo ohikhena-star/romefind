@@ -89,7 +89,7 @@ const TopNav = () => {
                       cn(
                         'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
                         isActive
-                          ? 'bg-white dark:bg-surface-900 text-surface-950 dark:text-white shadow-xs border border-surface-200/60 dark:border-surface-700'
+                          ? 'bg-white dark:bg-surface-900 text-rome-600 dark:text-rome-400 shadow-xs border border-rome-200/60 dark:border-rome-800/80'
                           : 'text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
                       )
                     }

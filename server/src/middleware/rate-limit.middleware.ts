@@ -32,3 +32,13 @@ export const adviceRateLimiter = rateLimit({
   legacyHeaders: false,
   message: { success: false, message: 'Too many submissions. Please try again later.' }
 });
+
+/** 200 events per minute per IP — covers POST /analytics/event */
+export const eventIngestLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 200,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many tracking events. Please slow down.' }
+});
+

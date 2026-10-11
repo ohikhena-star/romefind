@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticateToken, requireAdmin, optionalAuth } from './middleware/auth.middleware.js';
-import { authRateLimiter, strictAuthLimiter, adviceRateLimiter } from './middleware/rate-limit.middleware.js';
+import { authRateLimiter, strictAuthLimiter, adviceRateLimiter, eventIngestLimiter } from './middleware/rate-limit.middleware.js';
 
 // Controllers
 import * as authController from './modules/auth/auth.controller.js';
@@ -14,6 +14,8 @@ import * as learningController from './modules/learning/learning.controller.js';
 import * as notificationController from './modules/notifications/notification.controller.js';
 import * as ingestionController from './modules/ingestion/ingestion.controller.js';
 import * as adminController from './modules/admin/admin.controller.js';
+import * as analyticsController from './modules/analytics/analytics.controller.js';
+import * as analyticsAdminController from './modules/analytics/analytics.admin.controller.js';
 
 export const apiRouter = Router();
 
@@ -117,3 +119,9 @@ apiRouter.get('/admin/reviews', authenticateToken, requireAdmin, adminController
 apiRouter.get('/admin/reports', authenticateToken, requireAdmin, adminController.getAdminReports);
 apiRouter.patch('/admin/reports/:id', authenticateToken, requireAdmin, adminController.updateReportStatus);
 apiRouter.get('/admin/system-health', authenticateToken, requireAdmin, adminController.getSystemHealth);
+
+// ── Analytics Endpoints ────────────────────────────────────────────────
+apiRouter.post('/analytics/event', optionalAuth, eventIngestLimiter, analyticsController.ingestEvent);
+apiRouter.get('/admin/analytics/share', authenticateToken, requireAdmin, analyticsAdminController.getShareAnalytics);
+apiRouter.get('/admin/analytics/share/:opportunityId', authenticateToken, requireAdmin, analyticsAdminController.getOpportunityShareAnalytics);
+
