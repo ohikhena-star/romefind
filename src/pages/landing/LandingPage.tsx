@@ -2,22 +2,18 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useUiStore } from '@/store/uiStore';
-import { useApplicationStore } from '@/store/applicationStore';
-import { opportunities } from '@/data/opportunities';
 import { Button } from '@/components/ui/Button';
 import { SolarIcon } from '@/components/ui/SolarIcon';
 import { cn } from '@/utils/cn';
-import { Opportunity } from '@/types/models';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { theme, toggleTheme } = useUiStore();
-  const { isSaved, saveOpportunity, unsaveOpportunity } = useApplicationStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handlePrimaryCta = () => {
+  const handleCtaClick = () => {
     if (isAuthenticated) {
       navigate('/discover');
     } else {
@@ -33,167 +29,178 @@ export default function LandingPage() {
     }
   };
 
-  // Curated, verified live opportunities with active deadlines
-  const featuredIds = ['opp-pm-01', 'opp-cx-01', 'opp-sch-01', 'opp-tech-03'];
-  const featuredOpportunities: Opportunity[] = featuredIds
-    .map(id => opportunities.find(o => o.id === id))
-    .filter(Boolean) as Opportunity[];
+  const pathways = [
+    {
+      title: 'Fellowships & Residencies',
+      badge: 'Fully Funded',
+      description: 'Prestigious global cohorts with full living stipends, dedicated mentorship, and research freedom.',
+      icon: 'diploma-verified-linear'
+    },
+    {
+      title: 'Internships & Co-ops',
+      badge: 'Paid Roles',
+      description: 'Hands-on industry and technical experience at pioneering research labs, scaleups, and companies.',
+      icon: 'case-linear'
+    },
+    {
+      title: 'Grants & Seed Funding',
+      badge: 'Non-Dilutive',
+      description: 'Financial backing to conduct independent research, build open-source projects, or prototype ideas.',
+      icon: 'dollar-minimalistic-linear'
+    },
+    {
+      title: 'Research Placements',
+      badge: 'Academic Labs',
+      description: 'Collaborate with top faculty and global institutes on cutting-edge scientific investigations.',
+      icon: 'test-tube-linear'
+    },
+    {
+      title: 'Competitions & Hackathons',
+      badge: 'Prizes & Recognition',
+      description: 'High-visibility technical challenges offering cash prizes, peer networking, and venture backing.',
+      icon: 'cup-star-linear'
+    },
+    {
+      title: 'Programmes & Accelerators',
+      badge: 'Intensive Cohorts',
+      description: 'Structured sprints and incubators designed to rapidly advance your skills and trajectory.',
+      icon: 'rocket-linear'
+    },
+  ];
 
-  const workflowSteps = [
+  const pillars = [
     {
-      number: '01',
-      title: 'Discover',
-      tagline: 'Filter by what matters',
-      description: 'Search curated programs by living stipend, remote modality, and your academic or career discipline.',
-      accent: 'border-l-burgundy text-burgundy dark:text-rome-400'
+      title: 'Verified Eligibility',
+      description: 'Clear criteria on experience levels, degree requirements, and regional citizenship rules.',
+      icon: 'check-circle-linear'
     },
     {
-      number: '02',
-      title: 'Understand',
-      tagline: 'Check requirements upfront',
-      description: 'Review education prerequisites, citizenship or regional eligibility, and experience levels before investing hours in applications.',
-      accent: 'border-l-amber-600 text-amber-700 dark:text-amber-400'
+      title: 'Transparent Funding',
+      description: 'Immediate visibility into stipends, salaries, grants, or self-funded commitments.',
+      icon: 'dollar-minimalistic-linear'
     },
     {
-      number: '03',
-      title: 'Compare',
-      tagline: 'Weigh trade-offs side-by-side',
-      description: 'Evaluate commitments, duration, funding levels, and requirements across 2 to 4 shortlisted options.',
-      accent: 'border-l-emerald-600 text-emerald-700 dark:text-emerald-400'
+      title: 'Actionable Deadlines',
+      description: 'Urgency indicators and rolling submission windows so you never miss an application cycle.',
+      icon: 'clock-circle-linear'
     },
     {
-      number: '04',
-      title: 'Pursue',
-      tagline: 'Apply on official portals',
-      description: 'Navigate directly to official institutional application pages and track your deadlines in a private workspace.',
-      accent: 'border-l-rome-600 text-rome-600 dark:text-rome-400'
+      title: 'Official Sources',
+      description: 'Direct verified links to institutional application portals and program guidelines.',
+      icon: 'arrow-right-up-linear'
     }
   ];
 
-  const practicalFeatures = [
+  const workflowSteps = [
     {
-      icon: 'scale-linear',
-      title: 'Side-by-Side Comparison',
-      description: 'Compare duration, stipends, location requirements, and prerequisites side by side before deciding where to focus your effort.'
+      step: '01',
+      title: 'Discover',
+      description: 'Find curated opportunities matching your verified background, interests, and target destinations.'
     },
     {
-      icon: 'book-2-linear',
-      title: 'Connected Skill Preparation',
-      description: 'Identify technical and writing skills connected to opportunities you want to pursue and review targeted learning materials.'
+      step: '02',
+      title: 'Compare',
+      description: 'Evaluate commitments, funding, duration, and prerequisites side by side to make confident choices.'
     },
     {
-      icon: 'heart-linear',
-      title: 'Personal Shortlist',
-      description: 'Save opportunities to monitor active deadlines, rolling admission windows, and upcoming recruitment cycles.'
+      step: '03',
+      title: 'Prepare',
+      description: 'Identify skill gaps and follow tailored learning recommendations before submission.'
     },
     {
-      icon: 'case-linear',
-      title: 'Application Milestones',
-      description: 'Organize personal checklists, draft notes, reference letters, and outcomes in one calm, private workspace.'
+      step: '04',
+      title: 'Track',
+      description: 'Manage checklist items, essays, deadlines, and acceptance outcomes in your personal workspace.'
     }
   ];
 
   const faqs = [
     {
-      q: 'Is ROMEfind free to use?',
-      a: 'Yes. Discovering opportunities, comparing options side-by-side, accessing curated skill materials, and tracking applications in your workspace are completely free for students, graduates, and individual explorers.'
+      q: 'What makes ROMEfind different from generic job boards?',
+      a: 'ROMEfind focuses on holistic opportunity discovery. Instead of just listing standard vacancies, we curate high-impact fellowships, funded research residencies, grants, accelerators, and student opportunities with verified eligibility criteria and transparent stipends.'
     },
     {
-      q: 'Where do the application links take me?',
-      a: 'Every application button points directly to the host organization’s official application portal—such as universities, foundations, research institutes, or verified company career portals. ROMEfind does not charge application fees or act as an intermediary.'
+      q: 'Is ROMEfind free to use for students and researchers?',
+      a: 'Yes. Discovering opportunities, comparing options side-by-side, accessing curated learning resources, and tracking your applications in the personal workspace are completely free for individual explorers.'
     },
     {
-      q: 'How are opportunities selected and verified?',
-      a: 'We focus on high-impact fellowships, funded research placements, internships, and grants with transparent stipends and active submission cycles. We verify host institutions, deadlines, and direct destination URLs before publishing.'
+      q: 'How does opportunity personalization work?',
+      a: 'During onboarding, you share your interests, target locations, education level, and career goals. ROMEfind calculates dynamic match scores and highlights parallel pathways you might have otherwise overlooked.'
     },
     {
-      q: 'Can I compare opportunities from different fields?',
-      a: 'Yes. Our comparison view allows you to place multiple opportunities side-by-side to evaluate differences in funding amounts, duration, location modality, and requirements across varied career pathways.'
+      q: 'How are deadlines and application links verified?',
+      a: 'Every opportunity is directly linked to its official institutional application portal and checked for verified status, rolling windows, and active deadlines.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-cream dark:bg-surface-950 text-ink dark:text-surface-50 font-sans selection:bg-burgundy selection:text-white transition-colors">
-      
-      {/* ─── 1. Header (Sticky, Editorial Warm Cream) ─── */}
-      <header className="sticky top-0 z-40 bg-cream/90 dark:bg-surface-950/90 backdrop-blur-md border-b border-editorial-ink dark:border-surface-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
-          
-          {/* Brand Logo */}
+    <div className="min-h-screen bg-white dark:bg-surface-950 text-surface-900 dark:text-surface-50 font-sans selection:bg-rome-500 selection:text-white transition-colors">
+      {/* ─── Public Navigation Bar ─── */}
+      <header className="sticky top-0 z-40 bg-white/90 dark:bg-surface-950/90 backdrop-blur-md border-b border-surface-200/80 dark:border-surface-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1 group" aria-label="ROMEfind home">
-            <span className="text-xl sm:text-2xl font-black tracking-tight text-burgundy dark:text-rome-400">
-              ROME
-            </span>
-            <span className="text-xl sm:text-2xl font-bold tracking-tight text-ink dark:text-white">
-              find
-            </span>
+            <span className="text-2xl font-bold tracking-tight text-rome-500">ROME</span>
+            <span className="text-2xl font-bold tracking-tight text-surface-950 dark:text-white">find</span>
           </Link>
 
-          {/* Desktop Nav Links (In-Page Anchors) */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-ink/80 dark:text-surface-300">
+          {/* Desktop Nav Links (Smooth Scroll on Landing Page) */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-surface-600 dark:text-surface-300">
             <button 
-              onClick={() => scrollToSection('opportunities')} 
-              className="hover:text-burgundy dark:hover:text-white transition-colors cursor-pointer"
+              onClick={() => scrollToSection('about')} 
+              className="hover:text-surface-950 dark:hover:text-white transition-colors cursor-pointer"
             >
-              Opportunities
+              About
             </button>
             <button 
               onClick={() => scrollToSection('how-it-works')} 
-              className="hover:text-burgundy dark:hover:text-white transition-colors cursor-pointer"
+              className="hover:text-surface-950 dark:hover:text-white transition-colors cursor-pointer"
             >
               How It Works
             </button>
             <button 
-              onClick={() => scrollToSection('features')} 
-              className="hover:text-burgundy dark:hover:text-white transition-colors cursor-pointer"
-            >
-              Features
-            </button>
-            <button 
               onClick={() => scrollToSection('faq')} 
-              className="hover:text-burgundy dark:hover:text-white transition-colors cursor-pointer"
+              className="hover:text-surface-950 dark:hover:text-white transition-colors cursor-pointer"
             >
               FAQ
             </button>
           </nav>
 
-          {/* Right Header Actions */}
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 text-ink/70 hover:text-ink dark:text-surface-400 dark:hover:text-white rounded-xl hover:bg-black/5 dark:hover:bg-surface-800 transition-colors cursor-pointer"
+              className="p-2 text-surface-500 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer"
               aria-label="Toggle theme"
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={18} /> : <SolarIcon name="moon-linear" size={18} />}
             </button>
-
             {isAuthenticated ? (
-              <Button
-                variant="default"
-                size="default"
-                className="bg-burgundy hover:bg-burgundy-700 text-white text-sm font-semibold h-10 min-h-[40px] px-5 rounded-xl shadow-xs"
-                onClick={() => navigate('/discover')}
-              >
-                <span>Go to App</span>
-                <SolarIcon name="alt-arrow-right-linear" size={15} />
-              </Button>
+              <Link to="/discover">
+                <Button
+                  variant="default"
+                  size="default"
+                  className="bg-rome-500 hover:bg-rome-600 text-white text-sm font-semibold h-10 min-h-[40px] px-5 rounded-xl shadow-xs"
+                >
+                  <span>Go to App</span>
+                  <SolarIcon name="alt-arrow-right-linear" size={16} />
+                </Button>
+              </Link>
             ) : (
               <>
                 <Link 
                   to="/login"
-                  className="text-sm font-semibold text-ink/80 dark:text-surface-200 hover:text-ink dark:hover:text-white px-3.5 py-2 transition-colors rounded-xl hover:bg-black/5 dark:hover:bg-surface-800"
+                  className="text-sm font-semibold text-surface-700 dark:text-surface-200 hover:text-surface-950 dark:hover:text-white px-3.5 py-2 transition-colors rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800"
                 >
                   Sign in
                 </Link>
-                <Button
-                  variant="default"
-                  size="default"
-                  className="bg-burgundy hover:bg-burgundy-700 text-white text-sm font-semibold h-10 min-h-[40px] px-5 rounded-xl shadow-xs"
-                  onClick={handlePrimaryCta}
-                >
-                  <span>Find opportunities</span>
-                </Button>
+                <Link to="/signup">
+                  <Button
+                    variant="default"
+                    size="default"
+                    className="bg-rome-500 hover:bg-rome-600 text-white text-sm font-semibold h-10 min-h-[40px] px-5 rounded-xl shadow-xs"
+                  >
+                    Sign up
+                  </Button>
+                </Link>
               </>
             )}
           </div>
@@ -202,14 +209,14 @@ export default function LandingPage() {
           <div className="md:hidden flex items-center gap-1">
             <button
               onClick={toggleTheme}
-              className="p-2 text-ink/70 dark:text-surface-300 hover:bg-black/5 dark:hover:bg-surface-800 rounded-xl transition-colors cursor-pointer"
+              className="p-2 text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-xl transition-colors cursor-pointer"
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <SolarIcon name="sun-2-linear" size={20} /> : <SolarIcon name="moon-linear" size={20} />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2.5 rounded-xl text-ink/80 dark:text-surface-200 hover:bg-black/5 dark:hover:bg-surface-800 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2.5 rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
               aria-label="Toggle navigation menu"
             >
               <SolarIcon name={mobileMenuOpen ? "close-circle-linear" : "hamburger-menu-linear"} size={24} />
@@ -219,68 +226,53 @@ export default function LandingPage() {
 
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-cream dark:bg-surface-900 border-b border-editorial-ink dark:border-surface-800 px-5 py-6 space-y-4 animate-in slide-in-from-top-2">
-            <nav className="space-y-1">
+          <div className="md:hidden bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800 px-5 py-6 space-y-4 animate-in slide-in-from-top-2">
+            <div className="space-y-3">
               <button 
-                onClick={() => scrollToSection('opportunities')}
-                className="w-full text-left text-base font-semibold text-ink dark:text-surface-200 py-2.5 cursor-pointer min-h-[44px] flex items-center"
+                onClick={() => scrollToSection('about')}
+                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-2 cursor-pointer min-h-[44px] flex items-center"
               >
-                Opportunities
+                About
               </button>
               <button 
                 onClick={() => scrollToSection('how-it-works')}
-                className="w-full text-left text-base font-semibold text-ink dark:text-surface-200 py-2.5 cursor-pointer min-h-[44px] flex items-center"
+                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-2 cursor-pointer min-h-[44px] flex items-center"
               >
                 How It Works
               </button>
               <button 
-                onClick={() => scrollToSection('features')}
-                className="w-full text-left text-base font-semibold text-ink dark:text-surface-200 py-2.5 cursor-pointer min-h-[44px] flex items-center"
-              >
-                Features
-              </button>
-              <button 
                 onClick={() => scrollToSection('faq')}
-                className="w-full text-left text-base font-semibold text-ink dark:text-surface-200 py-2.5 cursor-pointer min-h-[44px] flex items-center"
+                className="block w-full text-left text-base font-semibold text-surface-800 dark:text-surface-200 py-2 cursor-pointer min-h-[44px] flex items-center"
               >
                 FAQ
               </button>
-            </nav>
-
-            <div className="pt-4 border-t border-editorial-ink dark:border-surface-800 space-y-2.5">
+            </div>
+            <div className="pt-4 border-t border-surface-100 dark:border-surface-800 space-y-2.5">
               {isAuthenticated ? (
-                <Button
-                  variant="default"
-                  size="default"
-                  className="w-full py-3 text-sm font-semibold bg-burgundy hover:bg-burgundy-700 text-white rounded-xl shadow-xs min-h-[48px]"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate('/discover');
-                  }}
+                <Link
+                  to="/discover"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full py-3 text-sm font-semibold bg-rome-500 hover:bg-rome-600 text-white rounded-xl shadow-xs transition-colors min-h-[48px]"
                 >
                   <span>Go to App</span>
                   <SolarIcon name="alt-arrow-right-linear" size={16} />
-                </Button>
+                </Link>
               ) : (
                 <>
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-center w-full py-3 text-sm font-semibold border border-ink/20 dark:border-surface-700 rounded-xl text-ink dark:text-surface-100 hover:bg-black/5 dark:hover:bg-surface-800 transition-colors min-h-[48px]"
+                    className="flex items-center justify-center w-full py-3 text-sm font-semibold border border-surface-200 dark:border-surface-700 rounded-xl text-surface-900 dark:text-surface-100 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors min-h-[48px]"
                   >
                     Sign in
                   </Link>
-                  <Button
-                    variant="default"
-                    size="default"
-                    className="w-full py-3 text-sm font-semibold bg-burgundy hover:bg-burgundy-700 text-white rounded-xl shadow-xs min-h-[48px]"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      handlePrimaryCta();
-                    }}
+                  <Link
+                    to="/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center w-full py-3 text-sm font-semibold bg-rome-500 hover:bg-rome-600 text-white rounded-xl shadow-xs transition-colors min-h-[48px]"
                   >
-                    <span>Find opportunities</span>
-                  </Button>
+                    Sign up
+                  </Link>
                 </>
               )}
             </div>
@@ -288,310 +280,327 @@ export default function LandingPage() {
         )}
       </header>
 
-      {/* ─── 2. Hero Section (Editorial Discovery + Human Personality) ─── */}
-      <section className="relative pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-editorial-ink dark:border-surface-800 overflow-hidden">
+      {/* ─── Hero Section ─── */}
+      <section className="relative pt-12 pb-16 sm:pt-20 sm:pb-24 overflow-hidden border-b border-surface-200/60 dark:border-surface-800/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl text-left space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             
-            {/* Brand Line Stamp */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-burgundy/10 dark:bg-burgundy/20 border border-burgundy/20 dark:border-burgundy/40 text-burgundy dark:text-rome-300 text-xs font-bold tracking-wide">
-              <span>✦</span>
-              <span>Rome wasn’t built in a day…</span>
+            {/* Left Narrative */}
+            <div className="lg:col-span-7 space-y-6 text-left">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-100 dark:bg-surface-850 text-surface-900 dark:text-surface-100 text-xs font-bold uppercase tracking-wider border border-surface-200 dark:border-surface-700">
+                <span className="w-2 h-2 rounded-full bg-rome-500" />
+                <span>Opportunity Discovery & Decision Support</span>
+              </div>
+
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 leading-[1.15]">
+                Rome wasn’t built in a day. <br className="hidden sm:inline" />
+                <span className="text-rome-500">Neither is your path.</span>
+              </h1>
+
+              <p className="text-base sm:text-lg text-surface-700 dark:text-surface-300 leading-relaxed max-w-xl">
+                Discover opportunities you might not have found on your own. ROMEfind surfaces high-impact fellowships, internships, grants, research programs, and skill accelerators tailored to what you want to achieve.
+              </p>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Button
+                  variant="default"
+                  size="default"
+                  className="bg-rome-500 hover:bg-rome-600 text-white text-base font-semibold h-12 sm:h-13 min-h-[48px] px-7 rounded-xl shadow-md hover:shadow-lg transition-all justify-center"
+                  onClick={handleCtaClick}
+                >
+                  <span>Explore opportunities</span>
+                  <SolarIcon name="alt-arrow-right-linear" size={18} />
+                </Button>
+
+                <button 
+                  onClick={() => scrollToSection('how-it-works')}
+                  className="inline-flex items-center justify-center text-sm font-semibold text-surface-700 dark:text-surface-300 hover:text-surface-950 dark:hover:text-white px-5 py-3 h-12 min-h-[48px] rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800/80 transition-colors cursor-pointer"
+                >
+                  See how it works
+                </button>
+              </div>
+
+              {/* Key Trust Signals */}
+              <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-surface-600 dark:text-surface-400 font-semibold">
+                <span className="flex items-center gap-1.5">
+                  <SolarIcon name="check-circle-linear" size={16} className="text-rome-500" />
+                  Verified Deadlines & Eligibility
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <SolarIcon name="check-circle-linear" size={16} className="text-rome-500" />
+                  Transparent Stipends & Funding
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <SolarIcon name="check-circle-linear" size={16} className="text-rome-500" />
+                  Official Application Portals
+                </span>
+              </div>
             </div>
 
-            {/* Display Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink dark:text-surface-50 leading-[1.12]">
-              Your next move shouldn’t be a guessing game.
-            </h1>
+            {/* Right Interactive Preview Card (Visual hover only, illustrative) */}
+            <div className="lg:col-span-5 w-full">
+              <div className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 sm:p-7 shadow-xl shadow-surface-950/5 relative overflow-hidden text-left transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-2xl">
+                {/* Header Tag */}
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 flex items-center justify-center">
+                      <SolarIcon name="buildings-2-linear" size={13} />
+                    </div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-surface-600 dark:text-surface-400">
+                      Stanford University
+                    </span>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/80">
+                    Fully Funded
+                  </span>
+                </div>
 
-            {/* Concise Supporting Copy */}
-            <p className="text-base sm:text-lg lg:text-xl text-ink/80 dark:text-surface-300 leading-relaxed max-w-2xl font-normal">
-              Find what’s possible. Discover curated fellowships, paid internships, research residencies, and grants worth pursuing—with transparent stipends, active deadlines, and verified requirements.
-            </p>
+                <h3 className="text-xl font-bold text-surface-950 dark:text-white leading-snug mb-2">
+                  Knight-Hennessy Scholars Program
+                </h3>
 
-            {/* Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <Button
-                variant="default"
-                size="default"
-                className="bg-burgundy hover:bg-burgundy-700 text-white text-base font-semibold h-12 sm:h-13 min-h-[48px] px-7 rounded-xl shadow-md hover:shadow-lg transition-all justify-center cursor-pointer"
-                onClick={handlePrimaryCta}
-              >
-                <span>Find opportunities</span>
-                <SolarIcon name="alt-arrow-right-linear" size={17} />
-              </Button>
+                <div className="flex flex-wrap items-center gap-1.5 mb-4">
+                  <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700">
+                    Fellowship
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-100/60 dark:bg-surface-800/60 text-surface-700 dark:text-surface-300">
+                    Leadership & Public Policy
+                  </span>
+                </div>
 
-              <button 
-                onClick={() => scrollToSection('opportunities')}
-                className="inline-flex items-center justify-center text-sm font-semibold text-ink/80 dark:text-surface-300 hover:text-ink dark:hover:text-white px-5 py-3 h-12 min-h-[48px] rounded-xl hover:bg-black/5 dark:hover:bg-surface-800 transition-colors cursor-pointer"
-              >
-                Browse live listings ↓
-              </button>
-            </div>
+                <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed mb-4">
+                  Full tuition, stipend, and leadership development across all graduate degree disciplines at Stanford.
+                </p>
 
-            {/* Factual Trust Indicators (Truthful Provenance) */}
-            <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-ink/70 dark:text-surface-400 font-medium">
-              <span className="flex items-center gap-1.5">
-                <SolarIcon name="check-circle-linear" size={15} className="text-burgundy dark:text-rome-400" />
-                Direct links to official host portals
-              </span>
-              <span className="flex items-center gap-1.5">
-                <SolarIcon name="check-circle-linear" size={15} className="text-burgundy dark:text-rome-400" />
-                Transparent stipends & salaries
-              </span>
-              <span className="flex items-center gap-1.5">
-                <SolarIcon name="check-circle-linear" size={15} className="text-burgundy dark:text-rome-400" />
-                Active submission deadlines
-              </span>
+                {/* Structured Metadata (Direct on Card Surface) */}
+                <div className="grid grid-cols-2 gap-2.5 text-xs py-3 border-y border-surface-100 dark:border-surface-800/80 mb-5">
+                  <div>
+                    <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold block mb-0.5">Location</span>
+                    <span className="font-semibold text-surface-900 dark:text-surface-100">Stanford, CA, USA</span>
+                  </div>
+                  <div>
+                    <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold block mb-0.5">Deadline</span>
+                    <span className="font-semibold text-amber-600 dark:text-amber-400">Oct 07, 2026</span>
+                  </div>
+                  <div className="col-span-2 pt-2 border-t border-surface-100 dark:border-surface-800/60 flex items-center justify-between">
+                    <span className="text-[11px] uppercase tracking-wider text-surface-500 dark:text-surface-400 font-bold">Funding</span>
+                    <span className="font-semibold text-surface-900 dark:text-surface-100">100% Tuition + Living Stipend</span>
+                  </div>
+                </div>
+
+                {/* Decorative Opportunity Preview Footer (Illustrative - does not navigate) */}
+                <div className="flex items-center gap-2">
+                  <div className="w-full py-2.5 px-4 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 text-center text-xs font-semibold flex items-center justify-center gap-1.5 cursor-default select-none border border-surface-200/50 dark:border-surface-700/50">
+                    <span>Verified Opportunity Preview</span>
+                    <SolarIcon name="check-circle-linear" size={14} className="text-rome-500" />
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* ─── 3. Live Opportunities Section (First Scroll: Real Data Proof) ─── */}
-      <section id="opportunities" className="py-16 sm:py-24 border-b border-editorial-ink dark:border-surface-800 scroll-mt-16">
+      {/* ─── Section: About (In-Page Section) ─── */}
+      <section id="about" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 text-left">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-burgundy dark:text-rome-400 block mb-1.5">
-                ★ Live Listings
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-6 space-y-4 text-left">
+              <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 block">
+                ★ About ROMEfind
               </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink dark:text-surface-50">
-                Opportunities open right now.
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 leading-tight">
+                Designed to help you uncover paths you never knew existed.
               </h2>
-              <p className="text-sm sm:text-base text-ink/70 dark:text-surface-300 mt-1 max-w-xl">
-                A selection of active programs from our verified catalog. Review funding, location, and prerequisites before you apply.
+              <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
+                Most discovery platforms operate like conventional job boards—showing you only the standard roles everyone already knows about.
+              </p>
+              <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
+                ROMEfind was built on a different principle: that ambitious paths are made possible through non-linear combinations of fellowships, research placements, seed grants, and intensive programmes. We provide the structured clarity and decision support to help you navigate them.
               </p>
             </div>
 
-            <Button
-              variant="outline"
-              size="default"
-              className="self-start sm:self-auto border-ink/20 dark:border-surface-700 bg-white/70 dark:bg-surface-900 text-ink dark:text-surface-100 hover:bg-white dark:hover:bg-surface-800 text-xs sm:text-sm font-semibold h-10 min-h-[40px] px-4 rounded-xl shrink-0 cursor-pointer"
-              onClick={handlePrimaryCta}
-            >
-              <span>Explore all in app</span>
-              <SolarIcon name="alt-arrow-right-linear" size={14} />
-            </Button>
+            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
+                <span className="text-2xl font-bold text-rome-500">100%</span>
+                <h3 className="font-bold text-base text-surface-950 dark:text-white">Curated & Verified</h3>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">All opportunities are vetted for genuine funding and authentic application links.</p>
+              </div>
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
+                <span className="text-2xl font-bold text-rome-500">Global</span>
+                <h3 className="font-bold text-base text-surface-950 dark:text-white">Worldwide Scope</h3>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">Opportunities spanning the US, UK, Europe, Africa, Asia, and remote worldwide.</p>
+              </div>
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
+                <span className="text-2xl font-bold text-rome-500">Smart</span>
+                <h3 className="font-bold text-base text-surface-950 dark:text-white">Side-by-Side Compare</h3>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">Evaluate duration, stipends, and requirements side-by-side before applying.</p>
+              </div>
+              <div className="p-6 rounded-2xl border border-surface-200 dark:border-surface-800 bg-surface-50/50 dark:bg-surface-900/40 text-left space-y-2 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover md:hover:bg-white dark:md:hover:bg-surface-900">
+                <span className="text-2xl font-bold text-rome-500">Private</span>
+                <h3 className="font-bold text-base text-surface-950 dark:text-white">Personal Workspace</h3>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">Track deadlines, checklists, and outcomes in one focused command center.</p>
+              </div>
+            </div>
           </div>
-
-          {/* 4 Real Opportunity Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
-            {featuredOpportunities.map((opp) => {
-              const orgName = typeof opp.organization === 'object' ? opp.organization.name : opp.organization;
-              const isItemSaved = isSaved(opp.id);
-
-              return (
-                <div 
-                  key={opp.id}
-                  className="bg-white dark:bg-surface-900 border border-editorial-ink dark:border-surface-800 rounded-2xl p-5 sm:p-6 text-left shadow-xs transition-all duration-200 md:hover:-translate-y-0.5 md:hover:shadow-card-hover flex flex-col justify-between"
-                >
-                  <div>
-                    {/* Header: Organization & Type Tag */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="text-xs font-bold uppercase tracking-wider text-burgundy dark:text-rome-400">
-                        {orgName}
-                      </span>
-                      <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-cream dark:bg-surface-800 text-ink dark:text-surface-200 border border-editorial-ink dark:border-surface-700">
-                        {opp.type}
-                      </span>
-                    </div>
-
-                    {/* Opportunity Title */}
-                    <h3 className="text-lg sm:text-xl font-bold text-ink dark:text-white mb-2 leading-snug">
-                      {opp.title}
-                    </h3>
-
-                    {/* Short Description */}
-                    <p className="text-xs sm:text-sm text-ink/70 dark:text-surface-300 leading-relaxed mb-4 line-clamp-2">
-                      {opp.shortDescription || opp.description}
-                    </p>
-
-                    {/* Metadata Strip */}
-                    <div className="grid grid-cols-2 gap-2 text-xs py-3 border-y border-editorial-ink dark:border-surface-800/80 mb-4 bg-cream/30 dark:bg-surface-850/30 px-3 rounded-xl">
-                      <div>
-                        <span className="text-[10px] uppercase tracking-wider text-ink/50 dark:text-surface-400 font-semibold block">Location</span>
-                        <span className="font-semibold text-ink dark:text-surface-100 truncate block">
-                          {opp.location}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] uppercase tracking-wider text-ink/50 dark:text-surface-400 font-semibold block">Deadline</span>
-                        <span className="font-semibold text-amber-700 dark:text-amber-400 truncate block">
-                          {opp.deadline || 'Rolling basis'}
-                        </span>
-                      </div>
-                      <div className="col-span-2 pt-1 border-t border-editorial-ink dark:border-surface-800/60 flex items-center justify-between">
-                        <span className="text-[10px] uppercase tracking-wider text-ink/50 dark:text-surface-400 font-semibold">Compensation</span>
-                        <span className="font-bold text-ink dark:text-surface-50 text-xs truncate">
-                          {opp.funding || 'Funded'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Actions Row */}
-                  <div className="flex items-center justify-between gap-3 pt-2">
-                    <a
-                      href={opp.applicationUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-burgundy dark:text-rome-400 hover:underline"
-                    >
-                      <span>Official application portal</span>
-                      <SolarIcon name="arrow-right-up-linear" size={14} />
-                    </a>
-
-                    <button
-                      onClick={() => {
-                        if (isAuthenticated) {
-                          if (isItemSaved) unsaveOpportunity(opp.id);
-                          else saveOpportunity(opp.id);
-                        } else {
-                          navigate('/signup');
-                        }
-                      }}
-                      className={cn(
-                        "w-9 h-9 rounded-xl border flex items-center justify-center transition-colors cursor-pointer",
-                        isItemSaved
-                          ? "bg-burgundy text-white border-burgundy shadow-2xs"
-                          : "bg-cream dark:bg-surface-800 text-ink/60 dark:text-surface-300 border-editorial-ink dark:border-surface-700 hover:text-burgundy"
-                      )}
-                      aria-label={isItemSaved ? "Remove from saved" : "Save opportunity"}
-                      title={isAuthenticated ? (isItemSaved ? "Saved" : "Save to workspace") : "Sign up to save"}
-                    >
-                      <SolarIcon name={isItemSaved ? "heart-bold" : "heart-linear"} size={16} />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
         </div>
       </section>
 
-      {/* ─── 4. The 4-Step Journey (How It Works) ─── */}
-      <section id="how-it-works" className="py-16 sm:py-24 border-b border-editorial-ink dark:border-surface-800 scroll-mt-16 bg-cream/40 dark:bg-surface-900/50">
+      {/* ─── Section 1: Find Possibilities Across Different Paths ─── */}
+      <section id="pathways" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           <div className="text-left max-w-2xl mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-burgundy dark:text-rome-400 block mb-1.5">
-              ★ The Discovery Journey
+            <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 block mb-2">
+              ★ Discover Pathways
             </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink dark:text-surface-50">
-              Clear steps. No endless searching.
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
+              Find possibilities across different paths.
             </h2>
-            <p className="text-base text-ink/70 dark:text-surface-300 mt-2 leading-relaxed">
-              Finding the right opportunity shouldn't feel like guessing. We guide you through four intentional phases:
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
+              There are more opportunities and career trajectories available than people usually discover. Explore curated formats structured for high growth.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {workflowSteps.map((step) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {pathways.map((path, idx) => (
               <div 
-                key={step.number}
-                className="bg-white dark:bg-surface-900 border border-editorial-ink dark:border-surface-800 rounded-2xl p-6 text-left shadow-xs flex flex-col justify-between"
+                key={idx}
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 transition-all duration-200 md:hover:-translate-y-0.5 md:hover:shadow-card-hover md:hover:border-surface-300 dark:md:hover:border-surface-700 text-left flex flex-col justify-between group"
               >
                 <div>
-                  <span className="text-3xl font-black text-ink/20 dark:text-surface-700 block mb-3">
-                    {step.number}
-                  </span>
-                  <h3 className="text-lg font-bold text-ink dark:text-white mb-1">
-                    {step.title}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 flex items-center justify-center border border-surface-200/60 dark:border-surface-700/60 transition-colors md:group-hover:border-surface-300 dark:md:group-hover:border-surface-600">
+                      <SolarIcon name={path.icon} size={20} />
+                    </div>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300">
+                      {path.badge}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-surface-950 dark:text-white mb-2 transition-colors">
+                    {path.title}
                   </h3>
-                  <p className="text-xs font-bold text-burgundy dark:text-rome-400 uppercase tracking-wide mb-3">
-                    {step.tagline}
-                  </p>
-                  <p className="text-xs sm:text-sm text-ink/70 dark:text-surface-300 leading-relaxed">
-                    {step.description}
+
+                  <p className="text-sm text-surface-600 dark:text-surface-300 leading-relaxed">
+                    {path.description}
                   </p>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* ─── 5. Practical Utility (Compare, Learn, Save, Track) ─── */}
-      <section id="features" className="py-16 sm:py-24 border-b border-editorial-ink dark:border-surface-800 scroll-mt-16">
+      {/* ─── Section 2: Opportunity Discovery & Decision Support (Pillars) ─── */}
+      <section className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           <div className="text-left max-w-2xl mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-burgundy dark:text-rome-400 block mb-1.5">
-              ★ Built for Decision-Making
+            <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 block mb-2">
+              ★ Clarity & Decision Support
             </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink dark:text-surface-50">
-              Tools to evaluate before you apply.
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
+              Don’t just find opportunities. Understand them.
             </h2>
-            <p className="text-base text-ink/70 dark:text-surface-300 mt-2 leading-relaxed">
-              ROMEfind helps you evaluate realistic options and organize your preparation in one calm workspace.
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
+              Every opportunity in ROMEfind is broken down into structured, actionable intelligence before you invest your time applying.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {practicalFeatures.map((feat, idx) => (
-              <div
+            {pillars.map((pillar, idx) => (
+              <div 
                 key={idx}
-                className="bg-white dark:bg-surface-900 border border-editorial-ink dark:border-surface-800 rounded-2xl p-6 text-left shadow-xs space-y-3"
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 text-left space-y-3 shadow-xs transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover group"
               >
-                <div className="w-10 h-10 rounded-xl bg-cream dark:bg-surface-800 text-burgundy dark:text-rome-400 flex items-center justify-center border border-editorial-ink dark:border-surface-700">
-                  <SolarIcon name={feat.icon} size={20} />
+                <div className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 flex items-center justify-center border border-surface-200/60 dark:border-surface-700/60 transition-colors md:group-hover:border-rome-200 dark:md:group-hover:border-rome-800 md:group-hover:text-rome-600 dark:md:group-hover:text-rome-400">
+                  <SolarIcon name={pillar.icon} size={20} />
                 </div>
-                <h3 className="text-base font-bold text-ink dark:text-white">
-                  {feat.title}
+                <h3 className="text-base font-bold text-surface-950 dark:text-white">
+                  {pillar.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-ink/70 dark:text-surface-300 leading-relaxed">
-                  {feat.description}
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">
+                  {pillar.description}
                 </p>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* ─── 6. Frequently Asked Questions (Clean Accordion) ─── */}
-      <section id="faq" className="py-16 sm:py-24 border-b border-editorial-ink dark:border-surface-800 scroll-mt-16 bg-cream/40 dark:bg-surface-900/50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+      {/* ─── Section 3: The ROMEMethod Loop (How It Works) ─── */}
+      <section id="how-it-works" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-left max-w-2xl mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-burgundy dark:text-rome-400 block mb-1.5">
-              ★ Honest Answers
+            <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 block mb-2">
+              ★ The Complete Loop
             </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink dark:text-surface-50">
-              Frequently asked questions.
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
+              Explore. Compare. Prepare. Track.
             </h2>
-            <p className="text-base text-ink/70 dark:text-surface-300 mt-2 leading-relaxed">
-              Clear information about how ROMEfind curates opportunities and links to host institutions.
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
+              From initial spark to accepted offer, navigate every step of your trajectory with confidence.
             </p>
           </div>
 
-          <div className="space-y-3 text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {workflowSteps.map((step, idx) => (
+              <div 
+                key={idx}
+                className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 text-left space-y-3 relative overflow-hidden transition-all duration-200 md:hover:-translate-y-0.5 md:hover:border-surface-300 dark:md:hover:border-surface-700 md:hover:shadow-card-hover group"
+              >
+                <span className="text-3xl font-black text-surface-300 dark:text-surface-700 block transition-colors md:group-hover:text-rome-500">
+                  {step.step}
+                </span>
+                <h3 className="text-lg font-bold text-surface-950 dark:text-white">
+                  {step.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-surface-600 dark:text-surface-300 leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Section: FAQ (In-Page Section) ─── */}
+      <section id="faq" className="py-16 sm:py-24 border-b border-surface-200/60 dark:border-surface-800/60 bg-surface-50/50 dark:bg-surface-900 scroll-mt-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-left max-w-2xl mb-12">
+            <span className="text-xs font-bold uppercase tracking-wider text-rome-600 dark:text-rome-400 block mb-2">
+              ★ Frequently Asked Questions
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50 mb-3">
+              Everything you need to know.
+            </h2>
+            <p className="text-base text-surface-700 dark:text-surface-300 leading-relaxed">
+              Answers to common questions about opportunity curation, matching, and tracking on ROMEfind.
+            </p>
+          </div>
+
+          <div className="space-y-3">
             {faqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <div 
                   key={idx}
-                  className="rounded-2xl border border-editorial-ink dark:border-surface-800 bg-white dark:bg-surface-900 overflow-hidden shadow-2xs"
+                  className="rounded-2xl border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 overflow-hidden shadow-2xs transition-all duration-200 md:hover:border-surface-300 dark:md:hover:border-surface-700"
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-base sm:text-lg text-ink dark:text-white cursor-pointer hover:text-burgundy dark:hover:text-rome-400 transition-colors"
+                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-base sm:text-lg text-surface-950 dark:text-white cursor-pointer hover:text-rome-600 dark:hover:text-rome-400 transition-colors"
                     aria-expanded={isOpen}
                   >
                     <span>{faq.q}</span>
                     <SolarIcon 
                       name={isOpen ? "alt-arrow-up-linear" : "alt-arrow-down-linear"} 
                       size={18} 
-                      className="shrink-0 text-ink/50 dark:text-surface-400"
+                      className="shrink-0 text-surface-500"
                     />
                   </button>
                   {isOpen && (
-                    <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-base text-ink/70 dark:text-surface-300 leading-relaxed border-t border-editorial-ink dark:border-surface-800/80">
+                    <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-base text-surface-600 dark:text-surface-300 leading-relaxed border-t border-surface-100 dark:border-surface-800/80">
                       {faq.a}
                     </div>
                   )}
@@ -599,59 +608,54 @@ export default function LandingPage() {
               );
             })}
           </div>
-
         </div>
       </section>
 
-      {/* ─── 7. Final Invitation & Closing ─── */}
-      <section className="py-16 sm:py-24 bg-cream dark:bg-surface-950 text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          <span className="text-xs font-bold uppercase tracking-wider text-burgundy dark:text-rome-400 block">
-            ✦ ROMEfind
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-ink dark:text-surface-50">
+      {/* ─── Section 4: Final CTA ─── */}
+      <section className="py-16 sm:py-24 bg-surface-50/60 dark:bg-surface-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-surface-950 dark:text-surface-50">
             Find what’s possible.
           </h2>
-          <p className="text-base sm:text-lg text-ink/70 dark:text-surface-300 max-w-xl mx-auto leading-relaxed">
-            Start discovering realistic opportunities, evaluate requirements, and figure out your next step.
+          <p className="text-base sm:text-lg text-surface-600 dark:text-surface-300 max-w-xl mx-auto leading-relaxed">
+            Join thousands of ambitious students, researchers, and professionals discovering and securing their next breakthrough.
           </p>
-          <div className="pt-2 flex justify-center">
+          <div className="pt-3 flex justify-center">
             <Button
               variant="default"
               size="default"
-              className="bg-burgundy hover:bg-burgundy-700 text-white text-base font-semibold h-13 min-h-[50px] px-8 rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer"
-              onClick={handlePrimaryCta}
+              className="bg-rome-500 hover:bg-rome-600 text-white text-base font-semibold h-13 min-h-[50px] px-8 rounded-xl shadow-lg hover:shadow-xl transition-all"
+              onClick={handleCtaClick}
             >
               <span>Start exploring opportunities</span>
-              <SolarIcon name="alt-arrow-right-linear" size={17} />
+              <SolarIcon name="alt-arrow-right-linear" size={18} />
             </Button>
           </div>
         </div>
       </section>
 
-      {/* ─── 8. Minimal Editorial Footer ─── */}
-      <footer className="bg-cream dark:bg-surface-950 border-t border-editorial-ink dark:border-surface-800 py-10">
+      {/* ─── Clean Minimal Footer ─── */}
+      <footer className="bg-white dark:bg-surface-950 border-t border-surface-200 dark:border-surface-800 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-1">
-            <span className="text-xl font-black tracking-tight text-burgundy dark:text-rome-400">ROME</span>
-            <span className="text-xl font-bold tracking-tight text-ink dark:text-white">find</span>
+            <span className="text-xl font-bold tracking-tight text-rome-500">ROME</span>
+            <span className="text-xl font-bold tracking-tight text-surface-950 dark:text-white">find</span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm font-medium text-ink/70 dark:text-surface-400">
-            <button onClick={() => scrollToSection('opportunities')} className="hover:text-burgundy dark:hover:text-white transition-colors cursor-pointer">Opportunities</button>
-            <button onClick={() => scrollToSection('how-it-works')} className="hover:text-burgundy dark:hover:text-white transition-colors cursor-pointer">How It Works</button>
-            <button onClick={() => scrollToSection('faq')} className="hover:text-burgundy dark:hover:text-white transition-colors cursor-pointer">FAQ</button>
-            <Link to="/community-guidelines" className="hover:text-burgundy dark:hover:text-white transition-colors">Community Guidelines</Link>
-            <Link to="/privacy" className="hover:text-burgundy dark:hover:text-white transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-burgundy dark:hover:text-white transition-colors">Terms of Service</Link>
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm font-medium text-surface-600 dark:text-surface-400">
+            <button onClick={() => scrollToSection('about')} className="hover:text-surface-950 dark:hover:text-white transition-colors cursor-pointer">About</button>
+            <button onClick={() => scrollToSection('how-it-works')} className="hover:text-surface-950 dark:hover:text-white transition-colors cursor-pointer">How It Works</button>
+            <button onClick={() => scrollToSection('faq')} className="hover:text-surface-950 dark:hover:text-white transition-colors cursor-pointer">FAQ</button>
+            <Link to="/community-guidelines" className="hover:text-surface-950 dark:hover:text-white transition-colors">Community Guidelines</Link>
+            <Link to="/privacy" className="hover:text-surface-950 dark:hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-surface-950 dark:hover:text-white transition-colors">Terms of Service</Link>
           </div>
 
-          <p className="text-xs text-ink/50 dark:text-surface-500">
+          <p className="text-xs text-surface-400 dark:text-surface-500">
             &copy; {new Date().getFullYear()} ROMEfind. All rights reserved.
           </p>
         </div>
       </footer>
-
     </div>
   );
 }
