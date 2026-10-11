@@ -41,6 +41,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^8.7.0",
+    "google-auth-library": "^11.2.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.460.0",
     "morgan": "^1.10.0",

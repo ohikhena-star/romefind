@@ -13,6 +13,9 @@ dist-ssr
 .env.local
 .env.*.local
 server/.env
+.env*
+!.env.example
+!server/.env.example
 
 # Database & Neon
 .neon
@@ -34,4 +37,3 @@ Thumbs.db
 .idea
 
 .vercel
-.env*

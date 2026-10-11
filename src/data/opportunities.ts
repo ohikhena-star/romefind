@@ -3914,6 +3914,663 @@ export const opportunities: Opportunity[] = [
     "createdAt": "2026-10-01T00:00:00.000Z",
     "updatedAt": "2026-10-01T00:00:00.000Z",
     "isFeatured": true
+  },
+
+  // ─── NEW VERIFIED ADDITIONS — 2026-10-11 ───────────────────────────────────
+
+  {
+    "id": "opp-tef-01",
+    "title": "Tony Elumelu Foundation Entrepreneurship Programme",
+    "organization": {
+      "id": "org-tef",
+      "name": "Tony Elumelu Foundation",
+      "website": "https://www.tonyelumelufoundation.org",
+      "description": "Africa's leading private-sector development foundation, committed to empowering African entrepreneurs across all 54 African countries.",
+      "type": "Foundation"
+    },
+    "type": "Programme",
+    "description": "The Tony Elumelu Foundation Entrepreneurship Programme is the world's largest African private-sector initiative for empowering African entrepreneurs. Selected entrepreneurs from all 54 African countries receive $5,000 USD in non-refundable seed capital, 12 weeks of world-class business management training, mentorship from a network of experienced African business leaders, and access to the TEFConnect platform of over 1.5 million entrepreneurs. The programme targets early-stage business ideas and businesses up to approximately 5 years old.",
+    "shortDescription": "$5,000 USD seed capital, business training, and mentorship for entrepreneurs from all 54 African countries.",
+    "field": ["Entrepreneurship", "Business", "Social Impact"],
+    "subfields": ["Startup Funding", "Business Development", "SME Growth", "African Enterprise"],
+    "tags": ["entrepreneurship", "Africa", "seed funding", "TEF", "all 54 countries", "startup", "mentorship"],
+    "location": "All 54 African Countries (remote training + in-person events)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Citizen or legal resident of any of the 54 African countries",
+      "Early-stage business idea or business up to approximately 5 years old",
+      "Age 18 or older",
+      "Committed to growing a business in Africa"
+    ],
+    "educationRequirements": ["Any"],
+    "experienceRequirements": "Beginner",
+    "funding": "$5,000 USD non-refundable seed capital",
+    "benefits": [
+      "$5,000 USD non-refundable seed capital",
+      "12-week online business training curriculum",
+      "One-on-one mentorship with experienced business leaders",
+      "Access to TEFConnect network of 1.5M+ African entrepreneurs",
+      "Opportunity for additional funding from TEF"
+    ],
+    "duration": "12 weeks training + ongoing community",
+    "deadline": "2027-03-31",
+    "applicationUrl": "https://www.tefconnect.com",
+    "officialSource": "https://www.tonyelumelufoundation.org/tef-programme",
+    "sourceName": "Tony Elumelu Foundation",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Online application via TEFConnect platform", "Business idea or plan summary", "Personal and business details"],
+    "applicationSteps": [
+      "Register on TEFConnect (opens January 1, 2027)",
+      "Complete application form with business information",
+      "Submit before March 31, 2027 deadline",
+      "Shortlisted applicants invited to business plan stage",
+      "Selected entrepreneurs announced and training begins"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": true
+  },
+
+  {
+    "id": "opp-daad-africa-01",
+    "title": "DAAD In-Country/In-Region Scholarship for Sub-Saharan Africa",
+    "organization": {
+      "id": "org-daad",
+      "name": "DAAD (German Academic Exchange Service)",
+      "website": "https://www.daad.de",
+      "description": "The world's largest funding organisation for the international exchange of students and researchers, funded by the German Federal Foreign Office.",
+      "type": "Government"
+    },
+    "type": "Scholarship",
+    "description": "The DAAD In-Country/In-Region Scholarship Programme provides fully funded scholarships for development-related Master's and doctoral degrees within Sub-Saharan Africa. The programme allows students to study at a participating institution in their home country (In-Country) or at another participating institution in the Sub-Saharan region (In-Region), without needing to travel to Germany. The goal is to strengthen higher education capacity in Africa and support researchers who will contribute to the sustainable development of their home countries.",
+    "shortDescription": "Fully funded scholarships for postgraduate study in development-related fields at participating Sub-Saharan African universities.",
+    "field": ["Academic Research", "Development", "Engineering", "Agriculture", "Healthcare", "Public Policy"],
+    "subfields": ["Development Studies", "Regional Higher Education", "Sustainable Development", "Research"],
+    "tags": ["DAAD", "scholarship", "Africa", "Sub-Saharan", "postgraduate", "development", "fully funded", "masters", "PhD"],
+    "location": "Sub-Saharan Africa (participating universities)",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Graduate or postgraduate applicant from a Sub-Saharan African country",
+      "Intending to pursue a development-related Master's or doctoral degree",
+      "Aiming for a career in teaching, research, or sustainable development",
+      "Must apply to a participating university programme alongside scholarship application"
+    ],
+    "educationRequirements": ["Graduate", "Postgraduate"],
+    "experienceRequirements": "Beginner",
+    "funding": "Fully funded (tuition, living allowance, health insurance, travel)",
+    "benefits": [
+      "Full tuition coverage at participating university",
+      "Monthly living allowance",
+      "Health insurance",
+      "Travel costs within the region"
+    ],
+    "duration": "1-3 years (depending on programme)",
+    "deadline": "2026-11-12",
+    "applicationUrl": "https://portal.meindaad.de",
+    "officialSource": "https://www.daad.de/en/study-and-research-in-germany/scholarships/daad-scholarship-programmes/in-country-regional-programme-for-sub-saharan-africa/",
+    "sourceName": "DAAD Scholarship Database",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Academic transcripts", "Motivation letter", "CV", "Two academic references", "Admission to participating university programme"],
+    "applicationSteps": [
+      "Identify a development-related postgraduate programme at a participating Sub-Saharan African university",
+      "Apply for university admission simultaneously",
+      "Submit scholarship application via DAAD portal (portal.meindaad.de) by November 12, 2026",
+      "Scholarship selection by DAAD and partner institutions"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": true
+  },
+
+  {
+    "id": "opp-au-intern-01",
+    "title": "African Union Commission Internship Programme",
+    "organization": {
+      "id": "org-au-commission",
+      "name": "African Union Commission",
+      "website": "https://au.int",
+      "description": "The secretariat of the African Union, the continental body of 55 member states covering the entire African continent, headquartered in Addis Ababa, Ethiopia.",
+      "type": "International Organisation"
+    },
+    "type": "Internship",
+    "description": "The African Union Commission Internship Programme is a full-time professional development opportunity for students and recent graduates from AU Member States. Interns are placed across departments at the AU Commission headquarters in Addis Ababa, Ethiopia, and at AU field offices across the continent. Departments include Peace and Security, Economic Affairs, Social Affairs, Political Affairs, Infrastructure and Energy, and more. The programme provides hands-on exposure to continental policy-making, governance, and programme implementation.",
+    "shortDescription": "Full-time internship at the African Union Commission in Addis Ababa and continental offices, open to nationals of all 55 AU member states.",
+    "field": ["Governance", "Public Policy", "International Relations", "Social Impact", "Development"],
+    "subfields": ["Continental Policy", "Peace and Security", "Economic Policy", "African Union Affairs"],
+    "tags": ["African Union", "AU", "internship", "Africa", "all 55 member states", "Addis Ababa", "policy", "governance"],
+    "location": "Addis Ababa, Ethiopia / AU Field Offices (Africa)",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "National of an African Union Member State",
+      "Enrolled in the final year of a Bachelor's degree, or holds a Bachelor's, Master's, or postgraduate qualification",
+      "32 years of age or younger at time of selection",
+      "Fluent in at least one AU working language: Arabic, English, French, Portuguese, or Kiswahili"
+    ],
+    "educationRequirements": ["Undergraduate", "Graduate", "Postgraduate"],
+    "experienceRequirements": "Beginner",
+    "funding": "Unpaid (self-funded travel, accommodation, and living expenses)",
+    "benefits": [
+      "Direct exposure to continental policy-making processes",
+      "Professional network within the African Union system",
+      "Certificate of completion from the African Union Commission"
+    ],
+    "duration": "3-6 months",
+    "deadline": "2026-12-31",
+    "applicationUrl": "https://careers.au.int",
+    "officialSource": "https://au.int/en/internship",
+    "sourceName": "African Union Careers Portal",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Online application via AU Careers portal", "AU Personal History Form (PHF)", "CV", "Academic transcripts or degree certificate", "Motivation letter"],
+    "applicationSteps": [
+      "Create account on AU Careers portal (careers.au.int)",
+      "Complete AU Personal History Form (PHF)",
+      "Search available internship notices and submit application",
+      "Submit before December 31, 2026 deadline"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": false
+  },
+
+  {
+    "id": "opp-mcf-uct-01",
+    "title": "Mastercard Foundation Scholars Program at University of Cape Town (UCT)",
+    "organization": {
+      "id": "org-uct-mcf",
+      "name": "Mastercard Foundation / University of Cape Town",
+      "website": "https://www.uct.ac.za/mastercardfdn",
+      "description": "The Mastercard Foundation Scholars Program at UCT provides fully funded postgraduate scholarships for outstanding Africans demonstrating academic excellence and commitment to giving back to their communities.",
+      "type": "University"
+    },
+    "type": "Scholarship",
+    "description": "The Mastercard Foundation Scholars Program at UCT provides fully funded postgraduate scholarships for academically outstanding students from across Africa who demonstrate commitment to giving back and transforming their communities. The scholarship covers tuition fees, accommodation, meals, a living allowance, and health insurance. It is open to citizens of African countries applying for postgraduate diploma, honours, or coursework master's programmes at the University of Cape Town.",
+    "shortDescription": "Fully funded postgraduate scholarship at University of Cape Town for academically excellent African students committed to community transformation.",
+    "field": ["Academic Research", "Engineering", "Healthcare", "Business", "Social Impact", "Technology"],
+    "subfields": ["Postgraduate Study", "Academic Excellence", "Community Leadership", "Africa-based Higher Education"],
+    "tags": ["Mastercard Foundation", "UCT", "South Africa", "scholarship", "Africa", "postgraduate", "fully funded"],
+    "location": "Cape Town, South Africa",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Citizen of an African country",
+      "Applying for a postgraduate diploma (Health Sciences), honours, or coursework master's programme at UCT",
+      "Must separately apply for and receive a UCT admission offer",
+      "Demonstrated financial need and commitment to giving back to African communities"
+    ],
+    "educationRequirements": ["Graduate", "Postgraduate"],
+    "experienceRequirements": "Beginner",
+    "funding": "Fully funded (tuition, accommodation, meals, living allowance, health insurance)",
+    "benefits": [
+      "Full tuition fees",
+      "University accommodation or accommodation allowance",
+      "Meals and living stipend",
+      "Health insurance",
+      "Leadership development and mentorship"
+    ],
+    "duration": "Duration of the postgraduate programme",
+    "deadline": "2026-10-31",
+    "applicationUrl": "https://www.uct.ac.za/mastercardfdn",
+    "officialSource": "https://www.uct.ac.za/mastercardfdn",
+    "sourceName": "UCT Mastercard Foundation Scholars Programme",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["First, apply to UCT postgraduate programme and receive admission offer", "Scholarship application via UCT Mastercard Foundation portal", "Academic transcripts", "Personal statement on leadership and giving back"],
+    "applicationSteps": [
+      "Apply for admission to chosen UCT postgraduate programme",
+      "On receiving admission offer, submit separate scholarship application",
+      "Complete scholarship application by October 31, 2026",
+      "Interview for shortlisted candidates"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": true
+  },
+
+  {
+    "id": "opp-mcf-cam-01",
+    "title": "Mastercard Foundation Scholars Program at University of Cambridge",
+    "organization": {
+      "id": "org-cam-mcf",
+      "name": "Mastercard Foundation / University of Cambridge",
+      "website": "https://www.postgraduate.study.cam.ac.uk/funding/mastercard-foundation-scholars",
+      "description": "The Mastercard Foundation Scholars Program at Cambridge funds African postgraduate scholars to pursue master's degrees at one of the world's leading universities.",
+      "type": "University"
+    },
+    "type": "Scholarship",
+    "description": "The Mastercard Foundation Scholars Program at the University of Cambridge provides fully funded scholarships for African students pursuing full-time one-year master's programmes. The scholarship covers course fees, maintenance grant, return airfare, and associated costs. Scholars are integrated into the Cambridge Scholars community and receive leadership development support. Eligible applicants must be citizens of an African country resident in Africa. Most one-year master's programmes are eligible, with a few exceptions (MBA, MCL, MFin, MACC). Application fee waivers are available.",
+    "shortDescription": "Fully funded master's scholarship at University of Cambridge for African citizens, covering fees, maintenance, and return flights.",
+    "field": ["Academic Research", "Engineering", "Technology", "Public Policy", "Business", "Healthcare", "Social Impact"],
+    "subfields": ["Postgraduate Study", "UK Higher Education", "Leadership Development"],
+    "tags": ["Mastercard Foundation", "Cambridge", "UK", "scholarship", "Africa", "master's", "fully funded"],
+    "location": "Cambridge, United Kingdom",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Citizen of an African country",
+      "Resident in an African country (or refugee/IDP status)",
+      "Applying for a full-time one-year master's programme at Cambridge",
+      "Most master's courses eligible (MBA, MCL, MFin, MACC excluded)"
+    ],
+    "educationRequirements": ["Graduate"],
+    "experienceRequirements": "Beginner",
+    "funding": "Fully funded (course fees, maintenance grant, return airfare)",
+    "benefits": [
+      "Full course fees",
+      "Maintenance grant for living costs",
+      "Return airfare to Cambridge",
+      "Application fee waiver",
+      "Leadership development and scholars network"
+    ],
+    "duration": "1 year (master's programme)",
+    "deadline": "2027-01-15",
+    "applicationUrl": "https://www.postgraduate.study.cam.ac.uk/funding/mastercard-foundation-scholars",
+    "officialSource": "https://www.postgraduate.study.cam.ac.uk/funding/mastercard-foundation-scholars",
+    "sourceName": "University of Cambridge Postgraduate Funding",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Postgraduate application via Cambridge course portal", "Scholarship statement within course application", "Application fee waiver request by November 18, 2026 (for fee waiver)", "Academic transcripts and references as required by course"],
+    "applicationSteps": [
+      "Find chosen course in Cambridge Postgraduate Course Directory",
+      "Apply through Cambridge application portal, selecting Mastercard Foundation Scholars funding",
+      "Request application fee waiver by November 18, 2026 if needed",
+      "Submit full application by course-specific deadline (typically December–January)",
+      "Scholarship decisions communicated alongside admissions"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": true
+  },
+
+  {
+    "id": "opp-aims-sa-01",
+    "title": "AIMS South Africa Master of Mathematical Sciences",
+    "organization": {
+      "id": "org-aims",
+      "name": "African Institute for Mathematical Sciences (AIMS)",
+      "website": "https://aims.ac.za",
+      "description": "AIMS is a pan-African network of centres of excellence for postgraduate training, research, and public engagement in mathematical sciences.",
+      "type": "University"
+    },
+    "type": "Scholarship",
+    "description": "The AIMS South Africa Master of Mathematical Sciences programme is a fully funded, intensive one-year postgraduate programme for African students. It provides advanced training in mathematics, statistics, and computing with applications to science, engineering, climate, finance, and data science. The programme is structured around intensive modules taught by international guest lecturers and resident faculty. All accepted students receive full funding covering tuition, accommodation, meals, and a personal stipend.",
+    "shortDescription": "Fully funded one-year Master's in Mathematical Sciences at AIMS South Africa, open to African students from across the continent.",
+    "field": ["Academic Research", "Technology", "Data Science", "Engineering"],
+    "subfields": ["Mathematics", "Statistics", "Computing", "Data Science", "Mathematical Modelling"],
+    "tags": ["AIMS", "mathematics", "scholarship", "Africa", "South Africa", "masters", "fully funded", "STEM", "data science"],
+    "location": "Cape Town, South Africa (Muizenberg)",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "South African national, permanent resident, or refugee residing in South Africa (for January 2027 intake)",
+      "Holds or expected to complete a bachelor's degree with strong mathematics component",
+      "Strong academic performance in mathematics and sciences",
+      "Note: Other AIMS centres in Ghana, Rwanda, Senegal, Cameroon, Tanzania also open to Pan-African applicants — check aims-network.org"
+    ],
+    "educationRequirements": ["Undergraduate"],
+    "experienceRequirements": "Beginner",
+    "funding": "Fully funded (tuition, accommodation, meals, personal stipend)",
+    "benefits": [
+      "Full tuition",
+      "On-campus accommodation",
+      "Meals included",
+      "Monthly personal stipend",
+      "International lecturer network"
+    ],
+    "duration": "1 year",
+    "deadline": "2026-11-04",
+    "applicationUrl": "https://apply.aims.ac.za",
+    "officialSource": "https://aims.ac.za",
+    "sourceName": "AIMS South Africa",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Online application via apply.aims.ac.za", "CV", "Motivation letter", "Academic transcripts", "Two academic references"],
+    "applicationSteps": [
+      "Submit application at apply.aims.ac.za by November 4, 2026",
+      "Provide CV, motivation letter, transcripts, and two referee contacts",
+      "Shortlisted applicants may be contacted for assessment",
+      "Offers communicated on a rolling basis"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": false
+  },
+
+  {
+    "id": "opp-gif-01",
+    "title": "Global Innovation Fund (GIF) — Social Innovation Grants",
+    "organization": {
+      "id": "org-gif",
+      "name": "Global Innovation Fund",
+      "website": "https://www.globalinnovation.fund",
+      "description": "The Global Innovation Fund is a nonprofit impact investment fund that supports the development, rigorous testing, and scaling of innovations that improve the lives of people living in poverty.",
+      "type": "Foundation"
+    },
+    "type": "Grant",
+    "description": "The Global Innovation Fund (GIF) provides grants and investment to support scalable social innovations that improve the lives of people in poverty, primarily in Africa and Asia. GIF operates with rolling open applications — there is no fixed deadline. Current strategic priorities include climate resilience and inclusive economic opportunity. Funding is available at pilot stage (up to $230,000) and test & transition stage (up to approximately $2.3 million). Eligible applicants include nonprofits, social enterprises, for-profit companies, government agencies, and research institutions.",
+    "shortDescription": "Rolling open grants of up to $2.3 million for social innovations tackling poverty, with strong focus on Africa and Asia.",
+    "field": ["Entrepreneurship", "Social Impact", "Technology", "Climate & Sustainability", "Development"],
+    "subfields": ["Social Innovation", "Impact Investment", "Poverty Reduction", "Climate Resilience"],
+    "tags": ["GIF", "grant", "social innovation", "Africa", "rolling", "climate", "poverty", "social enterprise"],
+    "location": "Worldwide (Africa and Asia focus)",
+    "remoteStatus": "Remote",
+    "eligibility": [
+      "Nonprofits, social enterprises, for-profit companies, government agencies, or research institutions",
+      "Individual applicants must apply through an affiliated organisation",
+      "Innovation must address global development challenges (poverty, climate, inclusion)",
+      "Applications accepted from organisations based in any country"
+    ],
+    "educationRequirements": ["Any"],
+    "experienceRequirements": "Intermediate",
+    "funding": "Pilot stage: up to $230,000 USD; Test & Transition: up to $2.3 million USD",
+    "benefits": [
+      "Grant funding for social innovation pilots",
+      "Rigorous evaluation and learning support",
+      "Scale-up investment for high-performing innovations",
+      "Access to GIF's global network of development funders"
+    ],
+    "duration": "Varies by stage (pilot to multi-year)",
+    "deadline": "2027-12-31",
+    "applicationUrl": "https://www.globalinnovation.fund/apply",
+    "officialSource": "https://www.globalinnovation.fund",
+    "sourceName": "Global Innovation Fund",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Online application via GIF portal", "Innovation description and evidence of impact", "Financial projections", "Team information"],
+    "applicationSteps": [
+      "Review GIF funding criteria and strategic priorities at globalinnovation.fund",
+      "Submit initial application through the online portal (rolling — no fixed deadline)",
+      "If shortlisted, participate in follow-on call with GIF team",
+      "Approved organisations proceed to full application and due diligence"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": false
+  },
+
+  {
+    "id": "opp-hult-01",
+    "title": "Hult Prize — Student Social Enterprise Competition",
+    "organization": {
+      "id": "org-hult-prize",
+      "name": "Hult Prize Foundation",
+      "website": "https://www.hultprize.org",
+      "description": "The Hult Prize is the world's largest student social enterprise competition, giving university students the opportunity to pitch solutions to global challenges for a $1 million prize.",
+      "type": "Foundation"
+    },
+    "type": "Competition",
+    "description": "The Hult Prize is the world's largest student-led social enterprise competition. Teams of university students develop and pitch business solutions to pressing global challenges for a $1 million USD prize and support to launch their venture. The competition runs through on-campus programmes at universities globally and through an open application track. Teams progress from campus qualifiers to regional finals to the global championship. The 2027 competition is currently active, with campus qualifiers running through early 2027.",
+    "shortDescription": "$1 million prize for university student teams with social enterprise solutions to global challenges — campuses worldwide including Africa.",
+    "field": ["Entrepreneurship", "Social Impact", "Business", "Technology"],
+    "subfields": ["Social Enterprise", "Student Competition", "Impact Investing", "Startup"],
+    "tags": ["Hult Prize", "competition", "student", "social enterprise", "million dollar prize", "global", "Africa", "university"],
+    "location": "Worldwide (campus programmes across Africa and globally)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "All team members must be currently enrolled university students",
+      "All team members must be 18 years of age or older by February 28, 2027",
+      "Teams of 3-4 members (maximum)",
+      "Open to students from any country including all African nations"
+    ],
+    "educationRequirements": ["Undergraduate", "Graduate"],
+    "experienceRequirements": "Beginner",
+    "funding": "$1,000,000 USD prize for global winner; regional prizes for finalists",
+    "benefits": [
+      "$1 million USD prize for global winning team",
+      "Seed funding and venture support for finalists",
+      "Mentorship from business leaders",
+      "Access to Hult Prize global network",
+      "International competition experience"
+    ],
+    "duration": "6-month competition cycle (October 2026 – September 2027)",
+    "deadline": "2027-02-28",
+    "applicationUrl": "https://www.hultprize.org",
+    "officialSource": "https://www.hultprize.org",
+    "sourceName": "Hult Prize Foundation",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Team registration on hultprize.org", "Business plan and solution pitch", "Participation in campus qualifier or open track"],
+    "applicationSteps": [
+      "Register team at hultprize.org",
+      "Check if your university hosts an on-campus programme (or apply via open track)",
+      "Participate in campus qualifier (deadlines vary by university, many in early 2027)",
+      "Campus winners advance to regional finals",
+      "Regional finalists compete at global championship"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": false
+  },
+
+  {
+    "id": "opp-echoing-01",
+    "title": "Echoing Green Fellowship for Early-Stage Social Entrepreneurs",
+    "organization": {
+      "id": "org-echoing-green",
+      "name": "Echoing Green",
+      "website": "https://echoinggreen.org",
+      "description": "Echoing Green identifies and invests in emerging social entrepreneurs with the ideas and moral courage to create large-scale, systemic change.",
+      "type": "Foundation"
+    },
+    "type": "Fellowship",
+    "description": "The Echoing Green Fellowship provides seed funding, leadership development, and a global network to early-stage social entrepreneurs working to create large-scale systemic change. Fellows receive up to $90,000 USD in seed funding over two years, access to a global community of 700+ Echoing Green alumni, and an intensive leadership development programme. The fellowship is open to early-stage social entrepreneurs from all countries, including those working in Africa and other emerging markets. Applications typically open in summer and close in autumn.",
+    "shortDescription": "Up to $90,000 USD seed funding and leadership development for early-stage social entrepreneurs from any country, including Africa.",
+    "field": ["Entrepreneurship", "Social Impact", "Development"],
+    "subfields": ["Social Innovation", "Systems Change", "Early-Stage Venture", "Leadership"],
+    "tags": ["Echoing Green", "fellowship", "social entrepreneur", "seed funding", "global", "Africa eligible", "leadership"],
+    "location": "Remote (Worldwide) / Fellowship activities in USA",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "18 years or older",
+      "Original founder or leading member of founding team with decision-making authority",
+      "Working on an early-stage social enterprise or innovation",
+      "English proficiency (all programming conducted in English)",
+      "Open to applicants from all countries including Africa"
+    ],
+    "educationRequirements": ["Any"],
+    "experienceRequirements": "Beginner",
+    "funding": "Up to $90,000 USD over 2 years (seed funding)",
+    "benefits": [
+      "Up to $90,000 USD in seed funding over two years",
+      "Leadership development programme",
+      "Access to 700+ Echoing Green alumni network",
+      "Ongoing mentorship from senior advisors",
+      "Connections to investors and partners"
+    ],
+    "duration": "2 years",
+    "deadline": "2026-11-30",
+    "applicationUrl": "https://echoinggreen.org/fellowship/",
+    "officialSource": "https://echoinggreen.org/fellowship/",
+    "sourceName": "Echoing Green Fellowship",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Online application", "Venture description and impact vision", "Leadership story", "Video submission (if shortlisted)"],
+    "applicationSteps": [
+      "Review fellowship eligibility and current challenge areas at echoinggreen.org",
+      "Submit online application (verify current deadline — typically closes autumn)",
+      "Shortlisted applicants participate in interviews",
+      "Fellows announced and funding disbursed"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": false
+  },
+
+  {
+    "id": "opp-acumen-uk-01",
+    "title": "Acumen UK Fellowship 2027",
+    "organization": {
+      "id": "org-acumen",
+      "name": "Acumen Academy",
+      "website": "https://fellowship.acumenacademy.org",
+      "description": "Acumen is a global nonprofit that changes the way the world tackles poverty. The Acumen Fellowship develops leaders who are changing the world through market-based solutions.",
+      "type": "Non-Profit"
+    },
+    "type": "Fellowship",
+    "description": "The Acumen UK Fellowship is a 9-month leadership development programme for social entrepreneurs, CEOs, and senior leaders who are building market-based solutions to poverty. Fellows join an intimate cohort of 20–25 leaders from across sectors for an intensive curriculum covering moral leadership, values-based decision making, social change, and community. The programme includes facilitated workshops, deep dialogue, and a final retreat. Applications are accepted from individuals working in the UK or internationally.",
+    "shortDescription": "9-month leadership fellowship for senior social entrepreneurs and leaders building market-based solutions to poverty, based in the UK.",
+    "field": ["Entrepreneurship", "Social Impact", "Business", "Governance"],
+    "subfields": ["Moral Leadership", "Systems Change", "Social Enterprise", "Leadership Development"],
+    "tags": ["Acumen", "fellowship", "UK", "social entrepreneurship", "leadership", "poverty", "impact", "market solutions"],
+    "location": "United Kingdom (hybrid cohort activities)",
+    "remoteStatus": "Hybrid",
+    "eligibility": [
+      "Social entrepreneur, CEO, or senior leader with a proven track record",
+      "Minimum 5 years of professional experience",
+      "Currently leading or building a social initiative or enterprise",
+      "Strong commitment to tackling poverty and inequality",
+      "Applications accepted from UK-based and international candidates"
+    ],
+    "educationRequirements": ["Any"],
+    "experienceRequirements": "Intermediate",
+    "funding": "Fellowship is subsidised; application fee applies",
+    "benefits": [
+      "9-month intensive leadership development curriculum",
+      "Cohort of 20-25 high-impact leaders",
+      "Access to Acumen's global community of 600+ Fellows",
+      "Mentorship and coaching",
+      "Deep focus on moral leadership and values"
+    ],
+    "duration": "9 months (February – October 2027)",
+    "deadline": "2026-11-03",
+    "applicationUrl": "https://fellowship.acumenacademy.org/apply",
+    "officialSource": "https://fellowship.acumenacademy.org",
+    "sourceName": "Acumen Academy Fellowship",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Online application via Acumen Academy portal", "Applicant toolkit review recommended before applying", "Organisation and leadership description", "Personal essay on values and leadership"],
+    "applicationSteps": [
+      "Download and review the Applicant Toolkit on Acumen Academy website",
+      "Complete online application at fellowship.acumenacademy.org/apply",
+      "Submit by November 3, 2026 deadline",
+      "Shortlisted candidates invited to interviews",
+      "Programme begins February 2027"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": false
+  },
+
+  {
+    "id": "opp-aws-restart-01",
+    "title": "AWS re/Start — Free Cloud Computing Training (Africa)",
+    "organization": {
+      "id": "org-aws",
+      "name": "Amazon Web Services (AWS)",
+      "website": "https://aws.amazon.com/training/restart/",
+      "description": "Amazon Web Services is the world's most comprehensive and broadly adopted cloud platform, offering cloud computing training programmes globally.",
+      "type": "Company"
+    },
+    "type": "Programme",
+    "description": "AWS re/Start is a free, cohort-based cloud computing workforce development programme that prepares unemployed and underemployed individuals for careers in cloud technology. The 12-week, full-time programme covers cloud computing fundamentals, Linux, Python scripting, networking, security, and databases, alongside professional skills such as resume writing and interview coaching. Graduates are prepared for entry-level cloud roles and AWS certification. The programme operates in Nigeria, Kenya, Ghana, Rwanda, and other African countries through local partner organisations.",
+    "shortDescription": "Free 12-week cloud computing training programme preparing unemployed and underemployed Africans for entry-level cloud technology careers.",
+    "field": ["Technology", "Software Engineering"],
+    "subfields": ["Cloud Computing", "AWS", "Networking", "Python", "Linux"],
+    "tags": ["AWS", "cloud computing", "free", "Africa", "Nigeria", "Kenya", "Ghana", "Rwanda", "career change", "technology"],
+    "location": "Nigeria, Kenya, Ghana, Rwanda + other African countries (via local partners)",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Unemployed or underemployed individuals",
+      "Located in a country where an active re/Start partner operates",
+      "Access to a reliable computer and stable internet",
+      "Able to commit to full-time participation (Monday–Friday) for 12 weeks",
+      "No prior technical experience required"
+    ],
+    "educationRequirements": ["Any"],
+    "experienceRequirements": "Beginner",
+    "funding": "Free (sponsored training, no tuition fee)",
+    "benefits": [
+      "Free 12-week intensive cloud training",
+      "AWS certification preparation",
+      "Professional skills coaching (resume, interview)",
+      "Job placement support through partner network",
+      "AWS digital credentials"
+    ],
+    "duration": "12 weeks (full-time)",
+    "deadline": "2027-12-31",
+    "applicationUrl": "https://aws.amazon.com/training/restart/how-to-apply/",
+    "officialSource": "https://aws.amazon.com/training/restart/",
+    "sourceName": "AWS re/Start Programme",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Apply through local partner organisation (vary by country)", "Proof of unemployment or underemployment", "Able to commit full-time for 12 weeks"],
+    "applicationSteps": [
+      "Visit aws.amazon.com/training/restart/how-to-apply/ and select your country",
+      "Find the active collaborating organisation in your country (e.g. AmaliTech in Ghana, Azubi Africa)",
+      "Apply directly through the local partner's application process",
+      "Complete assessments and enrol in the next available cohort"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": false
+  },
+
+  {
+    "id": "opp-mandela-washington-01",
+    "title": "Mandela Washington Fellowship for Young African Leaders (YALI)",
+    "organization": {
+      "id": "org-yali",
+      "name": "U.S. Department of State / YALI",
+      "website": "https://www.mandelawashingtonfellowship.org",
+      "description": "The Mandela Washington Fellowship is the U.S. Government's flagship program for young African leaders, administered by the U.S. Department of State.",
+      "type": "Government"
+    },
+    "type": "Fellowship",
+    "description": "The Mandela Washington Fellowship is the U.S. Government's flagship exchange programme for young African leaders. Selected Fellows participate in a six-week Leadership Institute at a U.S. university in the summer of 2027, focusing on business and entrepreneurship, civic leadership, or public management. The programme is fully funded, covering international travel, accommodation, meals, and health insurance. Fellows join a network of thousands of alumni across Sub-Saharan Africa.",
+    "shortDescription": "Fully funded 6-week leadership institute in the United States for outstanding young leaders from Sub-Saharan Africa.",
+    "field": ["Governance", "Entrepreneurship", "Social Impact", "Public Policy", "Business"],
+    "subfields": ["Leadership Development", "Civic Leadership", "Public Management", "African Leadership"],
+    "tags": ["Mandela Washington", "YALI", "fellowship", "Africa", "Sub-Saharan", "fully funded", "US government", "leadership", "young leaders"],
+    "location": "United States (6-week institute) + Sub-Saharan Africa (applicant residence)",
+    "remoteStatus": "In-Person",
+    "eligibility": [
+      "Citizen and resident of an eligible Sub-Saharan African country",
+      "Between 25 and 35 years old (exceptional applicants 21–24 may be considered)",
+      "English proficiency (reading, writing, speaking)",
+      "Eligible for a U.S. J-1 visa",
+      "Proven record of leadership in business, governance, technology, or social impact",
+      "Not a U.S. citizen, permanent resident, or U.S. government employee or family member"
+    ],
+    "educationRequirements": ["Any"],
+    "experienceRequirements": "Intermediate",
+    "funding": "Fully funded (international flights, accommodation, meals, health insurance, programme costs)",
+    "benefits": [
+      "International travel and accommodation fully covered",
+      "Health insurance for programme duration",
+      "All programme costs covered",
+      "Six weeks at a leading U.S. university",
+      "Ongoing access to YALI alumni network across Africa"
+    ],
+    "duration": "6 weeks (summer 2027)",
+    "deadline": "2026-10-13",
+    "applicationUrl": "https://apply.mandelawashingtonfellowship.org",
+    "officialSource": "https://www.mandelawashingtonfellowship.org",
+    "sourceName": "Mandela Washington Fellowship Official Site",
+    "lastVerified": "2026-10-11T00:00:00.000Z",
+    "verificationStatus": "Verified",
+    "requirements": ["Online application via official portal", "Application instructions PDF", "Essay responses on leadership and impact", "Eligibility verification documents"],
+    "applicationSteps": [
+      "Download 2027 Application Instructions from mandelawashingtonfellowship.org",
+      "Complete online application at apply.mandelawashingtonfellowship.org",
+      "Submit before deadline: October 13, 2026 at 16:00 GMT",
+      "Shortlisted candidates notified and invited to interviews",
+      "Final Fellows selected for summer 2027 institute"
+    ],
+    "status": "open",
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "updatedAt": "2026-10-11T00:00:00.000Z",
+    "isFeatured": true
   }
+
 ] as any;
 

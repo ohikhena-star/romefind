@@ -61,7 +61,9 @@ export default function LandingPage() {
     const now = new Date();
     const openCandidates = opportunities.filter((opp) => {
       if (!opp.id || !opp.title) return false;
-      if (opp.status && opp.status !== 'open') return false;
+      // Case-insensitive status check: accept 'open', 'OPEN', or default to open if undefined
+      const statusLower = opp.status ? String(opp.status).toLowerCase() : 'open';
+      if (statusLower !== 'open') return false;
       if (opp.deadline) {
         const d = new Date(opp.deadline);
         if (!isNaN(d.getTime()) && d < now) return false;
@@ -72,8 +74,10 @@ export default function LandingPage() {
     const sorted = [...openCandidates].sort((a, b) => {
       if (a.isFeatured && !b.isFeatured) return -1;
       if (!a.isFeatured && b.isFeatured) return 1;
-      if (a.verificationStatus === 'Verified' && b.verificationStatus !== 'Verified') return -1;
-      if (a.verificationStatus !== 'Verified' && b.verificationStatus === 'Verified') return 1;
+      const aVerified = String(a.verificationStatus || '').toLowerCase() === 'verified';
+      const bVerified = String(b.verificationStatus || '').toLowerCase() === 'verified';
+      if (aVerified && !bVerified) return -1;
+      if (!aVerified && bVerified) return 1;
       return a.title.localeCompare(b.title);
     });
 

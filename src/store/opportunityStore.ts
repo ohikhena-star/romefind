@@ -47,12 +47,23 @@ export const useOpportunityStore = create<OpportunityState>()((set, get) => ({
       set({ isLoading: true });
       const remoteOpps = await api.getOpportunities({ limit: 100 });
       if (Array.isArray(remoteOpps) && remoteOpps.length > 0) {
-        set({ opportunities: remoteOpps as Opportunity[], isLoading: false });
+        const normalized = remoteOpps.map((opp: any) => ({
+          ...opp,
+          status: (opp.status ? String(opp.status).toLowerCase() : 'open') as any,
+          verificationStatus:
+            opp.verificationStatus === 'VERIFIED' ? 'Verified' :
+            opp.verificationStatus === 'NEEDS_REVIEW' ? 'Outdated' :
+            opp.verificationStatus === 'EXPIRED' ? 'Outdated' :
+            opp.verificationStatus === 'PENDING' ? 'Unverified' :
+            (opp.verificationStatus || 'Unverified')
+        }));
+        set({ opportunities: normalized as Opportunity[], isLoading: false });
       } else {
+        // If API returns empty or fails, keep existing opportunities in memory
         set({ isLoading: false });
       }
     } catch (e) {
-      // Fallback to initial local opportunities
+      // Fallback: preserve existing opportunities, do not clear
       set({ isLoading: false });
     }
   },

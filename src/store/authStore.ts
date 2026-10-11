@@ -11,6 +11,7 @@ interface AuthState {
   initAuth: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
+  loginWithGoogle: (idToken: string) => Promise<void>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => Promise<void>;
   syncProfile: () => Promise<void>;
@@ -89,6 +90,28 @@ export const useAuthStore = create<AuthState>()(
             return;
           }
           throw new Error('Invalid response from server');
+        } catch (error: any) {
+          set({ isLoading: false });
+          throw error;
+        }
+      },
+
+      loginWithGoogle: async (idToken: string) => {
+        if (!idToken || !idToken.trim()) {
+          throw new Error('A valid Google ID token is required.');
+        }
+        set({ isLoading: true });
+        try {
+          const res = await api.googleLogin(idToken.trim());
+          if (res?.user) {
+            set({
+              user: res.user,
+              isAuthenticated: true,
+              isLoading: false
+            });
+            return;
+          }
+          throw new Error('Invalid response from server during Google sign-in.');
         } catch (error: any) {
           set({ isLoading: false });
           throw error;

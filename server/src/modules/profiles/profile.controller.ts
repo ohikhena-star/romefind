@@ -32,6 +32,7 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
           location: user.location || '',
           country: user.country || '',
           currentStatus: user.profile.currentStatus || '',
+          experienceLevel: user.profile.experienceLevel || '',
           skills: parseJsonField(user.profile.skills, []),
           interests: parseJsonField(user.profile.interests, []),
           goals: parseJsonField(user.profile.goals, []),
@@ -112,6 +113,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
 
     const updatedBio = bio !== undefined ? bio : (profile?.bio !== undefined ? profile.bio : currentUser.profile?.bio);
     const updatedStatus = currentStatus !== undefined ? currentStatus : (profile?.currentStatus !== undefined ? profile.currentStatus : currentUser.profile?.currentStatus);
+    const updatedExpLevel = profile?.experienceLevel !== undefined ? profile.experienceLevel : currentUser.profile?.experienceLevel;
     
     const updatedSkills = skills !== undefined ? stringifyJsonField(skills) : (profile?.skills !== undefined ? stringifyJsonField(profile.skills) : currentUser.profile?.skills || '[]');
     const updatedInterests = interests !== undefined ? stringifyJsonField(interests) : (profile?.interests !== undefined ? stringifyJsonField(profile.interests) : currentUser.profile?.interests || '[]');
@@ -160,6 +162,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
             create: {
               bio: updatedBio,
               currentStatus: updatedStatus,
+              experienceLevel: updatedExpLevel,
               skills: updatedSkills,
               interests: updatedInterests,
               goals: updatedGoals,
@@ -175,6 +178,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
             update: {
               bio: updatedBio,
               currentStatus: updatedStatus,
+              experienceLevel: updatedExpLevel,
               skills: updatedSkills,
               interests: updatedInterests,
               goals: updatedGoals,
@@ -211,6 +215,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
           location: updated.location || '',
           country: updated.country || '',
           currentStatus: updated.profile?.currentStatus || '',
+          experienceLevel: updated.profile?.experienceLevel || '',
           skills: parseJsonField(updated.profile?.skills, []),
           interests: parseJsonField(updated.profile?.interests, []),
           goals: parseJsonField(updated.profile?.goals, []),

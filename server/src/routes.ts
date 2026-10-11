@@ -4,6 +4,7 @@ import { authRateLimiter, strictAuthLimiter, adviceRateLimiter, eventIngestLimit
 
 // Controllers
 import * as authController from './modules/auth/auth.controller.js';
+import * as googleAuthController from './modules/auth/google.controller.js';
 import * as profileController from './modules/profiles/profile.controller.js';
 import * as organizationController from './modules/organizations/organization.controller.js';
 import * as opportunityController from './modules/opportunities/opportunity.controller.js';
@@ -32,6 +33,7 @@ apiRouter.get('/health', (req, res) => {
 // ── Auth Endpoints ──────────────────────────────────────────────────────
 apiRouter.post('/auth/register', authRateLimiter, authController.register);
 apiRouter.post('/auth/login', authRateLimiter, authController.login);
+apiRouter.post('/auth/google', authRateLimiter, googleAuthController.googleSignIn);
 apiRouter.get('/auth/me', authenticateToken, authController.getMe);
 apiRouter.post('/auth/logout', authenticateToken, authController.logout);
 apiRouter.post('/auth/forgot-password', strictAuthLimiter, authController.forgotPassword);

@@ -154,6 +154,17 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
 
+    // If this account was created via Google Sign-In it has no password.
+    // Give a clear error instead of crashing on a null hash.
+    if (!user.passwordHash) {
+      res.status(401).json({
+        success: false,
+        code: 'GOOGLE_ACCOUNT_NO_PASSWORD',
+        message: 'This account uses Google Sign-In. Please use the "Continue with Google" button to log in.'
+      });
+      return;
+    }
+
     const isMatch = await verifyPassword(password, user.passwordHash);
     if (!isMatch) {
       res.status(401).json({

@@ -54,7 +54,7 @@ export const OpportunityGridSkeleton: React.FC<{ count?: number; className?: str
 
 // ─── Opportunity Detail Skeleton ──────────────────────────────────────
 export const OpportunityDetailSkeleton: React.FC = () => (
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  <div className="w-full py-4 space-y-8 animate-in fade-in">
     <div className="flex items-center gap-3">
       <Skeleton className="h-9 w-24 rounded-lg" />
       <Skeleton className="h-4 w-40 rounded-md" />

@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { executePendingAction } from '@/utils/pendingAction';
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
@@ -13,7 +14,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login } = useAuthStore();
+  const { login, loginWithGoogle } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,6 +48,29 @@ const LoginPage = () => {
       }
     } catch (err: any) {
       setError(err?.message || 'Incorrect email or password.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (idToken: string) => {
+    setError('');
+    setIsLoading(true);
+    try {
+      await loginWithGoogle(idToken);
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser && currentUser.onboardingCompleted) {
+        const resumed = await executePendingAction();
+        if (resumed?.executed) {
+          navigate(resumed.returnUrl);
+          return;
+        }
+        navigate(from || '/discover');
+      } else {
+        navigate('/onboarding');
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Google sign-in failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -119,6 +143,28 @@ const LoginPage = () => {
           {isLoading ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
+
+      {/* Divider */}
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-surface-200 dark:border-surface-800" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white dark:bg-surface-900 px-3 text-surface-400">
+            Or continue with
+          </span>
+        </div>
+      </div>
+
+      {/* Google Sign-In */}
+      <div className="flex justify-center">
+        <GoogleSignInButton
+          text="signin_with"
+          disabled={isLoading}
+          onSuccess={handleGoogleSuccess}
+          onError={(msg) => setError(msg)}
+        />
+      </div>
 
       <div className="mt-8 text-center text-sm text-surface-600 dark:text-surface-400">
         Don't have an account?{' '}

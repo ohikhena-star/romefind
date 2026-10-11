@@ -193,7 +193,7 @@ export default function OpportunityDetailPage() {
 
   if (!opportunity) {
     return (
-      <div className="flex h-screen items-center justify-center p-8">
+      <div className="flex min-h-[50vh] items-center justify-center p-8">
         <EmptyState
           title="Opportunity not found"
           description="The opportunity you're looking for may have been removed or updated."
@@ -270,7 +270,7 @@ export default function OpportunityDetailPage() {
     : null;
 
   return (
-    <div className="relative min-h-screen pb-24 lg:pb-10 bg-white dark:bg-surface-950">
+    <div className="relative w-full pb-24 lg:pb-10 animate-in fade-in duration-200">
 
       {/* ─── A. COMPACT BACK NAVIGATION ─── */}
       <div className="pt-3 pb-1">
@@ -284,7 +284,7 @@ export default function OpportunityDetailPage() {
         </button>
       </div>
 
-      <main className="w-full">
+      <div className="w-full">
 
         {/* ─── B. OPPORTUNITY HEADER ─── */}
         <div className="border-b border-surface-200 dark:border-surface-800 pb-7 pt-3">
@@ -460,7 +460,7 @@ export default function OpportunityDetailPage() {
 
             {/* Profile Match — only when user has enough profile data AND score is meaningful */}
             {isAuthenticated && relevance && (
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xs">
                 <SolarIcon name="magic-stick-linear" size={16} className="text-rome-500 shrink-0 mt-0.5" />
                 <div className="space-y-1.5 flex-1">
                   <div className="flex items-center gap-2">
@@ -937,7 +937,7 @@ export default function OpportunityDetailPage() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
 
       {/* ─── Related Opportunities ─── */}
       {relatedOpportunities.length > 0 && (

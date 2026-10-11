@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SolarIcon } from '@/components/ui/SolarIcon';
 import { Button } from '@/components/ui/Button';
-import { setPendingAction } from '@/utils/pendingAction';
+import { setPendingAction, executePendingAction } from '@/utils/pendingAction';
+import { useAuthStore } from '@/store/authStore';
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 
 export type ContextualPromptType = 'save' | 'track' | 'personalize';
 
@@ -24,6 +26,39 @@ export const ContextualSignupModal: React.FC<ContextualSignupModalProps> = ({
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
   const primaryButtonRef = useRef<HTMLButtonElement>(null);
+  const { loginWithGoogle } = useAuthStore();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState('');
+
+  const handleGoogleSuccess = async (idToken: string) => {
+    setGoogleError('');
+    setGoogleLoading(true);
+    try {
+      if (opportunityId && (type === 'save' || type === 'track')) {
+        setPendingAction({
+          type,
+          opportunityId,
+          returnUrl: returnUrl || window.location.pathname
+        });
+      }
+      await loginWithGoogle(idToken);
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser?.onboardingCompleted) {
+        const resumed = await executePendingAction();
+        onClose();
+        if (resumed?.executed && resumed.returnUrl) {
+          navigate(resumed.returnUrl);
+        }
+      } else {
+        onClose();
+        navigate('/onboarding');
+      }
+    } catch (err: any) {
+      setGoogleError(err?.message || 'Google sign-in failed.');
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -149,7 +184,32 @@ export const ContextualSignupModal: React.FC<ContextualSignupModalProps> = ({
         </div>
 
         {/* Action buttons */}
-        <div className="px-6 pb-6 pt-3 space-y-3">
+        <div className="px-6 pb-6 pt-2 space-y-3">
+          {/* Quick Google Sign-In */}
+          {googleError && (
+            <p className="text-xs text-red-500 text-center">{googleError}</p>
+          )}
+          <div className="flex justify-center">
+            <GoogleSignInButton
+              text="continue_with"
+              disabled={googleLoading}
+              onSuccess={handleGoogleSuccess}
+              onError={(msg) => setGoogleError(msg)}
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="relative my-2">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-surface-200 dark:border-surface-800" />
+            </div>
+            <div className="relative flex justify-center text-[10px] uppercase">
+              <span className="bg-white dark:bg-surface-900 px-2 text-surface-400">
+                Or with email
+              </span>
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
             <Button
               ref={primaryButtonRef}
@@ -173,7 +233,7 @@ export const ContextualSignupModal: React.FC<ContextualSignupModalProps> = ({
           </div>
 
           {/* Login fallback link */}
-          <div className="pt-2 text-center">
+          <div className="pt-1 text-center">
             <button
               onClick={handleLogin}
               className="text-xs font-medium text-surface-500 dark:text-surface-400 hover:text-rome-600 dark:hover:text-rome-400 transition-colors cursor-pointer"

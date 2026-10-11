@@ -1,41 +1,37 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
+import { useApplicationStore } from '@/store/applicationStore';
 import { useUIStore } from '@/store/uiStore';
-import { ProgressBar, Chip, Button, Input } from '@/components/ui';
+import { Button, Input, Chip } from '@/components/ui';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
 import { ProfileSkeleton } from '@/components/ui/composite-skeletons';
-import { calculateProfileCompleteness } from '@/utils/format';
+import { CountrySelector } from '@/components/ui/CountrySelector';
+import { SolarIcon } from '@/components/ui/SolarIcon';
 import { FIELDS, GOALS, LOCATIONS } from '@/utils/constants';
-import { cn } from '@/utils/cn';
 import { formatCountryDisplay } from '@/data/countries';
 import { OpportunityType, RemoteStatus } from '@/types/models';
-import {
-  Moon, Sun, Plus, X, Compass, Camera, Check, CheckCircle,
-  Briefcase, GraduationCap, Award, Globe, Lightbulb, Heart,
-  Rocket, Users, Laptop, DollarSign, MapPin, Sparkles, AlertCircle, LogOut
-} from 'lucide-react';
+import { cn } from '@/utils/cn';
 
-// Same opportunity types list as onboarding
 const OPPORTUNITY_TYPES = [
-  { id: OpportunityType.Fellowship, label: 'Fellowships', icon: GraduationCap, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Scholarship, label: 'Scholarships', icon: Award, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Internship, label: 'Internships', icon: Briefcase, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Job, label: 'Full-Time Jobs', icon: Users, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Grant, label: 'Grants & Funding', icon: Lightbulb, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Research, label: 'Research', icon: Rocket, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Programme, label: 'Programmes', icon: Compass, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Competition, label: 'Competitions', icon: Globe, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
-  { id: OpportunityType.Volunteering, label: 'Volunteering', icon: Heart, color: 'bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300' },
+  { id: OpportunityType.Fellowship, label: 'Fellowships', icon: 'graduation-cap-linear' },
+  { id: OpportunityType.Scholarship, label: 'Scholarships', icon: 'cup-star-linear' },
+  { id: OpportunityType.Internship, label: 'Internships', icon: 'case-linear' },
+  { id: OpportunityType.Job, label: 'Full-Time Jobs', icon: 'users-group-rounded-linear' },
+  { id: OpportunityType.Grant, label: 'Grants & Funding', icon: 'lightbulb-linear' },
+  { id: OpportunityType.Research, label: 'Research', icon: 'test-tube-linear' },
+  { id: OpportunityType.Programme, label: 'Programmes', icon: 'compass-linear' },
+  { id: OpportunityType.Competition, label: 'Competitions', icon: 'global-linear' },
+  { id: OpportunityType.Volunteering, label: 'Volunteering', icon: 'heart-linear' },
 ];
 
 const STATUS_OPTIONS = [
   'University Student (Undergrad / Master\'s / PhD)',
-  'Working Professional / Practitioner',
-  'Public Health / Medical Specialist',
-  'Software Engineer / AI Researcher',
-  'Founder / Entrepreneur',
   'Recent Graduate',
+  'Working Professional / Practitioner',
+  'Software Engineer / AI Researcher',
+  'Public Health / Medical Specialist',
+  'Founder / Entrepreneur',
   'High School Student',
   'Career Transitioner / Seeking New Role',
 ];
@@ -47,68 +43,82 @@ const EXPERIENCE_LEVELS = [
   'Expert / Lead (8+ yrs experience)',
 ];
 
+const WORK_MODALITIES: { id: string; label: string }[] = [
+  { id: 'Remote', label: 'Remote' },
+  { id: 'Hybrid', label: 'Hybrid' },
+  { id: 'In-Person', label: 'In-person' },
+  { id: 'Flexible', label: 'Flexible' },
+];
+
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { user, updateUser, logout } = useAuthStore();
   const { theme, toggleTheme } = useUIStore();
+  const { savedOpportunities, trackedApplications } = useApplicationStore();
+
   const photoInputRef = useRef<HTMLInputElement>(null);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  // Section edit states
+  const [editingIdentity, setEditingIdentity] = useState(false);
+  const [editingPreferences, setEditingPreferences] = useState(false);
+  const [showSignoutConfirm, setShowSignoutConfirm] = useState(false);
+
+  const [isSavingIdentity, setIsSavingIdentity] = useState(false);
+  const [isSavingPreferences, setIsSavingPreferences] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
   const [newSkill, setNewSkill] = useState('');
 
-  // Profile fields (from onboarding step 5 + profile)
-  const [localProfile, setLocalProfile] = useState(() => ({
+  // Local identity state
+  const [identityData, setIdentityData] = useState(() => ({
     name: user?.profile?.name || '',
     bio: user?.profile?.bio || '',
     location: user?.profile?.location || '',
     country: user?.profile?.country || '',
-    currentStatus: user?.profile?.currentStatus || 'University Student',
-    experienceLevel: (user?.profile as any)?.experienceLevel || 'Intermediate',
-    skills: user?.profile?.skills || [],
-    interests: user?.profile?.interests || [],
-    goals: user?.profile?.goals || [],
+    currentStatus: user?.profile?.currentStatus || '',
+    experienceLevel: (user?.profile as any)?.experienceLevel || '',
     photo: user?.profileImage || '',
+    skills: user?.profile?.skills || [],
   }));
 
-  // Preferences fields (from onboarding steps 1-4)
-  const [localPrefs, setLocalPrefs] = useState(() => ({
+  // Local preferences state
+  const [prefsData, setPrefsData] = useState(() => ({
     opportunityTypes: (user?.preferences?.opportunityTypes || []) as OpportunityType[],
-    remotePreference: (user?.preferences?.remotePreference || ['Remote', 'Hybrid']) as string[],
+    interests: user?.profile?.interests || [],
+    goals: user?.profile?.goals || [],
+    remotePreference: (user?.preferences?.remotePreference || ['Remote', 'Hybrid']).map(r => String(r)),
     locationPreference: user?.preferences?.locationPreference || [],
     fundingPreference: user?.preferences?.fundingPreference ?? true,
   }));
 
-  // Sync when user loads from store
-  React.useEffect(() => {
-    if (user?.profile) {
-      setLocalProfile({
-        name: user.profile.name || '',
-        bio: user.profile.bio || '',
-        location: user.profile.location || '',
-        country: user.profile.country || '',
-        currentStatus: user.profile.currentStatus || 'University Student',
-        experienceLevel: (user.profile as any)?.experienceLevel || 'Intermediate',
-        skills: user.profile.skills || [],
-        interests: user.profile.interests || [],
-        goals: user.profile.goals || [],
+  // Sync state when store user changes
+  useEffect(() => {
+    if (user) {
+      setIdentityData({
+        name: user.profile?.name || '',
+        bio: user.profile?.bio || '',
+        location: user.profile?.location || '',
+        country: user.profile?.country || '',
+        currentStatus: user.profile?.currentStatus || '',
+        experienceLevel: (user.profile as any)?.experienceLevel || '',
         photo: user.profileImage || '',
+        skills: user.profile?.skills || [],
+      });
+      setPrefsData({
+        opportunityTypes: (user.preferences?.opportunityTypes || []) as OpportunityType[],
+        interests: user.profile?.interests || [],
+        goals: user.profile?.goals || [],
+        remotePreference: (user.preferences?.remotePreference || ['Remote', 'Hybrid']).map(r => String(r)),
+        locationPreference: user.preferences?.locationPreference || [],
+        fundingPreference: user.preferences?.fundingPreference ?? true,
       });
     }
-    if (user?.preferences) {
-      setLocalPrefs({
-        opportunityTypes: (user.preferences.opportunityTypes || []) as OpportunityType[],
-        remotePreference: (user.preferences.remotePreference || []).map((r: any) => String(r)),
-        locationPreference: user.preferences.locationPreference || [],
-        fundingPreference: user.preferences.fundingPreference ?? true,
-      });
-    }
-  }, [user?.profile, user?.preferences, user?.profileImage]);
+  }, [user]);
 
   if (!user) return <ProfileSkeleton />;
 
-  const completeness = calculateProfileCompleteness(localProfile as any);
+  const toggleItem = <T,>(arr: T[], item: T): T[] =>
+    arr.includes(item) ? arr.filter(x => x !== item) : [...arr, item];
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -116,472 +126,862 @@ export default function ProfilePage() {
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
-      // Guard: reject images over ~600KB (base64 encoding adds ~33%)
       if (dataUrl.length > 800000) {
-        alert('Image is too large. Please choose a photo under 600KB.');
+        setFeedback({ type: 'error', message: 'Photo is too large. Please choose an image under 600KB.' });
         return;
       }
-      setLocalProfile(prev => ({ ...prev, photo: dataUrl }));
+      setIdentityData(prev => ({ ...prev, photo: dataUrl }));
     };
     reader.readAsDataURL(file);
   };
 
-  // ── Save ─────────────────────────────────────────────────────────────
-  const handleSave = async () => {
-    setIsSaving(true);
-    setSaveStatus('idle');
-    try {
-      await updateUser({
-        profileImage: localProfile.photo,
-        profile: {
-          ...user.profile,
-          ...localProfile,
-          completeness,
-        } as any,
-        preferences: {
-          ...user.preferences,
-          opportunityTypes: localPrefs.opportunityTypes,
-          remotePreference: localPrefs.remotePreference.map(r =>
-            r === 'Remote' ? RemoteStatus.Remote :
-            r === 'Hybrid' ? RemoteStatus.Hybrid :
-            r === 'In-Person' ? RemoteStatus.InPerson :
-            RemoteStatus.Flexible
-          ) as any,
-          locationPreference: localPrefs.locationPreference,
-          fundingPreference: localPrefs.fundingPreference,
-        } as any,
-      });
-      setSaveStatus('success');
-      setIsEditing(false);
-      setTimeout(() => setSaveStatus('idle'), 3000);
-    } catch {
-      setSaveStatus('error');
-    } finally {
-      setIsSaving(false);
+  const handleAddSkill = () => {
+    const s = newSkill.trim();
+    if (s && !identityData.skills.includes(s)) {
+      setIdentityData(prev => ({ ...prev, skills: [...prev.skills, s] }));
+      setNewSkill('');
     }
   };
 
-  const handleCancel = () => {
-    // Reset to current user state
+  const handleRemoveSkill = (skillToRemove: string) => {
+    setIdentityData(prev => ({ ...prev, skills: prev.skills.filter(s => s !== skillToRemove) }));
+  };
+
+  // Save Identity
+  const handleSaveIdentity = async () => {
+    setIsSavingIdentity(true);
+    setFeedback(null);
+    try {
+      await updateUser({
+        profileImage: identityData.photo,
+        profile: {
+          ...user.profile,
+          name: identityData.name.trim() || user.profile.name,
+          bio: identityData.bio, // user-provided or cleared empty
+          location: identityData.location,
+          country: identityData.country,
+          currentStatus: identityData.currentStatus,
+          experienceLevel: identityData.experienceLevel,
+          skills: identityData.skills,
+        } as any,
+      });
+      setFeedback({ type: 'success', message: 'Profile identity updated.' });
+      setEditingIdentity(false);
+      setTimeout(() => setFeedback(null), 3500);
+    } catch {
+      setFeedback({ type: 'error', message: 'Could not update identity. Please try again.' });
+    } finally {
+      setIsSavingIdentity(false);
+    }
+  };
+
+  const handleCancelIdentity = () => {
     if (user?.profile) {
-      setLocalProfile({
+      setIdentityData({
         name: user.profile.name || '',
         bio: user.profile.bio || '',
         location: user.profile.location || '',
         country: user.profile.country || '',
         currentStatus: user.profile.currentStatus || '',
-        experienceLevel: (user.profile as any)?.experienceLevel || 'Intermediate',
-        skills: user.profile.skills || [],
-        interests: user.profile.interests || [],
-        goals: user.profile.goals || [],
+        experienceLevel: (user.profile as any)?.experienceLevel || '',
         photo: user.profileImage || '',
+        skills: user.profile.skills || [],
       });
     }
-    if (user?.preferences) {
-      setLocalPrefs({
-        opportunityTypes: (user.preferences.opportunityTypes || []) as OpportunityType[],
-        remotePreference: (user.preferences.remotePreference || []).map((r: any) => String(r)),
-        locationPreference: user.preferences.locationPreference || [],
-        fundingPreference: user.preferences.fundingPreference ?? true,
+    setEditingIdentity(false);
+  };
+
+  // Save Preferences
+  const handleSavePreferences = async () => {
+    setIsSavingPreferences(true);
+    setFeedback(null);
+    try {
+      await updateUser({
+        profile: {
+          ...user.profile,
+          interests: prefsData.interests,
+          goals: prefsData.goals,
+        } as any,
+        preferences: {
+          ...user.preferences,
+          opportunityTypes: prefsData.opportunityTypes,
+          fields: prefsData.interests,
+          goals: prefsData.goals,
+          remotePreference: prefsData.remotePreference.map(r =>
+            r === 'Remote' ? RemoteStatus.Remote :
+            r === 'Hybrid' ? RemoteStatus.Hybrid :
+            r === 'In-Person' ? RemoteStatus.InPerson :
+            RemoteStatus.Flexible
+          ),
+          locationPreference: prefsData.locationPreference,
+          fundingPreference: prefsData.fundingPreference,
+        } as any,
+      });
+      setFeedback({ type: 'success', message: 'Discovery preferences updated.' });
+      setEditingPreferences(false);
+      setTimeout(() => setFeedback(null), 3500);
+    } catch {
+      setFeedback({ type: 'error', message: 'Could not update preferences. Please try again.' });
+    } finally {
+      setIsSavingPreferences(false);
+    }
+  };
+
+  const handleCancelPreferences = () => {
+    if (user) {
+      setPrefsData({
+        opportunityTypes: (user.preferences?.opportunityTypes || []) as OpportunityType[],
+        interests: user.profile?.interests || [],
+        goals: user.profile?.goals || [],
+        remotePreference: (user.preferences?.remotePreference || ['Remote', 'Hybrid']).map(r => String(r)),
+        locationPreference: user.preferences?.locationPreference || [],
+        fundingPreference: user.preferences?.fundingPreference ?? true,
       });
     }
-    setIsEditing(false);
+    setEditingPreferences(false);
   };
 
-  // ── Skill helpers ─────────────────────────────────────────────────────
-  const handleAddSkill = () => {
-    const s = newSkill.trim();
-    if (s && !localProfile.skills.includes(s)) {
-      setLocalProfile(prev => ({ ...prev, skills: [...prev.skills, s] }));
-      setNewSkill('');
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
-  // ── Toggle helpers ────────────────────────────────────────────────────
-  const toggle = <T,>(arr: T[], val: T): T[] =>
-    arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
+  const initials = (user.profile?.name || user.profile?.email?.split('@')[0] || 'U')
+    .split(' ')
+    .map((p: string) => p[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
-    <div className="p-4 md:p-8 max-w-5xl mx-auto flex flex-col gap-6 pb-24">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-6">
 
-      {/* ── Save feedback banner ── */}
-      {saveStatus === 'success' && (
-        <div className="flex items-center gap-2 px-4 py-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl text-sm text-emerald-700 dark:text-emerald-300">
-          <CheckCircle size={16} /> Profile saved successfully!
-        </div>
-      )}
-      {saveStatus === 'error' && (
-        <div className="flex items-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-300">
-          <AlertCircle size={16} /> Failed to save. Please try again.
-        </div>
-      )}
-
-      {/* ── Header Identity Card ── */}
-      <div className="bg-white dark:bg-surface-900 rounded-2xl p-6 md:p-8 shadow-card border border-surface-200 dark:border-surface-800 flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left relative">
-        {/* Avatar with upload */}
-        <div className="flex-shrink-0 relative group">
-          <Avatar className="h-24 w-24">
-            <AvatarImage src={localProfile.photo || user?.profileImage || undefined} alt={localProfile.name || 'User'} />
-            <AvatarFallback>{(localProfile.name || 'U').charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          {isEditing && (
-            <>
-              <button
-                onClick={() => photoInputRef.current?.click()}
-                className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+        {/* ── 1. Page Header ── */}
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-surface-200/60 dark:border-surface-800/60 pb-5">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-surface-900 dark:text-surface-100">
+              My Profile
+            </h1>
+            <p className="text-sm text-surface-500 dark:text-surface-400 mt-0.5">
+              Manage your personal identity, discovery criteria, and account settings.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            {!editingIdentity && !editingPreferences && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditingIdentity(true)}
+                className="text-xs h-9 px-3 gap-1.5"
               >
-                <Camera size={22} className="text-white" />
-              </button>
-              <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
-            </>
-          )}
-        </div>
+                <SolarIcon name="pen-2-linear" size={14} />
+                Edit Profile
+              </Button>
+            )}
+          </div>
+        </header>
 
-        <div className="flex-1 w-full">
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        {/* ── Feedback Banner ── */}
+        {feedback && (
+          <div
+            role="status"
+            className={cn(
+              'flex items-center justify-between gap-3 px-4 py-3 rounded-xl text-sm border',
+              feedback.type === 'success'
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800/50'
+                : 'bg-red-50 text-red-800 border-red-200 dark:bg-red-950/30 dark:text-red-300 dark:border-red-800/50'
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <SolarIcon
+                name={feedback.type === 'success' ? 'check-circle-linear' : 'danger-circle-linear'}
+                size={16}
+              />
+              <span>{feedback.message}</span>
+            </div>
+            <button
+              onClick={() => setFeedback(null)}
+              className="text-surface-400 hover:text-surface-600 dark:hover:text-surface-200"
+              aria-label="Dismiss notification"
+            >
+              <SolarIcon name="close-circle-linear" size={14} />
+            </button>
+          </div>
+        )}
+
+        {/* ── 2. Profile Identity Section ── */}
+        <section aria-labelledby="identity-heading" className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 sm:p-7 shadow-xs">
+          <div className="flex items-start justify-between gap-4 pb-4 border-b border-surface-100 dark:border-surface-800/60">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-surface-950 dark:text-surface-50">
-                {localProfile.name || 'Opportunity Explorer'}
-              </h1>
-              <p className="text-sm text-surface-500 dark:text-surface-400 mt-1">
-                {localProfile.currentStatus || 'Student / Professional'}
-                {localProfile.location ? ` · ${localProfile.location}` : ''}
+              <h2 id="identity-heading" className="text-base font-semibold text-surface-900 dark:text-surface-100">
+                Personal Identity
+              </h2>
+              <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">
+                Your public name, current focus, and self-authored biography.
               </p>
-              <p className="text-xs text-surface-400 mt-0.5">{user.profile.email}</p>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
-              {isEditing ? (
-                <>
-                  <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isSaving}>Cancel</Button>
-                  <Button variant="default" size="sm" onClick={handleSave} disabled={isSaving}>
-                    {isSaving ? 'Saving…' : 'Save Changes'}
-                  </Button>
-                </>
-              ) : (
-                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} aria-label="Edit Profile">Edit Profile</Button>
-              )}
-            </div>
+            {!editingIdentity ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setEditingIdentity(true)}
+                className="text-xs text-rome-600 hover:text-rome-700 dark:text-rome-400 h-8 px-2.5 gap-1"
+              >
+                <SolarIcon name="pen-2-linear" size={13} />
+                Edit
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCancelIdentity}
+                  disabled={isSavingIdentity}
+                  className="text-xs h-8 px-3"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleSaveIdentity}
+                  disabled={isSavingIdentity}
+                  className="text-xs h-8 px-3.5 bg-rome-500 hover:bg-rome-600 text-white"
+                >
+                  {isSavingIdentity ? 'Saving…' : 'Save'}
+                </Button>
+              </div>
+            )}
           </div>
 
-          {/* Completeness */}
-          <div className="mt-5 bg-surface-50 dark:bg-surface-800/60 p-3 rounded-xl border border-surface-100 dark:border-surface-700/50">
-            <div className="flex justify-between text-xs font-semibold text-surface-700 dark:text-surface-300 mb-2">
-              <span className="flex items-center gap-1.5"><Compass size={13} className="text-rome-500" /> Opportunity Identity Completeness</span>
-              <span className="text-rome-600 dark:text-rome-400">{completeness}%</span>
-            </div>
-            <ProgressBar value={completeness} size="sm" />
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* ── Left Column ── */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
-
-          {/* About Me */}
-          <section className="bg-white dark:bg-surface-900 rounded-xl p-6 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">About Me</h2>
-            {isEditing ? (
-              <div className="flex flex-col gap-3">
-                <div>
-                  <label htmlFor="bio-input" className="sr-only">About Me Bio</label>
-                  <textarea
-                    id="bio-input"
-                    className="w-full p-3 rounded-lg border border-surface-300 dark:border-surface-700 bg-transparent text-surface-900 dark:text-surface-50 text-sm focus:ring-2 focus:ring-rome-500 outline-none resize-none"
-                    rows={3}
-                    value={localProfile.bio}
-                    onChange={e => setLocalProfile(p => ({ ...p, bio: e.target.value }))}
-                    placeholder="Share a short bio about your trajectory, interests, and aspirations..."
-                  />
+          <div className="pt-6">
+            {!editingIdentity ? (
+              /* Read Mode */
+              <div className="flex flex-col sm:flex-row gap-6 items-start">
+                <div className="flex-shrink-0">
+                  <Avatar className="h-20 w-20 ring-2 ring-surface-100 dark:ring-surface-800">
+                    <AvatarImage src={user.profileImage || undefined} alt={user.profile?.name || 'User'} />
+                    <AvatarFallback className="text-base font-semibold bg-rome-50 text-rome-700 dark:bg-surface-800 dark:text-surface-200">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-foreground">Full Name</label>
-                    <Input value={localProfile.name} onChange={e => setLocalProfile(p => ({ ...p, name: e.target.value }))} />
-                  </div>
+
+                <div className="flex-1 min-w-0 space-y-3">
                   <div>
-                    <label className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1.5">Current Status</label>
-                    <select
-                      className="w-full px-3 py-2.5 bg-white dark:bg-surface-900 border border-surface-300 dark:border-surface-700 rounded-lg text-sm text-surface-900 dark:text-white focus:ring-2 focus:ring-rome-500 outline-none"
-                      value={localProfile.currentStatus}
-                      onChange={e => setLocalProfile(p => ({ ...p, currentStatus: e.target.value }))}
-                    >
-                      {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
+                    <h3 className="text-lg font-bold text-surface-900 dark:text-surface-100">
+                      {user.profile?.name || 'Explorer'}
+                    </h3>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-surface-500 dark:text-surface-400 mt-1">
+                      {user.profile?.currentStatus && (
+                        <span>{user.profile.currentStatus}</span>
+                      )}
+                      {(user.profile as any)?.experienceLevel && (
+                        <>
+                          <span>·</span>
+                          <span>{(user.profile as any).experienceLevel}</span>
+                        </>
+                      )}
+                      {user.profile?.country && (
+                        <>
+                          <span>·</span>
+                          <span className="inline-flex items-center gap-1">
+                            {formatCountryDisplay(user.profile.country)}
+                          </span>
+                        </>
+                      )}
+                      {user.profile?.location && user.profile.location !== user.profile.country && (
+                        <>
+                          <span>·</span>
+                          <span>{user.profile.location}</span>
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-foreground">Location / City</label>
-                    <Input value={localProfile.location} onChange={e => setLocalProfile(p => ({ ...p, location: e.target.value }))} placeholder="e.g. Lagos, Nigeria" />
-                  </div>
+
+                  {/* Bio */}
                   <div>
-                    <label className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1.5">Experience Level</label>
-                    <select
-                      className="w-full px-3 py-2.5 bg-white dark:bg-surface-900 border border-surface-300 dark:border-surface-700 rounded-lg text-sm text-surface-900 dark:text-white focus:ring-2 focus:ring-rome-500 outline-none"
-                      value={localProfile.experienceLevel}
-                      onChange={e => setLocalProfile(p => ({ ...p, experienceLevel: e.target.value }))}
-                    >
-                      {EXPERIENCE_LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
-                    </select>
+                    {user.profile?.bio?.trim() ? (
+                      <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed whitespace-pre-line">
+                        {user.profile.bio}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-surface-400 dark:text-surface-500 italic">
+                        Add a short bio to introduce yourself.
+                      </p>
+                    )}
                   </div>
+
+                  {/* Skills preview if set */}
+                  {user.profile?.skills && user.profile.skills.length > 0 && (
+                    <div className="pt-2">
+                      <span className="text-xs font-medium text-surface-500 dark:text-surface-400 block mb-1.5">
+                        Key Skills & Strengths
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {user.profile.skills.map((skill: string) => (
+                          <span
+                            key={skill}
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200/60 dark:border-surface-700/60"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
-              <div className="space-y-3">
-                <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed">
-                  {localProfile.bio?.trim() ? (
-                    localProfile.bio
-                  ) : (
-                    <span className="text-surface-400 dark:text-surface-500 italic">
-                      Add a short bio to introduce yourself.
-                    </span>
-                  )}
-                </p>
-                <div className="grid grid-cols-2 gap-2 pt-2">
-                  {localProfile.experienceLevel && (
-                    <div className="text-xs">
-                      <span className="text-surface-400">Experience · </span>
-                      <span className="font-medium text-surface-700 dark:text-surface-300">{localProfile.experienceLevel}</span>
+              /* Edit Mode */
+              <div className="space-y-5">
+                {/* Avatar with photo selector */}
+                <div className="flex items-center gap-4">
+                  <div className="relative group cursor-pointer" onClick={() => photoInputRef.current?.click()}>
+                    <Avatar className="h-16 w-16 ring-2 ring-rome-400">
+                      <AvatarImage src={identityData.photo || undefined} alt="Preview" />
+                      <AvatarFallback className="text-sm font-semibold bg-rome-50 text-rome-700">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <SolarIcon name="camera-linear" size={18} className="text-white" />
                     </div>
-                  )}
-                  {localProfile.country && (
-                    <div className="text-xs">
-                      <span className="text-surface-400">Country · </span>
-                      <span className="font-medium text-surface-700 dark:text-surface-300">{formatCountryDisplay(localProfile.country)}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </section>
-
-          {/* Skills */}
-          <section className="bg-white dark:bg-surface-900 rounded-xl p-6 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">Skills & Strengths</h2>
-            {isEditing && (
-              <div className="flex gap-2 mb-4">
-                <div className="flex-1">
-                  <label htmlFor="new-skill-input" className="sr-only">Add a skill</label>
-                  <Input
-                    id="new-skill-input"
-                    placeholder="Add a skill (e.g. Python, Grant Writing, UX Research)…"
-                    value={newSkill}
-                    onChange={e => setNewSkill(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
-                  />
-                </div>
-                <Button size="sm" variant="secondary" onClick={handleAddSkill} aria-label="Add skill"><Plus size={16} /></Button>
-              </div>
-            )}
-            <div className="flex flex-wrap gap-2">
-              {localProfile.skills.length > 0 ? localProfile.skills.map((skill: string) => (
-                <span
-                  key={skill}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 text-xs font-medium rounded-full border border-surface-200 dark:border-surface-700"
-                >
-                  {skill}
-                  {isEditing && (
-                    <button
-                      onClick={() => setLocalProfile(p => ({ ...p, skills: p.skills.filter(s => s !== skill) }))}
-                      className="text-surface-400 hover:text-red-500 transition-colors"
-                      aria-label={`Remove ${skill}`}
+                  </div>
+                  <div>
+                    <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => photoInputRef.current?.click()}
+                      className="text-xs h-8"
                     >
-                      <X size={12} />
-                    </button>
-                  )}
-                </span>
-              )) : (
-                <span className="text-sm text-surface-400 italic">No skills added yet.</span>
-              )}
-            </div>
-          </section>
+                      Change Photo
+                    </Button>
+                    <p className="text-[11px] text-surface-400 mt-1">PNG, JPG or WebP under 600KB</p>
+                  </div>
+                </div>
 
-          {/* Fields & Interests */}
-          <section className="bg-white dark:bg-surface-900 rounded-xl p-6 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-1">Fields & Interests</h2>
-            <p className="text-xs text-surface-500 mb-4">The domains you want to explore opportunities within</p>
-            <div className="flex flex-wrap gap-2">
-              {isEditing ? (
-                FIELDS.map((f: string) => (
-                  <Chip
-                    key={f} label={f}
-                    selected={localProfile.interests.includes(f)}
-                    onClick={() => setLocalProfile(p => ({ ...p, interests: toggle(p.interests, f) }))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name-input" className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1">
+                      Full Name
+                    </label>
+                    <Input
+                      id="name-input"
+                      value={identityData.name}
+                      onChange={e => setIdentityData(p => ({ ...p, name: e.target.value }))}
+                      placeholder="e.g. Maya Lin"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="status-select" className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1">
+                      Current Status
+                    </label>
+                    <select
+                      id="status-select"
+                      className="w-full px-3 py-2 bg-white dark:bg-surface-900 border border-surface-300 dark:border-surface-700 rounded-lg text-sm text-surface-900 dark:text-white focus:ring-2 focus:ring-rome-500 outline-none h-10"
+                      value={identityData.currentStatus}
+                      onChange={e => setIdentityData(p => ({ ...p, currentStatus: e.target.value }))}
+                    >
+                      <option value="">Select current focus…</option>
+                      {STATUS_OPTIONS.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="exp-select" className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1">
+                      Experience Level
+                    </label>
+                    <select
+                      id="exp-select"
+                      className="w-full px-3 py-2 bg-white dark:bg-surface-900 border border-surface-300 dark:border-surface-700 rounded-lg text-sm text-surface-900 dark:text-white focus:ring-2 focus:ring-rome-500 outline-none h-10"
+                      value={identityData.experienceLevel}
+                      onChange={e => setIdentityData(p => ({ ...p, experienceLevel: e.target.value }))}
+                    >
+                      <option value="">Select experience bracket…</option>
+                      {EXPERIENCE_LEVELS.map(lvl => (
+                        <option key={lvl} value={lvl}>{lvl}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1">
+                      Country of Residence / Citizenship
+                    </label>
+                    <CountrySelector
+                      value={identityData.country}
+                      onChange={(countryName) => setIdentityData(p => ({ ...p, country: countryName }))}
+                      placeholder="Select your country…"
+                    />
+                  </div>
+                </div>
+
+                {/* City/Location */}
+                <div>
+                  <label htmlFor="location-input" className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1">
+                    City / Specific Location (Optional)
+                  </label>
+                  <Input
+                    id="location-input"
+                    value={identityData.location}
+                    onChange={e => setIdentityData(p => ({ ...p, location: e.target.value }))}
+                    placeholder="e.g. Lagos, Nairobi, London, Berlin"
                   />
-                ))
-              ) : localProfile.interests.length > 0 ? (
-                localProfile.interests.map((i: string) => <Chip key={i} label={i} selected />)
-              ) : (
-                <span className="text-sm text-surface-400 italic">No interests selected. Edit your profile to add some.</span>
-              )}
-            </div>
-          </section>
+                </div>
 
-          {/* Goals */}
-          <section className="bg-white dark:bg-surface-900 rounded-xl p-6 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-1">Current Goals</h2>
-            <p className="text-xs text-surface-500 mb-4">What outcomes are you aiming to make happen?</p>
-            <div className="flex flex-wrap gap-2">
-              {isEditing ? (
-                GOALS.map((g: string) => (
-                  <Chip
-                    key={g} label={g} variant="outline"
-                    selected={localProfile.goals.includes(g)}
-                    onClick={() => setLocalProfile(p => ({ ...p, goals: toggle(p.goals, g) }))}
+                {/* Bio text area */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label htmlFor="bio-textarea" className="block text-xs font-medium text-surface-700 dark:text-surface-300">
+                      Short Bio
+                    </label>
+                    <span className="text-[11px] text-surface-400">
+                      {identityData.bio.length}/500
+                    </span>
+                  </div>
+                  <textarea
+                    id="bio-textarea"
+                    rows={3}
+                    maxLength={500}
+                    value={identityData.bio}
+                    onChange={e => setIdentityData(p => ({ ...p, bio: e.target.value }))}
+                    placeholder="Tell other applicants or mentors about your background, interests, and what you're working toward…"
+                    className="w-full p-3 rounded-lg border border-surface-300 dark:border-surface-700 bg-transparent text-surface-900 dark:text-surface-50 text-sm focus:ring-2 focus:ring-rome-500 outline-none resize-none"
                   />
-                ))
-              ) : localProfile.goals.length > 0 ? (
-                localProfile.goals.map((g: string) => <Chip key={g} label={g} variant="outline" selected />)
-              ) : (
-                <span className="text-sm text-surface-400 italic">No goals selected.</span>
-              )}
+                  <p className="text-[11px] text-surface-400 mt-1">
+                    Leave blank to clear your bio. Placeholder text is never saved.
+                  </p>
+                </div>
+
+                {/* Skills editor */}
+                <div>
+                  <label className="block text-xs font-medium text-surface-700 dark:text-surface-300 mb-1">
+                    Skills & Strengths
+                  </label>
+                  <div className="flex gap-2 mb-2">
+                    <Input
+                      placeholder="Add a skill (e.g. Python, Financial Modeling, Grant Writing)…"
+                      value={newSkill}
+                      onChange={e => setNewSkill(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
+                      className="h-9 text-xs"
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={handleAddSkill}
+                      className="h-9 px-3 text-xs"
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {identityData.skills.map((skill: string) => (
+                      <span
+                        key={skill}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-200 border border-surface-200 dark:border-surface-700"
+                      >
+                        {skill}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSkill(skill)}
+                          className="text-surface-400 hover:text-red-500"
+                          aria-label={`Remove ${skill}`}
+                        >
+                          <SolarIcon name="close-circle-linear" size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2 border-t border-surface-100 dark:border-surface-800">
+                  <Button variant="ghost" size="sm" onClick={handleCancelIdentity} disabled={isSavingIdentity} className="text-xs">
+                    Cancel
+                  </Button>
+                  <Button variant="default" size="sm" onClick={handleSaveIdentity} disabled={isSavingIdentity} className="text-xs bg-rome-500 hover:bg-rome-600 text-white">
+                    {isSavingIdentity ? 'Saving…' : 'Save Identity'}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* ── 3. Opportunity Preferences Section ── */}
+        <section aria-labelledby="preferences-heading" className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 sm:p-7 shadow-xs">
+          <div className="flex items-start justify-between gap-4 pb-4 border-b border-surface-100 dark:border-surface-800/60">
+            <div>
+              <h2 id="preferences-heading" className="text-base font-semibold text-surface-900 dark:text-surface-100">
+                Opportunity Discovery Preferences
+              </h2>
+              <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">
+                These criteria refine your Discover recommendations, matches, and search relevance.
+              </p>
             </div>
-          </section>
-        </div>
+            {!editingPreferences ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setEditingPreferences(true)}
+                className="text-xs text-rome-600 hover:text-rome-700 dark:text-rome-400 h-8 px-2.5 gap-1"
+              >
+                <SolarIcon name="pen-2-linear" size={13} />
+                Edit
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCancelPreferences}
+                  disabled={isSavingPreferences}
+                  className="text-xs h-8 px-3"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleSavePreferences}
+                  disabled={isSavingPreferences}
+                  className="text-xs h-8 px-3.5 bg-rome-500 hover:bg-rome-600 text-white"
+                >
+                  {isSavingPreferences ? 'Saving…' : 'Save'}
+                </Button>
+              </div>
+            )}
+          </div>
 
-        {/* ── Right Column ── */}
-        <div className="flex flex-col gap-6">
+          <div className="pt-6 space-y-6">
 
-          {/* Opportunity Types Preference */}
-          <section className="bg-white dark:bg-surface-900 rounded-xl p-5 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-1 flex items-center gap-1.5">
-              <Sparkles size={14} className="text-rome-500" /> Opportunity Preferences
-            </h2>
-            <p className="text-xs text-surface-500 mb-4">Types you're actively seeking</p>
-            <div className="flex flex-col gap-2">
-              {OPPORTUNITY_TYPES.map(type => {
-                const Icon = type.icon;
-                const selected = localPrefs.opportunityTypes.includes(type.id);
-                return (
-                  <button
-                    key={type.id}
-                    onClick={() => isEditing && setLocalPrefs(p => ({ ...p, opportunityTypes: toggle(p.opportunityTypes, type.id) }))}
-                    className={cn(
-                      'flex items-center gap-2.5 px-3 py-2 rounded-lg border text-left text-xs font-medium transition-all',
-                      selected
-                        ? 'border-rome-400 bg-rome-50 dark:bg-rome-950/20 text-rome-700 dark:text-rome-300'
-                        : 'border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 bg-transparent',
-                      isEditing ? 'cursor-pointer hover:border-rome-300' : 'cursor-default'
-                    )}
-                  >
-                    <div className={cn('p-1 rounded-md flex-shrink-0', type.color)}>
-                      <Icon size={12} />
-                    </div>
-                    <span className="flex-1">{type.label}</span>
-                    {selected && <Check size={12} className="text-rome-500 flex-shrink-0" />}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* Work & Location */}
-          <section className="bg-white dark:bg-surface-900 rounded-xl p-5 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">Work & Location</h2>
-
-            {/* Work Modality */}
-            <div className="mb-4">
-              <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2 flex items-center gap-1">
-                <Laptop size={12} /> Work Modality
+            {/* A. Opportunity Types */}
+            <div>
+              <label className="block text-xs font-semibold text-surface-900 dark:text-surface-200 mb-1">
+                Preferred Opportunity Types
               </label>
-              <div className="flex flex-wrap gap-1.5">
-                {['Remote', 'Hybrid', 'In-Person', 'Flexible'].map(mod => {
-                  const selected = localPrefs.remotePreference.includes(mod);
+              <p className="text-xs text-surface-500 dark:text-surface-400 mb-3">
+                Select the formats you are actively seeking.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {OPPORTUNITY_TYPES.map(type => {
+                  const selected = prefsData.opportunityTypes.includes(type.id);
                   return (
                     <button
-                      key={mod}
-                      onClick={() => isEditing && setLocalPrefs(p => ({ ...p, remotePreference: toggle(p.remotePreference, mod) }))}
+                      key={type.id}
+                      type="button"
+                      disabled={!editingPreferences}
+                      onClick={() => editingPreferences && setPrefsData(p => ({ ...p, opportunityTypes: toggleItem(p.opportunityTypes, type.id) }))}
                       className={cn(
-                        'px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all',
-                        selected ? 'bg-rome-500 text-white border-rome-600' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 border-surface-200 dark:border-surface-700',
-                        isEditing && 'cursor-pointer hover:opacity-80'
+                        'flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium text-left transition-all',
+                        selected
+                          ? 'border-rome-500 bg-rome-50 dark:bg-rome-950/20 text-rome-800 dark:text-rome-200 font-semibold'
+                          : 'border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 bg-transparent',
+                        editingPreferences ? 'cursor-pointer hover:border-rome-400' : 'cursor-default'
                       )}
                     >
-                      {mod === 'Remote' ? '🌐 Remote' : mod}
+                      <SolarIcon name={type.icon} size={15} className={selected ? 'text-rome-600 dark:text-rome-400' : 'text-surface-400'} />
+                      <span className="flex-1 truncate">{type.label}</span>
+                      {selected && <SolarIcon name="check-circle-linear" size={13} className="text-rome-600 dark:text-rome-400 shrink-0" />}
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Funding */}
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-semibold text-surface-600 dark:text-surface-400 flex items-center gap-1">
-                  <DollarSign size={12} /> Funding Required
-                </span>
-                <span className="text-xs text-surface-400">Prioritize paid / fully-funded</span>
-              </div>
-              <button
-                onClick={() => isEditing && setLocalPrefs(p => ({ ...p, fundingPreference: !p.fundingPreference }))}
-                className={cn(
-                  'px-2.5 py-1 rounded-lg text-xs font-bold border transition-all',
-                  localPrefs.fundingPreference
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300 border-emerald-300'
-                    : 'bg-surface-100 dark:bg-surface-800 text-surface-500 border-surface-200 dark:border-surface-700',
-                  isEditing && 'cursor-pointer'
+            {/* B. Fields & Areas of Interest */}
+            <div>
+              <label className="block text-xs font-semibold text-surface-900 dark:text-surface-200 mb-1">
+                Fields & Disciplines
+              </label>
+              <p className="text-xs text-surface-500 dark:text-surface-400 mb-3">
+                Select domains to highlight on your Discover feed.
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {editingPreferences ? (
+                  FIELDS.map(f => (
+                    <Chip
+                      key={f}
+                      label={f}
+                      selected={prefsData.interests.includes(f)}
+                      onClick={() => setPrefsData(p => ({ ...p, interests: toggleItem(p.interests, f) }))}
+                    />
+                  ))
+                ) : prefsData.interests.length > 0 ? (
+                  prefsData.interests.map(i => <Chip key={i} label={i} selected />)
+                ) : (
+                  <span className="text-xs text-surface-400 italic">No fields selected yet.</span>
                 )}
-              >
-                {localPrefs.fundingPreference ? '✓ Required' : 'Open to All'}
-              </button>
+              </div>
+            </div>
+
+            {/* C. Current Goals */}
+            <div>
+              <label className="block text-xs font-semibold text-surface-900 dark:text-surface-200 mb-1">
+                Current Objectives
+              </label>
+              <p className="text-xs text-surface-500 dark:text-surface-400 mb-3">
+                What are you aiming to accomplish over the next 6–12 months?
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {editingPreferences ? (
+                  GOALS.map(g => (
+                    <Chip
+                      key={g}
+                      label={g}
+                      variant="outline"
+                      selected={prefsData.goals.includes(g)}
+                      onClick={() => setPrefsData(p => ({ ...p, goals: toggleItem(p.goals, g) }))}
+                    />
+                  ))
+                ) : prefsData.goals.length > 0 ? (
+                  prefsData.goals.map(g => <Chip key={g} label={g} variant="outline" selected />)
+                ) : (
+                  <span className="text-xs text-surface-400 italic">No goals selected.</span>
+                )}
+              </div>
+            </div>
+
+            {/* D. Work Modality & Funding */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-surface-100 dark:border-surface-800">
+              <div>
+                <label className="block text-xs font-semibold text-surface-900 dark:text-surface-200 mb-1">
+                  Work Arrangement
+                </label>
+                <p className="text-xs text-surface-500 dark:text-surface-400 mb-2.5">
+                  Acceptable work and participation modalities
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {WORK_MODALITIES.map(mod => {
+                    const selected = prefsData.remotePreference.includes(mod.id);
+                    return (
+                      <button
+                        key={mod.id}
+                        type="button"
+                        disabled={!editingPreferences}
+                        onClick={() => editingPreferences && setPrefsData(p => ({ ...p, remotePreference: toggleItem(p.remotePreference, mod.id) }))}
+                        className={cn(
+                          'px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all',
+                          selected
+                            ? 'bg-rome-500 text-white border-rome-600'
+                            : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 border-surface-200 dark:border-surface-700',
+                          editingPreferences && 'cursor-pointer hover:opacity-85'
+                        )}
+                      >
+                        {mod.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-surface-900 dark:text-surface-200 mb-1">
+                  Funding Preference
+                </label>
+                <p className="text-xs text-surface-500 dark:text-surface-400 mb-2.5">
+                  Whether funding/stipend is a strict priority
+                </p>
+                <button
+                  type="button"
+                  disabled={!editingPreferences}
+                  onClick={() => editingPreferences && setPrefsData(p => ({ ...p, fundingPreference: !p.fundingPreference }))}
+                  className={cn(
+                    'px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all inline-flex items-center gap-1.5',
+                    prefsData.fundingPreference
+                      ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                      : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 border-surface-200 dark:border-surface-700',
+                    editingPreferences && 'cursor-pointer'
+                  )}
+                >
+                  <SolarIcon
+                    name={prefsData.fundingPreference ? 'check-circle-linear' : 'close-circle-linear'}
+                    size={14}
+                  />
+                  <span>
+                    {prefsData.fundingPreference ? 'Prioritize funded / paid opportunities' : 'Open to self-funded and unpaid roles'}
+                  </span>
+                </button>
+              </div>
             </div>
 
             {/* Target Locations */}
-            <div>
-              <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2 flex items-center gap-1">
-                <MapPin size={12} /> Target Locations
+            <div className="pt-2 border-t border-surface-100 dark:border-surface-800">
+              <label className="block text-xs font-semibold text-surface-900 dark:text-surface-200 mb-1">
+                Target Countries & Regions
               </label>
+              <p className="text-xs text-surface-500 dark:text-surface-400 mb-2.5">
+                Locations where you are willing to study, work, or attend programmes
+              </p>
               <div className="flex flex-wrap gap-1.5">
-                {isEditing ? (
+                {editingPreferences ? (
                   LOCATIONS.map(loc => {
-                    const selected = localPrefs.locationPreference.includes(loc);
+                    const selected = prefsData.locationPreference.includes(loc);
                     return (
                       <button
                         key={loc}
-                        onClick={() => setLocalPrefs(p => ({ ...p, locationPreference: toggle(p.locationPreference, loc) }))}
+                        type="button"
+                        onClick={() => setPrefsData(p => ({ ...p, locationPreference: toggleItem(p.locationPreference, loc) }))}
                         className={cn(
-                          'px-2.5 py-1 rounded-md text-xs font-semibold border cursor-pointer transition-all',
-                          selected ? 'bg-emerald-600 text-white border-emerald-700' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 border-surface-200 dark:border-surface-700 hover:bg-surface-200'
+                          'px-2.5 py-1 rounded-md text-xs font-medium border cursor-pointer transition-all',
+                          selected
+                            ? 'bg-rome-500 text-white border-rome-600'
+                            : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 border-surface-200 dark:border-surface-700 hover:bg-surface-200'
                         )}
                       >
                         {loc}
                       </button>
                     );
                   })
-                ) : localPrefs.locationPreference.length > 0 ? (
-                  localPrefs.locationPreference.map(loc => (
-                    <span key={loc} className="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                ) : prefsData.locationPreference.length > 0 ? (
+                  prefsData.locationPreference.map(loc => (
+                    <span
+                      key={loc}
+                      className="px-2.5 py-1 rounded-md text-xs font-medium bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-700"
+                    >
                       {loc}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-surface-400 italic">No locations set.</span>
+                  <span className="text-xs text-surface-400 italic">No specific target locations set (open globally).</span>
                 )}
               </div>
             </div>
-          </section>
 
-          {/* Settings */}
-          <section className="bg-white dark:bg-surface-900 rounded-xl p-5 shadow-card border border-surface-200 dark:border-surface-800">
-            <h2 className="text-base font-bold text-surface-950 dark:text-surface-50 mb-4">Settings & Guidance</h2>
-
-            <div className="flex items-center justify-between py-2.5 border-b border-surface-100 dark:border-surface-800 mb-3">
-              <div>
-                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">Theme</span>
-                <span className="text-xs text-surface-400 capitalize">{theme} mode</span>
+            {editingPreferences && (
+              <div className="flex justify-end gap-2 pt-2 border-t border-surface-100 dark:border-surface-800">
+                <Button variant="ghost" size="sm" onClick={handleCancelPreferences} disabled={isSavingPreferences} className="text-xs">
+                  Cancel
+                </Button>
+                <Button variant="default" size="sm" onClick={handleSavePreferences} disabled={isSavingPreferences} className="text-xs bg-rome-500 hover:bg-rome-600 text-white">
+                  {isSavingPreferences ? 'Saving…' : 'Save Preferences'}
+                </Button>
               </div>
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-200 hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
-              </button>
+            )}
+          </div>
+        </section>
+
+        {/* ── 4. Account Summary / Activity Links ── */}
+        <section aria-labelledby="activity-heading" className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-xs">
+          <div className="flex items-center justify-between pb-4 border-b border-surface-100 dark:border-surface-800/60">
+            <div>
+              <h2 id="activity-heading" className="text-base font-semibold text-surface-900 dark:text-surface-100">
+                My Workspace Activity
+              </h2>
+              <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">
+                Quick access to your curated and in-progress applications.
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+            <Link
+              to="/my-opportunities"
+              className="flex items-center justify-between p-4 rounded-xl border border-surface-200/80 dark:border-surface-800 hover:border-rome-400 dark:hover:border-rome-600 hover:bg-surface-50/50 dark:hover:bg-surface-800/30 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-rome-50 dark:bg-rome-950/40 text-rome-600 dark:text-rome-400 flex items-center justify-center">
+                  <SolarIcon name="heart-linear" size={18} />
+                </div>
+                <div>
+                  <span className="text-sm font-semibold text-surface-900 dark:text-surface-100 block group-hover:text-rome-600 transition-colors">
+                    Saved Opportunities
+                  </span>
+                  <span className="text-xs text-surface-500 dark:text-surface-400">
+                    {savedOpportunities.length} {savedOpportunities.length === 1 ? 'item saved' : 'items saved'}
+                  </span>
+                </div>
+              </div>
+              <SolarIcon name="alt-arrow-right-linear" size={16} className="text-surface-400 group-hover:text-rome-500 transition-colors" />
+            </Link>
+
+            <Link
+              to="/my-opportunities?tab=tracking"
+              className="flex items-center justify-between p-4 rounded-xl border border-surface-200/80 dark:border-surface-800 hover:border-rome-400 dark:hover:border-rome-600 hover:bg-surface-50/50 dark:hover:bg-surface-800/30 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <SolarIcon name="case-linear" size={18} />
+                </div>
+                <div>
+                  <span className="text-sm font-semibold text-surface-900 dark:text-surface-100 block group-hover:text-rome-600 transition-colors">
+                    Active Applications
+                  </span>
+                  <span className="text-xs text-surface-500 dark:text-surface-400">
+                    {trackedApplications.length} {trackedApplications.length === 1 ? 'application tracked' : 'applications tracked'}
+                  </span>
+                </div>
+              </div>
+              <SolarIcon name="alt-arrow-right-linear" size={16} className="text-surface-400 group-hover:text-rome-500 transition-colors" />
+            </Link>
+          </div>
+        </section>
+
+        {/* ── 5. Account Settings Section ── */}
+        <section aria-labelledby="settings-heading" className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-xs">
+          <div className="pb-4 border-b border-surface-100 dark:border-surface-800/60">
+            <h2 id="settings-heading" className="text-base font-semibold text-surface-900 dark:text-surface-100">
+              Account & Preferences
+            </h2>
+            <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5">
+              Manage authentication credentials, display mode, and support.
+            </p>
+          </div>
+
+          <div className="divide-y divide-surface-100 dark:divide-surface-800">
+            {/* Account Email */}
+            <div className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div>
+                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">
+                  Email Address
+                </span>
+                <span className="text-xs text-surface-400">
+                  Used for account sign-in and security notifications
+                </span>
+              </div>
+              <span className="text-xs font-mono font-medium text-surface-700 dark:text-surface-300">
+                {user.profile?.email || 'Account email'}
+              </span>
             </div>
 
-            <div className="flex items-center justify-between py-2.5 border-b border-surface-100 dark:border-surface-800 mb-3">
+            {/* Display Mode */}
+            <div className="py-3.5 flex items-center justify-between gap-3">
               <div>
-                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">Product Tour</span>
-                <span className="text-xs text-surface-400">Review how ROMEfind works</span>
+                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">
+                  Interface Theme
+                </span>
+                <span className="text-xs text-surface-400 capitalize">
+                  Current: {theme} mode
+                </span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleTheme}
+                className="text-xs h-8 px-3 gap-1.5"
+                aria-label="Toggle dark / light theme"
+              >
+                <SolarIcon name={theme === 'dark' ? 'sun-2-linear' : 'moon-linear'} size={14} />
+                <span>Switch to {theme === 'dark' ? 'Light' : 'Dark'}</span>
+              </Button>
+            </div>
+
+            {/* Product Tour Reset */}
+            <div className="py-3.5 flex items-center justify-between gap-3">
+              <div>
+                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">
+                  Product Walkthrough
+                </span>
+                <span className="text-xs text-surface-400">
+                  Reset the guided feature highlights
+                </span>
               </div>
               <Button
                 variant="outline"
@@ -591,46 +991,77 @@ export default function ProfilePage() {
                   resetTour();
                   navigate('/discover');
                 }}
-                className="text-xs font-semibold h-9 px-3"
+                className="text-xs h-8 px-3"
               >
-                Take tour again
+                Take Tour Again
               </Button>
             </div>
 
-            <div className="flex items-center justify-between py-2.5 border-b border-surface-100 dark:border-surface-800 mb-3">
+            {/* Support */}
+            <div className="py-3.5 flex items-center justify-between gap-3">
               <div>
-                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">Support & Help</span>
-                <span className="text-xs text-surface-400">Questions, feedback or report an issue</span>
+                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">
+                  Feedback & Support
+                </span>
+                <span className="text-xs text-surface-400">
+                  Questions, feedback, or report an issue
+                </span>
               </div>
               <a
                 href="mailto:support@romefind.com?subject=ROMEfind%20Support%20Request"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
               >
-                <span>Get Help</span>
-                <Globe size={13} />
+                <span>Contact Team</span>
+                <SolarIcon name="arrow-right-up-linear" size={13} />
               </a>
             </div>
 
-            <div className="pt-2">
-              <span className="text-xs font-semibold text-surface-500 uppercase tracking-wider block mb-1.5">Account</span>
-              <p className="text-xs text-surface-600 dark:text-surface-400 mb-3">
-                Email: <span className="font-medium text-surface-900 dark:text-surface-100">{user.profile.email}</span>
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  logout();
-                  navigate('/');
-                }}
-                className="w-full text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 border-red-200 dark:border-red-900/50 h-10 min-h-[40px] flex items-center justify-center gap-2"
-              >
-                <LogOut size={14} />
-                <span>Log out</span>
-              </Button>
+            {/* Sign Out */}
+            <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-sm font-medium text-surface-800 dark:text-surface-200 block">
+                  Session
+                </span>
+                <span className="text-xs text-surface-400">
+                  Sign out of this browser session
+                </span>
+              </div>
+
+              {!showSignoutConfirm ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowSignoutConfirm(true)}
+                  className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 border-red-200 dark:border-red-900/50 h-8 px-3 gap-1.5"
+                >
+                  <SolarIcon name="logout-2-linear" size={13} />
+                  <span>Log out</span>
+                </Button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-surface-500">Sign out?</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowSignoutConfirm(false)}
+                    className="text-xs h-8 px-2.5"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="text-xs h-8 px-3.5 bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    Confirm Sign Out
+                  </Button>
+                </div>
+              )}
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
+
       </div>
     </div>
   );
