@@ -137,7 +137,7 @@ export default function DiscoverPage() {
   const totalTrackedCount = trackedApplications.length + savedOpportunities.filter(id => !trackedApplications.some(a => a.opportunityId === id)).length;
 
   return (
-    <div className="flex flex-col gap-8 sm:gap-10 pb-20 animate-in fade-in duration-300 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 w-full">
+    <div className="flex flex-col gap-8 sm:gap-10 pb-20 animate-in fade-in duration-300 py-4 sm:py-6 w-full">
       {/* ─── 1. MOBILE & DESKTOP DISCOVERY SEARCH (Directly below header) ─── */}
       <section id="home-search" className="space-y-2.5">
         <form onSubmit={handleSearchSubmit} className="relative flex items-center gap-2 w-full">

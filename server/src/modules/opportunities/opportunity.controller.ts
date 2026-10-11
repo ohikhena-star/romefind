@@ -289,6 +289,25 @@ export const unsaveOpportunity = async (req: Request, res: Response, next: NextF
   }
 };
 
+// GET /api/opportunities/saved
+export const getSavedOpportunities = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req as any).user.id;
+    const saved = await prisma.savedOpportunity.findMany({
+      where: { userId },
+      select: { opportunityId: true },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    res.json({
+      success: true,
+      data: saved.map(s => s.opportunityId)
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // POST /api/opportunities/:id/reject
 export const rejectOpportunity = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -150,6 +150,11 @@ class ApiClient {
     return this.request(`/opportunities/${id}/save`, { method: 'DELETE' });
   }
 
+  async getSavedOpportunities(): Promise<string[]> {
+    const res = await this.request<any>('/opportunities/saved');
+    return Array.isArray(res) ? res : (res?.data || []);
+  }
+
   async rejectOpportunity(id: string, reason?: string, notes?: string) {
     return this.request(`/opportunities/${id}/reject`, {
       method: 'POST',

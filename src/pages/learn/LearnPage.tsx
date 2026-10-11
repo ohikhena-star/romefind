@@ -70,7 +70,7 @@ export default function LearnPage() {
   if (isLoading) return <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-6">{Array.from({length:4}).map((_,i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex flex-col gap-8 sm:gap-10 w-full overflow-hidden">
+    <div className="w-full py-4 sm:py-8 flex flex-col gap-8 sm:gap-10 overflow-hidden">
       <div className="w-full">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-surface-950 dark:text-surface-50 tracking-tight break-words">
           Learn for what you're pursuing.

@@ -9,7 +9,7 @@ interface AuthState {
   isLoading: boolean;
   isInitializing: boolean;
   initAuth: () => Promise<void>;
-  login: (email: string, password?: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => Promise<void>;
@@ -51,10 +51,13 @@ export const useAuthStore = create<AuthState>()(
         set({ isInitializing: false });
       },
 
-      login: async (email: string, password?: string) => {
+      login: async (email: string, password: string) => {
+        if (!email || !email.trim() || !password || !password.trim()) {
+          throw new Error('Email and password are required');
+        }
         set({ isLoading: true });
         try {
-          const res = await api.login({ email, password: password || 'password123' });
+          const res = await api.login({ email: email.trim(), password });
           if (res?.user) {
             set({
               user: res.user,
@@ -71,9 +74,12 @@ export const useAuthStore = create<AuthState>()(
       },
 
       signup: async (email: string, password: string, name: string) => {
+        if (!email || !email.trim() || !password || !password.trim()) {
+          throw new Error('Email and password are required');
+        }
         set({ isLoading: true });
         try {
-          const res = await api.register({ email, password, name });
+          const res = await api.register({ email: email.trim(), password, name });
           if (res?.user) {
             set({
               user: res.user,
@@ -91,9 +97,17 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         api.logout().catch(() => {});
+        // Reset in-memory application store (saved opps, tracked apps, comparisons)
+        try {
+          const { useApplicationStore } = require('@/store/applicationStore');
+          useApplicationStore.getState().resetUserSession();
+        } catch {
+          // Fallback if dynamic import unavailable
+        }
         set({ user: null, isAuthenticated: false });
         if (typeof window !== 'undefined') {
           localStorage.removeItem('romefind-notifications-storage');
+          localStorage.removeItem('romefind-application-storage');
         }
       },
 

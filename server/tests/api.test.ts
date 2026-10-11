@@ -289,4 +289,109 @@ describe('ROMEfind API Integration Test Suite', () => {
     assert.strictEqual(getRes.status, 200);
     assert.strictEqual(getRes.data.data.profile.onboardingStep, 3);
   });
+
+  it('17. Rejection of empty, whitespace, or missing password login', async () => {
+    // Missing password
+    const res1 = await jsonFetch(`${baseUrl}/auth/login`, {
+      method: 'POST',
+      body: { email: 'alex.chen@example.com' },
+      noAuth: true
+    });
+    assert.strictEqual(res1.status, 400);
+    assert.strictEqual(res1.data.message, 'Email and password are required');
+
+    // Empty password
+    const res2 = await jsonFetch(`${baseUrl}/auth/login`, {
+      method: 'POST',
+      body: { email: 'alex.chen@example.com', password: '' },
+      noAuth: true
+    });
+    assert.strictEqual(res2.status, 400);
+    assert.strictEqual(res2.data.message, 'Email and password are required');
+
+    // Whitespace password
+    const res3 = await jsonFetch(`${baseUrl}/auth/login`, {
+      method: 'POST',
+      body: { email: 'alex.chen@example.com', password: '   ' },
+      noAuth: true
+    });
+    assert.strictEqual(res3.status, 400);
+    assert.strictEqual(res3.data.message, 'Email and password are required');
+  });
+
+  it('18. Saved opportunities hydration endpoint across sessions', async () => {
+    // Ensure testOppId is saved for user A
+    await jsonFetch(`${baseUrl}/opportunities/${testOppId}/save`, { method: 'POST' });
+
+    // Fetch saved opportunities endpoint
+    const savedRes = await jsonFetch(`${baseUrl}/opportunities/saved`);
+    assert.strictEqual(savedRes.status, 200);
+    assert.strictEqual(savedRes.data.success, true);
+    assert.ok(Array.isArray(savedRes.data.data));
+    assert.ok(savedRes.data.data.includes(testOppId));
+  });
+
+  it('19. Account switching and session data isolation', async () => {
+    // Register User B
+    const userBEmail = `userb.${Date.now()}@example.com`;
+    const regRes = await jsonFetch(`${baseUrl}/auth/register`, {
+      method: 'POST',
+      body: {
+        email: userBEmail,
+        password: 'Password123!',
+        name: 'User B Explorer'
+      },
+      noAuth: true
+    });
+    assert.strictEqual(regRes.status, 201);
+    const userBToken = regRes.data.data.token;
+
+    // Check User B's saved opportunities — should NOT include User A's testOppId
+    const userBSavedRes = await jsonFetch(`${baseUrl}/opportunities/saved`, {
+      headers: { Authorization: `Bearer ${userBToken}` }
+    });
+    assert.strictEqual(userBSavedRes.status, 200);
+    assert.strictEqual(userBSavedRes.data.data.includes(testOppId), false);
+
+    // User B saves a different opportunity
+    const oppCatalog = await jsonFetch(`${baseUrl}/opportunities`);
+    const oppB = oppCatalog.data.data.find((o: any) => o.id !== testOppId);
+    assert.ok(oppB);
+
+    const saveBRes = await jsonFetch(`${baseUrl}/opportunities/${oppB.id}/save`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${userBToken}` }
+    });
+    assert.strictEqual(saveBRes.status, 200);
+
+    // Verify User B's saved list has oppB.id and not testOppId
+    const userBSavedAfter = await jsonFetch(`${baseUrl}/opportunities/saved`, {
+      headers: { Authorization: `Bearer ${userBToken}` }
+    });
+    assert.ok(userBSavedAfter.data.data.includes(oppB.id));
+    assert.strictEqual(userBSavedAfter.data.data.includes(testOppId), false);
+  });
+
+  it('20. Logout and login session verification', async () => {
+    // Logout User A
+    const logoutRes = await jsonFetch(`${baseUrl}/auth/logout`, { method: 'POST' });
+    assert.strictEqual(logoutRes.status, 200);
+
+    // Login back as User A
+    const relogin = await jsonFetch(`${baseUrl}/auth/login`, {
+      method: 'POST',
+      body: {
+        email: 'alex.chen@example.com',
+        password: 'password123'
+      },
+      noAuth: true
+    });
+    assert.strictEqual(relogin.status, 200);
+    authToken = relogin.data.data.token;
+
+    // Verify User A's saved opportunities still exist in DB
+    const userASavedRes = await jsonFetch(`${baseUrl}/opportunities/saved`);
+    assert.strictEqual(userASavedRes.status, 200);
+    assert.ok(userASavedRes.data.data.includes(testOppId));
+  });
 });

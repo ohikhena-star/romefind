@@ -63,6 +63,49 @@ export default {
   				'800': '#1e293b',
   				'900': '#0f172a',
   				'950': '#070d18'
+  			},
+  			burgundy: {
+  				DEFAULT: '#702443',
+  				50: '#fdf2f6',
+  				100: '#fce7ef',
+  				200: '#f8d0e0',
+  				500: '#702443',
+  				600: '#702443',
+  				700: '#5c1d37',
+  				800: '#49172c',
+  				900: '#381222'
+  			},
+  			cream: {
+  				DEFAULT: '#F5EFE6',
+  				50: '#fdfbf7',
+  				100: '#f9f5ee',
+  				200: '#f5efe6',
+  				300: '#ebe0cf',
+  				400: '#decbb2'
+  			},
+  			ink: {
+  				DEFAULT: '#242321',
+  				50: '#f6f6f5',
+  				100: '#e7e6e4',
+  				200: '#d0cfcb',
+  				600: '#4a4844',
+  				700: '#3a3835',
+  				800: '#2e2c2a',
+  				900: '#242321'
+  			},
+  			'muted-green': {
+  				DEFAULT: '#E7EBD9',
+  				50: '#f6f8f1',
+  				100: '#e7ebd9',
+  				200: '#d5dcbf',
+  				border: '#cbd3b3'
+  			},
+  			'soft-lilac': {
+  				DEFAULT: '#E8D8F2',
+  				50: '#f7f2fb',
+  				100: '#e8d8f2',
+  				200: '#d6bde6',
+  				border: '#cbb0dc'
   			}
   		},
   		fontFamily: {

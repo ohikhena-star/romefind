@@ -15,6 +15,8 @@ interface ApplicationState {
   unsaveOpportunity: (id: string) => Promise<void>;
   isSaved: (id: string) => boolean;
   
+  fetchSavedOpportunities: () => Promise<void>;
+  resetUserSession: () => void;
   fetchApplications: () => Promise<void>;
   createApplication: (opportunityId: string, opp?: Opportunity) => Promise<void>;
   removeTrackedApplication: (id: string) => Promise<void>;
@@ -73,8 +75,28 @@ export const useApplicationStore = create<ApplicationState>()(
         return get().savedOpportunities.includes(id);
       },
 
+      fetchSavedOpportunities: async () => {
+        try {
+          const savedIds = await api.getSavedOpportunities();
+          if (Array.isArray(savedIds)) {
+            set({ savedOpportunities: savedIds });
+          }
+        } catch (e) {
+          // Keep current state if network/offline
+        }
+      },
+
+      resetUserSession: () => {
+        set({
+          savedOpportunities: [],
+          trackedApplications: [],
+          comparisons: []
+        });
+      },
+
       fetchApplications: async () => {
         try {
+          await get().fetchSavedOpportunities();
           const apps = await api.getApplications();
           if (Array.isArray(apps)) {
             set({

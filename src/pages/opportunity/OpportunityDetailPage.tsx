@@ -219,7 +219,7 @@ export default function OpportunityDetailPage() {
   return (
     <div className="relative min-h-screen pb-24 lg:pb-12 bg-white dark:bg-surface-950">
       {/* Top Back Nav */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+      <div className="w-full pt-6 pb-2">
         <button 
           onClick={() => navigate(-1)}
           aria-label="Back to opportunities"
@@ -233,7 +233,7 @@ export default function OpportunityDetailPage() {
       {/* Hero Section */}
       <main>
       <div className="bg-surface-50 dark:bg-surface-900/50 border-b border-surface-200 dark:border-surface-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 flex flex-col lg:flex-row gap-12">
+        <div className="w-full py-8 lg:py-12 flex flex-col lg:flex-row gap-12">
           <div className="flex-1 space-y-5">
             <div className="flex flex-wrap items-center gap-2">
               <Tag label={opportunity.type} />
@@ -386,7 +386,7 @@ export default function OpportunityDetailPage() {
       </div>
 
       {/* Body */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="w-full py-10">
         <div className="max-w-3xl space-y-10">
           
           {/* Personalized Relevance Section */}

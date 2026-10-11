@@ -46,6 +46,7 @@ apiRouter.get('/organizations/:id', organizationController.getOrganizationById);
 
 // ── Opportunities Endpoints ─────────────────────────────────────────────
 apiRouter.get('/opportunities', optionalAuth, opportunityController.getOpportunities);
+apiRouter.get('/opportunities/saved', authenticateToken, opportunityController.getSavedOpportunities);
 apiRouter.get('/opportunities/:id', optionalAuth, opportunityController.getOpportunityById);
 apiRouter.get('/opportunities/:id/related', opportunityController.getRelatedOpportunities);
 apiRouter.post('/opportunities/:id/save', authenticateToken, opportunityController.saveOpportunity);
