@@ -371,6 +371,19 @@ class ApiClient {
     return this.request<any>(`/admin/opportunities${qs}`);
   }
 
+  async updateAdminOpportunity(id: string, data: any) {
+    return this.request<any>(`/admin/opportunities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async deleteAdminOpportunity(id: string) {
+    return this.request<any>(`/admin/opportunities/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
   async getAdminOpportunityQuality() {
     return this.request<any>('/admin/opportunities/quality');
   }

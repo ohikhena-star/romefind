@@ -89,20 +89,20 @@ export const ContextualSignupModal: React.FC<ContextualSignupModalProps> = ({
     badge: string;
   }> = {
     save: {
-      heading: "Don't lose an opportunity worth pursuing.",
-      body: "Create a free account to save opportunities and find them again whenever you're ready.",
+      heading: "Keep this opportunity within reach.",
+      body: "Create a free account to save opportunities, track application deadlines, and manage your next steps.",
       icon: "heart-bold",
       badge: "Save Opportunity"
     },
     track: {
-      heading: "Turn opportunities into progress.",
-      body: "Create a free account to organise your applications, manage your next steps, and keep track of your progress.",
+      heading: "Keep this opportunity within reach.",
+      body: "Create a free account to save opportunities, track application deadlines, and manage your next steps.",
       icon: "case-linear",
       badge: "Application Tracker"
     },
     personalize: {
-      heading: "Find opportunities that fit you.",
-      body: "Tell ROMEfind about your interests and experience to make opportunity discovery more relevant to you.",
+      heading: "Keep this opportunity within reach.",
+      body: "Create a free account to save opportunities, track application deadlines, and manage your next steps.",
       icon: "magic-stick-linear",
       badge: "Tailored Matches"
     }
@@ -218,7 +218,7 @@ export const ContextualSignupModal: React.FC<ContextualSignupModalProps> = ({
               onClick={handleCreateAccount}
               className="flex-1 h-11 min-h-[44px] justify-center bg-rome-500 hover:bg-rome-600 text-white font-semibold text-sm rounded-xl shadow-xs"
             >
-              <span>Create Free Account</span>
+              <span>Create free account</span>
               <SolarIcon name="alt-arrow-right-linear" size={16} />
             </Button>
 

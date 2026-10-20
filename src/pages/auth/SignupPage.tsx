@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { executePendingAction } from '@/utils/pendingAction';
 import { Eye, EyeOff } from 'lucide-react';
 
 const SignupPage = () => {
@@ -56,6 +57,11 @@ const SignupPage = () => {
       await loginWithGoogle(idToken);
       const currentUser = useAuthStore.getState().user;
       if (currentUser && currentUser.onboardingCompleted) {
+        const resumed = await executePendingAction();
+        if (resumed?.executed && resumed.returnUrl) {
+          navigate(resumed.returnUrl);
+          return;
+        }
         navigate('/discover');
       } else {
         navigate('/onboarding');

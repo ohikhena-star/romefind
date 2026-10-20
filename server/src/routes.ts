@@ -108,6 +108,7 @@ apiRouter.get('/admin/submissions', authenticateToken, requireAdmin, adminContro
 apiRouter.post('/admin/submissions/:id/approve', authenticateToken, requireAdmin, adminController.approveSubmission);
 apiRouter.post('/admin/submissions/:id/reject', authenticateToken, requireAdmin, adminController.rejectSubmission);
 apiRouter.put('/admin/opportunities/:id', authenticateToken, requireAdmin, adminController.updateAdminOpportunity);
+apiRouter.delete('/admin/opportunities/:id', authenticateToken, requireAdmin, adminController.deleteAdminOpportunity);
 apiRouter.get('/admin/audit-logs', authenticateToken, requireAdmin, adminController.getAuditLogs);
 
 // ── Admin Dashboard Endpoints ────────────────────────────────────────────────

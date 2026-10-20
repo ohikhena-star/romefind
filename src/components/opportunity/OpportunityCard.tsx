@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { SolarIcon } from '@/components/ui/SolarIcon';
@@ -46,7 +46,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
   className
 }) => {
   const navigate = useNavigate();
-  const [inspectorOpen, setInspectorOpen] = useState(false);
+
 
   const { 
     isSaved: storeIsSaved, 
@@ -223,104 +223,6 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         )}
       </div>
 
-      {/* ─── 5. Contextual Fit & Matching Inspector ─── */}
-      {relevanceScore !== undefined && (
-        <div className="mb-3">
-          <div 
-            onClick={(e) => {
-              e.stopPropagation();
-              setInspectorOpen(!inspectorOpen);
-            }}
-            className="flex items-center justify-between gap-2 text-xs text-surface-600 dark:text-surface-400 bg-surface-50/70 dark:bg-surface-800/40 p-2 rounded-xl border border-surface-200/60 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700 transition-colors cursor-pointer"
-            title="Click to toggle Matching Inspector breakdown"
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <span className={cn(
-                "px-1.5 py-0.5 rounded text-xs font-bold shrink-0",
-                relevanceScore >= 75
-                  ? "bg-rome-100 dark:bg-surface-800 text-rome-700 dark:text-rome-300"
-                  : "bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300"
-              )}>
-                {relevanceScore}% Fit
-              </span>
-              <p className="line-clamp-1 leading-snug text-xs">
-                {relevanceReasons?.[0] || 'Selected based on your criteria'}
-              </p>
-            </div>
-            <span className="text-xs font-semibold text-rome-600 dark:text-rome-400 hover:underline shrink-0 flex items-center gap-0.5">
-              <span>{inspectorOpen ? 'Hide' : 'Inspect'}</span>
-              <SolarIcon name={inspectorOpen ? "alt-arrow-up-linear" : "alt-arrow-down-linear"} size={12} />
-            </span>
-          </div>
-
-          {/* Collapsible Matching Inspector Breakdown */}
-          {inspectorOpen && (
-            <div 
-              onClick={(e) => e.stopPropagation()}
-              className="mt-2 p-3 rounded-xl bg-surface-100/80 dark:bg-surface-800/80 border border-surface-200 dark:border-surface-700 text-xs space-y-1.5 animate-in fade-in duration-150"
-            >
-              <div className="flex items-center justify-between pb-1.5 border-b border-surface-200/60 dark:border-surface-700/60 text-xs font-bold text-surface-700 dark:text-surface-300">
-                <span className="flex items-center gap-1">
-                  <SolarIcon name="magnifer-linear" size={12} className="text-rome-500" />
-                  Matching Signals Inspector
-                </span>
-                <span className="text-rome-600 dark:text-rome-400 font-mono">{relevanceScore}% total</span>
-              </div>
-
-              {matchSignals ? (
-                <>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-surface-600 dark:text-surface-400">Field & Interest:</span>
-                    <span className={matchSignals.interestMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
-                      {matchSignals.interestMatch ? `✓ Match (+${matchSignals.fieldMatchScore || 20})` : '—'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-surface-600 dark:text-surface-400">Skill Alignment:</span>
-                    <span className={matchSignals.skillMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
-                      {matchSignals.skillMatch ? `✓ Overlap (+${matchSignals.skillMatchScore || 20})` : '—'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-surface-600 dark:text-surface-400">Goal Alignment:</span>
-                    <span className={matchSignals.goalMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
-                      {matchSignals.goalMatch ? `✓ Match (+${matchSignals.goalMatchScore || 15})` : '—'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-surface-600 dark:text-surface-400">Opportunity Type:</span>
-                    <span className={matchSignals.typeMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
-                      {matchSignals.typeMatch ? `✓ Preferred (+${matchSignals.typeMatchScore || 15})` : 'Neutral'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-surface-600 dark:text-surface-400">Eligibility & Experience:</span>
-                    <span className={matchSignals.eligibilityMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-amber-500"}>
-                      {matchSignals.eligibilityMatch ? `✓ Verified (+${matchSignals.eligibilityScore || 10})` : 'Open'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-surface-600 dark:text-surface-400">Location & Modality:</span>
-                    <span className={matchSignals.locationMatch ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-surface-400"}>
-                      {matchSignals.locationMatch ? `✓ Preferred (+${matchSignals.locationScore || 10})` : 'Global'}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-1 text-xs text-surface-600 dark:text-surface-400">
-                  {relevanceReasons?.map((reason, idx) => (
-                    <div key={idx} className="flex items-start gap-1.5">
-                      <span className="text-rome-500 font-bold">•</span>
-                      <span>{reason}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
       {/* ─── 6. Action Button (Compare Mode vs Standard View Mode) ─── */}
       <div 
         id={id ? "tour-actions" : undefined}
@@ -340,7 +242,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
               onClick={handleCompareToggle}
             >
               <SolarIcon name={isComparing ? "check-circle-linear" : "add-circle-linear"} size={16} />
-              <span>{isComparing ? "In Comparison" : "+ Add to Compare"}</span>
+              <span>{isComparing ? "Added to Compare" : "+ Add to Compare"}</span>
             </Button>
 
             <button

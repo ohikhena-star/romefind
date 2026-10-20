@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useApplicationStore } from '@/store/applicationStore';
 import { useOpportunityStore } from '@/store/opportunityStore';
 import { useAuthStore } from '@/store/authStore';
@@ -338,16 +338,32 @@ function buildConsiderations(opps: Opportunity[]): Consideration[] {
 
 export default function ComparePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { comparisons, addToCompare, removeFromCompare, isSaved, saveOpportunity, unsaveOpportunity } = useApplicationStore();
   const { opportunities } = useOpportunityStore();
   const { user } = useAuthStore();
   const [filterType, setFilterType] = useState<string>('All');
+  const [mobileActiveIdx, setMobileActiveIdx] = useState<number>(0);
 
   const compareOpps: Opportunity[] = useMemo(() => {
     return comparisons
       .map((id: string) => opportunities.find((o: Opportunity) => o.id === id))
       .filter(Boolean) as Opportunity[];
   }, [comparisons, opportunities]);
+
+  useEffect(() => {
+    setMobileActiveIdx(prev => Math.min(prev, Math.max(compareOpps.length - 1, 0)));
+  }, [compareOpps.length]);
+
+  const handleExitCompare = () => {
+    if (location.state?.from && location.state.from !== '/compare') {
+      navigate(location.state.from);
+    } else if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate('/discover');
+    }
+  };
 
   const uniqueTypes = useMemo(() => Array.from(new Set(compareOpps.map(o => o.type))), [compareOpps]);
 
@@ -375,7 +391,26 @@ export default function ComparePage() {
   const considerations = useMemo(() => buildConsiderations(compareOpps), [compareOpps]);
 
   return (
-    <div className="w-full py-6 md:py-10 animate-in fade-in">
+    <div className="w-full py-4 md:py-8 pb-24 md:pb-12 animate-in fade-in">
+      {/* ─── Back to Opportunities / Exit Control (Prominent on Mobile & Desktop) ─── */}
+      <nav aria-label="Exit compare" className="mb-4 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={handleExitCompare}
+          className="inline-flex items-center gap-2 px-3 py-2 -ml-2 rounded-xl text-xs sm:text-sm font-semibold text-surface-600 dark:text-surface-300 hover:text-rome-600 dark:hover:text-rome-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors cursor-pointer min-h-[44px]"
+          aria-label="Back to opportunities"
+        >
+          <SolarIcon name="alt-arrow-left-linear" size={18} className="shrink-0" />
+          <span>Back to opportunities</span>
+        </button>
+
+        {compareOpps.length > 0 && (
+          <span className="text-xs font-semibold text-surface-500 dark:text-surface-400 md:hidden">
+            {compareOpps.length}/4 selected
+          </span>
+        )}
+      </nav>
+
       {/* ─── Header ─── */}
       <header className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-200 dark:border-surface-800">
         <div>
@@ -641,73 +676,92 @@ export default function ComparePage() {
             </table>
           </div>
 
-          {/* ── Mobile Stacked Card View ── */}
-          <div className="md:hidden flex flex-col w-full space-y-4">
-            <p className="text-xs font-semibold text-surface-500 uppercase tracking-wider px-1">
-              Comparing {compareOpps.length} opportunities
-            </p>
-
-            {compareOpps.map((opp: Opportunity) => {
-              const orgName = typeof opp.organization === 'object' ? opp.organization.name : opp.organization;
-              return (
-                <article
+          {/* ── Mobile Tabbed Comparison View ── */}
+          <div className="md:hidden space-y-3">
+            {/* Tab strip */}
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none -mx-1 px-1">
+              {compareOpps.map((opp: Opportunity, idx: number) => (
+                <button
                   key={opp.id}
-                  className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-xs space-y-3"
+                  onClick={(e) => { e.stopPropagation(); setMobileActiveIdx(idx); }}
+                  className={cn(
+                    "shrink-0 flex flex-col items-start px-3 py-2 rounded-xl border text-left transition-all min-w-[140px] max-w-[200px] cursor-pointer",
+                    mobileActiveIdx === idx
+                      ? "border-rome-500 bg-rome-50 dark:bg-rome-950/20 text-rome-700 dark:text-rome-300"
+                      : "border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-900 text-surface-600 dark:text-surface-400 hover:border-rome-300"
+                  )}
                 >
-                  <div className="flex items-start justify-between gap-2 border-b border-surface-100 dark:border-surface-800 pb-3">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-500 truncate w-full">
+                    {typeof compareOpps[idx].organization === 'object' ? (compareOpps[idx].organization as any).name : String(compareOpps[idx].organization || '')}
+                  </span>
+                  <span className={cn("text-xs font-bold line-clamp-2 leading-snug mt-0.5", mobileActiveIdx === idx ? "text-rome-700 dark:text-rome-200" : "text-surface-800 dark:text-surface-200")}>
+                    {compareOpps[idx].title}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Active opportunity detail */}
+            {compareOpps[mobileActiveIdx] && (() => {
+              const opp = compareOpps[mobileActiveIdx];
+              const orgName = typeof opp.organization === 'object' ? (opp.organization as any).name : String(opp.organization || '');
+              return (
+                <article className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 overflow-hidden">
+                  {/* Header */}
+                  <div className="px-4 py-3 border-b border-surface-100 dark:border-surface-800 bg-surface-50 dark:bg-surface-800/50 flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <span className="text-xs font-semibold text-surface-500 uppercase tracking-wider truncate block">
-                        {orgName}
-                      </span>
-                      <h2 className="text-sm font-bold text-surface-950 dark:text-white line-clamp-2 mt-0.5">
-                        {opp.title}
-                      </h2>
-                      <Tag label={opp.type} className="mt-2" />
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-500 block">{orgName}</span>
+                      <h2 className="text-sm font-bold text-surface-950 dark:text-white leading-snug mt-0.5 line-clamp-2">{opp.title}</h2>
+                      <span className="inline-flex mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400">{opp.type}</span>
                     </div>
                     <button
                       onClick={() => removeFromCompare(opp.id)}
-                      className="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0"
+                      className="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors shrink-0 cursor-pointer"
                       aria-label={`Remove ${opp.title} from comparison`}
                     >
                       <SolarIcon name="close-circle-linear" size={18} />
                     </button>
                   </div>
 
-                  <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs">
-                    <div>
-                      <dt className="text-surface-400 font-medium mb-0.5">Funding</dt>
-                      <dd className="font-semibold text-surface-900 dark:text-surface-100 leading-snug">
+                  {/* Attributes */}
+                  <dl className="divide-y divide-surface-100 dark:divide-surface-800 text-xs">
+                    <div className="px-4 py-3 flex items-start justify-between gap-3">
+                      <dt className="font-medium text-surface-500 dark:text-surface-400 shrink-0 w-28">Funding</dt>
+                      <dd className="font-semibold text-surface-900 dark:text-surface-100 text-right leading-snug">
                         {opp.funding || <span className="italic text-surface-400 font-normal">Not specified</span>}
                       </dd>
                     </div>
-                    <div>
-                      <dt className="text-surface-400 font-medium mb-0.5">Deadline</dt>
-                      <dd className="font-semibold text-surface-900 dark:text-surface-100">
-                        {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : 'Rolling'}
+                    <div className="px-4 py-3 flex items-start justify-between gap-3">
+                      <dt className="font-medium text-surface-500 dark:text-surface-400 shrink-0 w-28">Deadline</dt>
+                      <dd className="font-semibold text-surface-900 dark:text-surface-100 text-right">
+                        {opp.deadline ? <DeadlineIndicator deadline={opp.deadline} /> : <span>Rolling</span>}
                       </dd>
                     </div>
-                    <div>
-                      <dt className="text-surface-400 font-medium mb-0.5">Location</dt>
-                      <dd className="font-semibold text-surface-900 dark:text-surface-100 leading-snug">
+                    <div className="px-4 py-3 flex items-start justify-between gap-3">
+                      <dt className="font-medium text-surface-500 dark:text-surface-400 shrink-0 w-28">Location</dt>
+                      <dd className="font-semibold text-surface-900 dark:text-surface-100 text-right leading-snug">
                         {opp.remoteStatus === RemoteStatus.Remote ? 'Remote' : (opp.location || 'Not specified')}
+                        {opp.remoteStatus && opp.remoteStatus !== RemoteStatus.Remote && (
+                          <span className="block text-[10px] text-surface-400 font-normal">{opp.remoteStatus}</span>
+                        )}
                       </dd>
                     </div>
-                    <div>
-                      <dt className="text-surface-400 font-medium mb-0.5">Duration</dt>
-                      <dd className="font-semibold text-surface-900 dark:text-surface-100 leading-snug">
-                        {opp.duration || <span className="italic text-surface-400 font-normal">Not specified</span>}
-                      </dd>
-                    </div>
-                    <div className="col-span-2">
-                      <dt className="text-surface-400 font-medium mb-0.5">Experience</dt>
-                      <dd className="font-semibold text-surface-900 dark:text-surface-100">
-                        {opp.experienceRequirements || <span className="italic text-surface-400 font-normal">Not specified</span>}
-                      </dd>
-                    </div>
+                    {opp.duration && (
+                      <div className="px-4 py-3 flex items-start justify-between gap-3">
+                        <dt className="font-medium text-surface-500 dark:text-surface-400 shrink-0 w-28">Duration</dt>
+                        <dd className="font-semibold text-surface-900 dark:text-surface-100 text-right leading-snug">{opp.duration}</dd>
+                      </div>
+                    )}
+                    {opp.experienceRequirements && (
+                      <div className="px-4 py-3 flex items-start justify-between gap-3">
+                        <dt className="font-medium text-surface-500 dark:text-surface-400 shrink-0 w-28">Experience</dt>
+                        <dd className="font-semibold text-surface-900 dark:text-surface-100 text-right">{opp.experienceRequirements}</dd>
+                      </div>
+                    )}
                     {opp.eligibility && opp.eligibility.length > 0 && (
-                      <div className="col-span-2">
-                        <dt className="text-surface-400 font-medium mb-0.5">Eligibility</dt>
-                        <dd className="text-surface-700 dark:text-surface-300 leading-snug">
+                      <div className="px-4 py-3 flex items-start justify-between gap-3">
+                        <dt className="font-medium text-surface-500 dark:text-surface-400 shrink-0 w-28">Eligibility</dt>
+                        <dd className="text-surface-700 dark:text-surface-300 text-right leading-snug">
                           {opp.eligibility.slice(0, 2).join('; ')}
                           {opp.eligibility.length > 2 && ` +${opp.eligibility.length - 2} more`}
                         </dd>
@@ -715,22 +769,21 @@ export default function ComparePage() {
                     )}
                   </dl>
 
-                  <div className="flex gap-2 pt-1">
-                    <Button
-                      variant="default"
-                      size="default"
-                      className="flex-1 justify-center h-10 min-h-[40px] text-xs font-semibold rounded-xl bg-rome-500 hover:bg-rome-600 text-white"
+                  {/* Actions */}
+                  <div className="px-4 py-3 border-t border-surface-100 dark:border-surface-800 flex gap-2">
+                    <button
                       onClick={() => navigate(`/opportunity/${opp.id}`)}
+                      className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl bg-rome-500 hover:bg-rome-600 text-white text-xs font-semibold transition-colors cursor-pointer"
                     >
                       <span>View Details</span>
                       <SolarIcon name="alt-arrow-right-linear" size={14} />
-                    </Button>
+                    </button>
                     {opp.applicationUrl && opp.applicationUrl.trim() !== '' && (
                       <a
                         href={opp.applicationUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-1.5 h-10 min-h-[40px] text-xs font-semibold rounded-xl border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                        className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 text-xs font-semibold hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
                       >
                         <span>Apply</span>
                         <SolarIcon name="arrow-right-up-linear" size={13} />
@@ -739,8 +792,9 @@ export default function ComparePage() {
                   </div>
                 </article>
               );
-            })}
+            })()}
           </div>
+
 
           {/* ── Pros & Cons per opportunity ── */}
           <div className="space-y-3">

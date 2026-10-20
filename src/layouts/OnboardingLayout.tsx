@@ -24,7 +24,7 @@ const OnboardingLayout = () => {
       </header>
       
       <main className="flex-1 flex flex-col justify-center items-center pt-24 pb-12 px-4 sm:px-6 w-full max-w-3xl mx-auto">
-        <div className="w-full bg-white dark:bg-surface-900 p-6 sm:p-10 rounded-2xl shadow-sm border border-surface-100 dark:border-surface-800 transition-colors">
+        <div className="w-full bg-white dark:bg-surface-900 p-4 sm:p-8 md:p-10 rounded-2xl shadow-sm border border-surface-100 dark:border-surface-800 transition-colors">
           <Outlet />
         </div>
       </main>

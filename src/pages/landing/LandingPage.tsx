@@ -7,7 +7,6 @@ import { useApplicationStore } from '@/store/applicationStore';
 import { Button } from '@/components/ui/Button';
 import { SolarIcon } from '@/components/ui/SolarIcon';
 import { OpportunityCard } from '@/components/opportunity/OpportunityCard';
-import { OpportunityPreviewModal } from '@/components/opportunity/OpportunityPreviewModal';
 import { ContextualSignupModal, ContextualPromptType } from '@/components/auth/ContextualSignupModal';
 import { Opportunity } from '@/types/models';
 import { cn } from '@/utils/cn';
@@ -25,8 +24,6 @@ export default function LandingPage() {
   // Featured Opportunities & Discovery State
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(false);
-  const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
 
   // Contextual Signup Prompt State
   const [contextualPrompt, setContextualPrompt] = useState<{
@@ -85,11 +82,8 @@ export default function LandingPage() {
   }, [opportunities]);
 
   const handleOpenPreview = (opportunityId: string) => {
-    const opp = opportunities.find(o => o.id === opportunityId);
-    if (opp) {
-      setSelectedOpportunity(opp);
-      setPreviewOpen(true);
-    }
+    // Navigate directly to the internal detail page
+    navigate(`/opportunity/${opportunityId}`);
   };
 
   const handleSaveAttempt = (opportunityId: string) => {
@@ -888,16 +882,6 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
-
-      {/* ─── Opportunity Preview Modal ─── */}
-      <OpportunityPreviewModal
-        isOpen={previewOpen}
-        onClose={() => setPreviewOpen(false)}
-        opportunity={selectedOpportunity}
-        isSaved={selectedOpportunity ? isSaved(selectedOpportunity.id) : false}
-        onSaveAttempt={handleSaveAttempt}
-        onTrackAttempt={handleTrackAttempt}
-      />
 
       {/* ─── Contextual Signup Prompt Modal ─── */}
       <ContextualSignupModal

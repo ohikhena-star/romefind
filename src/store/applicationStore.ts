@@ -301,11 +301,13 @@ export const useApplicationStore = create<ApplicationState>()(
 
       addToCompare: (id) => {
         set((state) => {
-          if (state.comparisons.includes(id)) return state;
-          if (state.comparisons.length >= 4) {
-            return { comparisons: [...state.comparisons.slice(1), id] };
+          // Deduplicate existing state first (in case of stale persisted duplicates)
+          const deduped = Array.from(new Set(state.comparisons));
+          if (deduped.includes(id)) return { comparisons: deduped }; // already in
+          if (deduped.length >= 4) {
+            return { comparisons: [...deduped.slice(1), id] };
           }
-          return { comparisons: [...state.comparisons, id] };
+          return { comparisons: [...deduped, id] };
         });
       },
 
@@ -320,7 +322,12 @@ export const useApplicationStore = create<ApplicationState>()(
       }
     }),
     {
-      name: 'romefind-applications-storage'
+      name: 'romefind-applications-storage',
+      onRehydrateStorage: () => (state) => {
+        if (state && Array.isArray(state.comparisons)) {
+          state.comparisons = Array.from(new Set(state.comparisons));
+        }
+      }
     }
   )
 );

@@ -153,6 +153,14 @@ const TopNav = () => {
                         <span>Profile Settings</span>
                       </Link>
                     </DropdownMenuItem>
+                    {user?.role === 'ADMIN' && (
+                      <DropdownMenuItem asChild className="rounded-xl px-3 py-2 cursor-pointer focus:bg-surface-100 dark:focus:bg-surface-800">
+                        <Link to="/admin/overview" className="flex items-center gap-2.5 text-xs font-semibold text-rome-600 dark:text-rome-400 w-full">
+                          <SolarIcon name="shield-warning-linear" size={14} />
+                          <span>Admin Console</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator className="my-1 bg-surface-100 dark:bg-surface-800" />
                     <DropdownMenuItem 
                       onClick={() => setShowLogoutConfirm(true)}
@@ -237,7 +245,7 @@ const TopNav = () => {
 
         {/* Mobile Dropdown Navigation Menu */}
         {mobileMenuOpen && isAuthenticated && (
-          <div className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800 px-4 py-4 space-y-3 shadow-xl animate-in slide-in-from-top-2">
+          <div className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800 px-4 py-4 space-y-3 shadow-xl animate-in slide-in-from-top-2 max-h-[calc(100vh-3.5rem)] overflow-y-auto overscroll-contain">
             {/* User info snippet */}
             <div className="pb-3 border-b border-surface-100 dark:border-surface-800 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-surface-200 dark:bg-surface-700 flex items-center justify-center text-surface-700 dark:text-surface-200 font-bold overflow-hidden">
@@ -288,6 +296,19 @@ const TopNav = () => {
                 );
               })}
             </nav>
+            {/* Admin Console shortcut for Admin users */}
+            {user?.role === 'ADMIN' && (
+              <div className="pt-1">
+                <Link
+                  to="/admin/overview"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-rome-600 dark:text-rome-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors min-h-[44px]"
+                >
+                  <SolarIcon name="shield-warning-linear" size={18} />
+                  <span>Admin Console</span>
+                </Link>
+              </div>
+            )}
 
             {/* Logout Action */}
             <div className="pt-2 border-t border-surface-100 dark:border-surface-800">

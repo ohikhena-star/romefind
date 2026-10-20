@@ -45,7 +45,7 @@ export const useOpportunityStore = create<OpportunityState>()((set, get) => ({
   fetchOpportunities: async () => {
     try {
       set({ isLoading: true });
-      const remoteOpps = await api.getOpportunities({ limit: 100 });
+      const remoteOpps = await api.getOpportunities({ limit: 250 });
       if (Array.isArray(remoteOpps) && remoteOpps.length > 0) {
         const normalized = remoteOpps.map((opp: any) => ({
           ...opp,

@@ -123,14 +123,30 @@ export default function ProfilePage() {
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setFeedback({ type: 'error', message: 'Unsupported file type. Please use JPG, PNG, WebP, or GIF.' });
+      e.target.value = '';
+      return;
+    }
+
+    // Validate file size (max 1MB)
+    if (file.size > 1024 * 1024) {
+      setFeedback({ type: 'error', message: 'Photo is too large. Maximum size is 1 MB.' });
+      e.target.value = '';
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
-      if (dataUrl.length > 800000) {
-        setFeedback({ type: 'error', message: 'Photo is too large. Please choose an image under 600KB.' });
-        return;
-      }
       setIdentityData(prev => ({ ...prev, photo: dataUrl }));
+      setFeedback(null); // Clear any previous error
+    };
+    reader.onerror = () => {
+      setFeedback({ type: 'error', message: 'Could not read the selected file. Please try another image.' });
     };
     reader.readAsDataURL(file);
   };
@@ -450,7 +466,7 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   <div>
-                    <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+                    <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={handlePhotoChange} />
                     <Button
                       type="button"
                       variant="outline"
@@ -460,7 +476,7 @@ export default function ProfilePage() {
                     >
                       Change Photo
                     </Button>
-                    <p className="text-[11px] text-surface-400 mt-1">PNG, JPG or WebP under 600KB</p>
+                    <p className="text-[11px] text-surface-400 mt-1">JPG, PNG, WebP or GIF — max 1 MB</p>
                   </div>
                 </div>
 

@@ -88,6 +88,36 @@ export default function OpportunityDetailPage() {
     }
   }, [id, location.search]);
 
+  // Local state fallback for direct ID fetching
+  const [fetchedOpp, setFetchedOpp] = useState<Opportunity | null>(null);
+  const [fetchingOpp, setFetchingOpp] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+    const existing = getOpportunityById(id);
+    if (!existing) {
+      setFetchingOpp(true);
+      api.getOpportunityById(id)
+        .then((res: any) => {
+          if (res) {
+            const normalized = {
+              ...res,
+              status: (res.status ? String(res.status).toLowerCase() : 'open') as any,
+              verificationStatus:
+                res.verificationStatus === 'VERIFIED' ? 'Verified' :
+                res.verificationStatus === 'NEEDS_REVIEW' ? 'Outdated' :
+                res.verificationStatus === 'EXPIRED' ? 'Outdated' :
+                res.verificationStatus === 'PENDING' ? 'Unverified' :
+                (res.verificationStatus || 'Unverified')
+            };
+            setFetchedOpp(normalized as Opportunity);
+          }
+        })
+        .catch(() => {})
+        .finally(() => setFetchingOpp(false));
+    }
+  }, [id, getOpportunityById]);
+
   useEffect(() => {
     if (!id) return;
     const fetchAdvice = () => {
@@ -164,7 +194,9 @@ export default function OpportunityDetailPage() {
     }
   };
 
-  const opportunity = useMemo(() => getOpportunityById(id || ''), [id, getOpportunityById]);
+  const opportunity = useMemo(() => {
+    return getOpportunityById(id || '') || fetchedOpp;
+  }, [id, getOpportunityById, fetchedOpp]);
 
   // Only calculate relevance when the user has enough profile data to produce a meaningful score.
   // Require at least interests or skills — without them the score cannot be personalised.
@@ -187,7 +219,7 @@ export default function OpportunityDetailPage() {
       .slice(0, 3);
   }, [opportunity, opportunities]);
 
-  if (isLoading && !opportunity) {
+  if ((isLoading || fetchingOpp) && !opportunity) {
     return <OpportunityDetailSkeleton />;
   }
 
@@ -231,7 +263,7 @@ export default function OpportunityDetailPage() {
 
   const handleToggleTask = (taskId: string) => {
     if (!isAuthenticated) {
-      navigate('/login');
+      setContextualPrompt({ isOpen: true, type: 'track' });
       return;
     }
     if (!app) {
@@ -277,7 +309,7 @@ export default function OpportunityDetailPage() {
         <button
           onClick={() => navigate(-1)}
           aria-label="Back to opportunities"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 transition-colors py-1 cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 transition-colors min-h-[44px] py-2 px-1 -ml-1 cursor-pointer"
         >
           <SolarIcon name="alt-arrow-left-linear" size={14} />
           <span>Back to discovery</span>
@@ -380,7 +412,7 @@ export default function OpportunityDetailPage() {
                 aria-label={isComparing ? 'Remove from compare' : 'Add to compare'}
               >
                 <SolarIcon name="scale-linear" size={14} />
-                <span>{isComparing ? 'Comparing' : 'Compare'}</span>
+                <span>{isComparing ? 'Added to Compare' : 'Compare'}</span>
               </Button>
 
               <Button
@@ -797,7 +829,7 @@ export default function OpportunityDetailPage() {
                     }}
                     aria-label={`Apply on official website for ${opportunity.title} (opens in new tab)`}
                   >
-                    <span>Apply on Official Site</span>
+                    <span>Apply on official website</span>
                     <SolarIcon name="arrow-right-up-linear" size={15} />
                   </Button>
                 ) : (
@@ -855,7 +887,7 @@ export default function OpportunityDetailPage() {
                     aria-label={isComparing ? 'Remove from compare' : 'Add to compare'}
                   >
                     <SolarIcon name="scale-linear" size={16} />
-                    <span>{isComparing ? 'Comparing' : 'Compare'}</span>
+                    <span>{isComparing ? 'Added to Compare' : 'Compare'}</span>
                   </button>
 
                   <button
@@ -1009,7 +1041,7 @@ export default function OpportunityDetailPage() {
               }}
               aria-label={`Apply to ${opportunity.title}`}
             >
-              <span>Apply on Official Site</span>
+              <span>Apply on official website</span>
               <SolarIcon name="arrow-right-up-linear" size={15} />
             </Button>
           ) : (

@@ -23,7 +23,7 @@ export const CompareBar: React.FC = () => {
     .filter(Boolean) as Opportunity[];
 
   return (
-    <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl animate-in slide-in-from-bottom duration-300 pointer-events-auto">
+    <div className="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl animate-in slide-in-from-bottom duration-300 pointer-events-auto">
       <div className="bg-surface-900/95 dark:bg-surface-950/95 backdrop-blur-md text-white px-4 sm:px-5 py-3 rounded-2xl shadow-2xl border border-surface-700/80 dark:border-surface-700 flex items-center justify-between gap-3">
         
         <div className="flex items-center gap-2.5 overflow-x-auto py-1">
@@ -66,7 +66,7 @@ export const CompareBar: React.FC = () => {
           <Button
             size="sm"
             variant="primary"
-            onClick={() => navigate('/compare')}
+            onClick={() => navigate('/compare', { state: { from: location.pathname } })}
             className="text-xs font-bold shadow-md whitespace-nowrap flex items-center gap-1.5"
           >
             <span>{comparisons.length >= 2 ? 'Compare Matrix' : 'Compare'}</span>

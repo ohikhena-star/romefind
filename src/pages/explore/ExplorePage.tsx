@@ -8,6 +8,7 @@ import { searchOpportunities, sortByRelevance } from '@/services/search.service'
 import { Chip, OpportunityList, EmptyState, Button, OpportunityGridSkeleton } from '@/components/ui';
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { SolarIcon } from '@/components/ui/SolarIcon';
+import { ContextualSignupModal, ContextualPromptType } from '@/components/auth/ContextualSignupModal';
 import { categories } from '@/data/categories';
 import { OpportunityType, RemoteStatus, Opportunity, SearchResult } from '@/types/models';
 import { FIELDS, LOCATIONS } from '@/utils/constants';
@@ -45,8 +46,14 @@ export default function ExplorePage() {
   const navigate = useNavigate();
   const { opportunities, isLoading } = useOpportunityStore();
   const { isSaved, saveOpportunity, unsaveOpportunity } = useApplicationStore();
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
   const { addRecentSearch } = useUIStore();
+
+  const [contextualPrompt, setContextualPrompt] = useState<{
+    isOpen: boolean;
+    type: ContextualPromptType;
+    opportunityId?: string;
+  }>({ isOpen: false, type: 'save' });
 
   // ── Filter state ─────────────────────────────────────────────────────────
   const [query, setQuery] = useState<string>(searchParams.get('q') || '');
@@ -634,7 +641,13 @@ export default function ExplorePage() {
             loading={false}
             showSaveButton
             isOpportunitySaved={(id: string) => isSaved(id)}
-            onSaveOpportunity={(id: string) => saveOpportunity(id)}
+            onSaveOpportunity={(id: string) => {
+              if (!isAuthenticated) {
+                setContextualPrompt({ isOpen: true, type: 'save', opportunityId: id });
+                return;
+              }
+              saveOpportunity(id);
+            }}
             onUnsaveOpportunity={(id: string) => unsaveOpportunity(id)}
             onOpportunityClick={(id: string) => navigate(`/opportunity/${id}`)}
           />
@@ -658,6 +671,14 @@ export default function ExplorePage() {
           </div>
         )}
       </main>
+
+      <ContextualSignupModal
+        isOpen={contextualPrompt.isOpen}
+        onClose={() => setContextualPrompt(prev => ({ ...prev, isOpen: false }))}
+        type={contextualPrompt.type}
+        opportunityId={contextualPrompt.opportunityId}
+        returnUrl={contextualPrompt.opportunityId ? `/opportunity/${contextualPrompt.opportunityId}` : '/explore'}
+      />
     </div>
   );
 }

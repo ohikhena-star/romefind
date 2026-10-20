@@ -19,6 +19,16 @@ interface OverviewData {
     expiringIn14Days: number;
     needsReviewOpportunities: number;
     pendingVerification: number;
+    verifiedOpportunities?: number;
+    recentlyAdded?: Array<{
+      id: string;
+      title: string;
+      opportunityType: string;
+      status: string;
+      verificationStatus: string;
+      createdAt: string;
+      organization: { name: string } | null;
+    }>;
   };
   engagement: {
     totalSaves: number;
@@ -278,7 +288,7 @@ export default function AdminOverviewPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
           <MetricCard
             label="Total Opportunities"
             value={data.opportunities.totalOpportunities}
@@ -289,6 +299,13 @@ export default function AdminOverviewPage() {
             label="Active (OPEN)"
             value={data.opportunities.activeOpportunities}
             icon="check-circle-linear"
+            accent
+            linkTo="/admin/opportunities"
+          />
+          <MetricCard
+            label="Verified"
+            value={data.opportunities.verifiedOpportunities ?? 0}
+            icon="shield-warning-linear"
             accent
             linkTo="/admin/opportunities"
           />
@@ -320,6 +337,40 @@ export default function AdminOverviewPage() {
             linkTo="/admin/opportunities"
           />
         </div>
+
+        {/* Recently Added Opportunities Feed */}
+        {data.opportunities.recentlyAdded && data.opportunities.recentlyAdded.length > 0 && (
+          <div className="bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl p-4 sm:p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold text-surface-600 dark:text-surface-400 uppercase tracking-wider">
+                Recently Added Opportunities
+              </h3>
+              <Link to="/admin/opportunities" className="text-xs text-rome-600 dark:text-rome-400 hover:underline">
+                View all →
+              </Link>
+            </div>
+            <div className="divide-y divide-surface-100 dark:divide-surface-800">
+              {data.opportunities.recentlyAdded.map(item => (
+                <div key={item.id} className="py-2.5 flex items-center justify-between gap-4 first:pt-1 last:pb-1">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-surface-900 dark:text-white truncate">{item.title}</p>
+                    <p className="text-xs text-surface-400 truncate">
+                      {item.organization?.name || '—'} · <span className="text-surface-500">{item.opportunityType}</span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[11px] px-2 py-0.5 rounded font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
+                      {item.verificationStatus}
+                    </span>
+                    <span className="text-[11px] text-surface-400 hidden sm:inline">
+                      {new Date(item.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ─── 4. User Base & Onboarding ─── */}

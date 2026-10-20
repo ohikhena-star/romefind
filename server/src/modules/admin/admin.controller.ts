@@ -190,13 +190,29 @@ export const updateAdminOpportunity = async (req: Request, res: Response, next: 
       });
     }
 
+    if (updateData.verificationStatus && updateData.verificationStatus !== current.verificationStatus) {
+      await prisma.opportunityChangeHistory.create({
+        data: { opportunityId: id, fieldChanged: 'verificationStatus', oldValue: current.verificationStatus, newValue: updateData.verificationStatus }
+      });
+    }
+
     const payload: any = { ...updateData };
-    if (updateData.field) payload.field = JSON.stringify(updateData.field);
-    if (updateData.subfields) payload.subfields = JSON.stringify(updateData.subfields);
-    if (updateData.benefits) payload.benefits = JSON.stringify(updateData.benefits);
-    if (updateData.eligibility) payload.eligibility = JSON.stringify(updateData.eligibility);
-    if (updateData.requirements) payload.requirements = JSON.stringify(updateData.requirements);
-    if (updateData.tags) payload.tags = JSON.stringify(updateData.tags);
+    delete payload.organization; // Remove nested object if present to avoid Prisma error
+    delete payload.missingUrl;
+    delete payload.missingDeadline;
+    delete payload.missingField;
+
+    if (updateData.field) payload.field = typeof updateData.field === 'string' ? updateData.field : JSON.stringify(updateData.field);
+    if (updateData.subfields) payload.subfields = typeof updateData.subfields === 'string' ? updateData.subfields : JSON.stringify(updateData.subfields);
+    if (updateData.benefits) payload.benefits = typeof updateData.benefits === 'string' ? updateData.benefits : JSON.stringify(updateData.benefits);
+    if (updateData.eligibility) payload.eligibility = typeof updateData.eligibility === 'string' ? updateData.eligibility : JSON.stringify(updateData.eligibility);
+    if (updateData.requirements) payload.requirements = typeof updateData.requirements === 'string' ? updateData.requirements : JSON.stringify(updateData.requirements);
+    if (updateData.tags) payload.tags = typeof updateData.tags === 'string' ? updateData.tags : JSON.stringify(updateData.tags);
+
+    // If verificationStatus is updated to VERIFIED, update lastVerifiedAt
+    if (updateData.verificationStatus === 'VERIFIED') {
+      payload.lastVerifiedAt = new Date();
+    }
 
     const updated = await prisma.opportunity.update({
       where: { id },
@@ -205,6 +221,24 @@ export const updateAdminOpportunity = async (req: Request, res: Response, next: 
     });
 
     res.json({ success: true, message: 'Opportunity updated successfully', data: formatOpportunityResponse(updated) });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DELETE /api/admin/opportunities/:id
+export const deleteAdminOpportunity = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+
+    const current = await prisma.opportunity.findUnique({ where: { id } });
+    if (!current) {
+      return res.status(404).json({ success: false, message: 'Opportunity not found' });
+    }
+
+    await prisma.opportunity.delete({ where: { id } });
+
+    res.json({ success: true, message: `Opportunity "${current.title}" deleted successfully`, data: { id } });
   } catch (error) {
     next(error);
   }
@@ -255,6 +289,8 @@ export const getAdminOverview = async (req: Request, res: Response, next: NextFu
       pendingReports,
       behaviourSignalCount,
       pendingSubmissions,
+      verifiedOpportunities,
+      recentlyAdded,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({ where: { createdAt: { gte: sevenDaysAgo } } }),
@@ -273,6 +309,20 @@ export const getAdminOverview = async (req: Request, res: Response, next: NextFu
       prisma.opportunityReport.count({ where: { status: 'PENDING' } }),
       prisma.behaviourSignal.count(),
       prisma.providerSubmission.count({ where: { status: 'PENDING' } }),
+      prisma.opportunity.count({ where: { verificationStatus: 'VERIFIED' } }),
+      prisma.opportunity.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          opportunityType: true,
+          status: true,
+          verificationStatus: true,
+          createdAt: true,
+          organization: { select: { name: true } }
+        }
+      })
     ]);
 
     // Expiring in 14 days: status OPEN and deadline between today and 14 days from now
@@ -289,7 +339,16 @@ export const getAdminOverview = async (req: Request, res: Response, next: NextFu
       success: true,
       data: {
         users: { totalUsers, newUsersLast7Days, newUsersLast30Days, onboardedUsers, onboardingRate },
-        opportunities: { totalOpportunities, activeOpportunities, expiredOpportunities, expiringIn14Days, needsReviewOpportunities, pendingVerification },
+        opportunities: {
+          totalOpportunities,
+          activeOpportunities,
+          expiredOpportunities,
+          expiringIn14Days,
+          needsReviewOpportunities,
+          pendingVerification,
+          verifiedOpportunities,
+          recentlyAdded
+        },
         engagement: { totalSaves, totalTracked, submittedApplications, acceptedApplications, totalCommunityAdvice, pendingReports, pendingSubmissions },
         instrumentation: {
           behaviourSignalCount,
@@ -396,17 +455,31 @@ export const getAdminOpportunities = async (req: Request, res: Response, next: N
         select: {
           id: true,
           title: true,
+          description: true,
+          shortDescription: true,
           opportunityType: true,
           field: true,
+          subfields: true,
           location: true,
+          country: true,
+          remoteStatus: true,
+          funding: true,
+          fundingType: true,
+          fundingAmount: true,
+          benefits: true,
+          eligibility: true,
+          requirements: true,
           deadline: true,
           status: true,
           verificationStatus: true,
           isFeatured: true,
           applicationUrl: true,
+          officialSource: true,
+          sourceName: true,
           createdAt: true,
           updatedAt: true,
-          organization: { select: { id: true, name: true } }
+          lastVerifiedAt: true,
+          organization: { select: { id: true, name: true, website: true } }
         },
         orderBy: { createdAt: 'desc' },
         skip: offset,
@@ -414,15 +487,33 @@ export const getAdminOpportunities = async (req: Request, res: Response, next: N
       })
     ]);
 
+    const todayStr = new Date().toISOString().split('T')[0];
+
     const formatted = opportunities.map(o => {
       let fields: string[] = [];
+      let eligibility: string[] = [];
+      let requirements: string[] = [];
+      let benefits: string[] = [];
       try { fields = JSON.parse(o.field || '[]'); } catch {}
+      try { eligibility = JSON.parse(o.eligibility || '[]'); } catch {}
+      try { requirements = JSON.parse(o.requirements || '[]'); } catch {}
+      try { benefits = JSON.parse(o.benefits || '[]'); } catch {}
+
+      const isExpired = o.deadline ? o.deadline < todayStr : false;
+      const isExpiredStillOpen = isExpired && o.status === 'OPEN';
+
       return {
         ...o,
         field: fields,
-        missingUrl: !o.applicationUrl,
+        eligibility,
+        requirements,
+        benefits,
+        missingUrl: !o.applicationUrl || o.applicationUrl.trim() === '',
         missingDeadline: !o.deadline,
         missingField: fields.length === 0,
+        missingEligibility: eligibility.length === 0,
+        isExpired,
+        isExpiredStillOpen,
       };
     });
 

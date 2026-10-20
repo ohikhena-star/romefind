@@ -69,7 +69,7 @@ const ProtectedRoute = () => {
     return <Navigate to="/onboarding" replace />;
   }
   
-  return <AppLayout />;
+  return <Outlet />;
 };
 
 const AuthAwareRoot = () => {
@@ -145,20 +145,25 @@ export default function App() {
         <Route path="/onboarding" element={<OnboardingFlow />} />
       </Route>
 
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/discover" element={<DiscoverPage />} />
-        <Route path="/recommendations" element={<RecommendationsPage />} />
-        <Route path="/explore" element={<ExplorePage />} />
+      {/* App Shell Layout (Public & Authenticated) */}
+      <Route element={<AppLayout />}>
+        {/* Public Opportunity Detail */}
         <Route path="/opportunity/:id" element={<OpportunityDetailPage />} />
-        <Route path="/compare" element={<ComparePage />} />
-        <Route path="/my-opportunities" element={<MyOpportunitiesPage />} />
-        <Route path="/my-opportunities/:id/workspace" element={<ApplicationWorkspacePage />} />
-        <Route path="/learn" element={<LearnPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/searches" element={<SearchesPage />} />
-        <Route path="/search" element={<SearchesPage />} />
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/discover" element={<DiscoverPage />} />
+          <Route path="/recommendations" element={<RecommendationsPage />} />
+          <Route path="/explore" element={<ExplorePage />} />
+          <Route path="/compare" element={<ComparePage />} />
+          <Route path="/my-opportunities" element={<MyOpportunitiesPage />} />
+          <Route path="/my-opportunities/:id/workspace" element={<ApplicationWorkspacePage />} />
+          <Route path="/learn" element={<LearnPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/searches" element={<SearchesPage />} />
+          <Route path="/search" element={<SearchesPage />} />
+        </Route>
       </Route>
 
       

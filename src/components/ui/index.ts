@@ -17,7 +17,6 @@ export * from './ErrorState';
 export * from './Skeleton';
 export * from './composite-skeletons';
 export * from './DeadlineIndicator';
-export * from './MatchIndicator';
 export * from './Toggle';
 export * from './Tooltip';
 export * from './Notification';
